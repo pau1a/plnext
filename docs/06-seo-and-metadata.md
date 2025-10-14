@@ -25,3 +25,7 @@ export default function BlogPostSeo() {
   );
 }
 ```
+
+## Crawl and Indexing Notes
+
+- User comments are rendered dynamically and are not part of the prerendered HTML. Treat them as non-indexed supporting content.
