@@ -1,0 +1,20 @@
+---
+title: "Project Name"
+slug: "project-slug"
+year: 2025
+summary: "Outcome-focused one-liner."
+stack: ["nextjs","rust","pytorch"]
+image: "/images/projects/project-slug/cover.webp"
+status: "public"
+---
+
+# {{ Project Name }}
+
+## Problem
+…
+
+## Approach
+…
+
+## Outcome
+…
