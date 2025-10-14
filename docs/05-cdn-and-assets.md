@@ -1,17 +1,22 @@
+_Last updated: 2025-10-14 by PL_
+
 # CDN & Assets (Decided)
 
-**CDN prefix**  
+**CDN prefix**
 `https://cdn.networklayer.co.uk/paulalivingstone/`
 
-**Subdirectories**  
+**Subdirectories**
+
 - `images/`, `videos/`, `documents/`
 
-**Content convention**  
+**Content convention**
+
 - MDX stores **relative** paths (e.g., `/images/blog/slug/cover.webp`).
 - Runtime resolves to CDN in production; local paths in development.
 
 **Structure guidance**
-```
+
+```text
 /images/
 blog/<slug>/*
 projects/<slug>/*
@@ -22,6 +27,9 @@ demos/*
 whitepapers/*
 ```
 
-**Caching intent**  
+**Caching intent**
+
 - Fingerprinted filenames preferred (e.g., `cover.ab12cd34.webp`).
 - Long-lived caching on images/videos; shorter on documents unless versioned.
+
+[See CDN invalidation workflow stub](05-cdn-and-assets-invalidation.md) for upcoming cache refresh process details.

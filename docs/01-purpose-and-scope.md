@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # Purpose and Scope
 
 **What this site exists to do**  

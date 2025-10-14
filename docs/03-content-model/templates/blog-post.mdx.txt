@@ -6,7 +6,8 @@ summary: "One-liner."
 tags: ["security","systems"]
 # categorySlug: ""   # optional, leave unset for now
 image: "/images/blog/post-slug/cover.webp"
-draft: false
+status: "draft" # draft | review | published
+# status: "draft" posts remain in the filesystem but builds ignore them.
 ---
 
 # {{ Title }}

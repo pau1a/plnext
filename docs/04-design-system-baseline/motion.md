@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # Motion Principles
 
 - Purpose: clarity, not spectacle.
