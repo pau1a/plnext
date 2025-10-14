@@ -1,0 +1,24 @@
+---
+title: "Post Title"
+slug: "post-slug"
+date: "2025-10-14"
+summary: "One-liner."
+tags: ["security","systems"]
+# categorySlug: ""   # optional, leave unset for now
+image: "/images/blog/post-slug/cover.webp"
+draft: false
+---
+
+# {{ Title }}
+
+> Why it matters: _One paragraph._
+
+## Context
+…
+
+## What I learned
+…
+
+## Links
+- Code:
+- Notes:
