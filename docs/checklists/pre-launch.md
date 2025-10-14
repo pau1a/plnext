@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # Pre-Launch Checklist
 
 - [ ] Purpose & Scope reviewed

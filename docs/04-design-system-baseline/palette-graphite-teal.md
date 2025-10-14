@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # Palette — Graphite & Teal (Chosen)
 
 Purpose: calm precision; strong readability; zero gloss.
@@ -11,6 +13,10 @@ Purpose: calm precision; strong readability; zero gloss.
 - Text (dark mode): `#e8e9ea`
 
 Usage notes:
+
 - Links and primary buttons use teal.
 - Muted text uses steel grey.
 - Accent for warnings/callouts only.
+
+![Light theme example](../assets/palette-light-placeholder.png)
+![Dark theme example](../assets/palette-dark-placeholder.png)

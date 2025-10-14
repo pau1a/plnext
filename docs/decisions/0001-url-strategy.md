@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # ADR 0001 — URL Strategy for Blog Posts
 
 **Status:** Accepted  
