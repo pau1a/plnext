@@ -33,3 +33,8 @@ whitepapers/*
 - Long-lived caching on images/videos; shorter on documents unless versioned.
 
 [See CDN invalidation workflow stub](05-cdn-and-assets-invalidation.md) for upcoming cache refresh process details.
+
+## Cross-references
+
+- Dynamic user data (comments and contact messages) lives in Supabase. See `09-database-and-services.md` for the data layer overview.
+- Media continues to publish via the CDN prefix above.
