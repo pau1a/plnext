@@ -9,8 +9,11 @@ Scope: **docs only** — no build or code tasks live here.
 
 1. [01-purpose-and-scope.md](./01-purpose-and-scope.md)
 2. [02-information-architecture.md](./02-information-architecture.md)
-3. [03-content-model/blog.md](./03-content-model/blog.md) and [03-content-model/project.md](./03-content-model/project.md)
-4. [04-design-system-baseline/](./04-design-system-baseline/)
+3. [10-site-structure-overview.md](./10-site-structure-overview.md)
+4. [11-api-and-database-interfaces.md](./11-api-and-database-interfaces.md)
+5. [12-content-publishing-model.md](./12-content-publishing-model.md)
+6. [03-content-model/blog.md](./03-content-model/blog.md) and [03-content-model/project.md](./03-content-model/project.md)
+7. [04-design-system-baseline/](./04-design-system-baseline/)
 
 ## UI Architecture
 
