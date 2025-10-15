@@ -53,23 +53,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const relatedPosts = (await getBlogPostSummaries()).filter((item) => item.slug !== post.slug).slice(0, 3);
 
   return (
-    <article className="mx-auto" style={{ maxWidth: "760px" }}>
-      <nav aria-label="Breadcrumb" className="mb-4 small text-uppercase">
-        <Link className="text-decoration-none text-muted" href="/blog">
-          ← Back to all posts
+    <article className="u-stack u-gap-2xl u-max-w-lg u-center">
+      <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
+        <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">
+          <i className="fa-solid fa-arrow-left" aria-hidden="true" />
+          <span>Back to all posts</span>
         </Link>
       </nav>
 
-      <header className="mb-5">
-        <time className="text-uppercase text-muted small mb-2 d-block">
+      <header className="u-stack u-gap-sm">
+        <time className="u-text-uppercase u-text-xs u-text-muted">
           {format(new Date(post.date), "MMMM d, yyyy")}
         </time>
-        <h1 className="display-5 mb-3">{post.title}</h1>
-        <p className="lead text-muted">{post.description}</p>
+        <h1 className="heading-display-lg">{post.title}</h1>
+        <p className="u-text-lead">{post.description}</p>
         {post.tags?.length ? (
-          <ul className="list-inline small text-muted mb-0">
+          <ul className="tag-list">
             {post.tags.map((tag) => (
-              <li key={tag} className="list-inline-item badge rounded-pill text-bg-dark me-1">
+              <li key={tag} className="tag-list__item">
                 {tag}
               </li>
             ))}
@@ -77,17 +78,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         ) : null}
       </header>
 
-      <div className="prose mb-5">{post.content}</div>
+      <div className="prose u-stack u-gap-lg">{post.content}</div>
 
       {relatedPosts.length > 0 ? (
-        <aside className="border-top pt-4">
-          <h2 className="h5 mb-3">Keep reading</h2>
-          <ul className="list-unstyled">
+        <aside className="surface u-pad-xl u-stack u-gap-sm">
+          <h2 className="heading-subtitle u-text-muted">Keep reading</h2>
+          <ul className="u-stack u-gap-sm">
             {relatedPosts.map((related) => (
-              <li key={related.slug} className="mb-3">
-                <Link className="text-decoration-none" href={`/blog/${related.slug}`}>
-                  <span className="fw-semibold d-block">{related.title}</span>
-                  <span className="text-muted small">
+              <li key={related.slug}>
+                <Link className="u-stack u-gap-2xs" href={`/blog/${related.slug}`}>
+                  <span className="u-font-semibold">{related.title}</span>
+                  <span className="u-text-muted u-text-sm">
                     {format(new Date(related.date), "MMMM d, yyyy")} · {related.description}
                   </span>
                 </Link>

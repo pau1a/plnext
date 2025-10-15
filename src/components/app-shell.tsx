@@ -1,6 +1,5 @@
 "use client";
 
-import BootstrapClient from "@/components/bootstrap-client";
 import BodyThemeSync from "@/components/body-theme-sync";
 import ThemeToggle from "@/components/theme-toggle";
 import { defaultSeoConfig } from "@/lib/seo";
@@ -11,38 +10,60 @@ import type { PropsWithChildren } from "react";
 
 export default function AppShell({ children }: PropsWithChildren) {
   return (
-    <body className="bg-body text-body">
+    <body className="app-shell">
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <DefaultSeo {...defaultSeoConfig} />
         <BodyThemeSync />
-        <BootstrapClient />
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-          <div className="container">
-            <Link className="navbar-brand" href="/">
-              <i className="fa-solid fa-shield-halved me-2" />
-              Paula Livingstone
-            </Link>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-              <span className="navbar-toggler-icon" />
-            </button>
-            <div className="collapse navbar-collapse" id="nav">
-              <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-3">
-                <li className="nav-item"><Link className="nav-link" href="/about">About</Link></li>
-                <li className="nav-item"><Link className="nav-link" href="/projects">Projects</Link></li>
-                <li className="nav-item"><Link className="nav-link" href="/blog">Blog</Link></li>
-                <li className="nav-item"><Link className="nav-link" href="/contact">Contact</Link></li>
-                <li className="nav-item mt-3 mt-lg-0">
-                  <ThemeToggle />
+
+        <header className="app-shell__header">
+          <div className="l-container u-pad-block-lg">
+            <nav className="app-nav" aria-label="Primary">
+              <Link className="app-nav__brand" href="/">
+                <i className="fa-solid fa-shield-halved" aria-hidden="true" />
+                <span>Paula Livingstone</span>
+              </Link>
+
+              <ul className="app-nav__links">
+                <li>
+                  <Link className="app-nav__link" href="/about">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link className="app-nav__link" href="/projects">
+                    Projects
+                  </Link>
+                </li>
+                <li>
+                  <Link className="app-nav__link" href="/blog">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link className="app-nav__link" href="/contact">
+                    Contact
+                  </Link>
                 </li>
               </ul>
-            </div>
+
+              <div className="app-nav__actions">
+                <ThemeToggle />
+              </div>
+            </nav>
           </div>
-        </nav>
+        </header>
 
-        <main className="container py-4">{children}</main>
+        <main className="app-shell__main">
+          <div className="l-container motion-fade-in">{children}</div>
+        </main>
 
-        <footer className="text-center text-muted py-4">
-          <small><i className="fa-regular fa-copyright me-1" />{new Date().getFullYear()} Paula Livingstone</small>
+        <footer className="app-shell__footer">
+          <div className="l-container">
+            <small className="u-inline-flex u-items-center u-gap-xs">
+              <i className="fa-regular fa-copyright" aria-hidden="true" />
+              <span>{new Date().getFullYear()} Paula Livingstone</span>
+            </small>
+          </div>
         </footer>
       </ThemeProvider>
     </body>
