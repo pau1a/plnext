@@ -13,10 +13,19 @@ Paula Livingstone operates as the sole steward for Supabase access, which keeps 
 - Submission: stored immediately in Supabase with `approved=false`.
 - Publication: visible publicly only after Paula sets `approved=true`.
 - Removal: on request, delete the comment row in Supabase and clear any cached copies.
+  1. Locate the record: `select id, author_email from pl_site.comments where slug = 'POST_SLUG' and id = 'UUID';`
+  2. Confirm the requester matches `author_email` (or admin request).
+  3. Remove the record: `delete from pl_site.comments where id = 'UUID';`
+  4. Invalidate cached views (ISR pages, CDN, browser storage) for the affected slug to prevent stale content from resurfacing.
 
 ## Contact Messages
 - Private by default; never displayed publicly.
 - Handling: toggle `handled` to `true` after action and retain for correspondence history unless deletion is requested.
+- Removal: honor data subject deletion or anonymisation requests.
+  1. Validate the requester by matching email headers or stored metadata.
+  2. If deletion is requested, run `delete from pl_site.contact_messages where id = 'UUID';`
+  3. If anonymisation is requested, update identifying fields instead: `update pl_site.contact_messages set email = null, name = null, message = '[anonymised]' where id = 'UUID';`
+  4. Clear any downstream caches or search indexes fed by contact data (e.g., admin dashboards) to ensure the removal propagates immediately.
 
 ## Data Subject Requests
 - Accept removal or export requests via email.
