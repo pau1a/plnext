@@ -26,6 +26,7 @@ export default function AppShell({ children }: PropsWithChildren) {
               <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-3">
                 <li className="nav-item"><Link className="nav-link" href="/about">About</Link></li>
                 <li className="nav-item"><Link className="nav-link" href="/projects">Projects</Link></li>
+                <li className="nav-item"><Link className="nav-link" href="/blog">Blog</Link></li>
                 <li className="nav-item"><Link className="nav-link" href="/contact">Contact</Link></li>
                 <li className="nav-item mt-3 mt-lg-0">
                   <ThemeToggle />
