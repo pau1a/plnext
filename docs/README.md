@@ -29,3 +29,6 @@ Scope: **docs only** — no build or code tasks live here.
 ## Decisions
 - [decisions/0003-adopt-supabase-no-migrations.md](./decisions/0003-adopt-supabase-no-migrations.md)
 
+## Housekeeping Log
+- 2025-10-15: Attempted to coordinate with Ged for an orphan/duplicate file review of the `docs/` tree. Direct confirmation could not be secured within this environment, so the review remains pending follow-up.
+
