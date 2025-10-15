@@ -3,7 +3,9 @@
 import BootstrapClient from "@/components/bootstrap-client";
 import BodyThemeSync from "@/components/body-theme-sync";
 import ThemeToggle from "@/components/theme-toggle";
+import { defaultSeoConfig } from "@/lib/seo";
 import Link from "next/link";
+import { DefaultSeo } from "next-seo";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
 
@@ -11,6 +13,7 @@ export default function AppShell({ children }: PropsWithChildren) {
   return (
     <body className="bg-body text-body">
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <DefaultSeo {...defaultSeoConfig} />
         <BodyThemeSync />
         <BootstrapClient />
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
