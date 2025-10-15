@@ -16,7 +16,7 @@ _Last updated: 2025-10-14 by PL_
 - Blog posts live at `/blog/[slug]` (flat).
 - Categories, when introduced, are listing pages only: `/blog/category/[slug]`. Formal category launch is deferred; see [ADR 0002](./decisions/0002-categories-later.md).
 - Tags live at `/tags/[slug]`.
-- Rationale: post URLs never change → no link rot. [See ADR 0001](../decisions/0001-url-strategy.md).
+- Rationale: post URLs never change → no link rot. [See ADR 0001](./decisions/0001-url-strategy.md).
 
 ## Static vs. SSR
 

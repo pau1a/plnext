@@ -37,4 +37,5 @@ Scope: **docs only** — no build or code tasks live here.
 
 ## Housekeeping Log
 - 2025-10-15: Attempted to coordinate with Ged for an orphan/duplicate file review of the `docs/` tree. Direct confirmation could not be secured within this environment, so the review remains pending follow-up.
+- 2025-10-15: Ran `npx markdown-link-check -p docs`; initial pass flagged four dead links (one internal path, two missing palette placeholders, one private CDN URL). Updated the docs to fix the internal reference, convert the restricted CDN location to inline code, and replace the missing palette images with a follow-up note. Re-ran the command and confirmed all links are healthy.
 
