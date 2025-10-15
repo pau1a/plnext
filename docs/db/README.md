@@ -25,3 +25,4 @@ Only Paula applies database changes.
 ## Execution Log
 
 - 2025-10-14: `2025-10-14T1800--init.sql` applied successfully in Supabase (Paula). `schema_version` = 2025-10-14T1800.
+- 2025-10-14: Attempted `2025-10-14T1830--rls-policies.sql`, but Supabase credentials were unavailable in this environment. Verification query was not executed (Paula).
