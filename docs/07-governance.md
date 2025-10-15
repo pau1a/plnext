@@ -12,7 +12,7 @@ _Last updated: 2025-10-14 by PL_
 
 - **Owner:** Paula Livingstone
 - **Database:** Supabase (Postgres) — single operator, no migration framework.
-- **Schema changes:** committed SQL under `docs/db/versions/`, applied manually in Supabase.
+- **Schema changes:** committed SQL under [docs/db/versions/](./db/versions/), applied manually in Supabase.
 - **Backups:** see [Backups & Retention](#backups--retention).
 
 ## Credentials
@@ -23,5 +23,5 @@ _Last updated: 2025-10-14 by PL_
 ## Backups & Retention
 
 - Supabase automated backups run daily and are retained for 30 days (per Supabase plan).
-- After any schema change, export a full SQL snapshot and store it under `docs/db/snapshots/` as `YYYY-MM-DD--full-export.sql`.
-- For recovery, restore from the latest Supabase backup first; if unavailable, load the newest snapshot and apply remaining `docs/db/versions/*.sql` files in order.
+- After any schema change, export a full SQL snapshot and store it under [docs/db/snapshots/](./db/snapshots/) as `YYYY-MM-DD--full-export.sql`.
+- For recovery, restore from the latest Supabase backup first; if unavailable, load the newest snapshot and apply remaining files in [docs/db/versions/](./db/versions/) (`*.sql`) in order.

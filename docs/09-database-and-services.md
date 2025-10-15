@@ -14,7 +14,7 @@ Include the static/dynamic boundary diagram here when it is ready.
 ## Principles
 
 - Single operator; no migration framework.
-- Schema changes are committed as dated SQL files in `docs/db/versions/`.
+- Schema changes are committed as dated SQL files in [docs/db/versions/](./db/versions/).
 - Applied versions are tracked in the `pl_site.schema_version` table.
 - Row-level security rules control read and write access by role.
 
