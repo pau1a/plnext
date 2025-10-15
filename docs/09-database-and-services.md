@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # Data Layer Overview
 
 Supabase (Postgres) provides the dynamic data layer for user-generated content such as blog comments and contact form submissions. MDX posts remain the canonical, static source for published content.
@@ -24,6 +26,4 @@ Include the static/dynamic boundary diagram here when it is ready.
 
 ## Related Documentation
 
-- `docs/db/` — schema, policies, change process.
-- `docs/data-layer/flow.md` — dynamic data flow for comments and contact forms.
-- `docs/decisions/0003-adopt-supabase-no-migrations.md` — architectural decision record.
+See [DB Operations](./db/README.md), [Data Layer Flow](./data-layer/flow.md), and [ADR 0003](./decisions/0003-adopt-supabase-no-migrations.md).

@@ -36,5 +36,5 @@ whitepapers/*
 
 ## Cross-references
 
-- Dynamic user data (comments and contact messages) lives in Supabase. See `09-database-and-services.md` for the data layer overview.
+- Dynamic user data (comments and contact messages) lives in Supabase. See [Data Layer Overview](./09-database-and-services.md).
 - Media continues to publish via the CDN prefix above.

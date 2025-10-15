@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # Schema (pl_site)
 
 ## Tables
@@ -36,3 +38,37 @@
 - Store events as `timestamptz`.
 - Default timestamps to `now()`.
 - Use `uuid` primary keys.
+
+## Sample Queries
+
+### Comments moderation flow
+```sql
+select id, name, body, created_at
+from pl_site.comments
+where post_slug = 'my-post-slug' and approved = true
+order by created_at desc;
+```
+
+```sql
+insert into pl_site.comments (post_slug, name, email, body)
+values ('my-post-slug', 'Alice', 'alice@example.com', 'Great post!');
+```
+
+```sql
+update pl_site.comments
+set approved = true
+where id = '00000000-0000-0000-0000-000000000000';
+```
+
+### Contact message handling
+```sql
+insert into pl_site.contact_messages (name, email, subject, body)
+values ('Bob', 'bob@example.com', 'Hello', 'Message body');
+```
+
+```sql
+select id, name, email, subject, created_at
+from pl_site.contact_messages
+where handled = false
+order by created_at desc;
+```
