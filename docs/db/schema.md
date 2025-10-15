@@ -72,3 +72,5 @@ from pl_site.contact_messages
 where handled = false
 order by created_at desc;
 ```
+
+Validated on 2025-10-15. Supabase service-role credentials are not available in this environment, so sample data inserts and query execution could not be performed.
