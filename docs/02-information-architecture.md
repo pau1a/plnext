@@ -4,7 +4,7 @@ _Last updated: 2025-10-14 by PL_
 
 ## Routes (v1)
 
-- `/` — Home
+- `/` — Home. See [Front Page Architecture](./ui/00-front-page-architecture.md) for entry-point layout.
 - `/about/`
 - `/projects/` and `/projects/[slug]/`
 - `/blog/` and `/blog/[slug]/`
