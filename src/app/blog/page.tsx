@@ -1,31 +1,16 @@
-interface Post {
-  title: string;
-  date: string;
-  description: string;
-}
+import { getBlogPostSummaries } from "@/lib/mdx";
+import { format } from "date-fns";
+import type { Metadata } from "next";
+import Link from "next/link";
 
-const posts: Post[] = [
-  {
-    title: "Securing the Modern Web",
-    date: "May 14, 2024",
-    description:
-      "Practical steps to harden your full-stack applications without slowing down delivery.",
-  },
-  {
-    title: "AI-Assisted Incident Response",
-    date: "April 30, 2024",
-    description:
-      "How large language models can accelerate triage workflows while maintaining human oversight.",
-  },
-  {
-    title: "Building a Home Lab for Red Teaming",
-    date: "April 12, 2024",
-    description:
-      "From network segmentation to repeatable attack simulations, here is the gear that earns its keep.",
-  },
-];
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
+};
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getBlogPostSummaries();
+
   return (
     <section className="py-4">
       <header className="mb-5 text-center">
@@ -35,22 +20,32 @@ export default function BlogPage() {
         </p>
       </header>
 
-      <div className="row g-4">
-        {posts.map((post) => (
-          <article key={post.title} className="col-md-4">
-            <div className="card h-100 shadow-sm border-0">
-              <div className="card-body d-flex flex-column">
-                <time className="text-uppercase text-muted small mb-2">{post.date}</time>
-                <h2 className="h4">{post.title}</h2>
-                <p className="text-muted flex-grow-1">{post.description}</p>
-                <a className="stretched-link text-decoration-none" href="#">
-                  Read article <i className="fa-solid fa-arrow-right ms-1" />
-                </a>
+      {posts.length === 0 ? (
+        <p className="text-center text-muted">New writing is on the way.</p>
+      ) : (
+        <div className="row g-4">
+          {posts.map((post) => (
+            <article key={post.slug} className="col-md-6 col-lg-4">
+              <div className="card h-100 shadow-sm border-0">
+                <div className="card-body d-flex flex-column">
+                  <time className="text-uppercase text-muted small mb-2">
+                    {format(new Date(post.date), "MMMM d, yyyy")}
+                  </time>
+                  <h2 className="h4">
+                    <Link className="stretched-link text-decoration-none" href={`/blog/${post.slug}`}>
+                      {post.title}
+                    </Link>
+                  </h2>
+                  <p className="text-muted flex-grow-1">{post.description}</p>
+                  <span className="fw-semibold">
+                    Read article <i className="fa-solid fa-arrow-right ms-1" />
+                  </span>
+                </div>
               </div>
-            </div>
-          </article>
-        ))}
-      </div>
+            </article>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

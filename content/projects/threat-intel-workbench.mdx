@@ -1,0 +1,20 @@
+---
+title: "Threat Intel Workbench"
+date: "2024-01-22"
+summary: "A collaborative workspace for automating enrichment across threat feeds and internal telemetry."
+role: "Product Engineer"
+status: "Beta"
+stack:
+  - Next.js
+  - FastAPI
+  - PostgreSQL
+  - LangChain
+---
+
+Threat feeds rarely align with what an organisation actually sees on its network. To bridge that gap I prototyped a workspace that combines commercial feeds, open-source intelligence, and local detections.
+
+- API workers normalise disparate indicators and enrich them with sandbox detonation results.
+- Analysts triage collections inside a React-based UI that tracks hypotheses and coverage.
+- Language models summarise investigations, but humans always approve findings before publication.
+
+Teams now catch overlaps in minutes rather than hours, keeping playbooks current while evidence is still relevant.

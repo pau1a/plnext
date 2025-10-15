@@ -1,0 +1,20 @@
+---
+title: "Cloud Breach Simulator"
+date: "2024-03-18"
+summary: "Automated attack simulations that validate detection pipelines across AWS and Azure tenants."
+role: "Technical Lead"
+status: "In production"
+stack:
+  - AWS
+  - Azure
+  - Terraform
+  - Python
+---
+
+I built a repeatable framework that spins up adversary scenarios in isolated cloud sandboxes. Each run provisions ephemeral infrastructure, executes scripted attack paths, and tears everything down once telemetry lands in the SIEM.
+
+- Terraform modules provide region-specific hardening while keeping environments disposable.
+- Step Functions orchestrate the execution graph and emit checkpoints to teams' Slack channels.
+- Python runners perform credential abuse, persistence, and data exfiltration patterns aligned to MITRE ATT&CK.
+
+The result is a safe way to validate detections weekly without risking customer workloads.
