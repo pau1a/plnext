@@ -24,12 +24,12 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
-      className="btn btn-outline-light btn-sm d-flex align-items-center justify-content-center gap-2 w-100 w-lg-auto"
+      className="button button--ghost button--sm u-inline-flex u-items-center u-gap-xs u-nowrap"
       onClick={() => setTheme(nextTheme)}
       aria-label={label}
     >
       <i className={`fa-solid ${iconClass}`} aria-hidden="true" />
-      <span className="small fw-semibold text-nowrap">{label}</span>
+      <span className="u-text-xs u-font-semibold">{isDark ? "Light mode" : "Dark mode"}</span>
     </button>
   );
 }

@@ -50,38 +50,39 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const otherProjects = (await getProjectSummaries()).filter((item) => item.slug !== project.slug);
 
   return (
-    <article className="mx-auto" style={{ maxWidth: "760px" }}>
-      <nav aria-label="Breadcrumb" className="mb-4 small text-uppercase">
-        <Link className="text-decoration-none text-muted" href="/projects">
-          ← Back to all projects
+    <article className="u-stack u-gap-2xl u-max-w-lg u-center">
+      <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
+        <Link className="u-inline-flex u-items-center u-gap-xs" href="/projects">
+          <i className="fa-solid fa-arrow-left" aria-hidden="true" />
+          <span>Back to all projects</span>
         </Link>
       </nav>
 
-      <header className="mb-5">
-        <h1 className="display-5 mb-3">{project.title}</h1>
-        <p className="lead text-muted">{project.summary}</p>
-        <dl className="row small text-muted">
-          <div className="col-md-4 mb-2">
-            <dt className="text-uppercase">Delivered</dt>
-            <dd className="mb-0">{format(new Date(project.date), "MMMM d, yyyy")}</dd>
+      <header className="u-stack u-gap-md">
+        <h1 className="heading-display-lg">{project.title}</h1>
+        <p className="u-text-lead">{project.summary}</p>
+        <dl className="u-flex u-flex-wrap u-gap-lg u-text-sm u-text-muted">
+          <div className="u-stack u-gap-2xs">
+            <dt className="u-text-uppercase u-letter-wide u-text-xs">Delivered</dt>
+            <dd>{format(new Date(project.date), "MMMM d, yyyy")}</dd>
           </div>
           {project.role ? (
-            <div className="col-md-4 mb-2">
-              <dt className="text-uppercase">Role</dt>
-              <dd className="mb-0">{project.role}</dd>
+            <div className="u-stack u-gap-2xs">
+              <dt className="u-text-uppercase u-letter-wide u-text-xs">Role</dt>
+              <dd>{project.role}</dd>
             </div>
           ) : null}
           {project.status ? (
-            <div className="col-md-4 mb-2">
-              <dt className="text-uppercase">Status</dt>
-              <dd className="mb-0">{project.status}</dd>
+            <div className="u-stack u-gap-2xs">
+              <dt className="u-text-uppercase u-letter-wide u-text-xs">Status</dt>
+              <dd>{project.status}</dd>
             </div>
           ) : null}
         </dl>
         {project.stack?.length ? (
-          <ul className="list-inline small text-muted mb-0">
+          <ul className="tag-list">
             {project.stack.map((tech) => (
-              <li key={tech} className="list-inline-item badge rounded-pill text-bg-dark me-1">
+              <li key={tech} className="tag-list__item">
                 {tech}
               </li>
             ))}
@@ -89,17 +90,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         ) : null}
       </header>
 
-      <div className="prose mb-5">{project.content}</div>
+      <div className="prose u-stack u-gap-lg">{project.content}</div>
 
       {otherProjects.length > 0 ? (
-        <aside className="border-top pt-4">
-          <h2 className="h5 mb-3">More client work</h2>
-          <ul className="list-unstyled">
+        <aside className="surface u-pad-xl u-stack u-gap-sm">
+          <h2 className="heading-subtitle u-text-muted">More client work</h2>
+          <ul className="u-stack u-gap-sm">
             {otherProjects.map((other) => (
-              <li key={other.slug} className="mb-3">
-                <Link className="text-decoration-none" href={`/projects/${other.slug}`}>
-                  <span className="fw-semibold d-block">{other.title}</span>
-                  <span className="text-muted small">{other.summary}</span>
+              <li key={other.slug}>
+                <Link className="u-stack u-gap-2xs" href={`/projects/${other.slug}`}>
+                  <span className="u-font-semibold">{other.title}</span>
+                  <span className="u-text-muted u-text-sm">{other.summary}</span>
                 </Link>
               </li>
             ))}

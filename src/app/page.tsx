@@ -2,17 +2,20 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <section className="text-center py-5">
-      <h1 className="display-4 mb-3">
-        <i className="fa-solid fa-lock me-2" />
-        Cybersecurity, AI, Engineering
+    <section className="u-stack u-gap-xl u-text-center u-pad-block-3xl">
+      <h1 className="heading-display-xl u-text-balance u-center u-max-w-md">
+        <span className="u-inline-flex u-items-center u-gap-sm u-justify-center">
+          <i className="fa-solid fa-lock" aria-hidden="true" />
+          <span>Cybersecurity, AI, Engineering</span>
+        </span>
       </h1>
-      <p className="lead">Practical builds. Solid outcomes.</p>
-      <Link href="/projects" className="btn btn-primary btn-lg mt-3">
-        <i className="fa-solid fa-diagram-project me-2" />
-        View Projects
+      <p className="u-text-lead u-center u-max-w-sm">
+        Practical builds. Solid outcomes.
+      </p>
+      <Link href="/projects" className="button button--primary button--lg">
+        <i className="fa-solid fa-diagram-project" aria-hidden="true" />
+        <span>View Projects</span>
       </Link>
     </section>
   );
 }
-
