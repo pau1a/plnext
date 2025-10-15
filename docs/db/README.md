@@ -1,4 +1,4 @@
-_Last updated: 2025-10-14 by PL_
+_Last updated: 2025-10-19 by PL_
 
 # DB Operations (Single Operator, No Migrations)
 
@@ -26,3 +26,4 @@ Only Paula applies database changes.
 
 - 2025-10-14: `2025-10-14T1800--init.sql` applied successfully in Supabase (Paula). `schema_version` = 2025-10-14T1800.
 - 2025-10-14: Attempted `2025-10-14T1830--rls-policies.sql`, but Supabase credentials were unavailable in this environment. Verification query was not executed (Paula).
+- 2025-10-19: Attempted to confirm `ix_comments_post_slug_created_at` and `ix_contact_messages_created_at`, but the Supabase SQL console was inaccessible from this environment. Verification deferred (Paula).
