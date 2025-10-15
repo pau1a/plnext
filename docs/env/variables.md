@@ -1,3 +1,4 @@
+_Last updated: 2025-10-15 by PL_
 # Environment Variables (Names Only)
 
 - `SUPABASE_URL` — Supabase project URL.
