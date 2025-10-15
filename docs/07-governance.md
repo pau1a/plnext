@@ -18,7 +18,7 @@ _Last updated: 2025-10-14 by PL_
 ## Credentials
 
 - Environment variable names are documented; values are never committed.
-- Service role keys stay on the server and are rotated after sensitive changes or on schedule.
+- Service role keys stay on the server and are rotated after sensitive changes and at least every 90 days.
 
 ## Backups & Retention
 
