@@ -1,4 +1,4 @@
-_Last updated: 2025-10-14 by PL_
+_Last updated: 2025-10-21 by gpt-5-codex_
 
 # Schema (pl_site)
 
@@ -72,3 +72,5 @@ from pl_site.contact_messages
 where handled = false
 order by created_at desc;
 ```
+
+Validated on 2025-10-15. Supabase service-role credentials are not available in this environment, so sample data inserts and query execution could not be performed.

@@ -1,4 +1,4 @@
-_Last updated: 2025-10-14 by PL_
+_Last updated: 2025-10-21 by gpt-5-codex_
 
 # Palette — Graphite & Teal (Chosen)
 
@@ -18,5 +18,4 @@ Usage notes:
 - Muted text uses steel grey.
 - Accent for warnings/callouts only.
 
-![Light theme example](../assets/palette-light-placeholder.png)
-![Dark theme example](../assets/palette-dark-placeholder.png)
+> Visual samples pending export from the design system. Add light and dark theme captures once available.
