@@ -38,6 +38,26 @@ The boundary line is drawn where the static build hands off to cached delivery: 
 - Applied versions are tracked in the `pl_site.schema_version` table.
 - Row-level security rules control read and write access by role.
 
+## Setup
+
+Follow these steps when provisioning a new environment or refreshing a Supabase project:
+
+1. **Create the Supabase project**
+   - Sign in to Supabase and create a new project named `paula-livingstone` (any region is acceptable; use the smallest free tier for testing).
+   - Copy the project URL, anon key, and service role key from the Supabase dashboard.
+   - Enable the Postgres schema extensions required by the SQL versions; no manual table creation is necessary beyond applying the scripts below.
+   - Review and apply the row-level security policies described in [docs/db/policies.md](./db/policies.md) once the tables exist.
+
+2. **Configure environment variables**
+   - Duplicate [`../.env.example`](../.env.example) to `.env.local` (or to `.env` for hosted deployments).
+   - Populate `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` with the values captured from the Supabase project.
+   - Restart `npm run dev` after updating the file so Next.js picks up the credentials.
+
+3. **Apply the SQL versions**
+   - Open the Supabase SQL editor and apply each file in [docs/db/versions/](./db/versions/) sequentially (oldest to newest).
+   - After running the scripts, confirm `select * from pl_site.schema_version;` returns the latest timestamp.
+   - If a script introduces or updates policies, cross-check with [docs/db/policies.md](./db/policies.md) to ensure the expected behaviour is active.
+
 ## Terminology
 
 - **Database**: Supabase (Postgres)
