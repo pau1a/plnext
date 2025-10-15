@@ -1,4 +1,4 @@
-_Last updated: 2025-10-16 by PL_
+_Last updated: 2025-10-21 by gpt-5-codex_
 
 # Front Page Architecture
 
@@ -18,10 +18,10 @@ The front page is the first-contact surface for PaulaLivingstone.com. It introdu
 The page follows a controlled descent: an initial freefall sparked by the Hero’s stark claim, a measured landing through the Introduction and Core Work sections, and a grounded credibility close established by Featured Writing, Ethos, Contact, and Footer elements.
 
 ## Palette & Tone Reference
-Use the graphite/teal palette established in the design system baseline, favouring graphite for structural elements and teal for selective emphasis. Motion remains restrained—micro-interactions only, no continuous animation, and nothing that distracts within the first five seconds.
+Use the graphite/teal palette established in the design system baseline (see [palette reference](../04-design-system-baseline/palette-graphite-teal.md)), favouring graphite for structural elements and teal for selective emphasis. Motion remains restrained per [baseline motion guidelines](../04-design-system-baseline/motion.md)—micro-interactions only, no continuous animation, and nothing that distracts within the first five seconds.
 
 ## Accessibility & SEO Expectations
-Follow the baseline wireframe expectations: semantic landmarks for each major section, descriptive alt text for hero imagery, keyboard-visible focus states, and heading structure that maps to the document outline. Hero copy should align with the primary H1 for SEO, while subsequent sections use descriptive H2 headings with supporting summary metadata.
+Follow the baseline wireframe expectations drawn from [design system foundations](../04-design-system-baseline/index.md): semantic landmarks for each major section, descriptive alt text for hero imagery, keyboard-visible focus states, and heading structure that maps to the document outline. Hero copy should align with the primary H1 for SEO, while subsequent sections use descriptive H2 headings with supporting summary metadata.
 
 ## Dependencies
 - `framer-motion`

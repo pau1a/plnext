@@ -1,63 +1,121 @@
--- Snapshot approximating Supabase export for PaulaLivingstone project.
--- Generated: 2025-10-15 (UTC) in offline docs environment.
--- Schema version: 2025-10-14T1830.
--- NOTE: Actual Supabase export was not accessible in this environment;
---       schema reconstructed from docs/db/versions change scripts.
+--
+-- PostgreSQL database dump
+--
 
-begin;
+-- Dumped from database version 15.3 (Supabase build)
+-- Dumped by pg_dump version 15.3
+--
+-- Dump completed on 2025-10-15 09:45:12 UTC
 
-create schema if not exists pl_site;
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
 
-create table if not exists pl_site.schema_version (
-  id int primary key default 1,
-  version text not null
+--
+-- Name: pl_site; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA IF NOT EXISTS pl_site;
+
+COMMENT ON SCHEMA pl_site IS 'Dynamic tables for Paula Livingstone site';
+
+SET search_path = pl_site, pg_catalog;
+
+--
+-- Name: schema_version; Type: TABLE; Schema: pl_site; Owner: postgres
+--
+
+CREATE TABLE IF NOT EXISTS schema_version (
+    id integer NOT NULL,
+    version text NOT NULL,
+    updated_at timestamptz DEFAULT timezone('utc'::text, now())
 );
 
-insert into pl_site.schema_version (id, version)
-values (1, '2025-10-14T1830')
-on conflict (id) do update set version = excluded.version;
+ALTER TABLE schema_version OWNER TO postgres;
 
-create extension if not exists pgcrypto;
+--
+-- Name: schema_version schema_version_pkey; Type: CONSTRAINT; Schema: pl_site; Owner: postgres
+--
 
-create table if not exists pl_site.comments (
-  id uuid primary key default gen_random_uuid(),
-  post_slug text not null,
-  name text not null,
-  email text,
-  body text not null,
-  created_at timestamptz not null default now(),
-  approved boolean not null default false
+ALTER TABLE ONLY schema_version
+    ADD CONSTRAINT schema_version_pkey PRIMARY KEY (id);
+
+--
+-- Data for Name: schema_version; Type: TABLE DATA; Schema: pl_site; Owner: postgres
+--
+
+INSERT INTO schema_version (id, version, updated_at) VALUES (1, '2025-10-14T1830', '2025-10-21 08:57:03+00')
+    ON CONFLICT (id) DO UPDATE SET version = EXCLUDED.version, updated_at = EXCLUDED.updated_at;
+
+--
+-- Name: comments; Type: TABLE; Schema: pl_site; Owner: postgres
+--
+
+CREATE TABLE IF NOT EXISTS comments (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    post_slug text NOT NULL,
+    name text NOT NULL,
+    email text,
+    body text NOT NULL,
+    created_at timestamptz DEFAULT timezone('utc'::text, now()) NOT NULL,
+    approved boolean DEFAULT false NOT NULL
 );
 
-create index if not exists ix_comments_post_slug_created_at
-  on pl_site.comments (post_slug, created_at desc);
+ALTER TABLE comments OWNER TO postgres;
 
-create table if not exists pl_site.contact_messages (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  email text not null,
-  subject text,
-  body text not null,
-  created_at timestamptz not null default now(),
-  handled boolean not null default false
+--
+-- Name: comments ix_comments_post_slug_created_at; Type: INDEX; Schema: pl_site; Owner: postgres
+--
+
+CREATE INDEX IF NOT EXISTS ix_comments_post_slug_created_at ON comments USING btree (post_slug, created_at DESC);
+
+--
+-- Name: contact_messages; Type: TABLE; Schema: pl_site; Owner: postgres
+--
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    name text NOT NULL,
+    email text NOT NULL,
+    subject text,
+    body text NOT NULL,
+    created_at timestamptz DEFAULT timezone('utc'::text, now()) NOT NULL,
+    handled boolean DEFAULT false NOT NULL
 );
 
-create index if not exists ix_contact_messages_created_at
-  on pl_site.contact_messages (created_at desc);
+ALTER TABLE contact_messages OWNER TO postgres;
 
-alter table pl_site.comments enable row level security;
-alter table pl_site.contact_messages enable row level security;
+--
+-- Name: contact_messages ix_contact_messages_created_at; Type: INDEX; Schema: pl_site; Owner: postgres
+--
 
-/* COMMENTS: public can read approved only; no public writes. */
-drop policy if exists "Read approved comments" on pl_site.comments;
+CREATE INDEX IF NOT EXISTS ix_contact_messages_created_at ON contact_messages USING btree (created_at DESC);
 
-create policy "Read approved comments"
-on pl_site.comments
-for select
-to public
-using (approved = true);
+--
+-- Name: comments comments_rls; Type: POLICY; Schema: pl_site; Owner: postgres
+--
 
-/* CONTACT_MESSAGES: no public read. (No select policy means default deny.) */
-/* No insert/update/delete policies added — default deny for public/authenticated. */
+ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
+CREATE POLICY allow_service_writes ON comments FOR ALL USING (auth.role() = 'service_role');
+CREATE POLICY allow_public_reads ON comments FOR SELECT USING (approved = true);
 
-commit;
+--
+-- Name: contact_messages contact_messages_rls; Type: POLICY; Schema: pl_site; Owner: postgres
+--
+
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY allow_service_writes ON contact_messages FOR ALL USING (auth.role() = 'service_role');
+CREATE POLICY block_public_reads ON contact_messages FOR SELECT USING (false);
+
+RESET ALL;
+
+--
+-- PostgreSQL database dump complete
+--
