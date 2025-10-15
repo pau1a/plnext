@@ -10,4 +10,5 @@ _Last updated: 2025-10-14 by PL_
 - [ ] CDN prefix & dirs recorded
 - [ ] SEO defaults defined (doc)
 - [ ] Privacy & Security baseline written
+- [ ] Credential rotation schedule confirmed (event-driven + <=90-day cycle)
 - [ ] ADRs 0001 + 0002 filed
