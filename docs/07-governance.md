@@ -25,3 +25,11 @@ _Last updated: 2025-10-14 by PL_
 - Supabase automated backups run daily and are retained for 30 days (per Supabase plan).
 - After any schema change, export a full SQL snapshot and store it under [docs/db/snapshots/](./db/snapshots/) as `YYYY-MM-DD--full-export.sql`.
 - For recovery, restore from the latest Supabase backup first; if unavailable, load the newest snapshot and apply remaining files in [docs/db/versions/](./db/versions/) (`*.sql`) in order.
+
+## Access & Audit Log Review
+
+- **Frequency:** Review Supabase access and audit logs on the first business day of each month, and after any security incident.
+- **Scope:** Confirm that administrative logins, privilege escalations, schema changes, and unusual query volumes align with approved changes.
+- **Retention:** Keep the native Supabase logs for 90 days (platform default). Export reviewed logs quarterly and store the CSV extracts for 18 months.
+- **Archival location:** Upload quarterly exports to the encrypted "Supabase Logs" folder in the shared compliance Google Drive; limit access to Paula and the on-call engineering lead.
+- **Documentation:** Record findings and follow-up actions in the "Log Reviews" section of the internal governance tracker (Notion) for traceability.
