@@ -2,6 +2,8 @@ _Last updated: 2025-10-14 by PL_
 
 # SEO & Metadata
 
+See [Database & Services](./09-database-and-services.md) for backend-driven capabilities that inform metadata automation.
+
 - Global defaults: title template, description, canonical, OG/Twitter.
 - Per-page overrides for blog posts and projects.
 - OG images should point to the CDN.
@@ -28,4 +30,4 @@ export default function BlogPostSeo() {
 
 ## Crawl and Indexing Notes
 
-- User comments are rendered dynamically and are not part of the prerendered HTML. Treat them as non-indexed supporting content.
+- User comments are rendered dynamically from Supabase and are not part of the prerendered HTML, so search engines may not index them. Treat them as non-indexed supporting content unless server-rendered.
