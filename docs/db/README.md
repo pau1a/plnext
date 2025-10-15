@@ -13,6 +13,24 @@ Schema spec: [schema.md](./schema.md) • Policies: [policies.md](./policies.md)
 3. Confirm `select * from pl_site.schema_version;` reports the latest version stamp.
 4. Commit any follow-up edits and update this folder when procedures change.
 
+## Smoke Test
+
+Run this workflow after configuring credentials (see [`../09-database-and-services.md`](../09-database-and-services.md)) to confirm Supabase, policies, and the application agree on comment handling:
+
+1. Ensure your `.env.local` matches [`../../.env.example`](../../.env.example) and restart `npm run dev` so the service role key is available to the moderation endpoint.
+2. In the Supabase SQL editor, insert a comment draft:
+   ```sql
+   insert into pl_site.comments (post_slug, name, email, body)
+   values ('getting-started', 'Test Reader', 'reader@example.com', 'Smoke test comment');
+   ```
+3. Approve the draft by setting `approved = true` in the SQL editor (replace the `id` with the value returned from the insert):
+   ```sql
+   update pl_site.comments
+   set approved = true
+   where id = '00000000-0000-0000-0000-000000000000';
+   ```
+4. Visit `http://localhost:3000/posts/getting-started` in your running dev server. The comment should render under the post once approved. If it does not, compare the active RLS configuration in Supabase with [policies.md](./policies.md) to ensure the read policy allows approved comments to surface.
+
 ## Rollback and Recovery
 
 - Restore from Supabase backups when possible.
