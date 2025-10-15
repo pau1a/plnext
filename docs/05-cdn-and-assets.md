@@ -1,4 +1,4 @@
-_Last updated: 2025-10-14 by PL_
+_Last updated: 2025-10-21 by gpt-5-codex_
 
 # CDN & Assets (Decided)
 
@@ -32,7 +32,7 @@ whitepapers/*
 - Fingerprinted filenames preferred (e.g., `cover.ab12cd34.webp`).
 - Long-lived caching on images/videos; shorter on documents unless versioned.
 
-[See CDN invalidation workflow stub](05-cdn-and-assets-invalidation.md) for upcoming cache refresh process details.
+[See CDN invalidation workflow](05-cdn-and-assets-invalidation.md) for cache refresh process details and purge commands.
 
 ## Cross-references
 

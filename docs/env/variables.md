@@ -1,4 +1,4 @@
-_Last updated: 2025-10-15 by PL_
+_Last updated: 2025-10-21 by gpt-5-codex_
 # Environment Variables (Names Only)
 
 - `SUPABASE_URL` — Supabase project URL.

@@ -1,10 +1,11 @@
-_Last updated: 2025-10-14 by PL_
+_Last updated: 2025-10-21 by gpt-5-codex_
 
 # Governance
 
 - Scope of this doc set: **documentation only**.
 - Branch naming (for docs): `docs/*`.
 - Review: Paula approves tone and structure; technical accuracy checked as needed.
+- Change control: every documentation pull request requires Paula’s approval plus one technical reviewer before merge.
 - Versioning: optional tags for major content milestones.
 - Backups: content and docs mirrored off-repo periodically.
 
@@ -14,6 +15,15 @@ _Last updated: 2025-10-14 by PL_
 - **Database:** Supabase (Postgres) — single operator, no migration framework.
 - **Schema changes:** committed SQL under [docs/db/versions/](./db/versions/), applied manually in Supabase.
 - **Backups:** see [Backups & Retention](#backups--retention).
+
+## Static Content & CDN Stewardship
+
+- **Owner:** Paula Livingstone (content), Ged (technical oversight).
+- **Source of truth:** MDX content in the repository (`/src/content`). Copy edits follow [01-front-page-content-style.md](./ui/01-front-page-content-style.md).
+- **Design references:** Align component usage with [04-design-system-baseline/index.md](./04-design-system-baseline/index.md) and linked palette/typography docs.
+- **Deployment:** Static assets publish via Next.js build; follow [05-cdn-and-assets-invalidation.md](./05-cdn-and-assets-invalidation.md) immediately after deploys and moderation approvals.
+- **Cache management:** Paula triggers CDN purges (dashboard or API) and records them in the moderation log. Ged ensures API keys (`NETWORKLAYER_API_KEY`) stay rotated and scoped.
+- **Accessibility & SEO:** Cross-check updates with [06-seo-and-metadata.md](./06-seo-and-metadata.md) and [ui/00-front-page-architecture.md](./ui/00-front-page-architecture.md) to guarantee parity between narrative intent and implementation.
 
 ## Credentials
 

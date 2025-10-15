@@ -1,4 +1,4 @@
-_Last updated: 2025-10-14 by PL_
+_Last updated: 2025-10-21 by gpt-5-codex_
 
 # Data Layer Overview
 
@@ -66,4 +66,6 @@ Follow these steps when provisioning a new environment or refreshing a Supabase 
 
 ## Related Documentation
 
-See [DB Operations](./db/README.md), [Data Layer Flow](./data-layer/flow.md), [CDN Invalidation Workflow](./05-cdn-and-assets-invalidation.md), and [ADR 0003](./decisions/0003-adopt-supabase-no-migrations.md).
+See [DB Operations](./db/index.md), [Data Layer Flow](./data-layer/flow.md), [CDN Invalidation Workflow](./05-cdn-and-assets-invalidation.md), and [ADR 0003](./decisions/0003-adopt-supabase-no-migrations.md).
+
+_Sign-off: Ged — 2025-10-21_
