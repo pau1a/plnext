@@ -1,0 +1,112 @@
+.hero {
+  position: relative;
+  display: grid;
+  gap: clamp(var(--space-2xl), 4vw, var(--space-3xl));
+  padding-block: clamp(4rem, 8vw, 8rem);
+  padding-inline: clamp(var(--space-xl), 5vw, var(--space-3xl));
+  isolation: isolate;
+}
+
+.copy {
+  display: grid;
+  gap: clamp(var(--space-lg), 1.5vw, var(--space-2xl));
+  max-width: min(38rem, 100%);
+}
+
+.eyebrow {
+  font-size: clamp(var(--font-size-xs), 0.8rem + 0.15vw, var(--font-size-sm));
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-teal-500);
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(2.5rem, 2.4rem + 2.2vw, 4.25rem);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.subheading {
+  margin: 0;
+  font-size: clamp(var(--font-size-lg), 1.1rem + 0.7vw, var(--font-size-2xl));
+  color: var(--color-teal-600);
+  font-weight: 600;
+  line-height: var(--line-height-snug);
+}
+
+.lead {
+  margin: 0;
+  font-size: clamp(var(--font-size-md), 1rem + 0.6vw, var(--font-size-xl));
+  line-height: var(--line-height-snug);
+  color: var(--text-muted);
+}
+
+.ctaGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.cta {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.media {
+  position: relative;
+}
+
+.artwork {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+.verticalArt,
+.horizontalArt {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.horizontalArt {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .hero {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+  }
+
+  .media {
+    justify-self: center;
+  }
+
+  .artwork {
+    max-width: min(32rem, 100%);
+  }
+
+  .verticalArt {
+    display: none;
+  }
+
+  .horizontalArt {
+    display: block;
+  }
+}
+
+@media (min-width: 72rem) {
+  .hero {
+    padding-inline: clamp(var(--space-3xl), 8vw, 10rem);
+  }
+
+  .artwork {
+    max-width: min(38rem, 100%);
+  }
+}
