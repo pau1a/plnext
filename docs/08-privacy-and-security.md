@@ -7,6 +7,8 @@ _Last updated: 2025-10-14 by PL_
 - Legal stubs to add pre-launch: /privacy, /terms.
 - Security headers intent: HTTPS only; HSTS; basic CSP (tighten later).
 
+Paula Livingstone operates as the sole steward for Supabase access, which keeps schema changes and credential custody centralized with her. See [Governance](./07-governance.md) for the full stewardship breakdown and operational procedures.
+
 ## Comments
 - Submission: stored immediately in Supabase with `approved=false`.
 - Publication: visible publicly only after Paula sets `approved=true`.
