@@ -1,6 +1,10 @@
+_Last updated: 2025-10-14 by PL_
+
 # DB Operations (Single Operator, No Migrations)
 
 Authoritative SQL change files live in `docs/db/versions/`.
+
+Schema spec: [schema.md](./schema.md) • Policies: [policies.md](./policies.md) • Versions: [versions/](./versions/) • Snapshots: [snapshots/](./snapshots/)
 
 ## Change Application (Manual)
 
@@ -17,3 +21,7 @@ Authoritative SQL change files live in `docs/db/versions/`.
 ## One-Operator Rule
 
 Only Paula applies database changes.
+
+## Execution Log
+
+- 2025-10-14: `2025-10-14T1800--init.sql` applied successfully in Supabase (Paula). `schema_version` = 2025-10-14T1800.

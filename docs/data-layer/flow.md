@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # Data Flow (Comments and Contact)
 
 1. A reader loads a static blog post (`/blog/[slug]`).

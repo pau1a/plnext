@@ -1,6 +1,10 @@
+_Last updated: 2025-10-14 by PL_
+
 # Row-Level Security (RLS)
 
 Row-level security is enabled on `pl_site.comments` and `pl_site.contact_messages`.
+
+See SQL: [versions/2025-10-14T1830--rls-policies.sql](./versions/2025-10-14T1830--rls-policies.sql)
 
 ## Write (insert/update/delete)
 

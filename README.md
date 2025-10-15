@@ -6,7 +6,8 @@ This repository powers Paula Livingstone’s personal site and portfolio, combin
 
 All design, architecture, and content rules live in [`/docs/`](docs/), so start there when planning changes.
 
-**Stack overview:** Next.js 15 app directory, Bootstrap utility layer, and custom SCSS tokens.
+**Stack:** Next.js 15 app directory, React 19, Bootstrap utility layer, Framer Motion, next-themes, next-seo, and custom SCSS tokens.
+**Data layer:** Supabase (Postgres) for comments and contact records — see [`docs/09-database-and-services.md`](docs/09-database-and-services.md).
 
 ## Local development
 

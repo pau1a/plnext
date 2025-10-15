@@ -1,3 +1,5 @@
+_Last updated: 2025-10-14 by PL_
+
 # Field Types Glossary
 
 - `uuid`: unique primary keys generated via `gen_random_uuid()`.
