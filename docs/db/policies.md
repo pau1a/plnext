@@ -20,3 +20,7 @@ See SQL: [versions/2025-10-14T1830--rls-policies.sql](./versions/2025-10-14T1830
 
 - Keep static pages static — new comments appear once approved without a rebuild.
 - Preserve privacy for contact submissions.
+
+## Verification Log
+
+- 2025-10-15 (gpt-5-codex): Unable to run `select * from pg_policies where schemaname = 'pl_site';` — missing Supabase credentials and `psql` client in this environment. See [verification/2025-10-15--rls-policies-check.md](./verification/2025-10-15--rls-policies-check.md) for the recorded attempt and comparison notes.
