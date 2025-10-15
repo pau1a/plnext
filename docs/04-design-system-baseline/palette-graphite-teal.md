@@ -18,5 +18,4 @@ Usage notes:
 - Muted text uses steel grey.
 - Accent for warnings/callouts only.
 
-![Light theme example](../assets/palette-light-placeholder.png)
-![Dark theme example](../assets/palette-dark-placeholder.png)
+> Visual samples pending export from the design system. Add light and dark theme captures once available.
