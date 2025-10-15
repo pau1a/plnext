@@ -2,7 +2,7 @@ _Last updated: 2025-10-14 by PL_
 
 # DB Operations (Single Operator, No Migrations)
 
-Authoritative SQL change files live in `docs/db/versions/`.
+Authoritative SQL change files live in [docs/db/versions/](./versions/).
 
 Schema spec: [schema.md](./schema.md) • Policies: [policies.md](./policies.md) • Versions: [versions/](./versions/) • Snapshots: [snapshots/](./snapshots/)
 
@@ -16,7 +16,7 @@ Schema spec: [schema.md](./schema.md) • Policies: [policies.md](./policies.md)
 ## Rollback and Recovery
 
 - Restore from Supabase backups when possible.
-- Optionally store full exports under `docs/db/snapshots/` for offline recovery.
+- Optionally store full exports under [docs/db/snapshots/](./snapshots/) for offline recovery.
 
 ## One-Operator Rule
 
