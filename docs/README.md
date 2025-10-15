@@ -19,8 +19,13 @@ Scope: **docs only** — no build or code tasks live here.
   - [db/schema.md](./db/schema.md)
   - [db/policies.md](./db/policies.md)
   - [db/field-types-glossary.md](./db/field-types-glossary.md)
+  - [db/snapshots/README.md](./db/snapshots/README.md)
 - Flow:
   - [data-layer/flow.md](./data-layer/flow.md)
-- Decisions:
-  - [decisions/0003-adopt-supabase-no-migrations.md](./decisions/0003-adopt-supabase-no-migrations.md)
+
+## Environment
+- [env/variables.md](./env/variables.md)
+
+## Decisions
+- [decisions/0003-adopt-supabase-no-migrations.md](./decisions/0003-adopt-supabase-no-migrations.md)
 
