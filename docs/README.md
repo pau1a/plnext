@@ -11,6 +11,10 @@ Scope: **docs only** — no build or code tasks live here.
 2. 02-information-architecture.md
 3. 03-content-model/blog.md and project.md
 4. 04-design-system-baseline/*
+## UI Architecture
+- [ui/00-front-page-architecture.md](./ui/00-front-page-architecture.md)
+- [ui/01-front-page-content-style.md](./ui/01-front-page-content-style.md)
+
 
 ## Data Layer
 - [09-database-and-services.md](./09-database-and-services.md)
