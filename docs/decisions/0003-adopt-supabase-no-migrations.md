@@ -1,3 +1,4 @@
+_Last updated: 2025-10-15 by PL_
 # ADR 0003 — Adopt Supabase (No Migrations Framework)
 
 ## Status
