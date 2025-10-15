@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 
 export default function BodyThemeSync() {
   const { resolvedTheme, theme } = useTheme();
-  const previousTheme = useRef<string | undefined>();
+  const previousTheme = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     const nextTheme = resolvedTheme || theme;
@@ -13,7 +13,7 @@ export default function BodyThemeSync() {
       return;
     }
 
-    const { body } = document;
+    const body = globalThis.document?.body;
     if (!body) {
       return;
     }

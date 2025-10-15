@@ -1,4 +1,12 @@
 "use client";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-export default function BootstrapClient() { return null; }
+
+import { useEffect } from "react";
+
+export default function BootstrapClient() {
+  useEffect(() => {
+    void import("bootstrap/dist/js/bootstrap.bundle.min.js");
+  }, []);
+
+  return null;
+}
 
