@@ -15,7 +15,8 @@ import { notFound, type ReadonlyURLSearchParams } from "next/navigation";
 import type { Metadata } from "next";
 
 const BASE_PATH = "/blog";
-const PAGE_SIZE = 6;
+const RAW_PAGE_SIZE = Number.parseInt(process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE ?? "", 10);
+const PAGE_SIZE = Number.isFinite(RAW_PAGE_SIZE) && RAW_PAGE_SIZE > 0 ? RAW_PAGE_SIZE : 6;
 
 const BASE_METADATA: Pick<Metadata, "title" | "description"> = {
   title: "Blog",

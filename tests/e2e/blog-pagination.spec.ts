@@ -15,6 +15,10 @@ test.describe("blog pagination", () => {
       "true"
     );
 
+    await expect(
+      page.locator("nav[aria-label='Pagination'] span[aria-disabled='true']", { hasText: "Older posts" })
+    ).toHaveCount(0);
+
     const olderLink = page.getByRole("link", { name: /view older posts/i });
     await expect(olderLink).toBeVisible();
     await Promise.all([
