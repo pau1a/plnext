@@ -2,26 +2,18 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-export type CommentStatus = "pending" | "approved" | "spam";
-
 export interface CommentsTableRow {
   id: string;
-  post_slug: string;
-  author_name: string;
-  author_email: string;
-  body: string;
+  slug: string;
+  author: string;
+  content: string;
   created_at: string;
-  status: CommentStatus;
-  ip_hash: string | null;
 }
 
 export interface CommentsTableInsert {
-  post_slug: string;
-  author_name: string;
-  author_email: string;
-  body: string;
-  status: CommentStatus;
-  ip_hash: string | null;
+  slug: string;
+  author: string;
+  content: string;
 }
 
 interface Database {

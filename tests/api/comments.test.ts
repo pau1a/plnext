@@ -90,10 +90,10 @@ describe("/api/comments", () => {
       data: [
         {
           id: "1",
-          author_name: "Paula",
-          body: "Great post!",
+          slug: "hello-world",
+          author: "Paula",
+          content: "Great post!",
           created_at: now,
-          status: "approved",
         },
       ],
       error: null,
@@ -122,7 +122,7 @@ describe("/api/comments", () => {
     });
 
     expect(supabaseFrom).toHaveBeenCalledWith("comments");
-    expect(supabaseSelect).toHaveBeenCalledWith("id, author_name, body, created_at");
+    expect(supabaseSelect).toHaveBeenCalledWith("id, slug, author, content, created_at");
   });
 
   it("rejects missing slug", async () => {
@@ -177,16 +177,19 @@ describe("/api/comments", () => {
 
     expect(supabaseInsert).toHaveBeenCalledWith(
       expect.objectContaining({
-        post_slug: "hello-world",
-        author_name: "Ada",
-        author_email: "ada@example.com",
-        body: "Love it!",
-        status: "pending",
+        slug: "hello-world",
+        author: "Ada",
+        content: "Love it!",
       }),
     );
     const inserted = supabaseInsert.mock.calls[0][0];
-    expect(typeof inserted.ip_hash).toBe("string");
-    expect(inserted.ip_hash).toHaveLength(64);
+    expect(inserted).toEqual(
+      expect.objectContaining({
+        slug: "hello-world",
+        author: "Ada",
+        content: "Love it!",
+      }),
+    );
   });
 
   it("enforces honeypot validation", async () => {

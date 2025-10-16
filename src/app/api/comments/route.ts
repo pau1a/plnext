@@ -171,9 +171,8 @@ export async function GET(request: Request) {
     const supabase = getSupabase();
     const query = supabase
       .from("comments")
-      .select("id, author_name, body, created_at")
-      .eq("post_slug", slug)
-      .eq("status", "approved")
+      .select("id, slug, author, content, created_at")
+      .eq("slug", slug)
       .order("created_at", { ascending: true });
 
     const limitedQuery = after ? query.gt("created_at", after) : query;
@@ -190,8 +189,8 @@ export async function GET(request: Request) {
       {
         comments: records.map((row) => ({
           id: row.id,
-          author: row.author_name,
-          body: row.body,
+          author: row.author,
+          body: row.content,
           createdAt: row.created_at,
         })),
         nextCursor: hasMore ? records[records.length - 1]?.created_at ?? null : null,
@@ -335,12 +334,9 @@ export async function POST(request: Request) {
   try {
     const supabase = getSupabase();
     const payload: CommentsTableInsert = {
-      post_slug: parsedBody.slug,
-      author_name: parsedBody.author,
-      author_email: parsedBody.email,
-      body: sanitizedBody,
-      status: "pending",
-      ip_hash: ipHash,
+      slug: parsedBody.slug,
+      author: parsedBody.author,
+      content: sanitizedBody,
     };
 
     const { error } = await supabase.from("comments").insert(payload);
