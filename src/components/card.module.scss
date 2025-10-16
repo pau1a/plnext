@@ -1,0 +1,145 @@
+.card {
+  height: 100%;
+}
+
+.link {
+  gap: var(--space-lg);
+  border-radius: inherit;
+  outline: none;
+}
+
+.link:focus-visible {
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.35);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.metaRow span,
+.metaRow time {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.badgeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  border-radius: 9999px;
+  padding: var(--space-2xs) var(--space-sm);
+  font-size: var(--font-size-2xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(20, 184, 166, 0.18);
+  color: var(--color-teal-700);
+}
+
+:global(body.dark) .badge {
+  background: rgba(45, 212, 191, 0.16);
+  color: var(--color-teal-100);
+}
+
+.title {
+  color: inherit;
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-snug);
+}
+
+.description {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.details {
+  display: grid;
+  gap: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.details p {
+  margin: 0;
+}
+
+.details strong {
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-teal-600);
+}
+
+.link:hover .cta,
+.link:focus-visible .cta {
+  color: var(--color-teal-500);
+}
+
+:global(body.dark) .cta {
+  color: var(--color-teal-300);
+}
+
+:global(body.dark) .link:hover .cta,
+:global(body.dark) .link:focus-visible .cta {
+  color: var(--color-teal-200);
+}
+
+.cardFooter {
+  margin-top: auto;
+}
+
+.cardGrid {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.cardGridBlog {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.cardGridProjects {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+@media (max-width: 640px) {
+  .link {
+    gap: var(--space-md);
+  }
+
+  .cardGridBlog,
+  .cardGridProjects {
+    grid-template-columns: 1fr;
+  }
+}
