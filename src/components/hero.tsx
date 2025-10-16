@@ -1,11 +1,18 @@
 "use client";
 
+import clsx from "clsx";
 import type { MotionProps } from "framer-motion";
 import { motion } from "framer-motion";
-import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { useMemo } from "react";
+
+import {
+  createFadeInUpVariants,
+  motionDurations,
+  useMotionVariants,
+} from "@/lib/motion";
 
 import styles from "@/styles/hero.module.scss";
 
@@ -47,24 +54,27 @@ export function Hero({
   className,
   initial,
   animate,
-  transition,
   ...motionProps
 }: HeroProps) {
-  const defaultInitial = { opacity: 0, y: 24 } satisfies MotionProps["initial"];
-  const defaultAnimate = {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut", ...(transition ?? {}) },
-  } satisfies MotionProps["animate"];
+  const baseVariants = useMemo(
+    () =>
+      createFadeInUpVariants({
+        duration: motionDurations.long,
+        offset: 40,
+      }),
+    []
+  );
+  const { variants: heroVariants, shouldReduceMotion } = useMotionVariants(baseVariants);
 
-  const finalAnimate = animate ?? defaultAnimate;
+  const resolvedInitial = initial ?? (shouldReduceMotion ? "visible" : "hidden");
+  const resolvedAnimate = animate ?? "visible";
 
   return (
     <motion.section
       className={clsx(styles.hero, className)}
-      initial={initial ?? defaultInitial}
-      animate={finalAnimate}
-      transition={animate ? transition : undefined}
+      variants={heroVariants}
+      initial={resolvedInitial}
+      animate={resolvedAnimate}
       {...motionProps}
     >
       <div className={styles.copy}>
