@@ -4,12 +4,7 @@
 
 import { headers } from "next/headers";
 
-export type ContactFormState =
-  | { status: "idle" }
-  | { status: "success" }
-  | { status: "error"; message: string };
-
-export const initialState: ContactFormState = { status: "idle" };
+import { ContactFormState } from "./state";
 
 function resolveBaseUrl(): string {
   const headerList = headers();
