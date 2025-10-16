@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import sanitizeHtml from "sanitize-html";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import type { PostgrestError } from "@supabase/supabase-js";
 
 import { enforceCommentRateLimits } from "@/lib/rate-limit";
 import { supabase, type CommentsTableInsert } from "@/lib/supabase/server";
@@ -92,6 +93,33 @@ function hashIp(ip: string): string {
 
 function logStructured(data: Record<string, unknown>) {
   console.log(JSON.stringify(data));
+}
+
+function serializeSupabaseError(error: unknown) {
+  const fallbackMessage =
+    error instanceof Error ? error.message : typeof error === "string" ? error : "Unknown error";
+
+  if (error && typeof error === "object") {
+    const typed = error as PostgrestError & {
+      details?: string | null;
+      hint?: string | null;
+      code?: string | null;
+    };
+
+    return {
+      message: typed.message ?? fallbackMessage,
+      details: typed.details ?? null,
+      hint: typed.hint ?? null,
+      code: typed.code ?? null,
+    };
+  }
+
+  return {
+    message: fallbackMessage,
+    details: null,
+    hint: null,
+    code: null,
+  };
 }
 
 function parseAfterCursor(after: string | null): string | null {
@@ -188,7 +216,7 @@ export async function GET(request: Request) {
 
     return response;
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
+    const serialized = serializeSupabaseError(error);
 
     console.error("GET /api/comments failed:", error);
     logStructured({
@@ -196,11 +224,19 @@ export async function GET(request: Request) {
       event: "comments.get.failure",
       requestId,
       slug,
-      message,
+      message: serialized.message,
+      details: serialized.details,
+      hint: serialized.hint,
+      code: serialized.code,
     });
 
     const response = NextResponse.json(
-      { error: message },
+      {
+        error: serialized.message,
+        details: serialized.details,
+        hint: serialized.hint,
+        code: serialized.code,
+      },
       { status: 500 },
     );
     response.headers.set("x-request-id", requestId);
@@ -326,7 +362,7 @@ export async function POST(request: Request) {
 
     return response;
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
+    const serialized = serializeSupabaseError(error);
 
     console.error("POST /api/comments failed:", error);
     logStructured({
@@ -335,11 +371,19 @@ export async function POST(request: Request) {
       requestId,
       slug: parsedBody.slug,
       ipHash,
-      message,
+      message: serialized.message,
+      details: serialized.details,
+      hint: serialized.hint,
+      code: serialized.code,
     });
 
     const response = NextResponse.json(
-      { error: message },
+      {
+        error: serialized.message,
+        details: serialized.details,
+        hint: serialized.hint,
+        code: serialized.code,
+      },
       { status: 500 },
     );
     response.headers.set("x-request-id", requestId);
