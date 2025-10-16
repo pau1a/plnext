@@ -2,8 +2,8 @@
 
 // src/app/contact/contact-form.tsx
 
-import { useEffect, useRef, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { initialState } from "./state";
 import { sendMessage } from "./send";
@@ -19,7 +19,7 @@ function SubmitButton() {
 }
 
 export default function ContactForm() {
-  const [state, formAction] = useFormState(sendMessage, initialState);
+  const [state, formAction] = useActionState(sendMessage, initialState);
   const [loadedAt, setLoadedAt] = useState(() => new Date().toISOString());
   const formRef = useRef<HTMLFormElement>(null);
 
