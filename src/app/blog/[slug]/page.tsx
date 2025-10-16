@@ -1,3 +1,4 @@
+import { CommentList } from "@/components/comment-list";
 import { getBlogPost, getBlogPostSummaries, getBlogSlugs } from "@/lib/mdx";
 import { format } from "date-fns";
 import type { Metadata } from "next";
@@ -79,6 +80,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </header>
 
       <div className="prose u-stack u-gap-lg">{post.content}</div>
+
+      {post.comments?.length ? (
+        <section className="u-stack u-gap-sm" aria-labelledby="comments-heading">
+          <h2 id="comments-heading" className="heading-subtitle">
+            Reader comments
+          </h2>
+          <CommentList comments={post.comments} />
+        </section>
+      ) : null}
 
       {relatedPosts.length > 0 ? (
         <aside className="surface u-pad-xl u-stack u-gap-sm">

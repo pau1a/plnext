@@ -5,6 +5,19 @@ description: "How large language models can accelerate triage workflows while ma
 tags:
   - ai
   - security-operations
+comments:
+  - author: "Jordan Quinn"
+    role: "Principal Security Engineer"
+    date: "2024-05-02"
+    body: >-
+      Loved the emphasis on scoped prompts. Our team saw a 30% drop in false positives once we stopped
+      feeding generic incident summaries to the model and started asking targeted questions.
+  - author: "Priya Desai"
+    role: "SOC Lead"
+    date: "2024-05-05"
+    body: >-
+      We paired this approach with structured hand-off templates and it made shift changes way less chaotic.
+      Curious how you're measuring analyst confidence post-automation.
 ---
 
 Large language models are excellent at summarising noisy telemetry, but only when supplied with context. Build playbooks that gather the right packet captures, logs, and identity events before invoking automation. The model should answer specific questions, not take a free-form guess at what happened.

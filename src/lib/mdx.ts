@@ -7,12 +7,20 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
+export interface BlogPostComment {
+  author: string;
+  role?: string;
+  body: string;
+  date?: string;
+}
+
 export interface BlogPostFrontMatter {
   title: string;
   date: string;
   description: string;
   tags?: string[];
   draft?: boolean;
+  comments?: BlogPostComment[];
 }
 
 export interface ProjectFrontMatter {
