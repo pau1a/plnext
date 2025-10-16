@@ -58,7 +58,7 @@ export default function AppShell({ children }: PropsWithChildren) {
           </header>
 
           <main className="app-shell__main" id="main-content" tabIndex={-1}>
-            <div className="l-container motion-fade-in">{children}</div>
+            {children}
           </main>
 
           <footer className="app-shell__footer">

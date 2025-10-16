@@ -30,5 +30,9 @@ export const metadata: Metadata = {
 };
 
 export default function Contact() {
-  return <ContactForm />;
+  return (
+    <div className="l-container motion-fade-in u-pad-block-3xl">
+      <ContactForm />
+    </div>
+  );
 }

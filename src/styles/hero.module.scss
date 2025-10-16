@@ -1,13 +1,21 @@
 .hero {
   position: relative;
+  width: 100%;
+  min-height: clamp(80vh, 92vh, 100vh);
   display: grid;
-  justify-items: start;
-  gap: clamp(var(--space-xl), 3vw, var(--space-2xl));
-  padding-block: clamp(4rem, 8vw, 8rem);
-  padding-inline: clamp(var(--space-xl), 5vw, var(--space-3xl));
-  min-height: clamp(26rem, 60vw, 40rem);
+  place-items: center;
+  gap: clamp(var(--space-xl), 4vh, var(--space-2xl));
+  padding-inline: clamp(var(--space-lg), 6vw, var(--space-4xl));
+  padding-block: clamp(var(--space-2xl), 10vh, var(--space-4xl));
+  color: var(--text-on-inverse);
   overflow: hidden;
   isolation: isolate;
+}
+
+@supports (min-height: 100dvh) {
+  .hero {
+    min-height: clamp(80dvh, 92dvh, 100dvh);
+  }
 }
 
 .heroMedia {
@@ -21,20 +29,29 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(
-    to bottom,
-    rgba(8, 20, 27, 0.2),
-    rgba(6, 15, 21, 0.45)
-  );
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(6, 16, 24, 0.78) 0%,
+      rgba(6, 16, 24, 0.72) 45%,
+      rgba(6, 16, 24, 0.9) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(6, 16, 24, 0.55) 0%,
+      transparent 65%
+    );
+  box-shadow: inset 0 -6rem 12rem rgba(4, 12, 18, 0.55);
 }
 
 .heroContent {
   position: relative;
   z-index: 2;
   display: grid;
+  justify-items: center;
+  text-align: center;
   gap: clamp(var(--space-lg), 1.5vw, var(--space-2xl));
-  max-width: min(38rem, 100%);
-  color: var(--text-on-inverse);
+  max-width: min(68ch, 100%);
 }
 
 .eyebrow {
@@ -70,8 +87,9 @@
 
 .ctaGroup {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--space-md);
+  width: 100%;
 }
 
 .cta {
@@ -79,14 +97,52 @@
   letter-spacing: 0.02em;
 }
 
+@media (max-width: 48rem) {
+  .ctaGroup {
+    width: min(100%, 28rem);
+    align-self: center;
+  }
+}
+
 @media (min-width: 48rem) {
   .hero {
-    padding-inline: clamp(var(--space-2xl), 8vw, 10rem);
+    padding-inline: clamp(var(--space-2xl), 10vw, 12rem);
+  }
+
+  .heroOverlay {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(6, 16, 24, 0.64) 0%,
+        rgba(6, 16, 24, 0.58) 40%,
+        rgba(6, 16, 24, 0.82) 100%
+      ),
+      linear-gradient(
+        to top,
+        rgba(6, 16, 24, 0.35) 0%,
+        transparent 70%
+      );
+    box-shadow: inset 0 -5rem 10rem rgba(4, 12, 18, 0.45);
+  }
+
+  .heroContent {
+    max-width: min(62ch, 100%);
+  }
+
+  .ctaGroup {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: auto;
   }
 }
 
 @media (min-width: 72rem) {
   .hero {
-    padding-inline: clamp(var(--space-3xl), 10vw, 12rem);
+    padding-inline: clamp(var(--space-3xl), 12vw, 14rem);
+  }
+
+  .heroContent {
+    max-width: min(60ch, 100%);
   }
 }

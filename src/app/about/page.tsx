@@ -57,63 +57,65 @@ export const metadata: Metadata = {
 
 export default function About() {
   return (
-    <article className="u-stack u-gap-2xl u-max-w-lg u-center">
-      <header className="u-stack u-gap-sm">
-        <p className="u-text-xs u-text-uppercase u-text-muted">About</p>
-        <h1 className="heading-display-lg">Building calm in complex systems</h1>
-        <p className="u-text-lead">
-          I lead cyber, reliability, and AI programmes that keep critical platforms trustworthy even when the environment is
-          changing faster than the roadmap.
-        </p>
-      </header>
+    <div className="l-container motion-fade-in u-pad-block-3xl">
+      <article className="u-stack u-gap-2xl u-max-w-lg u-center">
+        <header className="u-stack u-gap-sm">
+          <p className="u-text-xs u-text-uppercase u-text-muted">About</p>
+          <h1 className="heading-display-lg">Building calm in complex systems</h1>
+          <p className="u-text-lead">
+            I lead cyber, reliability, and AI programmes that keep critical platforms trustworthy even when the environment is
+            changing faster than the roadmap.
+          </p>
+        </header>
 
-      <section className="u-stack u-gap-md" aria-labelledby="about-story-heading">
-        <h2 id="about-story-heading" className="heading-section">
-          Field-tested leadership
-        </h2>
-        <p>
-          Over the past 15 years I have worked across threat intelligence, security operations, and platform engineering—most
-          recently guiding cross-functional teams as Chief Security Officer for high-growth organisations. My remit spans risk
-          governance, product security, and the automation that binds them together.
-        </p>
-        <p>
-          I am at my best partnering with founders and engineering leads who need security to accelerate, not obstruct, their
-          mission. That means shaping strategy, coaching teams, and shipping the tooling that keeps commitments real.
-        </p>
-      </section>
+        <section className="u-stack u-gap-md" aria-labelledby="about-story-heading">
+          <h2 id="about-story-heading" className="heading-section">
+            Field-tested leadership
+          </h2>
+          <p>
+            Over the past 15 years I have worked across threat intelligence, security operations, and platform engineering—most
+            recently guiding cross-functional teams as Chief Security Officer for high-growth organisations. My remit spans risk
+            governance, product security, and the automation that binds them together.
+          </p>
+          <p>
+            I am at my best partnering with founders and engineering leads who need security to accelerate, not obstruct, their
+            mission. That means shaping strategy, coaching teams, and shipping the tooling that keeps commitments real.
+          </p>
+        </section>
 
-      <section className="surface u-pad-xl u-stack u-gap-md" aria-labelledby="about-highlights-heading">
-        <h2 id="about-highlights-heading" className="heading-subtitle">
-          At-a-glance
-        </h2>
-        <dl className="u-stack u-gap-sm" aria-label="Professional highlights">
-          {highlights.map((item) => (
-            <div key={item.label} className="u-stack-2xs">
-              <dt className="u-text-xs u-text-uppercase u-text-muted">{item.label}</dt>
-              <dd className="u-m-0">{item.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+        <section className="surface u-pad-xl u-stack u-gap-md" aria-labelledby="about-highlights-heading">
+          <h2 id="about-highlights-heading" className="heading-subtitle">
+            At-a-glance
+          </h2>
+          <dl className="u-stack u-gap-sm" aria-label="Professional highlights">
+            {highlights.map((item) => (
+              <div key={item.label} className="u-stack-2xs">
+                <dt className="u-text-xs u-text-uppercase u-text-muted">{item.label}</dt>
+                <dd className="u-m-0">{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
-      <section className="u-stack u-gap-md" aria-labelledby="about-ethos-heading">
-        <h2 id="about-ethos-heading" className="heading-section">
-          Ethos
-        </h2>
-        <div className="u-stack u-gap-sm" role="list">
-          {ethosStatements.map((statement) => (
-            <blockquote key={statement} className="surface u-pad-lg u-text-lg" role="listitem">
-              <p className="u-m-0">“{statement}”</p>
-            </blockquote>
-          ))}
-        </div>
-        <h3 className="heading-subtitle">Practice commitments</h3>
-        <ul className="u-stack u-gap-xs">
-          {commitments.map((commitment) => (
-            <li key={commitment}>{commitment}</li>
-          ))}
-        </ul>
-      </section>
-    </article>
+        <section className="u-stack u-gap-md" aria-labelledby="about-ethos-heading">
+          <h2 id="about-ethos-heading" className="heading-section">
+            Ethos
+          </h2>
+          <div className="u-stack u-gap-sm" role="list">
+            {ethosStatements.map((statement) => (
+              <blockquote key={statement} className="surface u-pad-lg u-text-lg" role="listitem">
+                <p className="u-m-0">“{statement}”</p>
+              </blockquote>
+            ))}
+          </div>
+          <h3 className="heading-subtitle">Practice commitments</h3>
+          <ul className="u-stack u-gap-xs">
+            {commitments.map((commitment) => (
+              <li key={commitment}>{commitment}</li>
+            ))}
+          </ul>
+        </section>
+      </article>
+    </div>
   );
 }
