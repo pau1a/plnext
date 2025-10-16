@@ -10,6 +10,8 @@ export default defineConfig({
     environment: "node",
     setupFiles: ["./tests/setup-tests.ts"],
     environmentMatchGlobs: [["tests/components/**", "jsdom"]],
+    exclude: ["tests/e2e/**"],
+    include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
     coverage: {
       reporter: ["text", "html"],
     },
@@ -17,6 +19,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "server-only": path.resolve(__dirname, "./tests/mocks/server-only.ts"),
     },
   },
 });

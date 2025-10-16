@@ -7,7 +7,10 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test": "vitest run && playwright test",
+    "playwright:install": "playwright install --with-deps"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",
@@ -33,6 +36,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.56.0",
     "@eslint/eslintrc": "^3.3.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",

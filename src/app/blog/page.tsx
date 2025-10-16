@@ -1,77 +1,156 @@
-import { Pagination } from "@/components/pagination";
 import { PostCard } from "@/components/post-card";
 import cardStyles from "@/components/card.module.scss";
-import { getBlogPostSummaries } from "@/lib/mdx";
+import paginationStyles from "@/components/pagination.module.scss";
 import {
-  buildPageHref,
-  DEFAULT_PAGE_PARAM,
-  resolvePaginationState,
-  type SearchParamRecord,
-} from "@/lib/pagination";
+  BLOG_AFTER_PARAM,
+  BLOG_BEFORE_PARAM,
+  BlogCursorError,
+  createCursorHref,
+  getBlogIndexPage,
+  parseCursorParam,
+} from "@/lib/supabase/blog";
+import type { SearchParamRecord } from "@/lib/pagination";
+import Link from "next/link";
+import { notFound, type ReadonlyURLSearchParams } from "next/navigation";
 import type { Metadata } from "next";
 
 const BASE_PATH = "/blog";
-const PAGE_SIZE = 6;
-const PAGE_PARAM = DEFAULT_PAGE_PARAM;
+
+function resolvePageSize() {
+  const raw = process.env.BLOG_PAGE_SIZE ?? process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE;
+  const parsed = Number.parseInt(raw ?? "", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 6;
+}
 
 const BASE_METADATA: Pick<Metadata, "title" | "description"> = {
   title: "Blog",
   description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
 };
 
-type SearchParamsInput = SearchParamRecord | Promise<SearchParamRecord> | undefined;
+type SearchParamsInput =
+  | SearchParamRecord
+  | URLSearchParams
+  | ReadonlyURLSearchParams
+  | Promise<SearchParamRecord | URLSearchParams | ReadonlyURLSearchParams>
+  | undefined;
 
 interface BlogPageProps {
   searchParams?: SearchParamsInput;
 }
 
-async function normalizeSearchParams(
-  searchParams: SearchParamsInput,
-): Promise<SearchParamRecord | undefined> {
+function isURLSearchParamsLike(value: unknown): value is URLSearchParams | ReadonlyURLSearchParams {
+  return Boolean(
+    value &&
+      typeof (value as URLSearchParams).entries === "function" &&
+      typeof (value as URLSearchParams).forEach === "function",
+  );
+}
+
+async function resolveSearchParams(searchParams: SearchParamsInput): Promise<URLSearchParams> {
   if (!searchParams) {
+    return new URLSearchParams();
+  }
+
+  const candidate = searchParams as
+    | Promise<SearchParamRecord | URLSearchParams | ReadonlyURLSearchParams>
+    | SearchParamRecord
+    | URLSearchParams
+    | ReadonlyURLSearchParams;
+  const resolved =
+    typeof (candidate as Promise<SearchParamRecord>)?.then === "function"
+      ? await (candidate as Promise<SearchParamRecord>)
+      : candidate;
+
+  if (!resolved) {
+    return new URLSearchParams();
+  }
+
+  if (isURLSearchParamsLike(resolved)) {
+    return new URLSearchParams(resolved as URLSearchParams);
+  }
+
+  const params = new URLSearchParams();
+  const record = resolved as SearchParamRecord;
+  for (const [key, value] of Object.entries(record)) {
+    if (value === undefined) {
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      for (const entry of value) {
+        params.append(key, entry);
+      }
+    } else {
+      params.append(key, value);
+    }
+  }
+
+  return params;
+}
+
+async function getSearchParamValue(
+  searchParams: SearchParamsInput,
+  key: string,
+): Promise<string | string[] | undefined> {
+  const params = await resolveSearchParams(searchParams);
+  const values = params.getAll(key);
+
+  if (values.length === 0) {
     return undefined;
   }
 
-  const candidate = searchParams as Promise<SearchParamRecord> | SearchParamRecord;
-  return typeof (candidate as Promise<SearchParamRecord>)?.then === "function"
-    ? await (candidate as Promise<SearchParamRecord>)
-    : (candidate as SearchParamRecord);
+  return values.length === 1 ? values[0] : values;
 }
 
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
-  const posts = await getBlogPostSummaries();
-  const totalCount = posts.length;
-  const resolvedSearchParams = await normalizeSearchParams(searchParams);
-  const state = resolvePaginationState({
-    totalCount,
-    pageSize: PAGE_SIZE,
-    searchParams: resolvedSearchParams,
-    pageParam: PAGE_PARAM,
-  });
+  const PAGE_SIZE = resolvePageSize();
+  const after = parseCursorParam(await getSearchParamValue(searchParams, BLOG_AFTER_PARAM));
+  const before = parseCursorParam(await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM));
 
-  const previous = state.currentPage > 1 ? buildPageHref(BASE_PATH, state.currentPage - 1, PAGE_PARAM) : undefined;
-  const hasNext = totalCount > 0 && state.currentPage < state.totalPages;
-  const next = hasNext ? buildPageHref(BASE_PATH, state.currentPage + 1, PAGE_PARAM) : undefined;
+  try {
+    const page = await getBlogIndexPage({ pageSize: PAGE_SIZE, after, before });
+    const previous = page.prevCursor
+      ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, page.prevCursor)
+      : undefined;
+    const next = page.nextCursor
+      ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor)
+      : undefined;
 
-  return {
-    ...BASE_METADATA,
-    ...(previous || next ? { pagination: { previous, next } } : {}),
-  };
+    return {
+      ...BASE_METADATA,
+      ...(previous || next ? { pagination: { previous, next } } : {}),
+    };
+  } catch (error) {
+    if (error instanceof BlogCursorError) {
+      return { ...BASE_METADATA };
+    }
+
+    console.error("Failed to resolve blog metadata:", error);
+    return { ...BASE_METADATA };
+  }
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const posts = await getBlogPostSummaries();
-  const totalCount = posts.length;
-  const resolvedSearchParams = await normalizeSearchParams(searchParams);
-  const state = resolvePaginationState({
-    totalCount,
-    pageSize: PAGE_SIZE,
-    searchParams: resolvedSearchParams,
-    pageParam: PAGE_PARAM,
-  });
+  const PAGE_SIZE = resolvePageSize();
+  const after = parseCursorParam(await getSearchParamValue(searchParams, BLOG_AFTER_PARAM));
+  const before = parseCursorParam(await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM));
 
-  const hasPosts = totalCount > 0;
-  const visiblePosts = hasPosts ? posts.slice(state.startIndex, state.endIndex) : [];
+  let page;
+  try {
+    page = await getBlogIndexPage({ pageSize: PAGE_SIZE, after, before });
+  } catch (error) {
+    if (error instanceof BlogCursorError) {
+      notFound();
+    }
+
+    throw error;
+  }
+
+  const hasPosts = page.items.length > 0;
+  const previousHref = page.prevCursor
+    ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, page.prevCursor)
+    : null;
+  const nextHref = page.nextCursor ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor) : null;
 
   return (
     <section className="u-stack u-gap-2xl">
@@ -84,7 +163,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
       {hasPosts ? (
         <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
-          {visiblePosts.map((post) => (
+          {page.items.map((post) => (
             <PostCard key={post.slug} summary={post} />
           ))}
         </div>
@@ -93,13 +172,42 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       )}
 
       {hasPosts ? (
-        <Pagination
-          totalCount={totalCount}
-          pageSize={state.pageSize}
-          currentPage={state.currentPage}
-          basePath={BASE_PATH}
-          pageParam={PAGE_PARAM}
-        />
+        <nav aria-label="Pagination" className={paginationStyles.pagination}>
+          <ul className={paginationStyles.list}>
+            <li className={paginationStyles.item}>
+              {previousHref ? (
+                <Link
+                  className={paginationStyles.button}
+                  href={previousHref}
+                  aria-label="View newer posts"
+                  prefetch={false}
+                >
+                  Newer posts
+                </Link>
+              ) : (
+                <span className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`} aria-disabled="true">
+                  Newer posts
+                </span>
+              )}
+            </li>
+            <li className={paginationStyles.item}>
+              {nextHref ? (
+                <Link
+                  className={paginationStyles.button}
+                  href={nextHref}
+                  aria-label="View older posts"
+                  prefetch={false}
+                >
+                  Older posts
+                </Link>
+              ) : (
+                <span className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`} aria-disabled="true">
+                  Older posts
+                </span>
+              )}
+            </li>
+          </ul>
+        </nav>
       ) : null}
     </section>
   );
