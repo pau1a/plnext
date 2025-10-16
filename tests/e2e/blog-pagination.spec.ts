@@ -9,13 +9,13 @@ test.describe("blog pagination", () => {
     const firstTitle = (await firstHeading.textContent())?.trim();
     expect(firstTitle?.length ?? 0).toBeGreaterThan(0);
 
-    await expect(page.getByRole("link", { name: "Newer posts" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /view newer posts/i })).toHaveCount(0);
     await expect(page.locator("nav[aria-label='Pagination']").getByText("Newer posts")).toHaveAttribute(
       "aria-disabled",
       "true"
     );
 
-    const olderLink = page.getByRole("link", { name: "Older posts" });
+    const olderLink = page.getByRole("link", { name: /view older posts/i });
     await expect(olderLink).toBeVisible();
     await Promise.all([
       page.waitForURL(/\?after=/),
@@ -29,13 +29,13 @@ test.describe("blog pagination", () => {
     expect(secondTitle?.length ?? 0).toBeGreaterThan(0);
     expect(secondTitle).not.toBe(firstTitle);
 
-    await expect(page.getByRole("link", { name: "Older posts" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /view older posts/i })).toHaveCount(0);
     await expect(page.locator("nav[aria-label='Pagination']").getByText("Older posts")).toHaveAttribute(
       "aria-disabled",
       "true"
     );
 
-    const newerLink = page.getByRole("link", { name: "Newer posts" });
+    const newerLink = page.getByRole("link", { name: /view newer posts/i });
     await expect(newerLink).toBeVisible();
     await Promise.all([
       page.waitForURL(/\?before=/),
@@ -48,7 +48,7 @@ test.describe("blog pagination", () => {
     const thirdTitle = (await thirdHeading.textContent())?.trim();
     expect(thirdTitle).toBe(firstTitle);
 
-    await expect(page.getByRole("link", { name: "Older posts" })).toBeVisible();
+    await expect(page.getByRole("link", { name: /view older posts/i })).toBeVisible();
   });
 
   test("returns 404 for malformed cursor", async ({ page }) => {
