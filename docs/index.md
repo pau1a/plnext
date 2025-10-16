@@ -1,4 +1,4 @@
-_Last updated: 2025-10-21 by gpt-5-codex_
+_Last updated: 2025-10-23 by gpt-5-codex_
 
 # PaulaLivingstone — Project Documentation
 
@@ -31,6 +31,7 @@ Scope: **docs only** — no build or code tasks live here.
   - [db/snapshots/index.md](./db/snapshots/index.md)
 - **Flow**
   - [data-layer/flow.md](./data-layer/flow.md)
+  - [data-layer/analytics.md](./data-layer/analytics.md)
 
 ## Environment
 

@@ -1,9 +1,9 @@
-_Last updated: 2025-10-22 by gpt-5-codex_
+_Last updated: 2025-10-23 by gpt-5-codex_
 
 # Privacy & Security (Baseline)
 
 - Contact: minimal data; server-side validation; rate limiting; spam protection.
-- Analytics: privacy-first; no cookies.
+- Analytics: PostHog configured in cookieless mode with explicit opt-in banner and footer preferences.
 - Legal stubs to add pre-launch: /privacy, /terms.
 - Security headers intent: HTTPS only; HSTS; basic CSP (tighten later).
 
