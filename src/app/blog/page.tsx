@@ -1,7 +1,7 @@
+import { PostCard } from "@/components/post-card";
+import cardStyles from "@/components/card.module.scss";
 import { getBlogPostSummaries } from "@/lib/mdx";
-import { format } from "date-fns";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -23,20 +23,9 @@ export default async function BlogPage() {
       {posts.length === 0 ? (
         <p className="u-text-center u-text-muted">New writing is on the way.</p>
       ) : (
-        <div className="layout-grid layout-grid--three">
+        <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
           {posts.map((post) => (
-            <article key={post.slug} className="surface surface--interactive">
-              <Link className="surface__link" href={`/blog/${post.slug}`}>
-                <time className="u-text-uppercase u-text-xs u-text-muted">
-                  {format(new Date(post.date), "MMMM d, yyyy")}
-                </time>
-                <h2 className="heading-section">{post.title}</h2>
-                <p className="u-text-muted u-flex-grow-1">{post.description}</p>
-                <span className="u-inline-flex u-items-center u-gap-xs u-font-semibold">
-                  Read article <i className="fa-solid fa-arrow-right" aria-hidden="true" />
-                </span>
-              </Link>
-            </article>
+            <PostCard key={post.slug} summary={post} />
           ))}
         </div>
       )}
