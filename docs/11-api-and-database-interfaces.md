@@ -1,4 +1,4 @@
-_Last updated: 2025-10-21 by gpt-5-codex_
+_Last updated: 2025-10-22 by gpt-5-codex_
 
 # API and Database Interfaces
 
@@ -6,20 +6,21 @@ This document defines how Supabase powers live interactions (comments and contac
 
 ## 1. Supabase Tables
 
-### `comments`
+### `pl_site.comments`
 - Stores visitor comments on blog posts.
-- Key fields: `id`, `post_slug`, `author_name`, `author_email`, `body`, `created_at`, `status` (`pending`, `approved`, `spam`), `ip_hash`.
-- Row Level Security (RLS): public read is allowed only when `status = 'approved' AND spam = false`. Inserts occur via server actions; no anonymous direct writes.
-- Trigger maintains `post_comment_counts` (see below).
+- Key fields: `id`, `slug`, `author_name`, `author_email`, `content`, `created_at`, `status` (`pending`, `approved`, `rejected`, `spam`), `is_spam`, `ip_hash`, `user_agent`, `moderated_at`.
+- Row Level Security (RLS): inserts restricted to service role; public read allowed only for `status = 'approved'` with `is_spam = false`.
+- Trigger maintains `post_comment_counts` (see below) and updates `updated_at`/`moderated_at` timestamps.
+- `public.comments` view projects the approved subset (`id`, `slug`, `author`, `content`, `created_at`) for anonymous readers and caching layers.
 
-### `post_comment_counts`
-- Materialised counter keyed by `post_slug`.
+### `pl_site.post_comment_counts`
+- Materialised counter keyed by `slug`.
 - Updated via Supabase trigger whenever an approved comment is added or removed.
 - Used to render `comment_count` on blog index cards without scanning `comments`.
 
-### `contact_messages`
+### `pl_site.contact_messages`
 - Stores messages submitted via `/contact`.
-- Fields: `id`, `email`, `name`, `message`, `ip_hash`, `submitted_at`, `status` (`new`, `acknowledged`, `archived`).
+- Fields: `id`, `email`, `name`, `message`, `ip_hash`, `user_agent`, `created_at`, `updated_at`, `status` (`new`, `acknowledged`, `archived`, `spam`), `acknowledged_at`.
 - RLS permits select for service role only; no public read.
 
 ## 2. API Routes

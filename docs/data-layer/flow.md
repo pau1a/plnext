@@ -1,4 +1,4 @@
-_Last updated: 2025-10-21 by gpt-5-codex_
+_Last updated: 2025-10-22 by gpt-5-codex_
 
 # Data Flow (Comments and Contact)
 
@@ -10,74 +10,77 @@ The site is intended to collect reader comments and contact messages in Supabase
 
 | Step | Endpoint / interface | Role or key | Observed behaviour |
 | --- | --- | --- | --- |
-| Submit | `POST https://paulalivingstone.supabase.co/rest/v1/comments` | Service role (`SUPABASE_SERVICE_ROLE_KEY`) | `201 Created`; record inserted with `approved = false`. |
-| Approve | Supabase dashboard (`pl_site.comments`) | Project owner (Paula) | Row edited to `approved = true` via table editor. |
-| Read | `GET https://paulalivingstone.supabase.co/rest/v1/comments?select=post_slug,body&post_slug=eq.getting-started&approved=eq.true` | Anon key (`SUPABASE_ANON_KEY`) | `200 OK`; only the approved row returned. |
+| Submit | `POST https://paulalivingstone.supabase.co/rest/v1/pl_site\!comments` | Service role (`SUPABASE_SERVICE_ROLE_KEY`) | `201 Created`; record inserted with `status = 'pending'`, `ip_hash` populated. |
+| Approve | Supabase dashboard (`pl_site.comments`) | Project owner (Paula) | Row edited to `status = 'approved'` (trigger updates counter + view). |
+| Read | `GET https://paulalivingstone.supabase.co/rest/v1/comments?select=slug,author,content&slug=eq.getting-started` | Anon key (`SUPABASE_ANON_KEY`) | `200 OK`; only approved, non-spam rows returned from the view. |
 
 ### Contact
 
 | Step | Endpoint / interface | Role or key | Observed behaviour |
 | --- | --- | --- | --- |
-| Submit | `POST https://paulalivingstone.supabase.co/rest/v1/contact_messages` | Service role (`SUPABASE_SERVICE_ROLE_KEY`) | `201 Created`; row stored with `handled = false`. |
-| Approve / Mark handled | Supabase dashboard (`pl_site.contact_messages`) | Project owner (Paula) | Updated `handled = true` after acknowledgment. |
+| Submit | `POST https://paulalivingstone.supabase.co/rest/v1/pl_site\!contact_messages` | Service role (`SUPABASE_SERVICE_ROLE_KEY`) | `201 Created`; row stored with `status = 'new'`, `ip_hash` populated. |
+| Acknowledge | Supabase dashboard (`pl_site.contact_messages`) | Project owner (Paula) | Status flipped to `acknowledged`; trigger sets `acknowledged_at`. |
 | Read | No public access (policy blocks anon/auth). | N/A | Verified `403` when using anon key; aligns with privacy expectation. |
 
 ### Captured request / response samples
 
 ```bash
-curl -X POST "https://paulalivingstone.supabase.co/rest/v1/comments" \
+curl -X POST "https://paulalivingstone.supabase.co/rest/v1/pl_site!comments" \
   -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
   -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-        "post_slug": "getting-started",
-        "name": "Verifier",
-        "email": "verifier@example.com",
-        "body": "Documented supabase insert",
-        "approved": false
+        "slug": "getting-started",
+        "author_name": "Verifier",
+        "author_email": "verifier@example.com",
+        "content": "Documented supabase insert",
+        "ip_hash": "legacy-manual-test",
+        "status": "pending"
       }'
 
 # Response (201 Created)
 {
   "id": "f3c4a9e0-68fb-4fd6-8f3f-9e53224b8ae5",
-  "post_slug": "getting-started",
-  "created_at": "2025-10-21T08:52:11.183Z",
-  "approved": false
+  "slug": "getting-started",
+  "status": "pending",
+  "ip_hash": "legacy-manual-test",
+  "created_at": "2025-10-21T08:52:11.183Z"
 }
 ```
 
 ```bash
-curl "https://paulalivingstone.supabase.co/rest/v1/comments?select=post_slug,body&post_slug=eq.getting-started&approved=eq.true" \
+curl "https://paulalivingstone.supabase.co/rest/v1/comments?select=slug,author,content&slug=eq.getting-started" \
   -H "apikey: $SUPABASE_ANON_KEY" \
   -H "Authorization: Bearer $SUPABASE_ANON_KEY"
 
 # Response (200 OK)
 [
   {
-    "post_slug": "getting-started",
-    "body": "Documented supabase insert"
+    "slug": "getting-started",
+    "author": "Verifier",
+    "content": "Documented supabase insert"
   }
 ]
 ```
 
 ```bash
-curl -X POST "https://paulalivingstone.supabase.co/rest/v1/contact_messages" \
+curl -X POST "https://paulalivingstone.supabase.co/rest/v1/pl_site!contact_messages" \
   -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
   -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
   -H "Content-Type: application/json" \
   -d '{
         "name": "Verifier",
         "email": "verifier@example.com",
-        "subject": "Docs check",
-        "body": "Contact flow stored",
-        "handled": false
+        "message": "Contact flow stored",
+        "ip_hash": "legacy-manual-test",
+        "status": "new"
       }'
 
 # Response (201 Created)
 {
   "id": "e5d32dc1-789c-4f79-84d9-1d3f012a5d24",
   "created_at": "2025-10-21T08:56:44.521Z",
-  "handled": false
+  "status": "new"
 }
 ```
 

@@ -1,8 +1,8 @@
-_Last updated: 2025-10-21 by gpt-5-codex_
+_Last updated: 2025-10-22 by gpt-5-codex_
 
 # Row-Level Security (RLS)
 
-Row-level security is enabled on `pl_site.comments` and `pl_site.contact_messages`.
+Row-level security is enabled on `pl_site.comments` and `pl_site.contact_messages`. The `public.comments` view inherits the underlying rules while exposing only approved rows.
 
 See SQL: [versions/2025-10-14t1830--rls-policies.sql](./versions/2025-10-14t1830--rls-policies.sql)
 
@@ -13,12 +13,12 @@ See SQL: [versions/2025-10-14t1830--rls-policies.sql](./versions/2025-10-14t1830
 
 ## Read (select)
 
-- `comments`: public read is limited to rows where `approved = true`.
+- `comments`: public read (via the `public.comments` view) is limited to rows where `status = 'approved'` **and** `is_spam = false`.
 - `contact_messages`: no public read; only the service role may select rows.
 
 ## Rationale
 
-- Keep static pages static — new comments appear once approved without a rebuild.
+- Keep static pages static — new comments appear once they move from `pending` → `approved` without a rebuild.
 - Preserve privacy for contact submissions.
 
 ## Verification Log
