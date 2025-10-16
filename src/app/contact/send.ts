@@ -1,5 +1,6 @@
-// src/app/contact/send.ts
 "use server";
+
+// src/app/contact/send.ts
 
 import { headers } from "next/headers";
 
@@ -72,7 +73,7 @@ export async function sendMessage(
     console.error("Failed to submit contact form", error);
     return {
       status: "error",
-      message: "We couldn't send your message right now. Please try later.",
+      message: "We couldn’t send your message right now. Please try later.",
     };
   }
 }

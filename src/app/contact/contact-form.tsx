@@ -1,5 +1,6 @@
-// src/app/contact/contact-form.tsx
 "use client";
+
+// src/app/contact/contact-form.tsx
 
 import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
@@ -48,7 +49,7 @@ export default function ContactForm() {
       <input type="hidden" name="submittedAt" value={loadedAt} readOnly />
       <div aria-live="polite" className="u-stack-sm" role="status">
         {showSuccess && (
-          <p className="u-text-success">Thanks for reaching out! I'll get back to you soon.</p>
+          <p className="u-text-success">Thanks for reaching out! I&apos;ll get back to you soon.</p>
         )}
         {errorMessage && <p className="u-text-danger">{errorMessage}</p>}
       </div>
