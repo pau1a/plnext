@@ -23,9 +23,9 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("@/lib/supabase/server", () => ({
-  getSupabaseServerClient: () => ({
+  supabase: {
     from: mocks.supabaseFrom,
-  }),
+  },
 }));
 
 vi.mock("@/lib/rate-limit", () => ({

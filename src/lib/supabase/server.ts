@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
 export type CommentStatus = "pending" | "approved" | "spam";
 
@@ -35,33 +35,14 @@ interface Database {
   };
 }
 
-const SUPABASE_URL =
-  process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY =
-  process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+  process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  throw new Error(
-    "Supabase env vars missing. Set SUPABASE_URL and SUPABASE_ANON_KEY (or NEXT_PUBLIC_ equivalents) in .env.local",
-  );
+  throw new Error("Missing SUPABASE_URL / SUPABASE_ANON_KEY in .env.local");
 }
 
-let client: SupabaseClient<Database> | null = null;
-
-function createServerClient(): SupabaseClient<Database> {
-  return createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {
-      persistSession: false,
-    },
-  });
-}
-
-export function getSupabaseServerClient(): SupabaseClient<Database> {
-  if (!client) {
-    client = createServerClient();
-  }
-
-  return client;
-}
-
-export const supabase = getSupabaseServerClient();
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: false },
+});

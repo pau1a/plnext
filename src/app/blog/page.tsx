@@ -25,24 +25,23 @@ interface BlogPageProps {
   searchParams?: SearchParamsInput;
 }
 
-async function resolveSearchParams(
+async function normalizeSearchParams(
   searchParams: SearchParamsInput,
 ): Promise<SearchParamRecord | undefined> {
   if (!searchParams) {
     return undefined;
   }
 
-  if (typeof (searchParams as Promise<SearchParamRecord>).then === "function") {
-    return searchParams as Promise<SearchParamRecord>;
-  }
-
-  return searchParams as SearchParamRecord;
+  const candidate = searchParams as Promise<SearchParamRecord> | SearchParamRecord;
+  return typeof (candidate as Promise<SearchParamRecord>)?.then === "function"
+    ? await (candidate as Promise<SearchParamRecord>)
+    : (candidate as SearchParamRecord);
 }
 
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
   const posts = await getBlogPostSummaries();
   const totalCount = posts.length;
-  const resolvedSearchParams = await resolveSearchParams(searchParams);
+  const resolvedSearchParams = await normalizeSearchParams(searchParams);
   const state = resolvePaginationState({
     totalCount,
     pageSize: PAGE_SIZE,
@@ -63,7 +62,7 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const posts = await getBlogPostSummaries();
   const totalCount = posts.length;
-  const resolvedSearchParams = await resolveSearchParams(searchParams);
+  const resolvedSearchParams = await normalizeSearchParams(searchParams);
   const state = resolvePaginationState({
     totalCount,
     pageSize: PAGE_SIZE,
