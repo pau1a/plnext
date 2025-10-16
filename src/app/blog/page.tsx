@@ -4,6 +4,7 @@ import paginationStyles from "@/components/pagination.module.scss";
 import {
   BLOG_AFTER_PARAM,
   BLOG_BEFORE_PARAM,
+  BLOG_INDEX_REVALIDATE_SECONDS,
   BlogCursorError,
   createCursorHref,
   getBlogIndexPage,
@@ -15,6 +16,8 @@ import { notFound, type ReadonlyURLSearchParams } from "next/navigation";
 import type { Metadata } from "next";
 
 const BASE_PATH = "/blog";
+
+export const revalidate = BLOG_INDEX_REVALIDATE_SECONDS;
 
 function resolvePageSize() {
   const raw = process.env.BLOG_PAGE_SIZE ?? process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE;

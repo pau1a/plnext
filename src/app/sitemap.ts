@@ -1,6 +1,7 @@
 import { getProjectSummaries } from "@/lib/mdx";
 import {
   BLOG_AFTER_PARAM,
+  BLOG_INDEX_REVALIDATE_SECONDS,
   createCursorHref,
   getBlogIndexPage,
   type BlogIndexPageResult,
@@ -9,6 +10,8 @@ import type { MetadataRoute } from "next";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://paulalivingstone.com";
 const BLOG_PAGE_SIZE = 6;
+
+export const revalidate = BLOG_INDEX_REVALIDATE_SECONDS;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -63,6 +66,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${siteUrl}/projects/${project.slug}`,
     lastModified: new Date(project.date),
   }));
+
+  try {
+    console.info(
+      JSON.stringify({
+        event: "sitemap-cache-hint",
+        revalidate: BLOG_INDEX_REVALIDATE_SECONDS,
+        blogIndexPageCount: paginationRoutes.length + 1, // include base `/blog`
+        blogPostCount: allPosts.length,
+      }),
+    );
+  } catch (error) {
+    console.error("Failed to emit sitemap cache hint:", error);
+  }
 
   return [...baseRoutes, ...paginationRoutes, ...postRoutes, ...projectRoutes];
 }
