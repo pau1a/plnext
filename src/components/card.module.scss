@@ -37,6 +37,17 @@
   gap: var(--space-2xs);
 }
 
+.commentCount {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  white-space: nowrap;
+}
+
+.commentCount i {
+  font-size: 0.85em;
+}
+
 .badgeList {
   display: flex;
   flex-wrap: wrap;

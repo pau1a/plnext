@@ -24,6 +24,7 @@ export interface BlogIndexPageResult {
   items: BlogPostSummary[];
   nextCursor: string | null;
   prevCursor: string | null;
+  commentCounts: Record<string, number> | null;
 }
 
 interface CursorPayload {
@@ -87,6 +88,55 @@ function mapRowToSummary(row: PostsTableRow): BlogPostSummary {
   } satisfies BlogPostSummary;
 }
 
+async function loadCommentCounts(
+  supabase: ReturnType<typeof getSupabase>,
+  slugs: string[],
+): Promise<Record<string, number> | null> {
+  // Always return a full mapping for the given slugs (zero when absent).
+  const zeroed = Object.fromEntries(slugs.map((s) => [s, 0]));
+  if (slugs.length === 0) return zeroed;
+
+  // 1) First, try the fast path (optional view). If it exists, great.
+  try {
+    const { data, error } = await supabase
+      .from("post_comment_counts")
+      .select("slug,approved_count")
+      .in("slug", slugs);
+
+    if (error) throw error;
+
+    const counts = { ...zeroed };
+    for (const row of (data ?? []) as Array<{ slug: string; approved_count: number }>) {
+      if (typeof row.approved_count === "number") {
+        counts[row.slug] = row.approved_count;
+      }
+    }
+    return counts;
+  } catch (err) {
+    // Fall through to the plain comments tally (no view required).
+  }
+
+  // 2) Fallback: fetch comments for these slugs and tally in-process.
+  try {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("slug")
+      .in("slug", slugs);
+
+    if (error) throw error;
+
+    const counts = { ...zeroed };
+    for (const row of (data ?? []) as Array<{ slug: string }>) {
+      if (counts[row.slug] !== undefined) counts[row.slug] += 1;
+    }
+    return counts;
+  } catch (error) {
+    console.error("Failed to load comment counts (fallback) from Supabase:", error);
+    // Final fallback: hide counts rather than crash the page.
+    return null;
+  }
+}
+
 function hasSupabaseConfig() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -141,6 +191,10 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
     const reversed = [...limited].reverse(); // because we queried ascending
 
     const items = reversed.map(mapRowToSummary);
+    const commentCounts = await loadCommentCounts(
+      supabase,
+      items.map((item) => item.slug),
+    );
     const prevCursor = hasMoreNewer && reversed.length > 0 ? encodeCursor(reversed[0]) : null;
     const nextCursor = reversed.length > 0 ? encodeCursor(reversed[reversed.length - 1]) : null;
 
@@ -148,6 +202,7 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
       items,
       nextCursor,
       prevCursor,
+      commentCounts,
     } satisfies BlogIndexPageResult;
   }
 
@@ -188,6 +243,10 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
   const limited = descendingRows.slice(0, pageSize);
 
   const items = limited.map(mapRowToSummary);
+  const commentCounts = await loadCommentCounts(
+    supabase,
+    items.map((item) => item.slug),
+  );
   const nextCursor = hasMoreOlder && limited.length > 0 ? encodeCursor(limited[limited.length - 1]) : null;
   const prevCursor = afterCursor && limited.length > 0 ? encodeCursor(limited[0]) : null;
 
@@ -195,6 +254,7 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
     items,
     nextCursor,
     prevCursor,
+    commentCounts,
   } satisfies BlogIndexPageResult;
 }
 
@@ -270,6 +330,7 @@ async function fetchFromFallback(options: BlogIndexPageOptions): Promise<BlogInd
       items,
       nextCursor,
       prevCursor,
+      commentCounts: null,
     } satisfies BlogIndexPageResult;
   }
 
@@ -297,6 +358,7 @@ async function fetchFromFallback(options: BlogIndexPageOptions): Promise<BlogInd
     items,
     nextCursor,
     prevCursor,
+    commentCounts: null,
   } satisfies BlogIndexPageResult;
 }
 

@@ -4,8 +4,7 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { useMemo } from "react";
+import React, { type ReactNode, useMemo } from "react";
 
 import type { BlogPostSummary } from "@/lib/mdx";
 import {
@@ -25,6 +24,7 @@ export interface PostCardProps {
   description?: ReactNode;
   cta?: ReactNode;
   className?: string;
+  commentCount?: number | null;
 }
 
 export function PostCard({
@@ -35,6 +35,7 @@ export function PostCard({
   description,
   cta,
   className,
+  commentCount,
 }: PostCardProps) {
   const baseVariants = useMemo(
     () =>
@@ -86,6 +87,22 @@ export function PostCard({
     </span>
   );
 
+  const resolvedMeta = meta ?? defaultMeta;
+  const resolvedTags = tags ?? defaultTags;
+
+  const commentLabel =
+    typeof commentCount === "number"
+      ? (() => {
+          const label = `${commentCount} ${commentCount === 1 ? "comment" : "comments"}`;
+          return (
+            <span className={styles.commentCount} aria-label={label}>
+              <i className="fa-regular fa-comments" aria-hidden="true" />
+              <span aria-hidden="true">{label}</span>
+            </span>
+          );
+        })()
+      : null;
+
   return (
     <motion.article
       className={clsx("surface", "surface--interactive", styles.card, className)}
@@ -103,8 +120,9 @@ export function PostCard({
       >
         <header className={styles.header}>
           <div className={styles.metaRow}>
-            {meta ?? defaultMeta}
-            {tags ?? defaultTags}
+            {resolvedMeta}
+            {commentLabel}
+            {resolvedTags}
           </div>
           <h2 className={styles.title}>{summary.title}</h2>
         </header>

@@ -25,6 +25,13 @@ export interface PostsTableRow {
   inserted_at: string;
 }
 
+export interface PostCommentCountsTableRow {
+  slug: string;
+  approved_count: number;
+  last_approved_at: string | null;
+  updated_at: string;
+}
+
 interface Database {
   public: {
     Tables: {
@@ -34,6 +41,9 @@ interface Database {
       };
       posts: {
         Row: PostsTableRow;
+      };
+      post_comment_counts: {
+        Row: PostCommentCountsTableRow;
       };
     };
   };
