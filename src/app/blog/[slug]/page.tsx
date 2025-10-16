@@ -1,12 +1,30 @@
+import { Suspense } from "react";
+
+import { CommentForm } from "@/components/comment-form";
 import { CommentList } from "@/components/comment-list";
+import { CommentProvider } from "@/components/comment-context";
 import { getBlogPost, getBlogPostSummaries, getBlogSlugs } from "@/lib/mdx";
 import { format } from "date-fns";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+interface BlogPostPageParams {
+  slug: string;
+}
+
+type BlogPostPageParamsInput = BlogPostPageParams | Promise<BlogPostPageParams>;
+
 interface BlogPostPageProps {
-  params: { slug: string };
+  params: BlogPostPageParamsInput;
+}
+
+async function resolveParams(params: BlogPostPageParamsInput): Promise<BlogPostPageParams> {
+  if (typeof (params as Promise<BlogPostPageParams>).then === "function") {
+    return params as Promise<BlogPostPageParams>;
+  }
+
+  return params as BlogPostPageParams;
 }
 
 export async function generateStaticParams() {
@@ -14,7 +32,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
+  const { slug } = await resolveParams(params);
+  const post = await getBlogPost(slug);
 
   if (!post) {
     return {
@@ -45,7 +64,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug);
+  const { slug } = await resolveParams(params);
+  const post = await getBlogPost(slug);
 
   if (!post) {
     notFound();
@@ -81,14 +101,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <div className="prose u-stack u-gap-lg">{post.content}</div>
 
-      {post.comments?.length ? (
-        <section className="u-stack u-gap-sm" aria-labelledby="comments-heading">
-          <h2 id="comments-heading" className="heading-subtitle">
-            Reader comments
-          </h2>
-          <CommentList comments={post.comments} />
-        </section>
-      ) : null}
+      <section className="u-stack u-gap-md" aria-labelledby="comments-heading">
+        <h2 id="comments-heading" className="heading-subtitle">
+          Join the discussion
+        </h2>
+        <CommentProvider slug={post.slug}>
+          <CommentForm slug={post.slug} />
+          <Suspense fallback={null}>
+            <CommentList slug={post.slug} />
+          </Suspense>
+        </CommentProvider>
+      </section>
 
       {relatedPosts.length > 0 ? (
         <aside className="surface u-pad-xl u-stack u-gap-sm">

@@ -8,7 +8,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   test: {
     environment: "node",
-    setupFiles: [],
+    setupFiles: ["./tests/setup-tests.ts"],
+    environmentMatchGlobs: [["tests/components/**", "jsdom"]],
     coverage: {
       reporter: ["text", "html"],
     },
