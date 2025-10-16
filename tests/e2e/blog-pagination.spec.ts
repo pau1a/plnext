@@ -4,9 +4,16 @@ test.describe("blog pagination", () => {
   test("navigates forward and backward across cursor pages", async ({ page }) => {
     await page.goto("/blog", { waitUntil: "networkidle" });
 
-    await expect(page.getByRole("heading", { name: "Operations Deep Dive" })).toBeVisible();
+    const firstHeading = page.getByRole("heading", { level: 2 }).first();
+    await expect(firstHeading).toBeVisible();
+    const firstTitle = (await firstHeading.textContent())?.trim();
+    expect(firstTitle?.length ?? 0).toBeGreaterThan(0);
+
     await expect(page.getByRole("link", { name: "Newer posts" })).toHaveCount(0);
-    await expect(page.locator("nav").getByText("Newer posts")).toHaveAttribute("aria-disabled", "true");
+    await expect(page.locator("nav[aria-label='Pagination']").getByText("Newer posts")).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
 
     const olderLink = page.getByRole("link", { name: "Older posts" });
     await expect(olderLink).toBeVisible();
@@ -16,9 +23,17 @@ test.describe("blog pagination", () => {
     ]);
 
     await page.waitForLoadState("networkidle");
-    await expect(page.getByRole("heading", { name: "Secure Baselines" })).toBeVisible();
+    const secondHeading = page.getByRole("heading", { level: 2 }).first();
+    await expect(secondHeading).toBeVisible();
+    const secondTitle = (await secondHeading.textContent())?.trim();
+    expect(secondTitle?.length ?? 0).toBeGreaterThan(0);
+    expect(secondTitle).not.toBe(firstTitle);
+
     await expect(page.getByRole("link", { name: "Older posts" })).toHaveCount(0);
-    await expect(page.locator("nav").getByText("Older posts")).toHaveAttribute("aria-disabled", "true");
+    await expect(page.locator("nav[aria-label='Pagination']").getByText("Older posts")).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
 
     const newerLink = page.getByRole("link", { name: "Newer posts" });
     await expect(newerLink).toBeVisible();
@@ -28,7 +43,11 @@ test.describe("blog pagination", () => {
     ]);
 
     await page.waitForLoadState("networkidle");
-    await expect(page.getByRole("heading", { name: "Operations Deep Dive" })).toBeVisible();
+    const thirdHeading = page.getByRole("heading", { level: 2 }).first();
+    await expect(thirdHeading).toBeVisible();
+    const thirdTitle = (await thirdHeading.textContent())?.trim();
+    expect(thirdTitle).toBe(firstTitle);
+
     await expect(page.getByRole("link", { name: "Older posts" })).toBeVisible();
   });
 

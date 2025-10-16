@@ -22,7 +22,9 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       env: {
         SUPABASE_URL: `http://127.0.0.1:${SUPABASE_STUB_PORT}`,
+        NEXT_PUBLIC_SUPABASE_URL: `http://127.0.0.1:${SUPABASE_STUB_PORT}`,
         SUPABASE_ANON_KEY: "playwright-test",
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "playwright-test",
         BLOG_INDEX_FORCE_FALLBACK: "0",
         NODE_ENV: "development",
         PORT: "3000",
