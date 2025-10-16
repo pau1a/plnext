@@ -71,6 +71,6 @@ This document defines how MDX content is structured, how posts and projects move
 
 - Provide descriptive `summary` values; they seed meta descriptions, RSS excerpts, and card previews.
 - Include alt text for all inline images. Use MDX JSX props where needed.
-- Set canonical URLs and structured data (handled in `lib/seo.ts`, reference `10-site-structure-overview.md`).
+- Set canonical URLs and structured data via the App Router metadata exports (see `app/layout.tsx` and `10-site-structure-overview.md`).
 
 This model keeps writing flow predictable while ensuring comments and contact remain well-governed. Update alongside any changes to the MDX pipeline or moderation tooling.
