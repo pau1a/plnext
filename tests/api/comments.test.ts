@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => {
   const supabaseLimit = vi.fn();
   const supabaseFrom = vi.fn();
   const rateLimitMock = vi.fn();
+  const getSupabase = vi.fn();
 
   return {
     supabaseInsert,
@@ -19,14 +20,16 @@ const mocks = vi.hoisted(() => {
     supabaseLimit,
     supabaseFrom,
     rateLimitMock,
+    getSupabase,
   };
 });
 
-vi.mock("@/lib/supabase/server", () => ({
-  supabase: {
-    from: mocks.supabaseFrom,
-  },
-}));
+vi.mock("@/lib/supabase/server", () => {
+  const client = { from: mocks.supabaseFrom };
+  return {
+    getSupabase: mocks.getSupabase.mockImplementation(() => client),
+  };
+});
 
 vi.mock("@/lib/rate-limit", () => ({
   enforceCommentRateLimits: mocks.rateLimitMock,
@@ -42,6 +45,7 @@ describe("/api/comments", () => {
     supabaseLimit,
     supabaseFrom,
     rateLimitMock,
+    getSupabase,
   } = mocks;
 
   const queryBuilder = {
@@ -62,12 +66,14 @@ describe("/api/comments", () => {
     supabaseLimit.mockReset();
     supabaseFrom.mockReset();
     rateLimitMock.mockReset();
+    getSupabase.mockReset();
 
     supabaseFrom.mockReturnValue(queryBuilder);
     supabaseSelect.mockReturnValue(queryBuilder);
     supabaseEq.mockReturnValue(queryBuilder);
     supabaseOrder.mockReturnValue(queryBuilder);
     supabaseGt.mockReturnValue(queryBuilder);
+    getSupabase.mockImplementation(() => ({ from: supabaseFrom }));
   });
 
   afterEach(() => {

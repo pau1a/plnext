@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 export type CommentStatus = "pending" | "approved" | "spam";
 
@@ -35,14 +35,24 @@ interface Database {
   };
 }
 
-const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON_KEY =
-  process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+let cachedClient: SupabaseClient<Database> | null = null;
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  throw new Error("Missing SUPABASE_URL / SUPABASE_ANON_KEY in .env.local");
+export function getSupabase(): SupabaseClient<Database> {
+  if (cachedClient) {
+    return cachedClient;
+  }
+
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const anonKey =
+    process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+  if (!url || !anonKey) {
+    throw new Error("SUPABASE_ENV_MISSING");
+  }
+
+  cachedClient = createClient<Database>(url, anonKey, {
+    auth: { persistSession: false },
+  });
+
+  return cachedClient;
 }
-
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { persistSession: false },
-});

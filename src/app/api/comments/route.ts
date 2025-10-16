@@ -6,7 +6,7 @@ import { z } from "zod";
 import type { PostgrestError } from "@supabase/supabase-js";
 
 import { enforceCommentRateLimits } from "@/lib/rate-limit";
-import { supabase, type CommentsTableInsert } from "@/lib/supabase/server";
+import { getSupabase, type CommentsTableInsert } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
@@ -168,6 +168,7 @@ export async function GET(request: Request) {
   }
 
   try {
+    const supabase = getSupabase();
     const query = supabase
       .from("comments")
       .select("id, author_name, body, created_at")
@@ -332,6 +333,7 @@ export async function POST(request: Request) {
   }
 
   try {
+    const supabase = getSupabase();
     const payload: CommentsTableInsert = {
       post_slug: parsedBody.slug,
       author_name: parsedBody.author,

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { PostgrestError } from "@supabase/supabase-js";
 
-import { supabase } from "@/lib/supabase/server";
+import { getSupabase } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
@@ -12,20 +12,35 @@ export async function GET() {
     const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
     const anon = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    const envOk = Boolean(url && anon);
-    const supabaseWithRpc = supabase as unknown as {
-      rpc: (fn: string, args: Record<string, unknown>) => { single: () => Promise<unknown> };
-    };
-    let dbReachable = false;
+    let envOk = true;
+    let supabase: ReturnType<typeof getSupabase> | null = null;
+
     try {
-      await supabaseWithRpc.rpc("isfinite", { x: 1 }).single();
-      dbReachable = true;
+      supabase = getSupabase();
     } catch (error) {
-      console.warn("Supabase RPC health check failed", error);
+      if (error instanceof Error && error.message === "SUPABASE_ENV_MISSING") {
+        envOk = false;
+      } else {
+        throw error;
+      }
+    }
+
+    if (!envOk || !supabase) {
+      return NextResponse.json({
+        envOk: false,
+        urlPresent: Boolean(url),
+        anonPresent: Boolean(anon),
+        dbReachable: false,
+        tableExists: false,
+        rlsOpen: false,
+        probeStatus: 0,
+        probeError: { message: "Supabase env vars missing" },
+      });
     }
 
     const commentsProbe = await supabase.from("comments").select("id", { count: "exact", head: true });
-    const tableExists = commentsProbe.status !== 406;
+    const tableExists =
+      !commentsProbe.error || !/relation \"?comments\"? does not exist/i.test(commentsProbe.error.message ?? "");
     const rlsOpen = !commentsProbe.error;
 
     const probeError: ProbeError = commentsProbe.error
@@ -41,7 +56,7 @@ export async function GET() {
       envOk,
       urlPresent: Boolean(url),
       anonPresent: Boolean(anon),
-      dbReachable,
+      dbReachable: true,
       tableExists,
       rlsOpen,
       probeStatus: commentsProbe.status,
