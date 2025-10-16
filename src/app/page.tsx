@@ -106,20 +106,6 @@ export default async function Home() {
             icon: <i className="fa-solid fa-message" aria-hidden="true" />,
           },
         ]}
-        images={{
-          horizontal: {
-            src: "/hero-horizontal.svg",
-            alt: "Abstract aerospace trajectories representing systems in freefall.",
-            width: 1440,
-            height: 720,
-          },
-          vertical: {
-            src: "/hero-vertical.svg",
-            alt: "Vertical mission control scene with guided landing vectors.",
-            width: 960,
-            height: 1280,
-          },
-        }}
       />
 
       <section className={styles.section} aria-labelledby="services-heading">

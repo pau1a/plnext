@@ -1,16 +1,45 @@
 .hero {
   position: relative;
   display: grid;
-  gap: clamp(var(--space-2xl), 4vw, var(--space-3xl));
+  justify-items: start;
+  gap: clamp(var(--space-xl), 3vw, var(--space-2xl));
   padding-block: clamp(4rem, 8vw, 8rem);
   padding-inline: clamp(var(--space-xl), 5vw, var(--space-3xl));
+  min-height: clamp(26rem, 60vw, 40rem);
+  overflow: hidden;
   isolation: isolate;
 }
 
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.mediaImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+.overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 20, 27, 0.2),
+    rgba(6, 15, 21, 0.45)
+  );
+}
+
 .copy {
+  position: relative;
+  z-index: 2;
   display: grid;
   gap: clamp(var(--space-lg), 1.5vw, var(--space-2xl));
   max-width: min(38rem, 100%);
+  color: var(--text-on-inverse);
 }
 
 .eyebrow {
@@ -18,7 +47,7 @@
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--color-teal-500);
+  color: var(--color-teal-200);
 }
 
 .heading {
@@ -32,7 +61,7 @@
 .subheading {
   margin: 0;
   font-size: clamp(var(--font-size-lg), 1.1rem + 0.7vw, var(--font-size-2xl));
-  color: var(--color-teal-600);
+  color: var(--color-teal-100);
   font-weight: 600;
   line-height: var(--line-height-snug);
 }
@@ -41,7 +70,7 @@
   margin: 0;
   font-size: clamp(var(--font-size-md), 1rem + 0.6vw, var(--font-size-xl));
   line-height: var(--line-height-snug);
-  color: var(--text-muted);
+  color: color-mix(in srgb, var(--text-on-inverse) 92%, transparent);
 }
 
 .ctaGroup {
@@ -55,58 +84,14 @@
   letter-spacing: 0.02em;
 }
 
-.media {
-  position: relative;
-}
-
-.artwork {
-  position: relative;
-  display: grid;
-  justify-items: center;
-}
-
-.verticalArt,
-.horizontalArt {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-}
-
-.horizontalArt {
-  display: none;
-}
-
 @media (min-width: 48rem) {
   .hero {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: center;
-  }
-
-  .media {
-    justify-self: center;
-  }
-
-  .artwork {
-    max-width: min(32rem, 100%);
-  }
-
-  .verticalArt {
-    display: none;
-  }
-
-  .horizontalArt {
-    display: block;
+    padding-inline: clamp(var(--space-2xl), 8vw, 10rem);
   }
 }
 
 @media (min-width: 72rem) {
   .hero {
-    padding-inline: clamp(var(--space-3xl), 8vw, 10rem);
-  }
-
-  .artwork {
-    max-width: min(38rem, 100%);
+    padding-inline: clamp(var(--space-3xl), 10vw, 12rem);
   }
 }

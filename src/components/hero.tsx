@@ -16,13 +16,6 @@ import {
 
 import styles from "@/styles/hero.module.scss";
 
-type HeroImage = {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-};
-
 type HeroCopy = {
   eyebrow?: string;
   title: string;
@@ -40,17 +33,12 @@ type HeroCta = {
 type HeroProps = MotionProps & {
   copy: HeroCopy;
   ctas?: HeroCta[];
-  images: {
-    horizontal: HeroImage;
-    vertical: HeroImage;
-  };
   className?: string;
 };
 
 export function Hero({
   copy,
   ctas = [],
-  images,
   className,
   initial,
   animate,
@@ -77,6 +65,17 @@ export function Hero({
       animate={resolvedAnimate}
       {...motionProps}
     >
+      <div className={styles.media}>
+        <Image
+          priority
+          fill
+          className={styles.mediaImage}
+          src="/paulalivingstone/images/freefall.jpg"
+          alt="Paula Livingstone in freefall: precision under pressure"
+          sizes="100vw"
+        />
+      </div>
+      <div className={styles.overlay} />
       <div className={styles.copy}>
         {copy.eyebrow ? <span className={styles.eyebrow}>{copy.eyebrow}</span> : null}
         <h1 className={styles.heading}>{copy.title}</h1>
@@ -103,26 +102,6 @@ export function Hero({
             ))}
           </div>
         ) : null}
-      </div>
-      <div className={styles.media}>
-        <div className={styles.artwork}>
-          <Image
-            priority
-            className={styles.verticalArt}
-            src={images.vertical.src}
-            alt={images.vertical.alt}
-            width={images.vertical.width}
-            height={images.vertical.height}
-          />
-          <Image
-            priority
-            className={styles.horizontalArt}
-            src={images.horizontal.src}
-            alt={images.horizontal.alt}
-            width={images.horizontal.width}
-            height={images.horizontal.height}
-          />
-        </div>
       </div>
     </motion.section>
   );
