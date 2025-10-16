@@ -12,6 +12,9 @@ import type { PropsWithChildren } from "react";
 export default function AppShell({ children }: PropsWithChildren) {
   return (
     <body className="app-shell">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <AnalyticsConsentProvider>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <BodyThemeSync />
@@ -54,7 +57,7 @@ export default function AppShell({ children }: PropsWithChildren) {
             </div>
           </header>
 
-          <main className="app-shell__main">
+          <main className="app-shell__main" id="main-content" tabIndex={-1}>
             <div className="l-container motion-fade-in">{children}</div>
           </main>
 

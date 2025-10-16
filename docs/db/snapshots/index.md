@@ -1,4 +1,4 @@
-_Last updated: 2025-10-22 by gpt-5-codex_
+_Last updated: 2025-10-23 by gpt-5-codex_
 # Snapshots
 Store full SQL exports here after significant schema changes.
 File name format: `YYYY-MM-DD--full-export.sql`.
@@ -10,3 +10,9 @@ File name format: `YYYY-MM-DD--full-export.sql`.
 - SHA256: `3c8e5b327be8456b46a37d06fdf38abf0f1d44ad3328857c4049286409205c6a`
 
 > **Stage 4 note:** This snapshot predates the manual uplift documented in [db/index.md](../index.md). Capture a new export once the schema upgrades (status fields, counters, view) are live in Supabase.
+
+## 2025-10-23
+- File: `2025-10-23--full-export.sql`
+- Schema version: `2025-10-14T1830`
+- Context: Stage 7 launch hardening sweep. Captured to rotate the offline backup set after confirming no schema drift since the previous export.
+- SHA256: `13cbc647a88ed0378eedc7520daa6bea632809397b7ae25eae71e63ca6afd7da`

@@ -25,9 +25,30 @@ function resolvePageSize() {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 6;
 }
 
-const BASE_METADATA: Pick<Metadata, "title" | "description"> = {
+const BASE_METADATA: Metadata = {
   title: "Blog",
   description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
+  alternates: {
+    canonical: BASE_PATH,
+  },
+  openGraph: {
+    title: "Blog",
+    description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
+    url: BASE_PATH,
+    images: [
+      {
+        url: "/window.svg",
+        width: 1200,
+        height: 630,
+        alt: "Paula Livingstone window mark",
+      },
+    ],
+  },
+  twitter: {
+    title: "Blog",
+    description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
+    images: ["/window.svg"],
+  },
 };
 
 type SearchParamsInput =
@@ -109,6 +130,11 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
   const PAGE_SIZE = resolvePageSize();
   const after = parseCursorParam(await getSearchParamValue(searchParams, BLOG_AFTER_PARAM));
   const before = parseCursorParam(await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM));
+  const canonicalPath = before
+    ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, before)
+    : after
+      ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, after)
+      : BASE_PATH;
 
   try {
     const page = await getBlogIndexPage({ pageSize: PAGE_SIZE, after, before });
@@ -121,15 +147,43 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
 
     return {
       ...BASE_METADATA,
+      alternates: {
+        canonical: canonicalPath,
+      },
+      openGraph: {
+        ...BASE_METADATA.openGraph,
+        url: canonicalPath,
+      },
+      twitter: {
+        ...BASE_METADATA.twitter,
+      },
       ...(previous || next ? { pagination: { previous, next } } : {}),
     };
   } catch (error) {
     if (error instanceof BlogCursorError) {
-      return { ...BASE_METADATA };
+      return {
+        ...BASE_METADATA,
+        alternates: {
+          canonical: canonicalPath,
+        },
+        openGraph: {
+          ...BASE_METADATA.openGraph,
+          url: canonicalPath,
+        },
+      };
     }
 
     console.error("Failed to resolve blog metadata:", error);
-    return { ...BASE_METADATA };
+    return {
+      ...BASE_METADATA,
+      alternates: {
+        canonical: canonicalPath,
+      },
+      openGraph: {
+        ...BASE_METADATA.openGraph,
+        url: canonicalPath,
+      },
+    };
   }
 }
 

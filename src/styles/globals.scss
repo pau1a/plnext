@@ -169,6 +169,33 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+:where(a, button, input, select, textarea) {
+  outline-color: var(--color-teal-500);
+  outline-offset: 3px;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid var(--color-teal-500);
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--space-lg);
+  inset-block-start: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-teal-600);
+  color: var(--color-graphite-50);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transform: translateY(-200%);
+  transition: transform var(--transition-base);
+  z-index: 100;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 ::selection {
   background-color: rgba(20, 184, 166, 0.25);
 }
