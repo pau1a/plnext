@@ -5,7 +5,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
-import { initialState, sendMessage } from "./send";
+import { initialState } from "./state";
+import { sendMessage } from "./send";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
