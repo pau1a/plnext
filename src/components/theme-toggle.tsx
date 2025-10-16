@@ -1,7 +1,7 @@
 "use client";
 
 import { useAnalyticsConsent } from "@/components/analytics-consent-provider";
-import { posthog } from "@/lib/analytics/posthog";
+import posthog from "@/lib/analytics/posthog";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 

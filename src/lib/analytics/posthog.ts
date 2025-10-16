@@ -35,8 +35,12 @@ async function ensureClient(): Promise<PostHogClient | null> {
       const ph = (mod?.default ?? mod) as PostHogClient;
       ph.init?.(POSTHOG_KEY, {
         api_host: POSTHOG_HOST,
+        persistence: "memory",
+        autocapture: false,
+        disable_session_recording: true,
         capture_pageview: false,
         capture_pageleave: false,
+        ip: false,
       });
       client = ph;
       return ph;
