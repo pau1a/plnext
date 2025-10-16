@@ -36,6 +36,10 @@ Scope: **docs only** — no build or code tasks live here.
 
 - [env/variables.md](./env/variables.md)
 
+## Operations
+
+- [operations-runbook.md](./operations-runbook.md)
+
 ## Decisions
 
 - [decisions/0001-url-strategy.md](./decisions/0001-url-strategy.md) — Blog posts live at `/blog/[slug]`; taxonomy tweaks never change canonical URLs.
