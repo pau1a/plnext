@@ -17,9 +17,20 @@ export const metadata: Metadata = {
     url: siteUrl,
     locale: "en_GB",
     siteName: "Paula Livingstone",
+    images: [
+      {
+        url: `${siteUrl}/window.svg`,
+        width: 1200,
+        height: 630,
+        alt: "Paula Livingstone",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    title: "Paula Livingstone",
+    description: "Cybersecurity leader building resilient platforms that balance risk, speed, and clarity.",
+    images: [`${siteUrl}/window.svg`],
   },
   alternates: {
     canonical: siteUrl,

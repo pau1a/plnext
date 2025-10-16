@@ -12,19 +12,25 @@ See [Database & Services](./09-database-and-services.md) for backend-driven capa
 
 ## Code examples
 
-Global defaults live in `_app-providers.tsx` via the shared `<DefaultSeo>` component. Override values per page with `next-seo`:
+Global defaults live in `app/layout.tsx` via the exported `metadata` object. Per-route overrides should use `generateMetadata` in App Router segments:
 
 ```tsx
-import { NextSeo } from "next-seo";
+import type { Metadata } from "next";
 
-export default function BlogPostSeo() {
-  return (
-    <NextSeo
-      title="Post Title | Paula Livingstone"
-      description="Short summary..."
-      openGraph={{ url: "https://paulalivingstone.com/blog/post-slug" }}
-    />
-  );
+export async function generateMetadata(): Promise<Metadata> {
+  const post = await getPost();
+
+  return {
+    title: post.title,
+    description: post.summary,
+    openGraph: {
+      type: "article",
+      url: `https://paulalivingstone.com/blog/${post.slug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+  };
 }
 ```
 

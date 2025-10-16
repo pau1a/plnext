@@ -15,6 +15,8 @@ type MemoryBucket = {
 
 const MEMORY_LIMIT_IP = 5;
 const MEMORY_LIMIT_SLUG = 30;
+const MEMORY_LIMIT_CONTACT_IP = 3;
+const MEMORY_LIMIT_CONTACT_EMAIL = 3;
 const WINDOW_MS = 60_000;
 
 const redisConfigured =
@@ -36,6 +38,22 @@ const slugLimiter = redis
       redis,
       limiter: Ratelimit.slidingWindow(MEMORY_LIMIT_SLUG, "60 s"),
       prefix: "comments:slug",
+    })
+  : null;
+
+const contactIpLimiter = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(MEMORY_LIMIT_CONTACT_IP, "60 s"),
+      prefix: "contact:ip",
+    })
+  : null;
+
+const contactEmailLimiter = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(MEMORY_LIMIT_CONTACT_EMAIL, "60 s"),
+      prefix: "contact:email",
     })
   : null;
 
@@ -110,3 +128,17 @@ export async function enforceCommentRateLimits(key: { ipHash: string; slug: stri
 }
 
 export type CommentRateLimitOutcome = Awaited<ReturnType<typeof enforceCommentRateLimits>>;
+
+export async function enforceContactRateLimits(key: { ipHash: string; emailHash: string }) {
+  const ipKey = `ip:${key.ipHash}`;
+  const emailKey = `email:${key.emailHash}`;
+
+  const [ip, email] = await Promise.all([
+    applyLimit(contactIpLimiter, ipKey, MEMORY_LIMIT_CONTACT_IP),
+    applyLimit(contactEmailLimiter, emailKey, MEMORY_LIMIT_CONTACT_EMAIL),
+  ]);
+
+  return { ip, email };
+}
+
+export type ContactRateLimitOutcome = Awaited<ReturnType<typeof enforceContactRateLimits>>;

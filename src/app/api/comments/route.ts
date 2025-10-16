@@ -158,7 +158,7 @@ export async function GET(request: Request) {
   let after: string | null = null;
   try {
     after = parseAfterCursor(afterParam);
-  } catch (error) {
+  } catch {
     const response = NextResponse.json(
       { error: "Invalid after cursor" },
       { status: 400 },
