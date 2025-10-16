@@ -1,4 +1,4 @@
-_Last updated: 2025-10-21 by gpt-5-codex_
+_Last updated: 2025-10-22 by gpt-5-codex_
 
 # CDN Invalidation Workflow
 
@@ -15,7 +15,7 @@ Purpose: describe how cached assets on <https://cdn.networklayer.co.uk/paulalivi
 
 User submissions bypass the static build and land directly in Supabase as described in [Data Flow (Comments and Contact)](./data-layer/flow.md). Paula reviews them under the stewardship rules defined in [Governance](./07-governance.md) and applies the privacy controls outlined in [Privacy & Security](./08-privacy-and-security.md).
 
-When a submission moves from `approved=false` to `approved=true` (or a contact message is anonymised/deleted):
+When a submission moves from `status='pending'` to `status='approved'` (or a contact message is anonymised/deleted):
 
 1. Update the record in Supabase.
 2. Trigger a targeted revalidation for the affected page(s).

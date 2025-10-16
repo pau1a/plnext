@@ -1,4 +1,4 @@
-_Last updated: 2025-10-21 by gpt-5-codex_
+_Last updated: 2025-10-22 by gpt-5-codex_
 
 # Privacy & Security (Baseline)
 
@@ -10,8 +10,8 @@ _Last updated: 2025-10-21 by gpt-5-codex_
 Paula Livingstone operates as the sole steward for Supabase access, which keeps schema changes and credential custody centralized with her. See [Governance](./07-governance.md) for the full stewardship breakdown and operational procedures.
 
 ## Comments
-- Submission: stored immediately in Supabase with `approved=false`.
-- Publication: visible publicly only after Paula sets `approved=true`.
+- Submission: stored immediately in Supabase with `status='pending'` and a hashed IP (`ip_hash`).
+- Publication: visible publicly only after Paula sets `status='approved'` (and `is_spam=false`).
 - Removal: on request, delete the comment row in Supabase and clear any cached copies.
   1. Locate the record: `select id, author_email from pl_site.comments where slug = 'POST_SLUG' and id = 'UUID';`
   2. Confirm the requester matches `author_email` (or admin request).
@@ -20,7 +20,8 @@ Paula Livingstone operates as the sole steward for Supabase access, which keeps 
 
 ## Contact Messages
 - Private by default; never displayed publicly.
-- Handling: toggle `handled` to `true` after action and retain for correspondence history unless deletion is requested.
+- Submission: stored with `status='new'`, hashed IP (`ip_hash`), and captured `user_agent` for abuse triage.
+- Handling: transition `status` from `new` → `acknowledged` → `archived` (or `spam`) and retain for correspondence history unless deletion is requested.
 - Removal: honor data subject deletion or anonymisation requests.
   1. Validate the requester by matching email headers or stored metadata.
   2. If deletion is requested, run `delete from pl_site.contact_messages where id = 'UUID';`
