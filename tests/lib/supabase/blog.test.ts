@@ -42,6 +42,7 @@ describe("getBlogIndexPage (fallback)", () => {
     expect(firstPage.items.map((item) => item.slug)).toEqual(["charlie", "alpha"]);
     expect(firstPage.prevCursor).toBeNull();
     expect(firstPage.nextCursor).not.toBeNull();
+    expect(firstPage.commentCounts).toBeNull();
 
     const secondPage = await blog.getBlogIndexPage({
       pageSize: 2,
@@ -51,6 +52,7 @@ describe("getBlogIndexPage (fallback)", () => {
     expect(secondPage.items.map((item) => item.slug)).toEqual(["bravo"]);
     expect(secondPage.prevCursor).not.toBeNull();
     expect(secondPage.nextCursor).toBeNull();
+    expect(secondPage.commentCounts).toBeNull();
   });
 
   it("supports backward navigation via before cursor", async () => {
@@ -71,6 +73,7 @@ describe("getBlogIndexPage (fallback)", () => {
 
     expect(nextPage.items.map((item) => item.slug)).toEqual(["third", "fourth"]);
     expect(nextPage.prevCursor).not.toBeNull();
+    expect(nextPage.commentCounts).toBeNull();
 
     const previous = await blog.getBlogIndexPage({
       pageSize: 2,
@@ -80,6 +83,7 @@ describe("getBlogIndexPage (fallback)", () => {
     expect(previous.items.map((item) => item.slug)).toEqual(["first", "second"]);
     expect(previous.prevCursor).toBeNull();
     expect(previous.nextCursor).not.toBeNull();
+    expect(previous.commentCounts).toBeNull();
   });
 
   it("throws for malformed cursor tokens", async () => {
@@ -107,47 +111,85 @@ describe("getBlogIndexPage (supabase)", () => {
     delete process.env.BLOG_INDEX_FORCE_FALLBACK;
     delete process.env.SUPABASE_URL;
     delete process.env.SUPABASE_ANON_KEY;
+    vi.doUnmock("@/lib/supabase/server");
   });
 
-  it("applies tie-breaker filters for after/prev navigation", async () => {
-    const limitResponses: Array<{ data: Array<{
-      slug: string;
-      title: string;
-      description: string;
-      date: string;
-      tags: string[] | null;
-      inserted_at: string;
-    }>; error: null }> = [];
+  function setupSupabaseMock() {
+    const postResponses: Array<{
+      data: Array<{
+        slug: string;
+        title: string;
+        description: string;
+        date: string;
+        tags: string[] | null;
+        inserted_at: string;
+      }>;
+      error: Error | null;
+    }> = [];
+    const countResponses: Array<{
+      data: Array<{ slug: string; approved_count: number }> | null;
+      error: Error | null;
+    }> = [];
 
-    const builders: Array<{
+    const postBuilders: Array<{
       select: ReturnType<typeof vi.fn>;
       or: ReturnType<typeof vi.fn>;
       order: ReturnType<typeof vi.fn>;
       limit: ReturnType<typeof vi.fn>;
     }> = [];
+    const countBuilders: Array<{
+      select: ReturnType<typeof vi.fn>;
+      in: ReturnType<typeof vi.fn>;
+    }> = [];
 
-    function createBuilder() {
+    function createPostBuilder() {
       const select = vi.fn().mockReturnThis();
       const or = vi.fn().mockReturnThis();
       const order = vi.fn().mockReturnThis();
       const limit = vi
         .fn()
-        .mockImplementation(() => Promise.resolve(limitResponses.shift() ?? { data: [], error: null }));
+        .mockImplementation(() => Promise.resolve(postResponses.shift() ?? { data: [], error: null }));
 
       const builder = { select, or, order, limit };
-      builders.push(builder);
+      postBuilders.push(builder);
       return builder;
     }
 
-    const from = vi.fn(() => createBuilder());
+    function createCountBuilder() {
+      const select = vi.fn().mockReturnThis();
+      const inOperator = vi
+        .fn()
+        .mockImplementation(() => Promise.resolve(countResponses.shift() ?? { data: [], error: null }));
+
+      const builder = { select, in: inOperator };
+      countBuilders.push(builder);
+      return builder;
+    }
+
+    const from = vi.fn((table: string) => {
+      if (table === "posts") {
+        return createPostBuilder();
+      }
+      if (table === "post_comment_counts") {
+        return createCountBuilder();
+      }
+
+      throw new Error(`Unexpected table: ${table}`);
+    });
 
     vi.doMock("@/lib/supabase/server", () => ({
       getSupabase: () => ({ from }),
     }));
 
+    return { postResponses, countResponses, postBuilders, countBuilders };
+  }
+
+  it("applies tie-breaker filters for after/prev navigation", async () => {
+    const { postResponses, countResponses, postBuilders, countBuilders } = setupSupabaseMock();
+
     const blog = await import("@/lib/supabase/blog");
 
-    limitResponses.push({
+    postResponses.push({
       data: [
         {
           slug: "alpha",
@@ -168,14 +210,26 @@ describe("getBlogIndexPage (supabase)", () => {
       ],
       error: null,
     });
+    countResponses.push({
+      data: [
+        {
+          slug: "alpha",
+          approved_count: 3,
+        },
+      ],
+      error: null,
+    });
 
     const firstPage = await blog.getBlogIndexPage({ pageSize: 1 });
     expect(firstPage.items.map((item) => item.slug)).toEqual(["alpha"]);
     expect(firstPage.nextCursor).not.toBeNull();
-    expect(builders[0].select).toHaveBeenCalledWith("slug,title,description,date,tags,inserted_at");
-    expect(builders[0].or).not.toHaveBeenCalled();
+    expect(firstPage.commentCounts).toEqual({ alpha: 3 });
+    expect(postBuilders[0].select).toHaveBeenCalledWith("slug,title,description,date,tags,inserted_at");
+    expect(postBuilders[0].or).not.toHaveBeenCalled();
+    expect(countBuilders[0].select).toHaveBeenCalledWith("slug,approved_count");
+    expect(countBuilders[0].in).toHaveBeenCalledWith("slug", ["alpha"]);
 
-    limitResponses.push({
+    postResponses.push({
       data: [
         {
           slug: "beta",
@@ -196,14 +250,17 @@ describe("getBlogIndexPage (supabase)", () => {
       ],
       error: null,
     });
+    countResponses.push({
+      data: [],
+      error: null,
+    });
 
     const secondPage = await blog.getBlogIndexPage({ pageSize: 1, after: firstPage.nextCursor });
-    expect(builders[1].or).toHaveBeenCalledWith(
-      expect.stringContaining("inserted_at.lt"),
-    );
+    expect(postBuilders[1].or).toHaveBeenCalledWith(expect.stringContaining("inserted_at.lt"));
     expect(secondPage.items.map((item) => item.slug)).toEqual(["beta"]);
+    expect(secondPage.commentCounts).toEqual({ beta: 0 });
 
-    limitResponses.push({
+    postResponses.push({
       data: [
         {
           slug: "alpha",
@@ -216,13 +273,50 @@ describe("getBlogIndexPage (supabase)", () => {
       ],
       error: null,
     });
+    countResponses.push({
+      data: [
+        {
+          slug: "alpha",
+          approved_count: 3,
+        },
+      ],
+      error: null,
+    });
 
     const previousPage = await blog.getBlogIndexPage({ pageSize: 1, before: secondPage.prevCursor });
-    expect(builders[2].or).toHaveBeenCalledWith(
-      expect.stringContaining("inserted_at.gt"),
-    );
+    expect(postBuilders[2].or).toHaveBeenCalledWith(expect.stringContaining("inserted_at.gt"));
     expect(previousPage.items.map((item) => item.slug)).toEqual(["alpha"]);
+    expect(previousPage.commentCounts).toEqual({ alpha: 3 });
+  });
 
-    vi.doUnmock("@/lib/supabase/server");
+  it("suppresses comment counts when Supabase lookup fails", async () => {
+    const { postResponses, countResponses } = setupSupabaseMock();
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const blog = await import("@/lib/supabase/blog");
+
+    const failure = new Error("boom");
+
+    postResponses.push({
+      data: [
+        {
+          slug: "alpha",
+          title: "Alpha",
+          description: "",
+          date: "2024-04-01T00:00:00.000Z",
+          tags: null,
+          inserted_at: "2024-04-10T10:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+    countResponses.push({ data: null, error: failure });
+
+    const page = await blog.getBlogIndexPage({ pageSize: 1 });
+
+    expect(page.commentCounts).toBeNull();
+    expect(consoleSpy).toHaveBeenCalledWith("Failed to load post comment counts from Supabase:", failure);
+
+    consoleSpy.mockRestore();
   });
 });

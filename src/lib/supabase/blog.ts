@@ -2,7 +2,7 @@ import "server-only";
 
 import { getBlogPostSummaries, type BlogPostSummary } from "@/lib/mdx";
 
-import { getSupabase, type PostsTableRow } from "./server";
+import { getSupabase, type PostCommentCountsTableRow, type PostsTableRow } from "./server";
 
 export const BLOG_AFTER_PARAM = "after" as const;
 export const BLOG_BEFORE_PARAM = "before" as const;
@@ -24,6 +24,7 @@ export interface BlogIndexPageResult {
   items: BlogPostSummary[];
   nextCursor: string | null;
   prevCursor: string | null;
+  commentCounts: Record<string, number> | null;
 }
 
 interface CursorPayload {
@@ -87,6 +88,38 @@ function mapRowToSummary(row: PostsTableRow): BlogPostSummary {
   } satisfies BlogPostSummary;
 }
 
+async function loadCommentCounts(
+  supabase: ReturnType<typeof getSupabase>,
+  slugs: string[],
+): Promise<Record<string, number> | null> {
+  if (slugs.length === 0) {
+    return {};
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("post_comment_counts")
+      .select("slug,approved_count")
+      .in("slug", slugs);
+
+    if (error) {
+      throw error;
+    }
+
+    const counts = Object.fromEntries(slugs.map((slug) => [slug, 0]));
+    for (const row of (data ?? []) as PostCommentCountsTableRow[]) {
+      if (typeof row.approved_count === "number") {
+        counts[row.slug] = row.approved_count;
+      }
+    }
+
+    return counts;
+  } catch (error) {
+    console.error("Failed to load post comment counts from Supabase:", error);
+    return null;
+  }
+}
+
 function hasSupabaseConfig() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -141,6 +174,10 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
     const reversed = [...limited].reverse(); // because we queried ascending
 
     const items = reversed.map(mapRowToSummary);
+    const commentCounts = await loadCommentCounts(
+      supabase,
+      items.map((item) => item.slug),
+    );
     const prevCursor = hasMoreNewer && reversed.length > 0 ? encodeCursor(reversed[0]) : null;
     const nextCursor = reversed.length > 0 ? encodeCursor(reversed[reversed.length - 1]) : null;
 
@@ -148,6 +185,7 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
       items,
       nextCursor,
       prevCursor,
+      commentCounts,
     } satisfies BlogIndexPageResult;
   }
 
@@ -188,6 +226,10 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
   const limited = descendingRows.slice(0, pageSize);
 
   const items = limited.map(mapRowToSummary);
+  const commentCounts = await loadCommentCounts(
+    supabase,
+    items.map((item) => item.slug),
+  );
   const nextCursor = hasMoreOlder && limited.length > 0 ? encodeCursor(limited[limited.length - 1]) : null;
   const prevCursor = afterCursor && limited.length > 0 ? encodeCursor(limited[0]) : null;
 
@@ -195,6 +237,7 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
     items,
     nextCursor,
     prevCursor,
+    commentCounts,
   } satisfies BlogIndexPageResult;
 }
 
@@ -270,6 +313,7 @@ async function fetchFromFallback(options: BlogIndexPageOptions): Promise<BlogInd
       items,
       nextCursor,
       prevCursor,
+      commentCounts: null,
     } satisfies BlogIndexPageResult;
   }
 
@@ -297,6 +341,7 @@ async function fetchFromFallback(options: BlogIndexPageOptions): Promise<BlogInd
     items,
     nextCursor,
     prevCursor,
+    commentCounts: null,
   } satisfies BlogIndexPageResult;
 }
 

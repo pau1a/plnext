@@ -147,6 +147,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   }
 
   const hasPosts = page.items.length > 0;
+  const commentCounts = page.commentCounts;
   const previousHref = page.prevCursor
     ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, page.prevCursor)
     : null;
@@ -164,7 +165,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       {hasPosts ? (
         <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
           {page.items.map((post) => (
-            <PostCard key={post.slug} summary={post} />
+            <PostCard
+              key={post.slug}
+              summary={post}
+              commentCount={commentCounts ? commentCounts[post.slug] ?? 0 : undefined}
+            />
           ))}
         </div>
       ) : (
