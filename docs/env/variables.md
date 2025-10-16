@@ -4,6 +4,7 @@ _Last updated: 2025-10-21 by gpt-5-codex_
 - `SUPABASE_URL` — Supabase project URL.
 - `SUPABASE_SERVICE_ROLE_KEY` — server-side key for privileged writes.
 - `SUPABASE_ANON_KEY` — read/write key used by the public API surface.
+- `ADMIN_REVALIDATE_TOKEN` — shared secret protecting the ISR revalidation API.
 
 Values are never committed. Store secrets in server-side environment management (e.g., hosting control panel).
 

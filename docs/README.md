@@ -21,6 +21,7 @@ The `/docs` directory is the canonical record of architecture, content, and oper
 
 - [05-cdn-and-assets.md](./05-cdn-and-assets.md)
 - [05-cdn-and-assets-invalidation.md](./05-cdn-and-assets-invalidation.md)
+- [operations-runbook.md](./operations-runbook.md)
 - [06-seo-and-metadata.md](./06-seo-and-metadata.md)
 - [07-governance.md](./07-governance.md)
 - [08-privacy-and-security.md](./08-privacy-and-security.md)
