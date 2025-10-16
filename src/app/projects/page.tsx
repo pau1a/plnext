@@ -14,9 +14,30 @@ const BASE_PATH = "/projects";
 const PAGE_SIZE = 6;
 const PAGE_PARAM = DEFAULT_PAGE_PARAM;
 
-const BASE_METADATA: Pick<Metadata, "title" | "description"> = {
+const BASE_METADATA: Metadata = {
   title: "Projects",
   description: "A snapshot of security and AI programmes delivered end-to-end.",
+  alternates: {
+    canonical: BASE_PATH,
+  },
+  openGraph: {
+    title: "Projects",
+    description: "A snapshot of security and AI programmes delivered end-to-end.",
+    url: BASE_PATH,
+    images: [
+      {
+        url: "/window.svg",
+        width: 1200,
+        height: 630,
+        alt: "Paula Livingstone window mark",
+      },
+    ],
+  },
+  twitter: {
+    title: "Projects",
+    description: "A snapshot of security and AI programmes delivered end-to-end.",
+    images: ["/window.svg"],
+  },
 };
 
 type SearchParamsInput = SearchParamRecord | Promise<SearchParamRecord> | undefined;
@@ -52,9 +73,20 @@ export async function generateMetadata({ searchParams }: ProjectsPageProps): Pro
   const previous = state.currentPage > 1 ? buildPageHref(BASE_PATH, state.currentPage - 1, PAGE_PARAM) : undefined;
   const hasNext = totalCount > 0 && state.currentPage < state.totalPages;
   const next = hasNext ? buildPageHref(BASE_PATH, state.currentPage + 1, PAGE_PARAM) : undefined;
+  const canonicalPath = state.currentPage > 1 ? buildPageHref(BASE_PATH, state.currentPage, PAGE_PARAM) : BASE_PATH;
 
   return {
     ...BASE_METADATA,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      ...BASE_METADATA.openGraph,
+      url: canonicalPath,
+    },
+    twitter: {
+      ...BASE_METADATA.twitter,
+    },
     ...(previous || next ? { pagination: { previous, next } } : {}),
   };
 }

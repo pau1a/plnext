@@ -43,22 +43,35 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   const publishedAt = new Date(post.date).toISOString();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://paulalivingstone.com";
+  const canonicalPath = `/blog/${post.slug}`;
 
   return {
     title: post.title,
     description: post.description,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
       type: "article",
       publishedTime: publishedAt,
       title: post.title,
       description: post.description,
-      url: `${siteUrl}/blog/${post.slug}`,
+      url: canonicalPath,
       tags: post.tags,
+      images: [
+        {
+          url: `${siteUrl}/window.svg`,
+          width: 1200,
+          height: 630,
+          alt: "Paula Livingstone window mark",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
+      images: [`${siteUrl}/window.svg`],
     },
   };
 }
