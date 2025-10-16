@@ -10,18 +10,13 @@
   isolation: isolate;
 }
 
-.media {
+.heroMedia {
   position: absolute;
   inset: 0;
   z-index: 0;
 }
 
-.mediaImage {
-  object-fit: cover;
-  object-position: center;
-}
-
-.overlay {
+.heroOverlay {
   pointer-events: none;
   position: absolute;
   inset: 0;
@@ -33,7 +28,7 @@
   );
 }
 
-.copy {
+.heroContent {
   position: relative;
   z-index: 2;
   display: grid;

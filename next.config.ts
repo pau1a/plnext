@@ -1,19 +1,23 @@
-import type { NextConfig } from "next";
-
-const CDN_PREFIX = "https://cdn.networklayer.co.uk/paulalivingstone";
-const isProduction = process.env.NODE_ENV === "production";
-const assetPrefix = isProduction ? CDN_PREFIX : undefined;
-const basePathFromCdn = isProduction
-  ? new URL(CDN_PREFIX).pathname.replace(/\/$/, "")
-  : undefined;
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  assetPrefix,
-  ...(basePathFromCdn
-    ? {
-        basePath: basePathFromCdn,
-      }
-    : {}),
+  images: {
+    // Allow optimized delivery directly from the Network Layer CDN.
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.networklayer.co.uk',
+        pathname: '/paulalivingstone/**',
+      },
+    ],
+    formats: ['image/avif', 'image/webp'],
+  },
+
+  // Explicitly declare base asset prefix for production builds.
+  assetPrefix:
+    process.env.NODE_ENV === 'production'
+      ? 'https://cdn.networklayer.co.uk/paulalivingstone'
+      : undefined,
 };
 
 export default nextConfig;

@@ -65,18 +65,18 @@ export function Hero({
       animate={resolvedAnimate}
       {...motionProps}
     >
-      <div className={styles.media}>
+      <div className={styles.heroMedia}>
         <Image
-          priority
+          src="https://cdn.networklayer.co.uk/paulalivingstone/images/freefall.jpg"
+          alt="Paula Livingstone in freefall — precision under pressure"
           fill
-          className={styles.mediaImage}
-          src="/paulalivingstone/images/freefall.jpg"
-          alt="Paula Livingstone in freefall: precision under pressure"
+          priority
           sizes="100vw"
+          style={{ objectFit: "cover", objectPosition: "center" }}
         />
       </div>
-      <div className={styles.overlay} />
-      <div className={styles.copy}>
+      <div className={styles.heroOverlay} />
+      <div className={styles.heroContent}>
         {copy.eyebrow ? <span className={styles.eyebrow}>{copy.eyebrow}</span> : null}
         <h1 className={styles.heading}>{copy.title}</h1>
         {copy.subheading ? (
