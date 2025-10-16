@@ -1,9 +1,19 @@
+"use client";
+
 import clsx from "clsx";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { useMemo } from "react";
 
 import type { BlogPostSummary } from "@/lib/mdx";
+import {
+  createFadeInUpVariants,
+  motionDurations,
+  useMotionVariants,
+  viewportDefaults,
+} from "@/lib/motion";
 
 import styles from "./card.module.scss";
 
@@ -26,6 +36,30 @@ export function PostCard({
   cta,
   className,
 }: PostCardProps) {
+  const baseVariants = useMemo(
+    () =>
+      createFadeInUpVariants({
+        duration: motionDurations.base,
+        offset: 28,
+      }),
+    []
+  );
+  const { variants, shouldReduceMotion } = useMotionVariants(baseVariants);
+
+  const hoverMotion = shouldReduceMotion
+    ? undefined
+    : {
+        y: -6,
+        transition: { duration: motionDurations.short },
+      };
+  const tapMotion = shouldReduceMotion
+    ? undefined
+    : {
+        y: -2,
+        transition: { duration: motionDurations.xshort },
+      };
+  const resolvedInitial = shouldReduceMotion ? "visible" : "hidden";
+
   const defaultMeta = (
     <time dateTime={summary.date} aria-label="Publication date">
       {format(new Date(summary.date), "MMMM d, yyyy")}
@@ -53,7 +87,15 @@ export function PostCard({
   );
 
   return (
-    <article className={clsx("surface", "surface--interactive", styles.card, className)}>
+    <motion.article
+      className={clsx("surface", "surface--interactive", styles.card, className)}
+      variants={variants}
+      initial={resolvedInitial}
+      whileInView="visible"
+      viewport={viewportDefaults}
+      whileHover={hoverMotion}
+      whileTap={tapMotion}
+    >
       <Link
         className={clsx("surface__link", styles.link)}
         href={href}
@@ -69,6 +111,6 @@ export function PostCard({
         {description ?? defaultDescription}
         <footer className={styles.cardFooter}>{cta ?? defaultCta}</footer>
       </Link>
-    </article>
+    </motion.article>
   );
 }
