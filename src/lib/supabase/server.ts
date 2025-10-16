@@ -1,3 +1,5 @@
+import "server-only";
+
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 export type CommentStatus = "pending" | "approved" | "spam";
@@ -33,37 +35,33 @@ interface Database {
   };
 }
 
+const SUPABASE_URL =
+  process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const SUPABASE_ANON_KEY =
+  process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  throw new Error(
+    "Supabase env vars missing. Set SUPABASE_URL and SUPABASE_ANON_KEY (or NEXT_PUBLIC_ equivalents) in .env.local",
+  );
+}
+
 let client: SupabaseClient<Database> | null = null;
 
-function validateEnv(name: string): string {
-  const value = process.env[name];
-
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-
-  return value;
+function createServerClient(): SupabaseClient<Database> {
+  return createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: false,
+    },
+  });
 }
 
 export function getSupabaseServerClient(): SupabaseClient<Database> {
-  if (client) {
-    return client;
+  if (!client) {
+    client = createServerClient();
   }
-
-  const supabaseUrl = validateEnv("SUPABASE_URL");
-  const supabaseServiceRoleKey = validateEnv("SUPABASE_SERVICE_ROLE_KEY");
-
-  client = createClient<Database>(supabaseUrl, supabaseServiceRoleKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-    global: {
-      headers: {
-        "X-Client-Info": "plnext-server",
-      },
-    },
-  });
 
   return client;
 }
+
+export const supabase = getSupabaseServerClient();

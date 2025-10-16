@@ -19,17 +19,34 @@ const BASE_METADATA: Pick<Metadata, "title" | "description"> = {
   description: "A snapshot of security and AI programmes delivered end-to-end.",
 };
 
+type SearchParamsInput = SearchParamRecord | Promise<SearchParamRecord> | undefined;
+
 interface ProjectsPageProps {
-  searchParams?: SearchParamRecord;
+  searchParams?: SearchParamsInput;
+}
+
+async function resolveSearchParams(
+  searchParams: SearchParamsInput,
+): Promise<SearchParamRecord | undefined> {
+  if (!searchParams) {
+    return undefined;
+  }
+
+  if (typeof (searchParams as Promise<SearchParamRecord>).then === "function") {
+    return searchParams as Promise<SearchParamRecord>;
+  }
+
+  return searchParams as SearchParamRecord;
 }
 
 export async function generateMetadata({ searchParams }: ProjectsPageProps): Promise<Metadata> {
   const projects = await getProjectSummaries();
   const totalCount = projects.length;
+  const resolvedSearchParams = await resolveSearchParams(searchParams);
   const state = resolvePaginationState({
     totalCount,
     pageSize: PAGE_SIZE,
-    searchParams,
+    searchParams: resolvedSearchParams,
     pageParam: PAGE_PARAM,
   });
 
@@ -46,10 +63,11 @@ export async function generateMetadata({ searchParams }: ProjectsPageProps): Pro
 export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
   const projects = await getProjectSummaries();
   const totalCount = projects.length;
+  const resolvedSearchParams = await resolveSearchParams(searchParams);
   const state = resolvePaginationState({
     totalCount,
     pageSize: PAGE_SIZE,
-    searchParams,
+    searchParams: resolvedSearchParams,
     pageParam: PAGE_PARAM,
   });
 

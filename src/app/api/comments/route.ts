@@ -10,6 +10,8 @@ import {
   type CommentsTableInsert,
 } from "@/lib/supabase/server";
 
+export const runtime = "nodejs";
+
 const PAGE_SIZE = 20;
 const MIN_DWELL_TIME_MS = 3_000;
 
@@ -190,16 +192,19 @@ export async function GET(request: Request) {
 
     return response;
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    console.error("GET /api/comments failed:", error);
     logStructured({
       level: "error",
       event: "comments.get.failure",
       requestId,
       slug,
-      message: error instanceof Error ? error.message : "Unknown error",
+      message,
     });
 
     const response = NextResponse.json(
-      { error: "Failed to load comments" },
+      { error: message },
       { status: 500 },
     );
     response.headers.set("x-request-id", requestId);
@@ -326,17 +331,20 @@ export async function POST(request: Request) {
 
     return response;
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    console.error("POST /api/comments failed:", error);
     logStructured({
       level: "error",
       event: "comments.post.failure",
       requestId,
       slug: parsedBody.slug,
       ipHash,
-      message: error instanceof Error ? error.message : "Unknown error",
+      message,
     });
 
     const response = NextResponse.json(
-      { error: "Failed to submit comment" },
+      { error: message },
       { status: 500 },
     );
     response.headers.set("x-request-id", requestId);
