@@ -2,7 +2,7 @@ import "server-only";
 
 import { getBlogPostSummaries, type BlogPostSummary } from "@/lib/mdx";
 
-import { getSupabase, type PostCommentCountsTableRow, type PostsTableRow } from "./server";
+import { getSupabase, type PostsTableRow } from "./server";
 
 export const BLOG_AFTER_PARAM = "after" as const;
 export const BLOG_BEFORE_PARAM = "before" as const;
@@ -92,30 +92,47 @@ async function loadCommentCounts(
   supabase: ReturnType<typeof getSupabase>,
   slugs: string[],
 ): Promise<Record<string, number> | null> {
-  if (slugs.length === 0) {
-    return {};
-  }
+  // Always return a full mapping for the given slugs (zero when absent).
+  const zeroed = Object.fromEntries(slugs.map((s) => [s, 0]));
+  if (slugs.length === 0) return zeroed;
 
+  // 1) First, try the fast path (optional view). If it exists, great.
   try {
     const { data, error } = await supabase
       .from("post_comment_counts")
       .select("slug,approved_count")
       .in("slug", slugs);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
-    const counts = Object.fromEntries(slugs.map((slug) => [slug, 0]));
-    for (const row of (data ?? []) as PostCommentCountsTableRow[]) {
+    const counts = { ...zeroed };
+    for (const row of (data ?? []) as Array<{ slug: string; approved_count: number }>) {
       if (typeof row.approved_count === "number") {
         counts[row.slug] = row.approved_count;
       }
     }
+    return counts;
+  } catch (err) {
+    // Fall through to the plain comments tally (no view required).
+  }
 
+  // 2) Fallback: fetch comments for these slugs and tally in-process.
+  try {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("slug")
+      .in("slug", slugs);
+
+    if (error) throw error;
+
+    const counts = { ...zeroed };
+    for (const row of (data ?? []) as Array<{ slug: string }>) {
+      if (counts[row.slug] !== undefined) counts[row.slug] += 1;
+    }
     return counts;
   } catch (error) {
-    console.error("Failed to load post comment counts from Supabase:", error);
+    console.error("Failed to load comment counts (fallback) from Supabase:", error);
+    // Final fallback: hide counts rather than crash the page.
     return null;
   }
 }

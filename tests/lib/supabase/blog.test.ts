@@ -130,6 +130,10 @@ describe("getBlogIndexPage (supabase)", () => {
       data: Array<{ slug: string; approved_count: number }> | null;
       error: Error | null;
     }> = [];
+    const commentResponses: Array<{
+      data: Array<{ slug: string }> | null;
+      error: Error | null;
+    }> = [];
 
     const postBuilders: Array<{
       select: ReturnType<typeof vi.fn>;
@@ -138,6 +142,10 @@ describe("getBlogIndexPage (supabase)", () => {
       limit: ReturnType<typeof vi.fn>;
     }> = [];
     const countBuilders: Array<{
+      select: ReturnType<typeof vi.fn>;
+      in: ReturnType<typeof vi.fn>;
+    }> = [];
+    const commentBuilders: Array<{
       select: ReturnType<typeof vi.fn>;
       in: ReturnType<typeof vi.fn>;
     }> = [];
@@ -166,12 +174,26 @@ describe("getBlogIndexPage (supabase)", () => {
       return builder;
     }
 
+    function createCommentBuilder() {
+      const select = vi.fn().mockReturnThis();
+      const inOperator = vi
+        .fn()
+        .mockImplementation(() => Promise.resolve(commentResponses.shift() ?? { data: [], error: null }));
+
+      const builder = { select, in: inOperator };
+      commentBuilders.push(builder);
+      return builder;
+    }
+
     const from = vi.fn((table: string) => {
       if (table === "posts") {
         return createPostBuilder();
       }
       if (table === "post_comment_counts") {
         return createCountBuilder();
+      }
+      if (table === "comments") {
+        return createCommentBuilder();
       }
 
       throw new Error(`Unexpected table: ${table}`);
@@ -181,7 +203,7 @@ describe("getBlogIndexPage (supabase)", () => {
       getSupabase: () => ({ from }),
     }));
 
-    return { postResponses, countResponses, postBuilders, countBuilders };
+    return { postResponses, countResponses, commentResponses, postBuilders, countBuilders, commentBuilders };
   }
 
   it("applies tie-breaker filters for after/prev navigation", async () => {
@@ -290,12 +312,13 @@ describe("getBlogIndexPage (supabase)", () => {
   });
 
   it("suppresses comment counts when Supabase lookup fails", async () => {
-    const { postResponses, countResponses } = setupSupabaseMock();
+    const { postResponses, countResponses, commentResponses } = setupSupabaseMock();
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     const blog = await import("@/lib/supabase/blog");
 
     const failure = new Error("boom");
+    const fallbackFailure = new Error("Unexpected table: comments");
 
     postResponses.push({
       data: [
@@ -311,11 +334,15 @@ describe("getBlogIndexPage (supabase)", () => {
       error: null,
     });
     countResponses.push({ data: null, error: failure });
+    commentResponses.push({ data: null, error: fallbackFailure });
 
     const page = await blog.getBlogIndexPage({ pageSize: 1 });
 
     expect(page.commentCounts).toBeNull();
-    expect(consoleSpy).toHaveBeenCalledWith("Failed to load post comment counts from Supabase:", failure);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Failed to load comment counts (fallback) from Supabase:",
+      fallbackFailure,
+    );
 
     consoleSpy.mockRestore();
   });
