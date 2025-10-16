@@ -26,6 +26,12 @@ This runbook converts the Stage 5 backlog into a linear set of engineering tasks
 3. Document cache contract and expectations for moderation-triggered refresh.
 4. Add monitoring/logging to confirm headers are emitted in production.
 
+### Cache contract (blog index + metadata)
+
+- **Revalidation window:** All blog index surfaces (`/blog`, RSS, sitemap, and metadata generation) now export `revalidate = 60` and consume the cached Supabase query helper.
+- **Cache tags:** The helper exposes `BLOG_LIST_CACHE_TAG` for index-level refreshes and `getBlogPostCacheTag(slug)` for per-article events. Moderation tooling must call `revalidateTag` with both values when a comment is approved/rejected to keep counts fresh without a full site purge.
+- **Structured telemetry:** Each call to the loader emits a `blog-cache-hint` JSON log summarising the cursor, applied tags, and active revalidate window. Operations can scrape these logs to verify that CDN/edge responses respect the expected cache headers.
+
 ## 4. Verify ISR rebuild and CDN asset caching
 <a href="../../issues/new?title=Stage%205%3A%20Verify%20ISR%20rebuild%20and%20CDN%20caching&labels=stage-5%2Crunbook&body=%23%23%20Checklist%0A-%20%5B%20%5D%201.%20Create%20server%20action%20or%20API%20endpoint%20to%20trigger%20on-demand%20revalidation%20by%20tag%2Fpath.%0A-%20%5B%20%5D%202.%20Script%20local%20and%20staging%20verification%20of%20ISR%20rebuilds%2C%20recording%20timings%20and%20outcomes.%0A-%20%5B%20%5D%203.%20Validate%20CDN%20asset%20caching%20rules%20%28headers%2C%20compression%29%20and%20capture%20evidence.%0A-%20%5B%20%5D%204.%20Document%20the%20verification%20steps%20in%20operations%20runbook." class="btn btn-primary" target="_blank" rel="noopener noreferrer">Start Task</a>
 1. Create server action or API endpoint to trigger on-demand revalidation by tag/path.

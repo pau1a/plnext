@@ -1,8 +1,18 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
+
 import { getBlogPostSummaries, type BlogPostSummary } from "@/lib/mdx";
 
 import { getSupabase, type PostsTableRow } from "./server";
+
+export const BLOG_INDEX_REVALIDATE_SECONDS = 60;
+export const BLOG_LIST_CACHE_TAG = "supabase:blog:index" as const;
+const BLOG_POST_CACHE_TAG_PREFIX = "supabase:blog:post:" as const;
+
+export function getBlogPostCacheTag(slug: string) {
+  return `${BLOG_POST_CACHE_TAG_PREFIX}${slug}`;
+}
 
 export const BLOG_AFTER_PARAM = "after" as const;
 export const BLOG_BEFORE_PARAM = "before" as const;
@@ -112,7 +122,7 @@ async function loadCommentCounts(
       }
     }
     return counts;
-  } catch (err) {
+  } catch {
     // Fall through to the plain comments tally (no view required).
   }
 
@@ -141,6 +151,34 @@ function hasSupabaseConfig() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   return Boolean(url && anonKey);
+}
+
+type BlogCacheSource = "supabase" | "fallback" | "fallback-error";
+
+function logBlogCacheUsage(
+  source: BlogCacheSource,
+  options: BlogIndexPageOptions,
+  page: BlogIndexPageResult,
+) {
+  try {
+    const slugTags = Array.from(new Set(page.items.map((item) => getBlogPostCacheTag(item.slug))));
+
+    const payload = {
+      event: "blog-cache-hint",
+      source,
+      revalidate: BLOG_INDEX_REVALIDATE_SECONDS,
+      tags: [BLOG_LIST_CACHE_TAG, ...slugTags],
+      cursor: {
+        after: options.after ?? null,
+        before: options.before ?? null,
+      },
+      itemCount: page.items.length,
+    } as const;
+
+    console.info(JSON.stringify(payload));
+  } catch (error) {
+    console.error("Failed to emit blog cache hint:", error);
+  }
 }
 
 async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogIndexPageResult> {
@@ -258,6 +296,12 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
   } satisfies BlogIndexPageResult;
 }
 
+const cachedFetchFromSupabase = unstable_cache(
+  async (options: BlogIndexPageOptions) => fetchFromSupabase(options),
+  ["supabase-blog-index"],
+  { revalidate: BLOG_INDEX_REVALIDATE_SECONDS, tags: [BLOG_LIST_CACHE_TAG] },
+);
+
 function sortFallbackRows(rows: PostsTableRow[]) {
   return [...rows].sort((a, b) => {
     const left = Date.parse(a.inserted_at);
@@ -365,18 +409,24 @@ async function fetchFromFallback(options: BlogIndexPageOptions): Promise<BlogInd
 export async function getBlogIndexPage(options: BlogIndexPageOptions): Promise<BlogIndexPageResult> {
   const forceFallback = process.env.BLOG_INDEX_FORCE_FALLBACK === "1";
   if (forceFallback || !hasSupabaseConfig()) {
-    return fetchFromFallback(options);
+    const page = await fetchFromFallback(options);
+    logBlogCacheUsage("fallback", options, page);
+    return page;
   }
 
   try {
-    return await fetchFromSupabase(options);
+    const page = await cachedFetchFromSupabase(options);
+    logBlogCacheUsage("supabase", options, page);
+    return page;
   } catch (error) {
     if (error instanceof BlogCursorError) {
       throw error;
     }
 
     console.error("Failed to load blog index from Supabase, falling back to static content:", error);
-    return fetchFromFallback(options);
+    const fallbackPage = await fetchFromFallback(options);
+    logBlogCacheUsage("fallback-error", options, fallbackPage);
+    return fallbackPage;
   }
 }
 

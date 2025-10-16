@@ -2,6 +2,7 @@ import { getBlogPost } from "@/lib/mdx";
 import {
   BLOG_AFTER_PARAM,
   BLOG_BEFORE_PARAM,
+  BLOG_INDEX_REVALIDATE_SECONDS,
   BlogCursorError,
   createCursorHref,
   getBlogIndexPage,
@@ -14,7 +15,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://paulalivingstone.co
 
 const RSS_PAGE_SIZE = 12;
 
-export const revalidate = 3600;
+export const revalidate = BLOG_INDEX_REVALIDATE_SECONDS;
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -92,9 +93,26 @@ export async function GET(request: Request) {
       </channel>
     </rss>`;
 
+  const cacheControl = `s-maxage=${BLOG_INDEX_REVALIDATE_SECONDS}, stale-while-revalidate=${BLOG_INDEX_REVALIDATE_SECONDS}`;
+
+  try {
+    console.info(
+      JSON.stringify({
+        event: "rss-cache-hint",
+        revalidate: BLOG_INDEX_REVALIDATE_SECONDS,
+        cacheControl,
+        cursor: { after, before },
+        itemCount: posts.length,
+      }),
+    );
+  } catch (error) {
+    console.error("Failed to emit RSS cache hint:", error);
+  }
+
   return new Response(rss, {
     headers: {
       "Content-Type": "application/rss+xml; charset=utf-8",
+      "Cache-Control": cacheControl,
     },
   });
 }
