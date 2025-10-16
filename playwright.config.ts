@@ -26,6 +26,7 @@ export default defineConfig({
         SUPABASE_ANON_KEY: "playwright-test",
         NEXT_PUBLIC_SUPABASE_ANON_KEY: "playwright-test",
         BLOG_INDEX_FORCE_FALLBACK: "0",
+        BLOG_PAGE_SIZE: "2",
         NEXT_PUBLIC_BLOG_PAGE_SIZE: "2",
         NODE_ENV: "development",
         PORT: "3000",

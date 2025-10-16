@@ -16,7 +16,7 @@ import type { Metadata } from "next";
 
 const BASE_PATH = "/blog";
 const PAGE_SIZE = (() => {
-  const envValue = process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE ?? process.env.BLOG_PAGE_SIZE;
+  const envValue = process.env.BLOG_PAGE_SIZE ?? process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE;
   const parsed = Number.parseInt(envValue ?? "", 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 6;
 })();
