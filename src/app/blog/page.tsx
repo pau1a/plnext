@@ -1,15 +1,60 @@
+import { Pagination } from "@/components/pagination";
 import { PostCard } from "@/components/post-card";
 import cardStyles from "@/components/card.module.scss";
 import { getBlogPostSummaries } from "@/lib/mdx";
+import {
+  buildPageHref,
+  DEFAULT_PAGE_PARAM,
+  resolvePaginationState,
+  type SearchParamRecord,
+} from "@/lib/pagination";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+const BASE_PATH = "/blog";
+const PAGE_SIZE = 6;
+const PAGE_PARAM = DEFAULT_PAGE_PARAM;
+
+const BASE_METADATA: Pick<Metadata, "title" | "description"> = {
   title: "Blog",
   description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
 };
 
-export default async function BlogPage() {
+interface BlogPageProps {
+  searchParams?: SearchParamRecord;
+}
+
+export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
   const posts = await getBlogPostSummaries();
+  const totalCount = posts.length;
+  const state = resolvePaginationState({
+    totalCount,
+    pageSize: PAGE_SIZE,
+    searchParams,
+    pageParam: PAGE_PARAM,
+  });
+
+  const previous = state.currentPage > 1 ? buildPageHref(BASE_PATH, state.currentPage - 1, PAGE_PARAM) : undefined;
+  const hasNext = totalCount > 0 && state.currentPage < state.totalPages;
+  const next = hasNext ? buildPageHref(BASE_PATH, state.currentPage + 1, PAGE_PARAM) : undefined;
+
+  return {
+    ...BASE_METADATA,
+    ...(previous || next ? { pagination: { previous, next } } : {}),
+  };
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const posts = await getBlogPostSummaries();
+  const totalCount = posts.length;
+  const state = resolvePaginationState({
+    totalCount,
+    pageSize: PAGE_SIZE,
+    searchParams,
+    pageParam: PAGE_PARAM,
+  });
+
+  const hasPosts = totalCount > 0;
+  const visiblePosts = hasPosts ? posts.slice(state.startIndex, state.endIndex) : [];
 
   return (
     <section className="u-stack u-gap-2xl">
@@ -20,15 +65,25 @@ export default async function BlogPage() {
         </p>
       </header>
 
-      {posts.length === 0 ? (
-        <p className="u-text-center u-text-muted">New writing is on the way.</p>
-      ) : (
+      {hasPosts ? (
         <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
-          {posts.map((post) => (
+          {visiblePosts.map((post) => (
             <PostCard key={post.slug} summary={post} />
           ))}
         </div>
+      ) : (
+        <p className="u-text-center u-text-muted">New writing is on the way.</p>
       )}
+
+      {hasPosts ? (
+        <Pagination
+          totalCount={totalCount}
+          pageSize={state.pageSize}
+          currentPage={state.currentPage}
+          basePath={BASE_PATH}
+          pageParam={PAGE_PARAM}
+        />
+      ) : null}
     </section>
   );
 }
