@@ -38,12 +38,42 @@ function formatCommentDate(value?: string) {
   return format(new Date(timestamp), "MMMM d, yyyy");
 }
 
+async function loadComments(
+  slug: string,
+  after: string | null,
+  signal: AbortSignal,
+): Promise<CommentResponse> {
+  const searchParams = new URLSearchParams({ slug });
+  if (after) {
+    searchParams.set("after", after);
+  }
+
+  const response = await fetch(`/api/comments?${searchParams.toString()}`, {
+    signal,
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => "");
+    console.error("comments fetch failed", response.status, body);
+    return { comments: [], nextCursor: null };
+  }
+
+  const payload = (await response
+    .json()
+    .catch(() => ({ comments: [], nextCursor: null }))) as Partial<CommentResponse>;
+
+  return {
+    comments: payload.comments ?? [],
+    nextCursor: payload.nextCursor ?? null,
+  };
+}
+
 export function CommentList({ slug, className }: CommentListProps) {
   const { optimisticComments, removeOptimisticComment } = useCommentContext();
   const [comments, setComments] = useState<CommentPayload[]>([]);
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -54,28 +84,12 @@ export function CommentList({ slug, className }: CommentListProps) {
         abortControllerRef.current?.abort();
         abortControllerRef.current = controller;
         setLoadingInitial(true);
-        setError(null);
       } else {
         setLoadingMore(true);
       }
 
       try {
-        const searchParams = new URLSearchParams({ slug });
-        if (after) {
-          searchParams.set("after", after);
-        }
-
-        const response = await fetch(`/api/comments?${searchParams.toString()}`, {
-          signal: controller.signal,
-          cache: "no-store",
-        });
-
-        if (!response.ok) {
-          const payload = await response.json().catch(() => ({ error: "Failed to load comments" }));
-          throw new Error(payload?.error ?? "Failed to load comments");
-        }
-
-        const payload = (await response.json()) as CommentResponse;
+        const payload = await loadComments(slug, after, controller.signal);
 
         setComments((previous) => (append ? [...previous, ...payload.comments] : payload.comments));
         setNextCursor(payload.nextCursor);
@@ -83,9 +97,7 @@ export function CommentList({ slug, className }: CommentListProps) {
         if (fetchError instanceof DOMException && fetchError.name === "AbortError") {
           return;
         }
-
-        const message = fetchError instanceof Error ? fetchError.message : "Failed to load comments";
-        setError(message);
+        console.error("Unable to load comments", fetchError);
       } finally {
         if (!append) {
           setLoadingInitial(false);
@@ -141,18 +153,6 @@ export function CommentList({ slug, className }: CommentListProps) {
     return (
       <div className={clsx(styles.emptyState, className)} role="status" aria-live="polite">
         Loading comments…
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={clsx(styles.emptyState, className)} role="alert">
-        <p className="u-text-md u-font-semibold">We couldn&apos;t load the comments.</p>
-        <p className="u-text-sm u-text-muted">{error}</p>
-        <button type="button" className="button" onClick={() => fetchPage(null, { append: false })}>
-          Try again
-        </button>
       </div>
     );
   }
