@@ -1,12 +1,9 @@
 "use client";
 
-import {
+import posthog, {
   hasPosthogStarted,
-  initPosthog,
-  isPosthogEnabled,
-  posthog,
-  shutdownPosthog,
-  trackPageview,
+  isPosthogConfigured,
+  withPosthog,
 } from "@/lib/analytics/posthog";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -43,7 +40,7 @@ export function AnalyticsConsentProvider({ children }: { children: ReactNode }) 
   const [consent, setConsentState] = useState<ConsentState>("unset");
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isConfigured = isPosthogEnabled();
+  const isConfigured = isPosthogConfigured();
 
   useEffect(() => {
     setConsentState(getInitialConsent());
@@ -64,15 +61,17 @@ export function AnalyticsConsentProvider({ children }: { children: ReactNode }) 
     }
 
     if (consent === "granted") {
-      initPosthog();
-      posthog.opt_in_capturing();
-      posthog.register({ analytics_consent: "granted" });
-      posthog.capture("analytics_consent_updated", { status: "granted" });
+      void withPosthog((client) => {
+        client.opt_in_capturing?.();
+        client.register?.({ analytics_consent: "granted" });
+        client.capture?.("analytics_consent_updated", { status: "granted" });
+      });
     } else if (consent === "denied") {
       if (hasPosthogStarted()) {
         posthog.capture("analytics_consent_updated", { status: "denied" });
       }
-      shutdownPosthog();
+      posthog.optOut();
+      posthog.reset();
     }
   }, [consent, hasHydrated, isConfigured]);
 
@@ -83,7 +82,7 @@ export function AnalyticsConsentProvider({ children }: { children: ReactNode }) 
 
     const query = searchParams?.toString();
     const url = query ? `${pathname}?${query}` : pathname ?? "/";
-    trackPageview(url);
+    posthog.capture("$pageview", { $current_url: url });
   }, [consent, hasHydrated, isConfigured, pathname, searchParams]);
 
   const updateConsent = useCallback((state: Exclude<ConsentState, "unset">) => {
@@ -95,7 +94,8 @@ export function AnalyticsConsentProvider({ children }: { children: ReactNode }) 
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(STORAGE_KEY);
     }
-    shutdownPosthog();
+    posthog.optOut();
+    posthog.reset();
   }, []);
 
   const value = useMemo<AnalyticsConsentContextValue>(
