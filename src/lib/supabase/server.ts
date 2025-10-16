@@ -16,12 +16,24 @@ export interface CommentsTableInsert {
   content: string;
 }
 
+export interface PostsTableRow {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  tags: string[] | null;
+  inserted_at: string;
+}
+
 interface Database {
   public: {
     Tables: {
       comments: {
         Row: CommentsTableRow;
         Insert: CommentsTableInsert;
+      };
+      posts: {
+        Row: PostsTableRow;
       };
     };
   };

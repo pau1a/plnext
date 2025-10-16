@@ -1,7 +1,14 @@
-import { getBlogPostSummaries, getProjectSummaries } from "@/lib/mdx";
+import { getProjectSummaries } from "@/lib/mdx";
+import {
+  BLOG_AFTER_PARAM,
+  createCursorHref,
+  getBlogIndexPage,
+  type BlogIndexPageResult,
+} from "@/lib/supabase/blog";
 import type { MetadataRoute } from "next";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://paulalivingstone.com";
+const BLOG_PAGE_SIZE = 6;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -11,8 +18,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: now,
   }));
 
-  const posts = await getBlogPostSummaries();
-  const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+  const allPosts: BlogIndexPageResult["items"] = [];
+  const paginationRoutes: MetadataRoute.Sitemap = [];
+  const visitedTokens = new Set<string | null>();
+  let afterToken: string | null = null;
+  let isFirst = true;
+
+  // Iterate through cursor pages to gather both post URLs and paginated index routes.
+  // The visited set protects against a misconfigured cursor that returns duplicate pages.
+  while (!visitedTokens.has(afterToken)) {
+    visitedTokens.add(afterToken);
+
+    const page = await getBlogIndexPage({ pageSize: BLOG_PAGE_SIZE, after: afterToken });
+
+    if (page.items.length === 0) {
+      break;
+    }
+
+    if (!isFirst && afterToken) {
+      const pageUrl = `${siteUrl}${createCursorHref("/blog", BLOG_AFTER_PARAM, afterToken)}`;
+      paginationRoutes.push({
+        url: pageUrl,
+        lastModified: new Date(page.items[0].date),
+      });
+    }
+
+    allPosts.push(...page.items);
+
+    if (!page.nextCursor) {
+      break;
+    }
+
+    afterToken = page.nextCursor;
+    isFirst = false;
+  }
+
+  const postRoutes: MetadataRoute.Sitemap = allPosts.map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
   }));
@@ -23,5 +64,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(project.date),
   }));
 
-  return [...baseRoutes, ...postRoutes, ...projectRoutes];
+  return [...baseRoutes, ...paginationRoutes, ...postRoutes, ...projectRoutes];
 }
