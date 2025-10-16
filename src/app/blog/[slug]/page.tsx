@@ -1,12 +1,30 @@
+import { Suspense } from "react";
+
+import { CommentForm } from "@/components/comment-form";
 import { CommentList } from "@/components/comment-list";
+import { CommentProvider } from "@/components/comment-context";
 import { getBlogPost, getBlogPostSummaries, getBlogSlugs } from "@/lib/mdx";
 import { format } from "date-fns";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+interface BlogPostPageParams {
+  slug: string;
+}
+
+type BlogPostPageParamsInput = BlogPostPageParams | Promise<BlogPostPageParams>;
+
 interface BlogPostPageProps {
-  params: { slug: string };
+  params: BlogPostPageParamsInput;
+}
+
+async function resolveParams(params: BlogPostPageParamsInput): Promise<BlogPostPageParams> {
+  if (typeof (params as Promise<BlogPostPageParams>).then === "function") {
+    return params as Promise<BlogPostPageParams>;
+  }
+
+  return params as BlogPostPageParams;
 }
 
 export async function generateStaticParams() {
@@ -14,7 +32,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
+  const { slug } = await resolveParams(params);
+  const post = await getBlogPost(slug);
 
   if (!post) {
     return {
@@ -45,13 +64,53 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug);
+  const { slug } = await resolveParams(params);
 
-  if (!post) {
+  let postError: Error | null = null;
+  const post = await getBlogPost(slug).catch((error) => {
+    const resolvedError = error instanceof Error ? error : new Error(String(error));
+    postError = resolvedError;
+    console.error(`Failed to load blog post ${slug}:`, resolvedError);
+    return null;
+  });
+
+  if (!post && !postError) {
     notFound();
   }
 
-  const relatedPosts = (await getBlogPostSummaries()).filter((item) => item.slug !== post.slug).slice(0, 3);
+  let relatedPosts: Awaited<ReturnType<typeof getBlogPostSummaries>> = [];
+  try {
+    const summaries = await getBlogPostSummaries();
+    relatedPosts = summaries.filter((item) => item.slug !== post?.slug).slice(0, 3);
+  } catch (error) {
+    const resolvedError = error instanceof Error ? error : new Error(String(error));
+    console.error("Failed to load related posts:", resolvedError);
+    relatedPosts = [];
+  }
+
+  if (postError) {
+    return (
+      <article className="u-stack u-gap-2xl u-max-w-lg u-center">
+        <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
+          <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">
+            <i className="fa-solid fa-arrow-left" aria-hidden="true" />
+            <span>Back to all posts</span>
+          </Link>
+        </nav>
+
+        <header className="u-stack u-gap-sm">
+          <h1 className="heading-display-lg">We couldn&apos;t load this post</h1>
+          <p className="u-text-lead">Please try again later.</p>
+        </header>
+
+        <p className="u-text-sm u-text-muted">
+          Something went wrong while loading the article. Our team has been notified.
+        </p>
+      </article>
+    );
+  }
+
+  const resolvedPost = post!;
 
   return (
     <article className="u-stack u-gap-2xl u-max-w-lg u-center">
@@ -64,13 +123,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <header className="u-stack u-gap-sm">
         <time className="u-text-uppercase u-text-xs u-text-muted">
-          {format(new Date(post.date), "MMMM d, yyyy")}
+          {format(new Date(resolvedPost.date), "MMMM d, yyyy")}
         </time>
-        <h1 className="heading-display-lg">{post.title}</h1>
-        <p className="u-text-lead">{post.description}</p>
-        {post.tags?.length ? (
+        <h1 className="heading-display-lg">{resolvedPost.title}</h1>
+        <p className="u-text-lead">{resolvedPost.description}</p>
+        {resolvedPost.tags?.length ? (
           <ul className="tag-list">
-            {post.tags.map((tag) => (
+            {resolvedPost.tags.map((tag) => (
               <li key={tag} className="tag-list__item">
                 {tag}
               </li>
@@ -79,16 +138,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         ) : null}
       </header>
 
-      <div className="prose u-stack u-gap-lg">{post.content}</div>
+      <div className="prose u-stack u-gap-lg">{resolvedPost.content}</div>
 
-      {post.comments?.length ? (
-        <section className="u-stack u-gap-sm" aria-labelledby="comments-heading">
-          <h2 id="comments-heading" className="heading-subtitle">
-            Reader comments
-          </h2>
-          <CommentList comments={post.comments} />
-        </section>
-      ) : null}
+      <section className="u-stack u-gap-md" aria-labelledby="comments-heading">
+        <h2 id="comments-heading" className="heading-subtitle">
+          Join the discussion
+        </h2>
+        <CommentProvider slug={resolvedPost.slug}>
+          <CommentForm slug={resolvedPost.slug} />
+          <Suspense fallback={null}>
+            <CommentList slug={resolvedPost.slug} />
+          </Suspense>
+        </CommentProvider>
+      </section>
 
       {relatedPosts.length > 0 ? (
         <aside className="surface u-pad-xl u-stack u-gap-sm">

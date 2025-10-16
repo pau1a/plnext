@@ -19,17 +19,33 @@ const BASE_METADATA: Pick<Metadata, "title" | "description"> = {
   description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
 };
 
+type SearchParamsInput = SearchParamRecord | Promise<SearchParamRecord> | undefined;
+
 interface BlogPageProps {
-  searchParams?: SearchParamRecord;
+  searchParams?: SearchParamsInput;
+}
+
+async function normalizeSearchParams(
+  searchParams: SearchParamsInput,
+): Promise<SearchParamRecord | undefined> {
+  if (!searchParams) {
+    return undefined;
+  }
+
+  const candidate = searchParams as Promise<SearchParamRecord> | SearchParamRecord;
+  return typeof (candidate as Promise<SearchParamRecord>)?.then === "function"
+    ? await (candidate as Promise<SearchParamRecord>)
+    : (candidate as SearchParamRecord);
 }
 
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
   const posts = await getBlogPostSummaries();
   const totalCount = posts.length;
+  const resolvedSearchParams = await normalizeSearchParams(searchParams);
   const state = resolvePaginationState({
     totalCount,
     pageSize: PAGE_SIZE,
-    searchParams,
+    searchParams: resolvedSearchParams,
     pageParam: PAGE_PARAM,
   });
 
@@ -46,10 +62,11 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const posts = await getBlogPostSummaries();
   const totalCount = posts.length;
+  const resolvedSearchParams = await normalizeSearchParams(searchParams);
   const state = resolvePaginationState({
     totalCount,
     pageSize: PAGE_SIZE,
-    searchParams,
+    searchParams: resolvedSearchParams,
     pageParam: PAGE_PARAM,
   });
 

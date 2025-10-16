@@ -1,25 +1,19 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import "server-only";
 
-export type CommentStatus = "pending" | "approved" | "spam";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 export interface CommentsTableRow {
   id: string;
-  post_slug: string;
-  author_name: string;
-  author_email: string;
-  body: string;
+  slug: string;
+  author: string;
+  content: string;
   created_at: string;
-  status: CommentStatus;
-  ip_hash: string | null;
 }
 
 export interface CommentsTableInsert {
-  post_slug: string;
-  author_name: string;
-  author_email: string;
-  body: string;
-  status: CommentStatus;
-  ip_hash: string | null;
+  slug: string;
+  author: string;
+  content: string;
 }
 
 interface Database {
@@ -33,37 +27,24 @@ interface Database {
   };
 }
 
-let client: SupabaseClient<Database> | null = null;
+let cachedClient: SupabaseClient<Database> | null = null;
 
-function validateEnv(name: string): string {
-  const value = process.env[name];
-
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
+export function getSupabase(): SupabaseClient<Database> {
+  if (cachedClient) {
+    return cachedClient;
   }
 
-  return value;
-}
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const anonKey =
+    process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
-export function getSupabaseServerClient(): SupabaseClient<Database> {
-  if (client) {
-    return client;
+  if (!url || !anonKey) {
+    throw new Error("SUPABASE_ENV_MISSING");
   }
 
-  const supabaseUrl = validateEnv("SUPABASE_URL");
-  const supabaseServiceRoleKey = validateEnv("SUPABASE_SERVICE_ROLE_KEY");
-
-  client = createClient<Database>(supabaseUrl, supabaseServiceRoleKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-    global: {
-      headers: {
-        "X-Client-Info": "plnext-server",
-      },
-    },
+  cachedClient = createClient<Database>(url, anonKey, {
+    auth: { persistSession: false },
   });
 
-  return client;
+  return cachedClient;
 }

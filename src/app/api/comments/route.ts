@@ -3,12 +3,12 @@ import crypto from "node:crypto";
 import sanitizeHtml from "sanitize-html";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import type { PostgrestError } from "@supabase/supabase-js";
 
 import { enforceCommentRateLimits } from "@/lib/rate-limit";
-import {
-  getSupabaseServerClient,
-  type CommentsTableInsert,
-} from "@/lib/supabase/server";
+import { getSupabase, type CommentsTableInsert } from "@/lib/supabase/server";
+
+export const runtime = "nodejs";
 
 const PAGE_SIZE = 20;
 const MIN_DWELL_TIME_MS = 3_000;
@@ -95,6 +95,33 @@ function logStructured(data: Record<string, unknown>) {
   console.log(JSON.stringify(data));
 }
 
+function serializeSupabaseError(error: unknown) {
+  const fallbackMessage =
+    error instanceof Error ? error.message : typeof error === "string" ? error : "Unknown error";
+
+  if (error && typeof error === "object") {
+    const typed = error as PostgrestError & {
+      details?: string | null;
+      hint?: string | null;
+      code?: string | null;
+    };
+
+    return {
+      message: typed.message ?? fallbackMessage,
+      details: typed.details ?? null,
+      hint: typed.hint ?? null,
+      code: typed.code ?? null,
+    };
+  }
+
+  return {
+    message: fallbackMessage,
+    details: null,
+    hint: null,
+    code: null,
+  };
+}
+
 function parseAfterCursor(after: string | null): string | null {
   if (!after) {
     return null;
@@ -141,12 +168,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    const supabase = getSupabaseServerClient();
+    const supabase = getSupabase();
     const query = supabase
       .from("comments")
-      .select("id, author_name, body, created_at")
-      .eq("post_slug", slug)
-      .eq("status", "approved")
+      .select("id, slug, author, content, created_at")
+      .eq("slug", slug)
       .order("created_at", { ascending: true });
 
     const limitedQuery = after ? query.gt("created_at", after) : query;
@@ -163,8 +189,8 @@ export async function GET(request: Request) {
       {
         comments: records.map((row) => ({
           id: row.id,
-          author: row.author_name,
-          body: row.body,
+          author: row.author,
+          body: row.content,
           createdAt: row.created_at,
         })),
         nextCursor: hasMore ? records[records.length - 1]?.created_at ?? null : null,
@@ -190,16 +216,27 @@ export async function GET(request: Request) {
 
     return response;
   } catch (error) {
+    const serialized = serializeSupabaseError(error);
+
+    console.error("GET /api/comments failed:", error);
     logStructured({
       level: "error",
       event: "comments.get.failure",
       requestId,
       slug,
-      message: error instanceof Error ? error.message : "Unknown error",
+      message: serialized.message,
+      details: serialized.details,
+      hint: serialized.hint,
+      code: serialized.code,
     });
 
     const response = NextResponse.json(
-      { error: "Failed to load comments" },
+      {
+        error: serialized.message,
+        details: serialized.details,
+        hint: serialized.hint,
+        code: serialized.code,
+      },
       { status: 500 },
     );
     response.headers.set("x-request-id", requestId);
@@ -295,14 +332,11 @@ export async function POST(request: Request) {
   }
 
   try {
-    const supabase = getSupabaseServerClient();
+    const supabase = getSupabase();
     const payload: CommentsTableInsert = {
-      post_slug: parsedBody.slug,
-      author_name: parsedBody.author,
-      author_email: parsedBody.email,
-      body: sanitizedBody,
-      status: "pending",
-      ip_hash: ipHash,
+      slug: parsedBody.slug,
+      author: parsedBody.author,
+      content: sanitizedBody,
     };
 
     const { error } = await supabase.from("comments").insert(payload);
@@ -326,17 +360,28 @@ export async function POST(request: Request) {
 
     return response;
   } catch (error) {
+    const serialized = serializeSupabaseError(error);
+
+    console.error("POST /api/comments failed:", error);
     logStructured({
       level: "error",
       event: "comments.post.failure",
       requestId,
       slug: parsedBody.slug,
       ipHash,
-      message: error instanceof Error ? error.message : "Unknown error",
+      message: serialized.message,
+      details: serialized.details,
+      hint: serialized.hint,
+      code: serialized.code,
     });
 
     const response = NextResponse.json(
-      { error: "Failed to submit comment" },
+      {
+        error: serialized.message,
+        details: serialized.details,
+        hint: serialized.hint,
+        code: serialized.code,
+      },
       { status: 500 },
     );
     response.headers.set("x-request-id", requestId);

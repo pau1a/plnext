@@ -25,6 +25,11 @@
   box-shadow: var(--shadow-md);
 }
 
+.optimistic {
+  border-style: dashed;
+  opacity: 0.95;
+}
+
 .meta {
   display: flex;
   flex-wrap: wrap;
@@ -61,4 +66,26 @@
   text-align: center;
   color: var(--text-muted);
   background-color: var(--surface-elevated);
+}
+
+.pendingStatus {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.pendingError {
+  color: var(--color-error, #ef4444);
+}
+
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

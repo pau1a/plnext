@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => {
   const supabaseLimit = vi.fn();
   const supabaseFrom = vi.fn();
   const rateLimitMock = vi.fn();
+  const getSupabase = vi.fn();
 
   return {
     supabaseInsert,
@@ -19,14 +20,16 @@ const mocks = vi.hoisted(() => {
     supabaseLimit,
     supabaseFrom,
     rateLimitMock,
+    getSupabase,
   };
 });
 
-vi.mock("@/lib/supabase/server", () => ({
-  getSupabaseServerClient: () => ({
-    from: mocks.supabaseFrom,
-  }),
-}));
+vi.mock("@/lib/supabase/server", () => {
+  const client = { from: mocks.supabaseFrom };
+  return {
+    getSupabase: mocks.getSupabase.mockImplementation(() => client),
+  };
+});
 
 vi.mock("@/lib/rate-limit", () => ({
   enforceCommentRateLimits: mocks.rateLimitMock,
@@ -42,6 +45,7 @@ describe("/api/comments", () => {
     supabaseLimit,
     supabaseFrom,
     rateLimitMock,
+    getSupabase,
   } = mocks;
 
   const queryBuilder = {
@@ -62,12 +66,14 @@ describe("/api/comments", () => {
     supabaseLimit.mockReset();
     supabaseFrom.mockReset();
     rateLimitMock.mockReset();
+    getSupabase.mockReset();
 
     supabaseFrom.mockReturnValue(queryBuilder);
     supabaseSelect.mockReturnValue(queryBuilder);
     supabaseEq.mockReturnValue(queryBuilder);
     supabaseOrder.mockReturnValue(queryBuilder);
     supabaseGt.mockReturnValue(queryBuilder);
+    getSupabase.mockImplementation(() => ({ from: supabaseFrom }));
   });
 
   afterEach(() => {
@@ -84,10 +90,10 @@ describe("/api/comments", () => {
       data: [
         {
           id: "1",
-          author_name: "Paula",
-          body: "Great post!",
+          slug: "hello-world",
+          author: "Paula",
+          content: "Great post!",
           created_at: now,
-          status: "approved",
         },
       ],
       error: null,
@@ -116,7 +122,7 @@ describe("/api/comments", () => {
     });
 
     expect(supabaseFrom).toHaveBeenCalledWith("comments");
-    expect(supabaseSelect).toHaveBeenCalledWith("id, author_name, body, created_at");
+    expect(supabaseSelect).toHaveBeenCalledWith("id, slug, author, content, created_at");
   });
 
   it("rejects missing slug", async () => {
@@ -171,16 +177,19 @@ describe("/api/comments", () => {
 
     expect(supabaseInsert).toHaveBeenCalledWith(
       expect.objectContaining({
-        post_slug: "hello-world",
-        author_name: "Ada",
-        author_email: "ada@example.com",
-        body: "Love it!",
-        status: "pending",
+        slug: "hello-world",
+        author: "Ada",
+        content: "Love it!",
       }),
     );
     const inserted = supabaseInsert.mock.calls[0][0];
-    expect(typeof inserted.ip_hash).toBe("string");
-    expect(inserted.ip_hash).toHaveLength(64);
+    expect(inserted).toEqual(
+      expect.objectContaining({
+        slug: "hello-world",
+        author: "Ada",
+        content: "Love it!",
+      }),
+    );
   });
 
   it("enforces honeypot validation", async () => {
