@@ -15,11 +15,12 @@ import { notFound, type ReadonlyURLSearchParams } from "next/navigation";
 import type { Metadata } from "next";
 
 const BASE_PATH = "/blog";
-const PAGE_SIZE = (() => {
-  const envValue = process.env.BLOG_PAGE_SIZE ?? process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE;
-  const parsed = Number.parseInt(envValue ?? "", 10);
+
+function resolvePageSize() {
+  const raw = process.env.BLOG_PAGE_SIZE ?? process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE;
+  const parsed = Number.parseInt(raw ?? "", 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 6;
-})();
+}
 
 const BASE_METADATA: Pick<Metadata, "title" | "description"> = {
   title: "Blog",
@@ -102,6 +103,7 @@ async function getSearchParamValue(
 }
 
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
+  const PAGE_SIZE = resolvePageSize();
   const after = parseCursorParam(await getSearchParamValue(searchParams, BLOG_AFTER_PARAM));
   const before = parseCursorParam(await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM));
 
@@ -129,6 +131,7 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const PAGE_SIZE = resolvePageSize();
   const after = parseCursorParam(await getSearchParamValue(searchParams, BLOG_AFTER_PARAM));
   const before = parseCursorParam(await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM));
 

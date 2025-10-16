@@ -101,7 +101,7 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
   }
 
   const supabase = getSupabase();
-  const limit = pageSize * 3;
+  const limit = pageSize + 1; // fetch one extra to detect if there is another page
   const columns = "slug,title,description,date,tags,inserted_at";
 
   const afterCursor = options.after ? decodeCursor(options.after) : null;
@@ -136,8 +136,9 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
     });
 
     const hasMoreNewer = rows.length > pageSize;
-    const limited = rows.slice(0, Math.min(pageSize, rows.length));
-    const reversed = [...limited].reverse();
+    const ascendingRows = sortRowsAscending(rows);
+    const limited = ascendingRows.slice(0, pageSize);
+    const reversed = [...limited].reverse(); // because we queried ascending
 
     const items = reversed.map(mapRowToSummary);
     const prevCursor = hasMoreNewer && reversed.length > 0 ? encodeCursor(reversed[0]) : null;
@@ -183,7 +184,8 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
   }
 
   const hasMoreOlder = rows.length > pageSize;
-  const limited = rows.slice(0, Math.min(pageSize, rows.length));
+  const descendingRows = sortFallbackRows(rows);
+  const limited = descendingRows.slice(0, pageSize);
 
   const items = limited.map(mapRowToSummary);
   const nextCursor = hasMoreOlder && limited.length > 0 ? encodeCursor(limited[limited.length - 1]) : null;
@@ -205,6 +207,18 @@ function sortFallbackRows(rows: PostsTableRow[]) {
     }
 
     return b.slug.localeCompare(a.slug);
+  });
+}
+
+function sortRowsAscending(rows: PostsTableRow[]) {
+  return [...rows].sort((a, b) => {
+    const left = Date.parse(a.inserted_at);
+    const right = Date.parse(b.inserted_at);
+    if (left !== right) {
+      return left - right;
+    }
+
+    return a.slug.localeCompare(b.slug);
   });
 }
 
@@ -244,16 +258,8 @@ async function fetchFromFallback(options: BlogIndexPageOptions): Promise<BlogInd
     });
 
     const hasMoreNewer = filtered.length > pageSize;
-    const ascending = [...filtered].sort((a, b) => {
-      const left = Date.parse(a.inserted_at);
-      const right = Date.parse(b.inserted_at);
-      if (left !== right) {
-        return left - right;
-      }
-
-      return a.slug.localeCompare(b.slug);
-    });
-    const limited = ascending.slice(0, Math.min(pageSize, ascending.length));
+    const ascending = sortRowsAscending(filtered);
+    const limited = ascending.slice(0, pageSize);
     const reversed = [...limited].reverse();
 
     const items = reversed.map(mapRowToSummary);
@@ -282,7 +288,7 @@ async function fetchFromFallback(options: BlogIndexPageOptions): Promise<BlogInd
     : rows;
 
   const hasMoreOlder = filtered.length > pageSize;
-  const limited = filtered.slice(0, Math.min(pageSize, filtered.length));
+  const limited = filtered.slice(0, pageSize);
   const items = limited.map(mapRowToSummary);
   const nextCursor = hasMoreOlder && limited.length > 0 ? encodeCursor(limited[limited.length - 1]) : null;
   const prevCursor = afterCursor && limited.length > 0 ? encodeCursor(limited[0]) : null;
