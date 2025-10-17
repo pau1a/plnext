@@ -1,0 +1,27 @@
+npm error code ERESOLVE
+npm error ERESOLVE could not resolve
+npm error
+npm error While resolving: posthog-js@1.276.0
+npm error Found: @rrweb/types@2.0.0-alpha.18
+npm error node_modules/@rrweb/types
+npm error   dev @rrweb/types@"^2.0.0-alpha.18" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peerOptional @rrweb/types@"2.0.0-alpha.17" from posthog-js@1.276.0
+npm error node_modules/posthog-js
+npm error   posthog-js@"^1.276.0" from the root project
+npm error
+npm error Conflicting peer dependency: @rrweb/types@2.0.0-alpha.17
+npm error node_modules/@rrweb/types
+npm error   peerOptional @rrweb/types@"2.0.0-alpha.17" from posthog-js@1.276.0
+npm error   node_modules/posthog-js
+npm error     posthog-js@"^1.276.0" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /Users/paula/.npm/_logs/2025-10-17T08_25_24_133Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /Users/paula/.npm/_logs/2025-10-17T08_25_24_133Z-debug-0.log

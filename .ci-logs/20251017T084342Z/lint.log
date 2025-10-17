@@ -1,0 +1,31 @@
+
+> paulalivingstone@0.1.0 lint
+> eslint
+
+
+/Users/paula/Development/WebDev/paulalivingstone/src/app/api/comments/route.ts
+  184:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  185:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  352:64  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/paula/Development/WebDev/paulalivingstone/src/app/api/contact/route.ts
+   11:8   warning  'ServiceDatabase' is defined but never used  @typescript-eslint/no-unused-vars
+  184:72  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+/Users/paula/Development/WebDev/paulalivingstone/src/lib/moderation/comments.ts
+   15:8   warning  'ServiceDatabase' is defined but never used  @typescript-eslint/no-unused-vars
+  119:51  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  187:59  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  207:75  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+/Users/paula/Development/WebDev/paulalivingstone/tests/components/post-card.test.tsx
+  25:17  warning  '_callback' is defined but never used  @typescript-eslint/no-unused-vars
+  25:58  warning  '_options' is defined but never used   @typescript-eslint/no-unused-vars
+
+/Users/paula/Development/WebDev/paulalivingstone/types/jsx.d.ts
+  5:15  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+  6:15  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+  7:15  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+✖ 14 problems (10 errors, 4 warnings)
+
