@@ -69,7 +69,7 @@ export function resolvePaginationState({
   } satisfies PaginationState;
 }
 
-export function buildPageHref(basePath: string, page: number, pageParam = DEFAULT_PAGE_PARAM) {
+export function buildPageHref(basePath: string, page: number, pageParam: string = DEFAULT_PAGE_PARAM) {
   const params = new URLSearchParams();
 
   if (page > 1) {

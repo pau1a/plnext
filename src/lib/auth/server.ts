@@ -15,7 +15,7 @@ import {
 
 export async function getCurrentActor(): Promise<AuthenticatedActor | null> {
   const cookieName = getSessionCookieName();
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(cookieName);
 
   if (!sessionCookie?.value) {
@@ -41,7 +41,7 @@ export async function createSession(token: string): Promise<AuthenticatedActor> 
     throw new Error("INVALID_CREDENTIALS");
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const value = await createSessionValue(user);
   cookieStore.set(cookieNameWithOptions(value));
   return createSessionActor(user);
@@ -53,9 +53,9 @@ function cookieNameWithOptions(value: string) {
   return { name: cookieName, value, ...options } as const;
 }
 
-export function clearSessionCookie() {
+export async function clearSessionCookie() {
   const cookieName = getSessionCookieName();
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.set({
     name: cookieName,
     value: "",
@@ -78,7 +78,7 @@ export function redirectToLogin(nextUrl: URL | string) {
 }
 
 export async function authenticateRequestToken(): Promise<AuthenticatedActor | null> {
-  const headerStore = headers();
+  const headerStore = await headers();
   const authHeader = headerStore.get("authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return null;

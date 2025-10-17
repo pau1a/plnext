@@ -7,6 +7,9 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "security-audit": "npm audit --omit=dev --audit-level=moderate",
+    "ci:manual": "node scripts/ci-manual.mjs",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test": "vitest run && playwright test",
@@ -39,6 +42,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.56.0",
+    "@rrweb/types": "^2.0.0-alpha.18",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",

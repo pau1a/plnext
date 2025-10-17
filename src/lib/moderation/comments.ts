@@ -11,6 +11,7 @@ import {
   type ModerationCommentRow,
   type ModerationCommentUpdate,
 } from "@/lib/supabase/service";
+import type { ServiceDatabase } from "@/types/supabase";
 
 export type ModerationAction = "approve" | "reject";
 
@@ -47,6 +48,23 @@ export interface ModerationQueueResult {
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
 
+type ModerationQueueRow = Pick<
+  ModerationCommentRow,
+  |
+    "id"
+    | "slug"
+    | "author_name"
+    | "author_email"
+    | "content"
+    | "status"
+    | "created_at"
+    | "updated_at"
+    | "moderated_at"
+    | "ip_hash"
+    | "user_agent"
+>;
+type ModerationSelectionRow = Pick<ModerationCommentRow, "id" | "slug" | "status">;
+
 function clampPageSize(pageSize?: number): number {
   if (!pageSize || !Number.isFinite(pageSize) || pageSize <= 0) {
     return DEFAULT_PAGE_SIZE;
@@ -64,7 +82,7 @@ function normaliseSearchTerm(term: string | undefined): string | undefined {
   return trimmed.length > 1 ? trimmed : undefined;
 }
 
-function mapRow(row: ModerationCommentRow): ModerationQueueItem {
+function mapRow(row: ModerationQueueRow): ModerationQueueItem {
   return {
     id: row.id,
     slug: row.slug,
@@ -87,7 +105,7 @@ export async function fetchModerationQueue(filters: ModerationQueueFilters): Pro
 
   const supabase = getServiceSupabase();
   let query = supabase
-    .from("pl_site.comments")
+    .from<"comments", ModerationCommentsTable>("comments")
     .select(
       "id, slug, author_name, author_email, content, status, created_at, updated_at, moderated_at, ip_hash, user_agent",
       { count: "exact" },
@@ -113,14 +131,16 @@ export async function fetchModerationQueue(filters: ModerationQueueFilters): Pro
 
   const rangeStart = (page - 1) * pageSize;
   const rangeEnd = rangeStart + pageSize - 1;
-  const { data, count, error } = await query.range(rangeStart, rangeEnd);
+  const typedQuery = query.returns<ModerationQueueRow[]>();
+  const { data, count, error } = await typedQuery.range(rangeStart, rangeEnd);
 
   if (error) {
     throw error;
   }
 
   const total = count ?? 0;
-  const items = (data ?? []).map((row) => mapRow(row));
+  const rows: ModerationQueueRow[] = data ?? [];
+  const items = rows.map((row) => mapRow(row));
   const hasNextPage = rangeEnd + 1 < total;
   const hasPreviousPage = rangeStart > 0;
 
@@ -177,10 +197,11 @@ export async function moderateComment({ commentId, action, actor, reason }: Mode
   const update = buildUpdate(action, now);
 
   const { data, error } = await supabase
-    .from("pl_site.comments")
+    .from<"comments", ModerationCommentsTable>("comments")
     .update(update)
     .eq("id", commentId)
     .select("id, slug, status")
+    .returns<ModerationSelectionRow[]>()
     .limit(1)
     .maybeSingle();
 
@@ -193,7 +214,9 @@ export async function moderateComment({ commentId, action, actor, reason }: Mode
   }
 
   const auditEntry = buildAuditEntry(data.id, data.slug, action, actor, reason?.trim() || undefined);
-  const { error: auditError } = await supabase.from("pl_site.moderation_audit_log").insert(auditEntry);
+  const { error: auditError } = await supabase
+    .from<"moderation_audit_log", ModerationAuditLogTable>("moderation_audit_log")
+    .insert(auditEntry);
   if (auditError) {
     throw auditError;
   }
@@ -203,3 +226,7 @@ export async function moderateComment({ commentId, action, actor, reason }: Mode
 
   return { status: data.status, slug: data.slug };
 }
+
+type ModerationCommentsTable = ServiceDatabase["pl_site"]["Tables"]["comments"];
+type ModerationAuditLogTable = ServiceDatabase["pl_site"]["Tables"]["moderation_audit_log"];
+
