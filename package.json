@@ -7,10 +7,13 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "security:audit": "npm audit --audit-level=high",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test": "vitest run && playwright test",
-    "playwright:install": "playwright install --with-deps"
+    "playwright:install": "playwright install --with-deps",
+    "ci:manual": "bash ./scripts/ci.sh"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",

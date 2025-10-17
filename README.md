@@ -20,3 +20,6 @@ npm run dev
 Static export via `next export` is supported for CDN uploads once content stabilises.
 
 For architecture, palette, and writing standards, see `/docs/`.
+
+> **Quality Assurance:**
+> Run `npm run ci:manual` before any release build. This command executes the complete test and lint pipeline locally. The repository has no remote CI runners by policy.
