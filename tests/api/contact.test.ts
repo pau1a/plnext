@@ -95,7 +95,7 @@ describe("/api/contact", () => {
       ipHash: expectedIpHash,
       emailHash: expectedEmailHash,
     });
-    expect(supabaseFrom).toHaveBeenCalledWith("pl_site.contact_messages");
+    expect(supabaseFrom).toHaveBeenCalledWith("contact_messages");
     expect(supabaseInsert).toHaveBeenCalledWith(
       expect.objectContaining({
         name: "Ada Lovelace",

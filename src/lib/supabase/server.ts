@@ -2,8 +2,6 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-export type { Database } from "@/types/supabase";
-
 import type {
   Database,
   PublicCommentsInsert,
@@ -13,12 +11,12 @@ import type {
   PublicPostsRow,
 } from "@/types/supabase";
 
+export type { Database } from "@/types/supabase";
 export type CommentsTableRow = PublicCommentsRow;
 export type CommentsTableInsert = PublicCommentsInsert;
 export type CommentsTableUpdate = PublicCommentsUpdate;
 export type PostsTableRow = PublicPostsRow;
 export type PostCommentCountsTableRow = PublicPostCommentCountsRow;
-
 
 let cachedClient: SupabaseClient<Database, "public"> | null = null;
 

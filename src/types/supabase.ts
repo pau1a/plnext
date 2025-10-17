@@ -1,3 +1,5 @@
+import type { GenericSchema, GenericTable } from "@supabase/supabase-js/dist/module/lib/types";
+
 export type Json =
   | string
   | number
@@ -20,6 +22,7 @@ export interface PublicCommentsInsert {
   author: string;
   content: string;
   created_at?: string;
+  [key: string]: unknown;
 }
 
 export interface PublicCommentsUpdate {
@@ -28,6 +31,7 @@ export interface PublicCommentsUpdate {
   author?: string;
   content?: string;
   created_at?: string;
+  [key: string]: unknown;
 }
 
 export interface PublicPostsRow {
@@ -64,6 +68,7 @@ export interface ServiceContactMessagesInsert {
   message: string;
   ip_hash: string;
   user_agent?: string | null;
+  [key: string]: unknown;
 }
 
 export interface ServiceContactMessagesUpdate {
@@ -74,6 +79,7 @@ export interface ServiceContactMessagesUpdate {
   message?: string;
   ip_hash?: string;
   user_agent?: string | null;
+  [key: string]: unknown;
 }
 
 export interface ServiceModerationCommentRow {
@@ -96,6 +102,7 @@ export interface ServiceModerationCommentUpdate {
   moderated_at?: string | null;
   updated_at?: string;
   is_spam?: boolean;
+  [key: string]: unknown;
 }
 
 export interface ServiceModerationAuditLogRow {
@@ -118,6 +125,7 @@ export interface ServiceModerationAuditLogInsert {
   actor_roles: string[];
   metadata?: Json | null;
   created_at?: string;
+  [key: string]: unknown;
 }
 
 export interface ServiceModerationAuditLogUpdate {
@@ -129,77 +137,51 @@ export interface ServiceModerationAuditLogUpdate {
   actor_roles?: string[];
   metadata?: Json | null;
   created_at?: string;
+  [key: string]: unknown;
 }
 
-export type PublicSchema = {
-  Tables: {
-    comments: {
-      Row: PublicCommentsRow;
-      Insert: PublicCommentsInsert;
-      Update: PublicCommentsUpdate;
-      Relationships: never[];
-    };
-    posts: {
-      Row: PublicPostsRow;
-      Insert: never;
-      Update: never;
-      Relationships: never[];
-    };
-    post_comment_counts: {
-      Row: PublicPostCommentCountsRow;
-      Insert: never;
-      Update: never;
-      Relationships: never[];
-    };
-  };
-  Views: {
-    [_ in never]: never;
-  };
-  Functions: {
-    [_ in never]: never;
-  };
-  Enums: {
-    [_ in never]: never;
-  };
-  CompositeTypes: {
-    [_ in never]: never;
-  };
+type SupabaseTable<Row, Insert, Update> = GenericTable & {
+  Row: Row;
+  Insert: Insert;
+  Update: Update;
+  Relationships: GenericTable["Relationships"];
 };
 
-export type PlSiteSchema = {
+export interface PublicSchema extends GenericSchema {
   Tables: {
-    contact_messages: {
-      Row: ServiceContactMessagesRow;
-      Insert: ServiceContactMessagesInsert;
-      Update: ServiceContactMessagesUpdate;
-      Relationships: never[];
-    };
-    comments: {
-      Row: ServiceModerationCommentRow;
-      Insert: ServiceModerationCommentRow;
-      Update: ServiceModerationCommentUpdate;
-      Relationships: never[];
-    };
-    moderation_audit_log: {
-      Row: ServiceModerationAuditLogRow;
-      Insert: ServiceModerationAuditLogInsert;
-      Update: ServiceModerationAuditLogUpdate;
-      Relationships: never[];
-    };
+    comments: SupabaseTable<PublicCommentsRow, PublicCommentsInsert, PublicCommentsUpdate>;
+    posts: SupabaseTable<PublicPostsRow, never, never>;
+    post_comment_counts: SupabaseTable<PublicPostCommentCountsRow, never, never>;
   };
-  Views: {
-    [_ in never]: never;
+  Views: GenericSchema["Views"];
+  Functions: GenericSchema["Functions"];
+  Enums: Record<string, never>;
+  CompositeTypes: Record<string, never>;
+}
+
+export interface PlSiteSchema extends GenericSchema {
+  Tables: {
+    contact_messages: SupabaseTable<
+      ServiceContactMessagesRow,
+      ServiceContactMessagesInsert,
+      ServiceContactMessagesUpdate
+    >;
+    comments: SupabaseTable<
+      ServiceModerationCommentRow,
+      ServiceModerationCommentRow,
+      ServiceModerationCommentUpdate
+    >;
+    moderation_audit_log: SupabaseTable<
+      ServiceModerationAuditLogRow,
+      ServiceModerationAuditLogInsert,
+      ServiceModerationAuditLogUpdate
+    >;
   };
-  Functions: {
-    [_ in never]: never;
-  };
-  Enums: {
-    [_ in never]: never;
-  };
-  CompositeTypes: {
-    [_ in never]: never;
-  };
-};
+  Views: GenericSchema["Views"];
+  Functions: GenericSchema["Functions"];
+  Enums: Record<string, never>;
+  CompositeTypes: Record<string, never>;
+}
 
 export interface Database {
   __InternalSupabase?: {

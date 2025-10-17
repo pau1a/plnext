@@ -22,17 +22,24 @@ beforeAll(() => {
     readonly rootMargin = "";
     readonly thresholds = [] as ReadonlyArray<number>;
 
-    constructor(_callback: IntersectionObserverCallback, _options?: IntersectionObserverInit) {}
+    constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+      void callback;
+      void options;
+    }
 
     disconnect(): void {}
 
-    observe(): void {}
+    observe(target: Element): void {
+      void target;
+    }
 
     takeRecords(): IntersectionObserverEntry[] {
       return [];
     }
 
-    unobserve(): void {}
+    unobserve(target: Element): void {
+      void target;
+    }
   }
 
   (globalThis as unknown as { IntersectionObserver: typeof IntersectionObserver }).IntersectionObserver =

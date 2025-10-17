@@ -8,7 +8,6 @@ import { enforceContactRateLimits } from "@/lib/rate-limit";
 import {
   getServiceSupabase,
   type ContactMessageInsert,
-  type ServiceDatabase,
 } from "@/lib/supabase/service";
 
 export const runtime = "nodejs";
@@ -181,9 +180,9 @@ export async function POST(request: Request) {
       user_agent: request.headers.get("user-agent"),
     };
 
-    const { error } = (await (supabase.from(CONTACT_MESSAGES_TABLE) as any).insert(payload)) as {
-      error: PostgrestError | null;
-    };
+    const { error } = await supabase
+      .from(CONTACT_MESSAGES_TABLE)
+      .insert<ContactMessageInsert>(payload);
     if (error) {
       throw error;
     }

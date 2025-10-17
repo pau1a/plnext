@@ -2,23 +2,27 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-export type { ServiceDatabase } from "@/types/supabase";
-
 import type {
   ServiceContactMessagesInsert,
+  ServiceContactMessagesRow,
   ServiceContactMessagesUpdate,
   ServiceDatabase,
   ServiceModerationAuditLogInsert,
+  ServiceModerationAuditLogRow,
   ServiceModerationCommentRow,
   ServiceModerationCommentUpdate,
 } from "@/types/supabase";
 
+export type { ServiceDatabase } from "@/types/supabase";
+
 export type CommentStatus = ServiceModerationCommentRow["status"];
 export type ContactMessageInsert = ServiceContactMessagesInsert;
+export type ContactMessageRow = ServiceContactMessagesRow;
 export type ContactMessageUpdate = ServiceContactMessagesUpdate;
 export type ModerationCommentRow = ServiceModerationCommentRow;
 export type ModerationCommentUpdate = ServiceModerationCommentUpdate;
 export type ModerationAuditLogInsert = ServiceModerationAuditLogInsert;
+export type ModerationAuditLogRow = ServiceModerationAuditLogRow;
 
 let cachedServiceClient: SupabaseClient<ServiceDatabase, "pl_site"> | null = null;
 

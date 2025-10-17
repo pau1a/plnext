@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "security:audit": "npm audit --audit-level=high",
+    "security-audit": "npm audit --omit=dev --audit-level=moderate",
+    "security:audit": "npm run security-audit",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test": "vitest run && playwright test",
@@ -35,6 +36,7 @@
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.0",
     "sanitize-html": "^2.13.0",
+    "@rrweb/types": "2.0.0-alpha.17",
     "sass": "^1.93.2",
     "sharp": "^0.34.4",
     "zod": "^3.23.8"

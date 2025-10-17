@@ -5,8 +5,28 @@ import { fetchModerationQueue } from "@/lib/moderation/comments";
 
 import { ModerationQueue } from "./_components/moderation-queue";
 
+type SearchParamsShape = Record<string, string | string[] | undefined>;
+type SearchParamsInput = SearchParamsShape | Promise<SearchParamsShape>;
+
 interface CommentsPageProps {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: SearchParamsInput;
+}
+
+function isPromiseLike<T>(value: unknown): value is PromiseLike<T> {
+  return typeof value === "object" && value !== null && typeof (value as { then?: unknown }).then === "function";
+}
+
+async function resolveSearchParams(input?: SearchParamsInput): Promise<SearchParamsShape> {
+  if (!input) {
+    return {};
+  }
+
+  if (isPromiseLike<SearchParamsShape>(input)) {
+    const resolved = await input;
+    return resolved ?? {};
+  }
+
+  return input;
 }
 
 const STATUS_OPTIONS: { value: CommentStatus | "all"; label: string }[] = [
@@ -40,9 +60,10 @@ function parsePage(raw: string | undefined): number {
 }
 
 export default async function CommentsPage({ searchParams }: CommentsPageProps) {
-  const status = parseStatus(typeof searchParams?.status === "string" ? searchParams.status : undefined);
-  const page = parsePage(typeof searchParams?.page === "string" ? searchParams.page : undefined);
-  const search = typeof searchParams?.search === "string" ? searchParams.search : undefined;
+  const params = await resolveSearchParams(searchParams);
+  const status = parseStatus(typeof params.status === "string" ? params.status : undefined);
+  const page = parsePage(typeof params.page === "string" ? params.page : undefined);
+  const search = typeof params.search === "string" ? params.search : undefined;
 
   const queue = await fetchModerationQueue({ status, page, search });
 

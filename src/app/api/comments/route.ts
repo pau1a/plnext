@@ -19,6 +19,11 @@ const MIN_DWELL_TIME_MS = 3_000;
 
 const COMMENTS_TABLE = "comments" as const;
 
+type CommentsListRow = Pick<
+  CommentsTableRow,
+  "id" | "slug" | "author" | "content" | "created_at"
+>;
+
 const commentPayloadSchema = z
   .object({
     slug: z
@@ -175,23 +180,23 @@ export async function GET(request: Request) {
 
   try {
     const supabase = getSupabase();
-    const query = supabase
+    let query = supabase
       .from(COMMENTS_TABLE)
       .select("id, slug, author, content, created_at")
       .eq("slug", slug)
       .order("created_at", { ascending: true });
 
-    const limitedQuery = after ? (query as any).gt("created_at", after) : query;
-    const { data, error } = (await (limitedQuery as any).limit(PAGE_SIZE + 1)) as {
-      data: CommentsTableRow[] | null;
-      error: PostgrestError | null;
-    };
+    if (after) {
+      query = query.gt("created_at", after);
+    }
+
+    const { data, error } = await query.limit(PAGE_SIZE + 1);
 
     if (error) {
       throw error;
     }
 
-    const rows = data ?? [];
+    const rows = (data ?? []) as CommentsListRow[];
     const hasMore = rows.length > PAGE_SIZE;
     const records = rows.slice(0, PAGE_SIZE);
 
@@ -349,9 +354,7 @@ export async function POST(request: Request) {
       content: sanitizedBody,
     };
 
-    const { error } = (await (supabase.from(COMMENTS_TABLE) as any).insert(payload)) as {
-      error: PostgrestError | null;
-    };
+    const { error } = await supabase.from(COMMENTS_TABLE).insert<CommentsTableInsert>(payload);
     if (error) {
       throw error;
     }

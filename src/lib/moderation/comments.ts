@@ -2,8 +2,6 @@ import "server-only";
 
 import { revalidateTag } from "next/cache";
 
-import type { PostgrestError } from "@supabase/supabase-js";
-
 import type { AuthenticatedActor } from "@/lib/auth/rbac";
 import { BLOG_LIST_CACHE_TAG, getBlogPostCacheTag } from "@/lib/supabase/blog";
 import {
@@ -12,7 +10,6 @@ import {
   type ModerationAuditLogInsert,
   type ModerationCommentRow,
   type ModerationCommentUpdate,
-  type ServiceDatabase,
 } from "@/lib/supabase/service";
 
 export type ModerationAction = "approve" | "reject";
@@ -49,6 +46,24 @@ export interface ModerationQueueResult {
 
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
+const COMMENTS_TABLE = "comments" as const;
+const AUDIT_LOG_TABLE = "moderation_audit_log" as const;
+
+type ModerationQueueRow = Pick<
+  ModerationCommentRow,
+  | "id"
+  | "slug"
+  | "author_name"
+  | "author_email"
+  | "content"
+  | "status"
+  | "created_at"
+  | "updated_at"
+  | "moderated_at"
+  | "ip_hash"
+  | "user_agent"
+>;
+type ModerationSelectionRow = Pick<ModerationCommentRow, "id" | "slug" | "status">;
 
 function clampPageSize(pageSize?: number): number {
   if (!pageSize || !Number.isFinite(pageSize) || pageSize <= 0) {
@@ -67,7 +82,7 @@ function normaliseSearchTerm(term: string | undefined): string | undefined {
   return trimmed.length > 1 ? trimmed : undefined;
 }
 
-function mapRow(row: ModerationCommentRow): ModerationQueueItem {
+function mapRow(row: ModerationQueueRow): ModerationQueueItem {
   return {
     id: row.id,
     slug: row.slug,
@@ -89,7 +104,8 @@ export async function fetchModerationQueue(filters: ModerationQueueFilters): Pro
   const search = normaliseSearchTerm(filters.search);
 
   const supabase = getServiceSupabase();
-  let query = supabase
+  const schemaClient = supabase.schema("pl_site");
+  let query = schemaClient
     .from(COMMENTS_TABLE)
     .select(
       "id, slug, author_name, author_email, content, status, created_at, updated_at, moderated_at, ip_hash, user_agent",
@@ -116,18 +132,14 @@ export async function fetchModerationQueue(filters: ModerationQueueFilters): Pro
 
   const rangeStart = (page - 1) * pageSize;
   const rangeEnd = rangeStart + pageSize - 1;
-  const { data, count, error } = (await (query as any).range(rangeStart, rangeEnd)) as {
-    data: ModerationCommentRow[] | null;
-    count: number | null;
-    error: PostgrestError | null;
-  };
+  const { data, count, error } = await query.range(rangeStart, rangeEnd);
 
   if (error) {
     throw error;
   }
 
   const total = count ?? 0;
-  const rows = (data ?? []) as ModerationCommentRow[];
+  const rows = (data ?? []) as ModerationQueueRow[];
   const items = rows.map((row) => mapRow(row));
   const hasNextPage = rangeEnd + 1 < total;
   const hasPreviousPage = rangeStart > 0;
@@ -184,16 +196,14 @@ export async function moderateComment({ commentId, action, actor, reason }: Mode
   const now = new Date().toISOString();
   const update = buildUpdate(action, now);
 
-  const commentsClient = supabase.from(COMMENTS_TABLE) as any;
-  const { data, error } = (await commentsClient
-    .update(update)
+  const schemaClient = supabase.schema("pl_site");
+  const commentsClient = schemaClient.from(COMMENTS_TABLE);
+  const { data, error } = await commentsClient
+    .update<ModerationCommentUpdate>(update)
     .eq("id", commentId)
     .select("id, slug, status")
     .limit(1)
-    .maybeSingle()) as {
-    data: { id: string; slug: string; status: CommentStatus } | null;
-    error: PostgrestError | null;
-  };
+    .maybeSingle<ModerationSelectionRow>();
 
   if (error) {
     throw error;
@@ -204,9 +214,9 @@ export async function moderateComment({ commentId, action, actor, reason }: Mode
   }
 
   const auditEntry = buildAuditEntry(data.id, data.slug, action, actor, reason?.trim() || undefined);
-  const { error: auditError } = (await (supabase.from(AUDIT_LOG_TABLE) as any).insert(auditEntry)) as {
-    error: PostgrestError | null;
-  };
+  const { error: auditError } = await schemaClient
+    .from(AUDIT_LOG_TABLE)
+    .insert<ModerationAuditLogInsert>(auditEntry);
   if (auditError) {
     throw auditError;
   }
@@ -216,6 +226,3 @@ export async function moderateComment({ commentId, action, actor, reason }: Mode
 
   return { status: data.status, slug: data.slug };
 }
-const COMMENTS_TABLE = "comments" as const;
-const AUDIT_LOG_TABLE = "moderation_audit_log" as const;
-
