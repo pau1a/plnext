@@ -2,56 +2,27 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-export interface CommentsTableRow {
-  id: string;
-  slug: string;
-  author: string;
-  content: string;
-  created_at: string;
-}
+export type { Database } from "@/types/supabase";
 
-export interface CommentsTableInsert {
-  slug: string;
-  author: string;
-  content: string;
-}
+import type {
+  Database,
+  PublicCommentsInsert,
+  PublicCommentsRow,
+  PublicCommentsUpdate,
+  PublicPostCommentCountsRow,
+  PublicPostsRow,
+} from "@/types/supabase";
 
-export interface PostsTableRow {
-  slug: string;
-  title: string;
-  description: string;
-  date: string;
-  tags: string[] | null;
-  inserted_at: string;
-}
+export type CommentsTableRow = PublicCommentsRow;
+export type CommentsTableInsert = PublicCommentsInsert;
+export type CommentsTableUpdate = PublicCommentsUpdate;
+export type PostsTableRow = PublicPostsRow;
+export type PostCommentCountsTableRow = PublicPostCommentCountsRow;
 
-export interface PostCommentCountsTableRow {
-  slug: string;
-  approved_count: number;
-  last_approved_at: string | null;
-  updated_at: string;
-}
 
-interface Database {
-  public: {
-    Tables: {
-      comments: {
-        Row: CommentsTableRow;
-        Insert: CommentsTableInsert;
-      };
-      posts: {
-        Row: PostsTableRow;
-      };
-      post_comment_counts: {
-        Row: PostCommentCountsTableRow;
-      };
-    };
-  };
-}
+let cachedClient: SupabaseClient<Database, "public"> | null = null;
 
-let cachedClient: SupabaseClient<Database> | null = null;
-
-export function getSupabase(): SupabaseClient<Database> {
+export function getSupabase(): SupabaseClient<Database, "public"> {
   if (cachedClient) {
     return cachedClient;
   }
@@ -64,8 +35,9 @@ export function getSupabase(): SupabaseClient<Database> {
     throw new Error("SUPABASE_ENV_MISSING");
   }
 
-  cachedClient = createClient<Database>(url, anonKey, {
+  cachedClient = createClient<Database, "public", "public">(url, anonKey, {
     auth: { persistSession: false },
+    db: { schema: "public" },
   });
 
   return cachedClient;

@@ -2,68 +2,27 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-export type CommentStatus = "pending" | "approved" | "rejected" | "spam";
+export type { ServiceDatabase } from "@/types/supabase";
 
-export interface ContactMessageInsert {
-  name: string;
-  email: string;
-  message: string;
-  ip_hash: string;
-  user_agent?: string | null;
-}
+import type {
+  ServiceContactMessagesInsert,
+  ServiceContactMessagesUpdate,
+  ServiceDatabase,
+  ServiceModerationAuditLogInsert,
+  ServiceModerationCommentRow,
+  ServiceModerationCommentUpdate,
+} from "@/types/supabase";
 
-export interface ModerationCommentRow {
-  id: string;
-  slug: string;
-  author_name: string;
-  author_email: string | null;
-  content: string;
-  status: CommentStatus;
-  is_spam: boolean;
-  ip_hash: string;
-  user_agent: string | null;
-  created_at: string;
-  updated_at: string;
-  moderated_at: string | null;
-}
+export type CommentStatus = ServiceModerationCommentRow["status"];
+export type ContactMessageInsert = ServiceContactMessagesInsert;
+export type ContactMessageUpdate = ServiceContactMessagesUpdate;
+export type ModerationCommentRow = ServiceModerationCommentRow;
+export type ModerationCommentUpdate = ServiceModerationCommentUpdate;
+export type ModerationAuditLogInsert = ServiceModerationAuditLogInsert;
 
-export interface ModerationCommentUpdate {
-  status?: CommentStatus;
-  moderated_at?: string | null;
-  updated_at?: string;
-  is_spam?: boolean;
-}
+let cachedServiceClient: SupabaseClient<ServiceDatabase, "pl_site"> | null = null;
 
-export interface ModerationAuditLogInsert {
-  comment_id: string;
-  action: string;
-  actor_id: string;
-  actor_name: string;
-  actor_roles: string[];
-  metadata?: Record<string, unknown> | null;
-  created_at?: string;
-}
-
-interface ServiceDatabase {
-  pl_site: {
-    Tables: {
-      contact_messages: {
-        Insert: ContactMessageInsert;
-      };
-      comments: {
-        Row: ModerationCommentRow;
-        Update: ModerationCommentUpdate;
-      };
-      moderation_audit_log: {
-        Insert: ModerationAuditLogInsert;
-      };
-    };
-  };
-}
-
-let cachedServiceClient: SupabaseClient<ServiceDatabase> | null = null;
-
-export function getServiceSupabase(): SupabaseClient<ServiceDatabase> {
+export function getServiceSupabase(): SupabaseClient<ServiceDatabase, "pl_site"> {
   if (cachedServiceClient) {
     return cachedServiceClient;
   }
@@ -75,8 +34,9 @@ export function getServiceSupabase(): SupabaseClient<ServiceDatabase> {
     throw new Error("SUPABASE_SERVICE_ENV_MISSING");
   }
 
-  cachedServiceClient = createClient<ServiceDatabase>(url, serviceKey, {
+  cachedServiceClient = createClient<ServiceDatabase, "pl_site", "pl_site">(url, serviceKey, {
     auth: { persistSession: false },
+    db: { schema: "pl_site" },
   });
 
   return cachedServiceClient;

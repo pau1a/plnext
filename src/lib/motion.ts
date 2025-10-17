@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Transition, Variants } from "framer-motion";
+import type { TargetAndTransition, Transition, Variants } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
 
 export const motionDurations = {
@@ -81,10 +81,10 @@ export function useMotionVariants(variants: Variants) {
       return variants;
     }
 
-    const neutralState = {
+    const neutralState: TargetAndTransition = {
       ...(visible ?? {}),
       transition: zeroTransition,
-    } as Record<string, unknown>;
+    };
 
     return {
       ...variants,
