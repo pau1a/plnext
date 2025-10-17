@@ -1,109 +1,116 @@
 "use client";
 
-import { useMemo } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
+import { useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const PHOTO = "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
-const fade = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
-} as const;
 
-const PRINCIPLES = [
-  "Narrow the blast radius",
-  "Increase visibility",
-  "Shorten recovery",
-  "Keep people out of headlines",
+const PINS = [
+  {
+    id: 0,
+    x: "22%",
+    y: "18%",
+    label: "Optimist",
+    title: "Post-mortem in one hour",
+    body: "Instrumentation made the narrative data-first; execs got clarity, engineers got rest.",
+  },
+  {
+    id: 1,
+    x: "68%",
+    y: "46%",
+    label: "Engineer",
+    title: "Guardrail saved the day",
+    body: "Drift flagged early; rollout paused; lineage traced; safe fix shipped.",
+  },
+  {
+    id: 2,
+    x: "40%",
+    y: "78%",
+    label: "Adventurer",
+    title: "Quiet on-call",
+    body: "Alerts crisp; recovery unremarkable. Exploration hardened the system.",
+  },
 ] as const;
 
 export default function Page() {
+  const [open, setOpen] = useState<number | null>(null);
   const shouldReduceMotion = useReducedMotion();
-  const heroMotion = useMemo(
-    () => ({
-      variants: fade,
-      initial: shouldReduceMotion ? undefined : "hidden",
-      animate: shouldReduceMotion ? undefined : "show",
-    }),
-    [shouldReduceMotion],
-  );
+
+  const popoverMotion = shouldReduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 8 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: 8 },
+        transition: { duration: 0.2 },
+      };
 
   return (
     <main className="pb-16 md:pb-24">
-      <section className="container mx-auto max-w-6xl px-4 pt-10 md:pt-14 relative">
-        <motion.h1 {...heroMotion} className="text-4xl md:text-6xl font-semibold leading-tight max-w-3xl">
-          Building calm in complex systems
-        </motion.h1>
-        <motion.div
-          {...heroMotion}
-          className="absolute right-4 top-4"
-          aria-label="Optimist | Engineer | Adventurer"
-        >
-          <div className="rounded-full bg-[hsl(var(--graphite-900)/0.45)] text-white backdrop-blur px-4 py-1.5 text-xs tracking-widest uppercase">
-            Optimist | Engineer | Adventurer
+      <section className="container mx-auto max-w-6xl px-4 pt-10 md:pt-14">
+        <h1 className="text-4xl md:text-6xl font-semibold leading-tight max-w-3xl">Building calm in complex systems</h1>
+        <p className="mt-3 text-base md:text-lg text-muted-foreground max-w-2xl">
+          The three words are not a slogan — they’re a map. Tap a pin to see how each shows up in real work.
+        </p>
+
+        <div className="mt-6 grid gap-6 md:grid-cols-[1.1fr_1.4fr] md:items-start">
+          <div className="relative aspect-[4/5] rounded-2xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.18)]">
+            <Image src={PHOTO} alt="Paula Livingstone" fill className="object-cover" sizes="(min-width: 1024px) 28rem, (min-width: 768px) 24rem, 100vw" />
+            {PINS.map((pin) => {
+              const isOpen = open === pin.id;
+
+              return (
+                <button
+                  key={pin.id}
+                  type="button"
+                  onClick={() => setOpen(isOpen ? null : pin.id)}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full px-2.5 py-1.5 text-xs font-medium text-white bg-[hsl(var(--crimson-500))] shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--crimson-500))]"
+                  style={{ left: pin.x, top: pin.y }}
+                >
+                  {pin.label}
+                </button>
+              );
+            })}
+            <AnimatePresence>
+              {PINS.filter((pin) => pin.id === open).map((pin) => (
+                <motion.div
+                  key={pin.id}
+                  className="absolute z-10 w-64 md:w-72 rounded-xl p-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur ring-1 ring-black/5 dark:ring-white/10"
+                  style={{ left: pin.x, top: pin.y, transform: "translate(-50%, calc(-50% - 12px))" }}
+                  {...popoverMotion}
+                >
+                  <h4 className="font-semibold">{pin.title}</h4>
+                  <p className="text-sm text-muted-foreground mt-1">{pin.body}</p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
-        </motion.div>
-        <motion.p {...heroMotion} className="mt-4 text-base md:text-lg text-muted-foreground max-w-2xl">
-          I am an engineer who helps build and secure automated systems and the interconnected networks that run them. My focus
-          is where operational technology, networks, and AI-enabled automation overlap. My job is to narrow the blast radius.
-        </motion.p>
 
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          <motion.div
-            {...heroMotion}
-            className="md:col-span-1 rounded-2xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 shadow"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={PHOTO} alt="Paula Livingstone" className="w-full aspect-[4/5] object-cover" loading="lazy" />
-          </motion.div>
-
-          <motion.article
-            {...heroMotion}
-            className="md:col-span-2 rounded-2xl bg-white/70 dark:bg-neutral-900/60 backdrop-blur ring-1 ring-black/5 dark:ring-white/10 p-6"
-          >
-            <h3 className="text-lg font-semibold">From RF to AI-secured automation</h3>
-            <p className="text-muted-foreground mt-2">
+          <article className="prose prose-neutral dark:prose-invert max-w-none">
+            <h2>From RF to AI-secured automation</h2>
+            <p>
               My career began in military radio and satellite systems and matured through large-scale IP networking. Today I focus on
-              AI-enabled operations for industrial environments. I design layered defences, instrument estates so risk is measured not guessed,
-              and remove toil with code so teams can focus on the hard problems.
+              AI-enabled operations for industrial environments. I design layered defences, instrument estates so risk is measured not
+              guessed, and remove toil with code so teams can focus on the hard problems.
             </p>
-          </motion.article>
-
-          <motion.article
-            {...heroMotion}
-            className="rounded-2xl p-6 ring-1 ring-black/5 dark:ring-white/10"
-          >
-            <h3 className="text-lg font-semibold">Security by design</h3>
-            <p className="text-muted-foreground mt-2">
+            <p>
               I shape security by design for OT and automation programmes and align controls to recognised standards such as IEC 62443.
               I am the person teams tap to untangle cross-discipline problems when they cut across layers and refuse to fit into one box.
             </p>
-          </motion.article>
-
-          <motion.article
-            {...heroMotion}
-            className="rounded-2xl p-6 ring-1 ring-black/5 dark:ring-white/10"
-          >
-            <h3 className="text-lg font-semibold">Python-first ML &amp; MLOps</h3>
-            <p className="text-muted-foreground mt-2">
-              I build guardrails that let models survive contact with production, including secure MLOps, model and data lineage, drift
-              detection, and adversarial robustness.
+            <p>
+              Over the past year I have gone deep on Python-first machine learning and modern data tooling. I build guardrails that let
+              models survive contact with production, including secure MLOps, model and data lineage, drift detection, and adversarial
+              robustness.
             </p>
-          </motion.article>
-
-          <motion.article
-            {...heroMotion}
-            className="rounded-2xl p-6 bg-white/70 dark:bg-neutral-900/60 backdrop-blur ring-1 ring-black/5 dark:ring-white/10"
-          >
-            <h3 className="text-lg font-semibold">Constants</h3>
-            <ul className="mt-2 grid gap-2 md:grid-cols-2 text-sm text-muted-foreground">
-              {PRINCIPLES.map((item) => (
-                <li key={item}>• {item}</li>
-              ))}
+            <h2>Constants</h2>
+            <ul>
+              <li>Narrow the blast radius</li>
+              <li>Increase visibility</li>
+              <li>Shorten recovery</li>
+              <li>Keep people out of headlines</li>
             </ul>
-            <p className="mt-4 text-sm text-muted-foreground">
-              If the future is AI and automation, it needs engineers who can secure it end to end. That is my lane.
-            </p>
-          </motion.article>
+          </article>
         </div>
       </section>
     </main>
