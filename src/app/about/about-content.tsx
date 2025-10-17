@@ -8,6 +8,21 @@ import styles from "./about.module.scss";
 const photoUrl =
   "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
 
+const heroSummary = [
+  {
+    highlight: "MSc (Cyber) · MIEE",
+    body: "measurement-led engineering.",
+  },
+  {
+    highlight: "OT · networks · AI automation",
+    body: "one blast radius, layered defence.",
+  },
+  {
+    highlight: "Python-first ML and secure MLOps",
+    body: "lineage, drift, adversarial robustness.",
+  },
+] as const;
+
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
@@ -65,6 +80,22 @@ export default function AboutPageContent({
             I am an engineer who helps build and secure automated systems and the interconnected networks that run them. My focus
             is where operational technology, networks, and AI-enabled automation overlap. My job is to narrow the blast radius.
           </motion.p>
+
+          <motion.div {...heroMotion} className={styles.heroSummary}>
+            <div className={styles.heroSummaryCard}>
+              <ul className={styles.heroSummaryList}>
+                {heroSummary.map((item) => (
+                  <li key={item.highlight} className={styles.heroSummaryItem}>
+                    <span className={styles.heroSummaryAccent} aria-hidden="true" />
+                    <span>
+                      <strong>{item.highlight}</strong> 
+                      <span className={styles.heroSummaryConnector}>–</span> {item.body}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
         </div>
 
       </section>
