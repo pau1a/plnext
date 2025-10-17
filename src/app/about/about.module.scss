@@ -42,10 +42,6 @@
   color: var(--text-muted);
 }
 
-.portraitDesktop {
-  display: none;
-}
-
 .portraitCard {
   position: relative;
   overflow: hidden;
@@ -74,22 +70,6 @@
   display: block;
 }
 
-.badgeRowDesktop,
-.badgeRowMobile {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.badgeRowDesktop {
-  margin-top: var(--space-lg);
-  justify-content: flex-end;
-}
-
-.badgeRowMobile {
-  margin-top: var(--space-lg);
-}
-
 .badge {
   display: inline-flex;
   align-items: center;
@@ -113,19 +93,24 @@
   width: min(100%, var(--max-content-lg));
   margin: clamp(4rem, 8vw, 7rem) auto 0;
   padding: 0 clamp(1.5rem, 4vw, 3rem);
-  display: grid;
-  gap: clamp(2rem, 4vw, 3rem);
-}
-
-.portraitMobile {
-  display: grid;
-  gap: var(--space-lg);
 }
 
 .biography {
   color: var(--text-primary);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
+  display: flow-root;
+}
+
+.biographyAside {
+  margin-bottom: var(--space-xl);
+}
+
+.badgeCluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
 }
 
 .biographyHeading {
@@ -229,21 +214,14 @@
     padding-bottom: 6.5rem;
   }
 
-  .portraitDesktop {
-    display: block;
-    position: absolute;
-    right: clamp(2.5rem, 5vw, 3.5rem);
-    bottom: -5rem;
-    width: clamp(18rem, 24vw, 22.5rem);
+  .biographyAside {
+    float: right;
+    width: min(18.75rem, 38vw);
+    margin: 0 0 var(--space-xl) clamp(1.5rem, 4vw, 3rem);
   }
 
-  .portraitMobile {
-    display: none;
-  }
-
-  .bodySection {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-    align-items: start;
+  .badgeCluster {
+    justify-content: flex-end;
   }
 
   .constantsGrid {

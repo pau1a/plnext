@@ -67,42 +67,27 @@ export default function AboutPageContent({
           </motion.p>
         </div>
 
-        <motion.div {...heroMotion} className={styles.portraitDesktop}>
-          <div className={styles.portraitCard}>
-            <div className={styles.portraitMedia}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
-            </div>
-          </div>
-
-          <div className={styles.badgeRowDesktop}>
-            {badges.map((label) => (
-              <span key={label} className={styles.badge}>
-                {label}
-              </span>
-            ))}
-          </div>
-        </motion.div>
       </section>
 
       <section className={styles.bodySection}>
-        <div className={styles.portraitMobile}>
-          <div className={styles.portraitCard}>
-            <div className={styles.portraitMedia}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
+        <motion.article {...articleMotion} className={styles.biography}>
+          <div className={styles.biographyAside}>
+            <div className={styles.portraitCard}>
+              <div className={styles.portraitMedia}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
+              </div>
+            </div>
+
+            <div className={styles.badgeCluster}>
+              {badges.map((label) => (
+                <span key={label} className={styles.badge}>
+                  {label}
+                </span>
+              ))}
             </div>
           </div>
-          <div className={styles.badgeRowMobile}>
-            {badges.map((label) => (
-              <span key={label} className={styles.badge}>
-                {label}
-              </span>
-            ))}
-          </div>
-        </div>
 
-        <motion.article {...articleMotion} className={styles.biography}>
           <h2 className={styles.biographyHeading}>From RF to AI-secured automation</h2>
           {biography.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
