@@ -1,46 +1,73 @@
 import type { Metadata } from "next";
+import AboutPageContent from "./about-content";
 
-const commitments = [
-  "Design guardrails that let product teams move quickly without compromising auditability.",
-  "Translate complex risk narratives into clear choices for executives and engineers.",
-  "Pair automation with human review so decisions stay accountable.",
+const BADGES = [
+  "Industrial automation",
+  "AI security",
+  "OT & networks",
+  "Python-first",
+  "Measurement-led",
 ] as const;
 
-const highlights = [
+const BIOGRAPHY = [
+  "My career began in military radio and satellite systems and matured through large-scale IP networking. Today I focus on AI-enabled operations for industrial environments. I design layered defences, instrument estates so risk is measured not guessed, and remove toil with code so teams can focus on the hard problems.",
+  "I shape security by design for OT and automation programmes and align controls to recognised standards such as IEC 62443. I am the person teams tap to untangle cross-discipline problems when they cut across layers and refuse to fit into one box.",
+  "Over the past year I have gone deep on Python-first machine learning and modern data tooling. I build guardrails that let models survive contact with production, including secure MLOps, model and data lineage, drift detection, and adversarial robustness.",
+  "Postgraduate study sharpened the theory. I hold an MSc Cyber Security and a PGDip Cyber. My dissertation explored how cryptographic transparency and distributed ledgers can strengthen identity and provenance across industrial supply chains. Applied cryptography is part of the toolbox. I use signatures, attestations and transparency logs, with blockchain only where it reduces risk and friction for integrity, provenance and tamper-evident logging.",
+  "My operating style is measurement-led. Results look like lower MTTR, fewer false positives, safer change windows and quieter on-call. I prefer simple, observable architectures to clever, brittle ones. Controls and infrastructure should be code. Runbooks should be testable. Recovery should be unremarkable.",
+  "Earlier in my journey I founded an AI venture and chose to wind it down when the stack was not ready. That experience sharpened timing and judgement and reinforced a bias for pragmatic engineering.",
+] as const;
+
+const PRINCIPLES = [
   {
-    label: "Current focus",
-    value: "Securing AI-enabled platforms for regulated scale-ups in fintech and aerospace.",
+    title: "Narrow the blast radius",
+    body: "Design for safe failure. Isolate. Contain. Make incidents small and boring.",
   },
   {
-    label: "Recent impact",
-    value: "Stabilised incident response at a Series C company, cutting mean time to recovery by 42%.",
+    title: "Increase visibility",
+    body: "Instrument the estate. Measure risk rather than guess it. Logs that tell the truth.",
   },
   {
-    label: "Toolbox",
-    value: "Zero-trust architecture, privacy-first telemetry, resilience testing, and AI workflow design.",
+    title: "Shorten recovery",
+    body: "Lower MTTR with clear runbooks, good alerts, and tested recovery paths.",
+  },
+  {
+    title: "Keep people out of headlines",
+    body: "Protect teams and users by making systems resilient and decisions auditable.",
   },
 ] as const;
 
-const ethosStatements = [
-  "Safety is a design constraint, not an afterthought.",
-  "Clarity beats theatre—especially under pressure.",
-] as const;
+const CLOSING_STATEMENT =
+  "If the future is AI and automation, it needs engineers who can secure it end to end. That is my lane.";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://paulalivingstone.com";
+
+const PERSON_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Paula Livingstone",
+  jobTitle: "Engineer, Industrial Cybersecurity",
+  image: "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg",
+  url: `${siteUrl}/about`,
+  inLanguage: "en-GB",
+} as const;
 
 export const metadata: Metadata = {
-  title: "About Paula Livingstone",
+  title: "About | Paula Livingstone",
   description:
-    "Cybersecurity and applied AI leader helping teams ship resilient systems with confidence and speed.",
+    "Industrial automation and AI security. Narrow the blast radius, increase visibility, shorten recovery.",
   alternates: {
     canonical: "/about",
   },
   openGraph: {
-    title: "About Paula Livingstone",
+    title: "About | Paula Livingstone",
     description:
-      "Cybersecurity and applied AI leader helping teams ship resilient systems with confidence and speed.",
-    url: "/about",
+      "Industrial automation and AI security. Narrow the blast radius, increase visibility, shorten recovery.",
+    url: `${siteUrl}/about`,
+    type: "profile",
     images: [
       {
-        url: "/window.svg",
+        url: `${siteUrl}/window.svg`,
         width: 1200,
         height: 630,
         alt: "Paula Livingstone window mark",
@@ -48,74 +75,24 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: "About Paula Livingstone",
+    card: "summary_large_image",
+    title: "About | Paula Livingstone",
     description:
-      "Cybersecurity and applied AI leader helping teams ship resilient systems with confidence and speed.",
-    images: ["/window.svg"],
+      "Industrial automation and AI security. Narrow the blast radius, increase visibility, shorten recovery.",
+    images: [`${siteUrl}/window.svg`],
   },
 };
 
-export default function About() {
+export default function AboutPage() {
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
-      <article className="u-stack u-gap-2xl u-max-w-lg u-center">
-        <header className="u-stack u-gap-sm">
-          <p className="u-text-xs u-text-uppercase u-text-muted">About</p>
-          <h1 className="heading-display-lg">Building calm in complex systems</h1>
-          <p className="u-text-lead">
-            I lead cyber, reliability, and AI programmes that keep critical platforms trustworthy even when the environment is
-            changing faster than the roadmap.
-          </p>
-        </header>
-
-        <section className="u-stack u-gap-md" aria-labelledby="about-story-heading">
-          <h2 id="about-story-heading" className="heading-section">
-            Field-tested leadership
-          </h2>
-          <p>
-            Over the past 15 years I have worked across threat intelligence, security operations, and platform engineering—most
-            recently guiding cross-functional teams as Chief Security Officer for high-growth organisations. My remit spans risk
-            governance, product security, and the automation that binds them together.
-          </p>
-          <p>
-            I am at my best partnering with founders and engineering leads who need security to accelerate, not obstruct, their
-            mission. That means shaping strategy, coaching teams, and shipping the tooling that keeps commitments real.
-          </p>
-        </section>
-
-        <section className="surface u-pad-xl u-stack u-gap-md" aria-labelledby="about-highlights-heading">
-          <h2 id="about-highlights-heading" className="heading-subtitle">
-            At-a-glance
-          </h2>
-          <dl className="u-stack u-gap-sm" aria-label="Professional highlights">
-            {highlights.map((item) => (
-              <div key={item.label} className="u-stack-2xs">
-                <dt className="u-text-xs u-text-uppercase u-text-muted">{item.label}</dt>
-                <dd className="u-m-0">{item.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-
-        <section className="u-stack u-gap-md" aria-labelledby="about-ethos-heading">
-          <h2 id="about-ethos-heading" className="heading-section">
-            Ethos
-          </h2>
-          <div className="u-stack u-gap-sm" role="list">
-            {ethosStatements.map((statement) => (
-              <blockquote key={statement} className="surface u-pad-lg u-text-lg" role="listitem">
-                <p className="u-m-0">“{statement}”</p>
-              </blockquote>
-            ))}
-          </div>
-          <h3 className="heading-subtitle">Practice commitments</h3>
-          <ul className="u-stack u-gap-xs">
-            {commitments.map((commitment) => (
-              <li key={commitment}>{commitment}</li>
-            ))}
-          </ul>
-        </section>
-      </article>
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_JSON_LD) }} />
+      <AboutPageContent
+        badges={BADGES}
+        biography={BIOGRAPHY}
+        principles={PRINCIPLES}
+        closingStatement={CLOSING_STATEMENT}
+      />
+    </>
   );
 }

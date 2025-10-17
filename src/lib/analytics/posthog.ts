@@ -72,6 +72,8 @@ function fire<K extends keyof PostHogClient>(
 const analytics = {
   capture: (event: string, properties?: Record<string, unknown>) =>
     fire("capture", event, properties),
+  track: (event: string, properties?: Record<string, unknown>) =>
+    fire("capture", event, properties),
   identify: (distinctId: string, properties?: Record<string, unknown>) =>
     fire("identify", distinctId, properties),
   reset: () => fire("reset"),

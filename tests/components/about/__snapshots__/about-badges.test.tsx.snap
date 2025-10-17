@@ -1,0 +1,39 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AboutBadges > matches the snapshot 1`] = `
+<ul
+  class="_badgeList_830bc4"
+  role="list"
+>
+  <li
+    class="_badgeItem_830bc4"
+    role="listitem"
+  >
+    <span
+      class="_badge_830bc4"
+    >
+      Industrial automation
+    </span>
+  </li>
+  <li
+    class="_badgeItem_830bc4"
+    role="listitem"
+  >
+    <span
+      class="_badge_830bc4"
+    >
+      AI security
+    </span>
+  </li>
+  <li
+    class="_badgeItem_830bc4"
+    role="listitem"
+  >
+    <span
+      class="_badge_830bc4"
+    >
+      OT & networks
+    </span>
+  </li>
+</ul>
+`;
