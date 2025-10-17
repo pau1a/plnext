@@ -53,7 +53,7 @@ describe("Comment form and list", () => {
     };
 
     const fetchMock = vi
-      .fn<Parameters<typeof fetch>, ReturnType<typeof fetch>>()
+      .fn<typeof fetch>()
       .mockResolvedValueOnce(
         new Response(JSON.stringify(firstPage), {
           status: 200,
@@ -94,7 +94,7 @@ describe("Comment form and list", () => {
   });
 
   it("shows optimistic updates while a comment submission is in flight", async () => {
-    const fetchMock = vi.fn<Parameters<typeof fetch>, ReturnType<typeof fetch>>();
+    const fetchMock = vi.fn<typeof fetch>();
     fetchMock.mockResolvedValueOnce(
       new Response(JSON.stringify({ comments: [], nextCursor: null }), {
         status: 200,
@@ -102,7 +102,7 @@ describe("Comment form and list", () => {
       }),
     );
 
-    let resolvePost: ((value: Response) => void) | null = null;
+    let resolvePost: ((value: Response | PromiseLike<Response>) => void) | undefined;
     const postPromise = new Promise<Response>((resolve) => {
       resolvePost = resolve;
     });
@@ -131,12 +131,14 @@ describe("Comment form and list", () => {
     });
     expect(pendingMessage).toBeInTheDocument();
 
-    resolvePost?.(
-      new Response(JSON.stringify({ success: true }), {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      }),
-    );
+    if (resolvePost) {
+      resolvePost(
+        new Response(JSON.stringify({ success: true }), {
+          status: 201,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
+    }
 
     await waitFor(() =>
       expect(
@@ -148,7 +150,7 @@ describe("Comment form and list", () => {
 
   it("provides accessible labels and status messaging", async () => {
     const fetchMock = vi
-      .fn<Parameters<typeof fetch>, ReturnType<typeof fetch>>()
+      .fn<typeof fetch>()
       .mockResolvedValueOnce(
         new Response(JSON.stringify({ comments: [], nextCursor: null }), {
           status: 200,

@@ -6,8 +6,8 @@ import { headers } from "next/headers";
 
 import { ContactFormState } from "./state";
 
-function resolveBaseUrl(): string {
-  const headerList = headers();
+async function resolveBaseUrl(): Promise<string> {
+  const headerList = await headers();
   const host = headerList.get("host");
   const protocol = headerList.get("x-forwarded-proto") ?? "http";
 
@@ -40,7 +40,8 @@ export async function sendMessage(
   const payload = { name, email, message, honeypot, submittedAt };
 
   try {
-    const response = await fetch(`${resolveBaseUrl()}/api/contact`, {
+    const baseUrl = await resolveBaseUrl();
+    const response = await fetch(`${baseUrl}/api/contact`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

@@ -5,6 +5,6 @@ import { redirect } from "next/navigation";
 import { clearSessionCookie } from "@/lib/auth/server";
 
 export async function logoutAction() {
-  clearSessionCookie();
+  await clearSessionCookie();
   redirect("/admin/login");
 }

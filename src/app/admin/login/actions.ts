@@ -22,7 +22,7 @@ export async function loginAction(_: LoginResult, formData: FormData): Promise<L
   try {
     const actor = await createSession(token);
     if (!actorHasPermission(actor, "comments:moderate")) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       cookieStore.delete(getSessionCookieName());
       return { error: "You do not have permission to moderate comments." };
     }

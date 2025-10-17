@@ -6,12 +6,18 @@ import { z } from "zod";
 import type { PostgrestError } from "@supabase/supabase-js";
 
 import { enforceCommentRateLimits } from "@/lib/rate-limit";
-import { getSupabase, type CommentsTableInsert } from "@/lib/supabase/server";
+import {
+  getSupabase,
+  type CommentsTableInsert,
+  type CommentsTableRow,
+} from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
 const PAGE_SIZE = 20;
 const MIN_DWELL_TIME_MS = 3_000;
+
+const COMMENTS_TABLE = "comments" as const;
 
 const commentPayloadSchema = z
   .object({
@@ -170,20 +176,24 @@ export async function GET(request: Request) {
   try {
     const supabase = getSupabase();
     const query = supabase
-      .from("comments")
+      .from(COMMENTS_TABLE)
       .select("id, slug, author, content, created_at")
       .eq("slug", slug)
       .order("created_at", { ascending: true });
 
-    const limitedQuery = after ? query.gt("created_at", after) : query;
-    const { data, error } = await limitedQuery.limit(PAGE_SIZE + 1);
+    const limitedQuery = after ? (query as any).gt("created_at", after) : query;
+    const { data, error } = (await (limitedQuery as any).limit(PAGE_SIZE + 1)) as {
+      data: CommentsTableRow[] | null;
+      error: PostgrestError | null;
+    };
 
     if (error) {
       throw error;
     }
 
-    const hasMore = (data?.length ?? 0) > PAGE_SIZE;
-    const records = (data ?? []).slice(0, PAGE_SIZE);
+    const rows = data ?? [];
+    const hasMore = rows.length > PAGE_SIZE;
+    const records = rows.slice(0, PAGE_SIZE);
 
     const response = NextResponse.json(
       {
@@ -339,7 +349,9 @@ export async function POST(request: Request) {
       content: sanitizedBody,
     };
 
-    const { error } = await supabase.from("comments").insert(payload);
+    const { error } = (await (supabase.from(COMMENTS_TABLE) as any).insert(payload)) as {
+      error: PostgrestError | null;
+    };
     if (error) {
       throw error;
     }
