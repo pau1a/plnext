@@ -59,18 +59,21 @@ export default function AboutPageContent({
     <main className={styles.main}>
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <motion.p {...heroMotion} className={styles.eyebrow}>
-            ABOUT
-          </motion.p>
+          <div className={styles.heroCopy}>
+            <motion.p {...heroMotion} className={styles.eyebrow}>
+              ABOUT
+            </motion.p>
 
-          <motion.h1 {...heroMotion} className={styles.heroTitle}>
-            Building calm in complex systems
-          </motion.h1>
+            <motion.h1 {...heroMotion} className={styles.heroTitle}>
+              Building calm in complex systems
+            </motion.h1>
 
-          <motion.p {...heroMotion} className={styles.heroSubhead}>
-            I am an engineer who helps build and secure automated systems and the interconnected networks that run them. My focus
-            is where operational technology, networks, and AI-enabled automation overlap. My job is to narrow the blast radius.
-          </motion.p>
+            <motion.p {...heroMotion} className={styles.heroSubhead}>
+              I am an engineer who helps build and secure automated systems and the interconnected networks that run them. My
+              focus is where operational technology, networks, and AI-enabled automation overlap. My job is to narrow the blast
+              radius.
+            </motion.p>
+          </div>
 
           <motion.div {...heroMotion} className={styles.heroSummary}>
             <div className={styles.heroSummaryCard}>
