@@ -2,9 +2,9 @@ import type { JSX as ReactJSX } from "react";
 
 declare global {
   namespace JSX {
-    export type Element = ReactJSX.Element;
-    export type ElementClass = ReactJSX.ElementClass;
-    export type IntrinsicElements = ReactJSX.IntrinsicElements;
+    type Element = ReactJSX.Element;
+    type ElementClass = ReactJSX.ElementClass;
+    type IntrinsicElements = ReactJSX.IntrinsicElements;
   }
 }
 

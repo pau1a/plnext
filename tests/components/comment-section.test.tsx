@@ -102,7 +102,7 @@ describe("Comment form and list", () => {
       }),
     );
 
-    let resolvePost: ((value: Response) => void) | undefined;
+    let resolvePost: ((value: Response | PromiseLike<Response>) => void) | undefined;
     const postPromise = new Promise<Response>((resolve) => {
       resolvePost = resolve;
     });
@@ -131,12 +131,14 @@ describe("Comment form and list", () => {
     });
     expect(pendingMessage).toBeInTheDocument();
 
-    resolvePost?.(
-      new Response(JSON.stringify({ success: true }), {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      }),
-    );
+    if (resolvePost) {
+      resolvePost(
+        new Response(JSON.stringify({ success: true }), {
+          status: 201,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
+    }
 
     await waitFor(() =>
       expect(

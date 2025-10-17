@@ -17,6 +17,8 @@ export const runtime = "nodejs";
 const PAGE_SIZE = 20;
 const MIN_DWELL_TIME_MS = 3_000;
 
+const COMMENTS_TABLE = "comments" as const;
+
 type CommentsListRow = Pick<
   CommentsTableRow,
   "id" | "slug" | "author" | "content" | "created_at"
@@ -178,14 +180,17 @@ export async function GET(request: Request) {
 
   try {
     const supabase = getSupabase();
-    const query = supabase
-      .from("comments")
+    let query = supabase
+      .from(COMMENTS_TABLE)
       .select("id, slug, author, content, created_at")
       .eq("slug", slug)
       .order("created_at", { ascending: true });
 
-    const limitedQuery = after ? query.gt("created_at", after) : query;
-    const { data, error } = await limitedQuery.limit(PAGE_SIZE + 1);
+    if (after) {
+      query = query.gt("created_at", after);
+    }
+
+    const { data, error } = await query.limit(PAGE_SIZE + 1);
 
     if (error) {
       throw error;
@@ -349,7 +354,7 @@ export async function POST(request: Request) {
       content: sanitizedBody,
     };
 
-    const { error } = await supabase.from("comments").insert(payload);
+    const { error } = await supabase.from(COMMENTS_TABLE).insert<CommentsTableInsert>(payload);
     if (error) {
       throw error;
     }

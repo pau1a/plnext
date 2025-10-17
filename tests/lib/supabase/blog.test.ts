@@ -1,5 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("next/cache", () => ({
+  unstable_cache:
+    <Args extends unknown[], Return>(
+      fn: (...args: Args) => Promise<Return>,
+      key: unknown,
+      options: unknown,
+    ) => {
+      void key;
+      void options;
+      return (...args: Args) => fn(...args);
+    },
+}));
+
 import type { BlogPostSummary } from "@/lib/mdx";
 
 function buildSummary(overrides: Partial<BlogPostSummary> = {}): BlogPostSummary {

@@ -5,11 +5,16 @@ import { z } from "zod";
 import type { PostgrestError } from "@supabase/supabase-js";
 
 import { enforceContactRateLimits } from "@/lib/rate-limit";
-import { getServiceSupabase, type ContactMessageInsert } from "@/lib/supabase/service";
+import {
+  getServiceSupabase,
+  type ContactMessageInsert,
+} from "@/lib/supabase/service";
 
 export const runtime = "nodejs";
 
 const MIN_DWELL_TIME_MS = 3_000;
+
+const CONTACT_MESSAGES_TABLE = "contact_messages" as const;
 
 const contactPayloadSchema = z
   .object({
@@ -176,8 +181,8 @@ export async function POST(request: Request) {
     };
 
     const { error } = await supabase
-      .from("pl_site.contact_messages")
-      .insert(payload);
+      .from(CONTACT_MESSAGES_TABLE)
+      .insert<ContactMessageInsert>(payload);
     if (error) {
       throw error;
     }

@@ -9,11 +9,12 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "security-audit": "npm audit --omit=dev --audit-level=moderate",
-    "ci:manual": "node scripts/ci-manual.mjs",
+    "security:audit": "npm run security-audit",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test": "vitest run && playwright test",
-    "playwright:install": "playwright install --with-deps"
+    "playwright:install": "playwright install --with-deps",
+    "ci:manual": "bash ./scripts/ci.sh"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",

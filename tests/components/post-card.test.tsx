@@ -17,28 +17,32 @@ function buildSummary(overrides: Partial<BlogPostSummary> = {}): BlogPostSummary
 }
 
 beforeAll(() => {
-  class MockIntersectionObserver {
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root: Element | Document | null = null;
+    readonly rootMargin = "";
+    readonly thresholds = [] as ReadonlyArray<number>;
+
     constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
       void callback;
       void options;
     }
 
-    observe(target: Element) {
+    disconnect(): void {}
+
+    observe(target: Element): void {
       void target;
     }
-
-    unobserve(target: Element) {
-      void target;
-    }
-
-    disconnect() {}
 
     takeRecords(): IntersectionObserverEntry[] {
       return [];
     }
+
+    unobserve(target: Element): void {
+      void target;
+    }
   }
 
-  (globalThis as unknown as { IntersectionObserver: typeof MockIntersectionObserver }).IntersectionObserver =
+  (globalThis as unknown as { IntersectionObserver: typeof IntersectionObserver }).IntersectionObserver =
     MockIntersectionObserver as unknown as typeof IntersectionObserver;
 });
 

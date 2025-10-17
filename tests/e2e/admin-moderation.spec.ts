@@ -36,8 +36,8 @@ test.describe("admin moderation", () => {
     await notesField.fill("Approved during e2e test");
 
     await Promise.all([
-      page.waitForResponse((response) =>
-        response.url().includes("pl_site.moderation_audit_log") && response.request().method() === "POST",
+      page.waitForResponse(
+        (response) => response.url().includes("/admin/comments") && response.request().method() === "POST",
       ),
       page.getByRole("button", { name: "Approve" }).click(),
     ]);

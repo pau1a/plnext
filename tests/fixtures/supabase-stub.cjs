@@ -419,15 +419,21 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (req.method === "GET" && parsed.pathname === "/rest/v1/comments") {
-    const data = selectPublicComments(parsed.searchParams);
-    respondJson(res, 200, data);
-    return;
-  }
+  if (parsed.pathname === "/rest/v1/comments" || parsed.pathname === "/rest/v1/pl_site.comments") {
+    const select = parsed.searchParams.get("select") || "";
+    const targetsModeration =
+      select.includes("author_name") ||
+      select.includes("moderated_at") ||
+      select.includes("status") ||
+      parsed.searchParams.has("status");
 
-  if (parsed.pathname === "/rest/v1/pl_site.comments") {
     if (req.method === "GET") {
-      handleModerationQuery(req, res, parsed.searchParams);
+      if (targetsModeration) {
+        handleModerationQuery(req, res, parsed.searchParams);
+      } else {
+        const data = selectPublicComments(parsed.searchParams);
+        respondJson(res, 200, data);
+      }
       return;
     }
 
@@ -437,7 +443,10 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  if (req.method === "POST" && parsed.pathname === "/rest/v1/pl_site.moderation_audit_log") {
+  if (
+    req.method === "POST" &&
+    (parsed.pathname === "/rest/v1/pl_site.moderation_audit_log" || parsed.pathname === "/rest/v1/moderation_audit_log")
+  ) {
     handleAuditInsert(req, res);
     return;
   }

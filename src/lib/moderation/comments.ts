@@ -46,6 +46,8 @@ export interface ModerationQueueResult {
 
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
+const COMMENTS_TABLE = "comments" as const;
+const AUDIT_LOG_TABLE = "moderation_audit_log" as const;
 
 type ModerationQueueRow = Pick<
   ModerationCommentRow,
@@ -102,8 +104,9 @@ export async function fetchModerationQueue(filters: ModerationQueueFilters): Pro
   const search = normaliseSearchTerm(filters.search);
 
   const supabase = getServiceSupabase();
-  let query = supabase
-    .from("pl_site.comments")
+  const schemaClient = supabase.schema("pl_site");
+  let query = schemaClient
+    .from(COMMENTS_TABLE)
     .select(
       "id, slug, author_name, author_email, content, status, created_at, updated_at, moderated_at, ip_hash, user_agent",
       { count: "exact" },
@@ -193,9 +196,10 @@ export async function moderateComment({ commentId, action, actor, reason }: Mode
   const now = new Date().toISOString();
   const update = buildUpdate(action, now);
 
-  const { data, error } = await supabase
-    .from("pl_site.comments")
-    .update(update)
+  const schemaClient = supabase.schema("pl_site");
+  const commentsClient = schemaClient.from(COMMENTS_TABLE);
+  const { data, error } = await commentsClient
+    .update<ModerationCommentUpdate>(update)
     .eq("id", commentId)
     .select("id, slug, status")
     .limit(1)
@@ -210,9 +214,9 @@ export async function moderateComment({ commentId, action, actor, reason }: Mode
   }
 
   const auditEntry = buildAuditEntry(data.id, data.slug, action, actor, reason?.trim() || undefined);
-  const { error: auditError } = await supabase
-    .from("pl_site.moderation_audit_log")
-    .insert(auditEntry);
+  const { error: auditError } = await schemaClient
+    .from(AUDIT_LOG_TABLE)
+    .insert<ModerationAuditLogInsert>(auditEntry);
   if (auditError) {
     throw auditError;
   }

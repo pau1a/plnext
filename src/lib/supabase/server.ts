@@ -11,15 +11,16 @@ import type {
   PublicPostsRow,
 } from "@/types/supabase";
 
+export type { Database } from "@/types/supabase";
 export type CommentsTableRow = PublicCommentsRow;
 export type CommentsTableInsert = PublicCommentsInsert;
 export type CommentsTableUpdate = PublicCommentsUpdate;
 export type PostsTableRow = PublicPostsRow;
 export type PostCommentCountsTableRow = PublicPostCommentCountsRow;
 
-let cachedClient: SupabaseClient<Database> | null = null;
+let cachedClient: SupabaseClient<Database, "public"> | null = null;
 
-export function getSupabase(): SupabaseClient<Database> {
+export function getSupabase(): SupabaseClient<Database, "public"> {
   if (cachedClient) {
     return cachedClient;
   }
@@ -32,8 +33,9 @@ export function getSupabase(): SupabaseClient<Database> {
     throw new Error("SUPABASE_ENV_MISSING");
   }
 
-  cachedClient = createClient<Database>(url, anonKey, {
+  cachedClient = createClient<Database, "public", "public">(url, anonKey, {
     auth: { persistSession: false },
+    db: { schema: "public" },
   });
 
   return cachedClient;
