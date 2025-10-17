@@ -2,26 +2,28 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-export type { ServiceDatabase } from "@/types/supabase";
+import type {
+  ServiceContactMessagesInsert,
+  ServiceContactMessagesRow,
+  ServiceDatabase,
+  ServiceModerationAuditLogInsert,
+  ServiceModerationAuditLogRow,
+  ServiceModerationCommentRow,
+  ServiceModerationCommentUpdate,
+} from "@/types/supabase";
 
-import type { ServiceDatabase } from "@/types/supabase";
+export type CommentStatus = ServiceModerationCommentRow["status"];
 
-type ContactMessagesTable = ServiceDatabase["pl_site"]["Tables"]["contact_messages"];
-type ModerationCommentsTable = ServiceDatabase["pl_site"]["Tables"]["comments"];
-type ModerationAuditLogTable = ServiceDatabase["pl_site"]["Tables"]["moderation_audit_log"];
+export type ContactMessageInsert = ServiceContactMessagesInsert;
+export type ContactMessageRow = ServiceContactMessagesRow;
+export type ModerationCommentRow = ServiceModerationCommentRow;
+export type ModerationCommentUpdate = ServiceModerationCommentUpdate;
+export type ModerationAuditLogInsert = ServiceModerationAuditLogInsert;
+export type ModerationAuditLogRow = ServiceModerationAuditLogRow;
 
-export type CommentStatus = ModerationCommentsTable["Row"]["status"];
-export type ContactMessageInsert = ContactMessagesTable["Insert"];
-export type ContactMessageRow = ContactMessagesTable["Row"];
-export type ContactMessageUpdate = ContactMessagesTable["Update"];
-export type ModerationCommentRow = ModerationCommentsTable["Row"];
-export type ModerationCommentUpdate = ModerationCommentsTable["Update"];
-export type ModerationAuditLogInsert = ModerationAuditLogTable["Insert"];
-export type ModerationAuditLogRow = ModerationAuditLogTable["Row"];
+let cachedServiceClient: SupabaseClient<ServiceDatabase> | null = null;
 
-let cachedServiceClient: SupabaseClient<ServiceDatabase, "pl_site", "pl_site"> | null = null;
-
-export function getServiceSupabase(): SupabaseClient<ServiceDatabase, "pl_site", "pl_site"> {
+export function getServiceSupabase(): SupabaseClient<ServiceDatabase> {
   if (cachedServiceClient) {
     return cachedServiceClient;
   }
@@ -33,9 +35,8 @@ export function getServiceSupabase(): SupabaseClient<ServiceDatabase, "pl_site",
     throw new Error("SUPABASE_SERVICE_ENV_MISSING");
   }
 
-  cachedServiceClient = createClient<ServiceDatabase, "pl_site">(url, serviceKey, {
+  cachedServiceClient = createClient<ServiceDatabase>(url, serviceKey, {
     auth: { persistSession: false },
-    db: { schema: "pl_site" },
   });
 
   return cachedServiceClient;

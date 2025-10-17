@@ -2,20 +2,24 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-export type { Database } from "@/types/supabase";
+import type {
+  Database,
+  PublicCommentsInsert,
+  PublicCommentsRow,
+  PublicCommentsUpdate,
+  PublicPostCommentCountsRow,
+  PublicPostsRow,
+} from "@/types/supabase";
 
-import type { Database } from "@/types/supabase";
+export type CommentsTableRow = PublicCommentsRow;
+export type CommentsTableInsert = PublicCommentsInsert;
+export type CommentsTableUpdate = PublicCommentsUpdate;
+export type PostsTableRow = PublicPostsRow;
+export type PostCommentCountsTableRow = PublicPostCommentCountsRow;
 
-export type CommentsTableRow = Database["public"]["Tables"]["comments"]["Row"];
-export type CommentsTableInsert = Database["public"]["Tables"]["comments"]["Insert"];
-export type CommentsTableUpdate = Database["public"]["Tables"]["comments"]["Update"];
-export type PostsTableRow = Database["public"]["Tables"]["posts"]["Row"];
-export type PostCommentCountsTableRow = Database["public"]["Tables"]["post_comment_counts"]["Row"];
+let cachedClient: SupabaseClient<Database> | null = null;
 
-
-let cachedClient: SupabaseClient<Database, "public", "public"> | null = null;
-
-export function getSupabase(): SupabaseClient<Database, "public", "public"> {
+export function getSupabase(): SupabaseClient<Database> {
   if (cachedClient) {
     return cachedClient;
   }
@@ -28,9 +32,8 @@ export function getSupabase(): SupabaseClient<Database, "public", "public"> {
     throw new Error("SUPABASE_ENV_MISSING");
   }
 
-  cachedClient = createClient<Database, "public", "public">(url, anonKey, {
+  cachedClient = createClient<Database>(url, anonKey, {
     auth: { persistSession: false },
-    db: { schema: "public" },
   });
 
   return cachedClient;

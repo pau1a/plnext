@@ -11,14 +11,11 @@ import {
   type CommentsTableInsert,
   type CommentsTableRow,
 } from "@/lib/supabase/server";
-import type { Database } from "@/types/supabase";
 
 export const runtime = "nodejs";
 
 const PAGE_SIZE = 20;
 const MIN_DWELL_TIME_MS = 3_000;
-
-type CommentsTable = Database["public"]["Tables"]["comments"];
 
 type CommentsListRow = Pick<
   CommentsTableRow,
@@ -182,19 +179,19 @@ export async function GET(request: Request) {
   try {
     const supabase = getSupabase();
     const query = supabase
-      .from<"comments", CommentsTable>("comments")
+      .from("comments")
       .select("id, slug, author, content, created_at")
       .eq("slug", slug)
       .order("created_at", { ascending: true });
 
-    const limitedQuery = (after ? query.gt("created_at", after) : query).returns<CommentsListRow[]>();
+    const limitedQuery = after ? query.gt("created_at", after) : query;
     const { data, error } = await limitedQuery.limit(PAGE_SIZE + 1);
 
     if (error) {
       throw error;
     }
 
-    const rows = data ?? [];
+    const rows = (data ?? []) as CommentsListRow[];
     const hasMore = rows.length > PAGE_SIZE;
     const records = rows.slice(0, PAGE_SIZE);
 
@@ -352,9 +349,7 @@ export async function POST(request: Request) {
       content: sanitizedBody,
     };
 
-    const { error } = await supabase
-      .from<"comments", CommentsTable>("comments")
-      .insert(payload);
+    const { error } = await supabase.from("comments").insert(payload);
     if (error) {
       throw error;
     }

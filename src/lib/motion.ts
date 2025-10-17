@@ -81,10 +81,10 @@ export function useMotionVariants(variants: Variants) {
       return variants;
     }
 
-    const neutralState: TargetAndTransition = {
-      ...(visible ?? {}),
-      transition: zeroTransition,
-    };
+    const neutralState: TargetAndTransition =
+      visible && typeof visible === "object"
+        ? { ...visible, transition: zeroTransition }
+        : { opacity: 1, transition: zeroTransition };
 
     return {
       ...variants,

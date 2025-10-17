@@ -22,6 +22,7 @@ export interface PublicCommentsInsert {
   author: string;
   content: string;
   created_at?: string;
+  [key: string]: unknown;
 }
 
 export interface PublicCommentsUpdate {
@@ -30,6 +31,7 @@ export interface PublicCommentsUpdate {
   author?: string;
   content?: string;
   created_at?: string;
+  [key: string]: unknown;
 }
 
 export interface PublicPostsRow {
@@ -66,6 +68,7 @@ export interface ServiceContactMessagesInsert {
   message: string;
   ip_hash: string;
   user_agent?: string | null;
+  [key: string]: unknown;
 }
 
 export interface ServiceContactMessagesUpdate {
@@ -76,6 +79,7 @@ export interface ServiceContactMessagesUpdate {
   message?: string;
   ip_hash?: string;
   user_agent?: string | null;
+  [key: string]: unknown;
 }
 
 export interface ServiceModerationCommentRow {
@@ -98,6 +102,7 @@ export interface ServiceModerationCommentUpdate {
   moderated_at?: string | null;
   updated_at?: string;
   is_spam?: boolean;
+  [key: string]: unknown;
 }
 
 export interface ServiceModerationAuditLogRow {
@@ -120,6 +125,7 @@ export interface ServiceModerationAuditLogInsert {
   actor_roles: string[];
   metadata?: Json | null;
   created_at?: string;
+  [key: string]: unknown;
 }
 
 export interface ServiceModerationAuditLogUpdate {
@@ -131,12 +137,13 @@ export interface ServiceModerationAuditLogUpdate {
   actor_roles?: string[];
   metadata?: Json | null;
   created_at?: string;
+  [key: string]: unknown;
 }
 
 type SupabaseTable<Row, Insert, Update> = GenericTable & {
   Row: Row;
-  Insert: Insert extends never ? never : Insert & Record<string, unknown>;
-  Update: Update extends never ? never : Update & Record<string, unknown>;
+  Insert: Insert;
+  Update: Update;
   Relationships: GenericTable["Relationships"];
 };
 
