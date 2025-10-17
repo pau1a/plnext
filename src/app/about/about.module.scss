@@ -14,7 +14,16 @@
 .heroInner {
   width: min(100%, var(--max-content-lg));
   margin: 0 auto;
-  padding: clamp(2.25rem, 6vw, 3.5rem) clamp(1.5rem, 4vw, 3rem) clamp(2.75rem, 7vw, 3.5rem);
+  padding-top: clamp(2.25rem, 6vw, 3.5rem);
+  padding-bottom: clamp(2.75rem, 7vw, 3.5rem);
+  padding-left: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 3rem);
+}
+
+@media (min-width: 64rem) {
+  .heroInner {
+    padding-right: 26.25rem;
+  }
 }
 
 .eyebrow {
@@ -50,33 +59,86 @@
   position: relative;
   margin: 0 auto;
   width: min(100%, 72ch);
-  padding: clamp(1.25rem, 4vw, 1.75rem) clamp(1.5rem, 4.5vw, 2.75rem);
+  padding: clamp(1.35rem, 4vw, 1.85rem) clamp(1.5rem, 4vw, 2.5rem);
   border-radius: 1.75rem;
-  background:
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-teal-200) 35%, transparent) 0%,
-      transparent 65%
-    ),
-    var(--surface-elevated);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
-  border: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
-  backdrop-filter: blur(12px);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface-elevated) 85%, transparent);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.18);
+  border: 1px solid color-mix(in srgb, var(--surface-elevated) 55%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+@media (min-width: 48rem) {
+  .heroSummaryCard {
+    padding-block: clamp(1.5rem, 4vw, 2rem);
+    padding-inline: 0;
+  }
 }
 
 :global(body.dark) .heroSummaryCard {
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
-  border-color: color-mix(in srgb, var(--surface-elevated) 40%, transparent);
+  background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.42);
+  border-color: color-mix(in srgb, var(--surface-elevated) 48%, transparent);
 }
 
-.heroSummaryList {
+.heroSummarySwatch {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.6rem;
+  background: var(--color-teal-500);
+}
+
+:global(body.dark) .heroSummarySwatch {
+  background: var(--color-teal-600);
+}
+
+.heroSummaryContent {
+  position: relative;
+  padding-left: clamp(1.75rem, 4vw, 2.75rem);
+  padding-right: clamp(1.5rem, 4vw, 2.75rem);
+}
+
+@media (min-width: 48rem) {
+  .heroSummaryContent {
+    padding-left: clamp(2.75rem, 5vw, 3.25rem);
+    padding-right: clamp(2rem, 4vw, 3rem);
+  }
+}
+
+@media (min-width: 64rem) {
+  .heroSummaryContent {
+    padding-left: clamp(3rem, 4vw, 3.75rem);
+  }
+}
+
+.heroSummaryGroups {
   display: grid;
-  gap: clamp(0.75rem, 2.5vw, 1.25rem);
+  gap: clamp(1.25rem, 3.5vw, 1.75rem);
 
   @media (min-width: 48rem) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: clamp(1rem, 3vw, 1.75rem);
+    column-gap: clamp(1.5rem, 4vw, 2rem);
   }
+}
+
+.heroSummaryGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.heroSummaryLabel {
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  color: var(--text-muted);
+}
+
+.heroSummaryList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-md);
 }
 
 .heroSummaryItem {
@@ -99,15 +161,15 @@
 
 .heroSummaryAccent {
   flex: none;
-  margin-top: 0.35rem;
-  width: 0.55rem;
-  height: 0.55rem;
+  margin-top: 0.5rem;
+  width: 0.45rem;
+  height: 0.45rem;
   border-radius: 50%;
   background: var(--color-crimson-500);
 }
 
-.heroSummaryConnector {
-  margin: 0 0.4ch;
+.heroSummaryDelimiter {
+  color: inherit;
 }
 
 .portraitCard {
@@ -285,7 +347,7 @@
   .biographyAside {
     float: right;
     width: min(18.75rem, 38vw);
-    margin: -3rem 0 var(--space-xl) clamp(1.5rem, 4vw, 3rem);
+    margin: -4rem 0 var(--space-xl) clamp(1.5rem, 4vw, 3rem);
   }
 
   .badgeCluster {

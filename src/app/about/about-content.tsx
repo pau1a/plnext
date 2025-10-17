@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import styles from "./about.module.scss";
@@ -8,18 +8,39 @@ import styles from "./about.module.scss";
 const photoUrl =
   "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
 
-const heroSummary = [
+type HeroSummaryItem =
+  | { key: string; strong: readonly string[] }
+  | { key: string; text: string };
+
+type HeroSummaryGroup = {
+  label: string;
+  items: readonly HeroSummaryItem[];
+};
+
+const heroSummaryGroups: readonly HeroSummaryGroup[] = [
   {
-    highlight: "MSc (Cyber) · MIEE",
-    body: "measurement-led engineering.",
+    label: "CREDENTIALS",
+    items: [
+      { key: "credentials-qualifications", strong: ["MSc (Cyber)", "MIEE"] },
+      { key: "credentials-measurement", text: "Measurement-led engineering" },
+    ],
   },
   {
-    highlight: "OT · networks · AI automation",
-    body: "one blast radius, layered defence.",
+    label: "FOCUS",
+    items: [
+      { key: "focus-domains", text: "OT · networks · AI-enabled automation" },
+      {
+        key: "focus-defence",
+        text: "Layered defence, risk that is measured not guessed",
+      },
+    ],
   },
   {
-    highlight: "Python-first ML and secure MLOps",
-    body: "lineage, drift, adversarial robustness.",
+    label: "TOOLBOX",
+    items: [
+      { key: "toolbox-ml", text: "Python-first ML · secure MLOps" },
+      { key: "toolbox-guardrails", text: "Lineage, drift, adversarial robustness" },
+    ],
   },
 ] as const;
 
@@ -83,17 +104,40 @@ export default function AboutPageContent({
 
           <motion.div {...heroMotion} className={styles.heroSummary}>
             <div className={styles.heroSummaryCard}>
-              <ul className={styles.heroSummaryList}>
-                {heroSummary.map((item) => (
-                  <li key={item.highlight} className={styles.heroSummaryItem}>
-                    <span className={styles.heroSummaryAccent} aria-hidden="true" />
-                    <span>
-                      <strong>{item.highlight}</strong> 
-                      <span className={styles.heroSummaryConnector}>–</span> {item.body}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <div className={styles.heroSummarySwatch} aria-hidden="true" />
+              <div className={styles.heroSummaryContent}>
+                <div className={styles.heroSummaryGroups}>
+                  {heroSummaryGroups.map((group) => (
+                    <div key={group.label} className={styles.heroSummaryGroup}>
+                      <p className={styles.heroSummaryLabel}>{group.label}</p>
+                      <ul className={styles.heroSummaryList}>
+                        {group.items.map((item) => (
+                          <li key={item.key} className={styles.heroSummaryItem}>
+                            <span
+                              className={styles.heroSummaryAccent}
+                              aria-hidden="true"
+                            />
+                            <span>
+                              {"strong" in item
+                                ? item.strong.map((value, index) => (
+                                    <Fragment key={value}>
+                                      <strong>{value}</strong>
+                                      {index < item.strong.length - 1 ? (
+                                        <span className={styles.heroSummaryDelimiter}>
+                                          , 
+                                        </span>
+                                      ) : null}
+                                    </Fragment>
+                                  ))
+                                : item.text}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
