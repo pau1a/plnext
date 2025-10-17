@@ -106,33 +106,35 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   const visibleProjects = hasProjects ? projects.slice(state.startIndex, state.endIndex) : [];
 
   return (
-    <section className="u-stack u-gap-2xl">
-      <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
-        <h1 className="heading-display-lg">Projects &amp; Programmes</h1>
-        <p className="u-text-lead u-center u-max-w-md">
-          Selected engagements that blend cyber operations, automation, and measurable business outcomes.
-        </p>
-      </header>
+    <div className="l-container motion-fade-in u-pad-block-3xl">
+      <section className="u-stack u-gap-2xl">
+        <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
+          <h1 className="heading-display-lg">Projects &amp; Programmes</h1>
+          <p className="u-text-lead u-center u-max-w-md">
+            Selected engagements that blend cyber operations, automation, and measurable business outcomes.
+          </p>
+        </header>
 
-      {hasProjects ? (
-        <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridProjects}`}>
-          {visibleProjects.map((project) => (
-            <ProjectCard key={project.slug} summary={project} />
-          ))}
-        </div>
-      ) : (
-        <p className="u-text-center u-text-muted">Project case studies are coming soon.</p>
-      )}
+        {hasProjects ? (
+          <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridProjects}`}>
+            {visibleProjects.map((project) => (
+              <ProjectCard key={project.slug} summary={project} />
+            ))}
+          </div>
+        ) : (
+          <p className="u-text-center u-text-muted">Project case studies are coming soon.</p>
+        )}
 
-      {hasProjects ? (
-        <Pagination
-          totalCount={totalCount}
-          pageSize={state.pageSize}
-          currentPage={state.currentPage}
-          basePath={BASE_PATH}
-          pageParam={PAGE_PARAM}
-        />
-      ) : null}
-    </section>
+        {hasProjects ? (
+          <Pagination
+            totalCount={totalCount}
+            pageSize={state.pageSize}
+            currentPage={state.currentPage}
+            basePath={BASE_PATH}
+            pageParam={PAGE_PARAM}
+          />
+        ) : null}
+      </section>
+    </div>
   );
 }

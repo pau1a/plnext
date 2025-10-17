@@ -103,6 +103,32 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   if (postError) {
     return (
+      <div className="l-container motion-fade-in u-pad-block-3xl">
+        <article className="u-stack u-gap-2xl u-max-w-lg u-center">
+          <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
+            <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">
+              <i className="fa-solid fa-arrow-left" aria-hidden="true" />
+              <span>Back to all posts</span>
+            </Link>
+          </nav>
+
+          <header className="u-stack u-gap-sm">
+            <h1 className="heading-display-lg">We couldn&apos;t load this post</h1>
+            <p className="u-text-lead">Please try again later.</p>
+          </header>
+
+          <p className="u-text-sm u-text-muted">
+            Something went wrong while loading the article. Our team has been notified.
+          </p>
+        </article>
+      </div>
+    );
+  }
+
+  const resolvedPost = post!;
+
+  return (
+    <div className="l-container motion-fade-in u-pad-block-3xl">
       <article className="u-stack u-gap-2xl u-max-w-lg u-center">
         <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
           <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">
@@ -112,76 +138,54 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </nav>
 
         <header className="u-stack u-gap-sm">
-          <h1 className="heading-display-lg">We couldn&apos;t load this post</h1>
-          <p className="u-text-lead">Please try again later.</p>
+          <time className="u-text-uppercase u-text-xs u-text-muted">
+            {format(new Date(resolvedPost.date), "MMMM d, yyyy")}
+          </time>
+          <h1 className="heading-display-lg">{resolvedPost.title}</h1>
+          <p className="u-text-lead">{resolvedPost.description}</p>
+          {resolvedPost.tags?.length ? (
+            <ul className="tag-list">
+              {resolvedPost.tags.map((tag) => (
+                <li key={tag} className="tag-list__item">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </header>
 
-        <p className="u-text-sm u-text-muted">
-          Something went wrong while loading the article. Our team has been notified.
-        </p>
-      </article>
-    );
-  }
+        <div className="prose u-stack u-gap-lg">{resolvedPost.content}</div>
 
-  const resolvedPost = post!;
+        <section className="u-stack u-gap-md" aria-labelledby="comments-heading">
+          <h2 id="comments-heading" className="heading-subtitle">
+            Join the discussion
+          </h2>
+          <CommentProvider slug={resolvedPost.slug}>
+            <CommentForm slug={resolvedPost.slug} />
+            <Suspense fallback={null}>
+              <CommentList slug={resolvedPost.slug} />
+            </Suspense>
+          </CommentProvider>
+        </section>
 
-  return (
-    <article className="u-stack u-gap-2xl u-max-w-lg u-center">
-      <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
-        <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">
-          <i className="fa-solid fa-arrow-left" aria-hidden="true" />
-          <span>Back to all posts</span>
-        </Link>
-      </nav>
-
-      <header className="u-stack u-gap-sm">
-        <time className="u-text-uppercase u-text-xs u-text-muted">
-          {format(new Date(resolvedPost.date), "MMMM d, yyyy")}
-        </time>
-        <h1 className="heading-display-lg">{resolvedPost.title}</h1>
-        <p className="u-text-lead">{resolvedPost.description}</p>
-        {resolvedPost.tags?.length ? (
-          <ul className="tag-list">
-            {resolvedPost.tags.map((tag) => (
-              <li key={tag} className="tag-list__item">
-                {tag}
-              </li>
-            ))}
-          </ul>
+        {relatedPosts.length > 0 ? (
+          <aside className="surface u-pad-xl u-stack u-gap-sm">
+            <h2 className="heading-subtitle u-text-muted">Keep reading</h2>
+            <ul className="u-stack u-gap-sm">
+              {relatedPosts.map((related) => (
+                <li key={related.slug}>
+                  <Link className="u-stack u-gap-2xs" href={`/blog/${related.slug}`}>
+                    <span className="u-font-semibold">{related.title}</span>
+                    <span className="u-text-muted u-text-sm">
+                      {format(new Date(related.date), "MMMM d, yyyy")} · {related.description}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </aside>
         ) : null}
-      </header>
-
-      <div className="prose u-stack u-gap-lg">{resolvedPost.content}</div>
-
-      <section className="u-stack u-gap-md" aria-labelledby="comments-heading">
-        <h2 id="comments-heading" className="heading-subtitle">
-          Join the discussion
-        </h2>
-        <CommentProvider slug={resolvedPost.slug}>
-          <CommentForm slug={resolvedPost.slug} />
-          <Suspense fallback={null}>
-            <CommentList slug={resolvedPost.slug} />
-          </Suspense>
-        </CommentProvider>
-      </section>
-
-      {relatedPosts.length > 0 ? (
-        <aside className="surface u-pad-xl u-stack u-gap-sm">
-          <h2 className="heading-subtitle u-text-muted">Keep reading</h2>
-          <ul className="u-stack u-gap-sm">
-            {relatedPosts.map((related) => (
-              <li key={related.slug}>
-                <Link className="u-stack u-gap-2xs" href={`/blog/${related.slug}`}>
-                  <span className="u-font-semibold">{related.title}</span>
-                  <span className="u-text-muted u-text-sm">
-                    {format(new Date(related.date), "MMMM d, yyyy")} · {related.description}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </aside>
-      ) : null}
-    </article>
+      </article>
+    </div>
   );
 }

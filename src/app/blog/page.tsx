@@ -211,66 +211,68 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const nextHref = page.nextCursor ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor) : null;
 
   return (
-    <section className="u-stack u-gap-2xl">
-      <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
-        <h1 className="heading-display-lg">Insights &amp; Updates</h1>
-        <p className="u-text-lead u-center u-max-w-md">
-          Notes from the field on cybersecurity, AI, and practical engineering.
-        </p>
-      </header>
+    <div className="l-container motion-fade-in u-pad-block-3xl">
+      <section className="u-stack u-gap-2xl">
+        <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
+          <h1 className="heading-display-lg">Insights &amp; Updates</h1>
+          <p className="u-text-lead u-center u-max-w-md">
+            Notes from the field on cybersecurity, AI, and practical engineering.
+          </p>
+        </header>
 
-      {hasPosts ? (
-        <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
-          {page.items.map((post) => (
-            <PostCard
-              key={post.slug}
-              summary={post}
-              commentCount={commentCounts ? commentCounts[post.slug] ?? 0 : undefined}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="u-text-center u-text-muted">New writing is on the way.</p>
-      )}
+        {hasPosts ? (
+          <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
+            {page.items.map((post) => (
+              <PostCard
+                key={post.slug}
+                summary={post}
+                commentCount={commentCounts ? commentCounts[post.slug] ?? 0 : undefined}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="u-text-center u-text-muted">New writing is on the way.</p>
+        )}
 
-      {hasPosts ? (
-        <nav aria-label="Pagination" className={paginationStyles.pagination}>
-          <ul className={paginationStyles.list}>
-            <li className={paginationStyles.item}>
-              {previousHref ? (
-                <Link
-                  className={paginationStyles.button}
-                  href={previousHref}
-                  aria-label="View newer posts"
-                  prefetch={false}
-                >
-                  Newer posts
-                </Link>
-              ) : (
-                <span className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`} aria-disabled="true">
-                  Newer posts
-                </span>
-              )}
-            </li>
-            <li className={paginationStyles.item}>
-              {nextHref ? (
-                <Link
-                  className={paginationStyles.button}
-                  href={nextHref}
-                  aria-label="View older posts"
-                  prefetch={false}
-                >
-                  Older posts
-                </Link>
-              ) : (
-                <span className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`} aria-disabled="true">
-                  Older posts
-                </span>
-              )}
-            </li>
-          </ul>
-        </nav>
-      ) : null}
-    </section>
+        {hasPosts ? (
+          <nav aria-label="Pagination" className={paginationStyles.pagination}>
+            <ul className={paginationStyles.list}>
+              <li className={paginationStyles.item}>
+                {previousHref ? (
+                  <Link
+                    className={paginationStyles.button}
+                    href={previousHref}
+                    aria-label="View newer posts"
+                    prefetch={false}
+                  >
+                    Newer posts
+                  </Link>
+                ) : (
+                  <span className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`} aria-disabled="true">
+                    Newer posts
+                  </span>
+                )}
+              </li>
+              <li className={paginationStyles.item}>
+                {nextHref ? (
+                  <Link
+                    className={paginationStyles.button}
+                    href={nextHref}
+                    aria-label="View older posts"
+                    prefetch={false}
+                  >
+                    Older posts
+                  </Link>
+                ) : (
+                  <span className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`} aria-disabled="true">
+                    Older posts
+                  </span>
+                )}
+              </li>
+            </ul>
+          </nav>
+        ) : null}
+      </section>
+    </div>
   );
 }

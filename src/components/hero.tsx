@@ -16,13 +16,6 @@ import {
 
 import styles from "@/styles/hero.module.scss";
 
-type HeroImage = {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-};
-
 type HeroCopy = {
   eyebrow?: string;
   title: string;
@@ -40,17 +33,12 @@ type HeroCta = {
 type HeroProps = MotionProps & {
   copy: HeroCopy;
   ctas?: HeroCta[];
-  images: {
-    horizontal: HeroImage;
-    vertical: HeroImage;
-  };
   className?: string;
 };
 
 export function Hero({
   copy,
   ctas = [],
-  images,
   className,
   initial,
   animate,
@@ -77,7 +65,18 @@ export function Hero({
       animate={resolvedAnimate}
       {...motionProps}
     >
-      <div className={styles.copy}>
+      <div className={styles.heroMedia}>
+        <Image
+          src="https://cdn.networklayer.co.uk/paulalivingstone/images/freefall.jpg"
+          alt="Paula Livingstone in freefall — precision under pressure"
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
+      </div>
+      <div className={styles.heroOverlay} />
+      <div className={styles.heroContent}>
         {copy.eyebrow ? <span className={styles.eyebrow}>{copy.eyebrow}</span> : null}
         <h1 className={styles.heading}>{copy.title}</h1>
         {copy.subheading ? (
@@ -103,26 +102,6 @@ export function Hero({
             ))}
           </div>
         ) : null}
-      </div>
-      <div className={styles.media}>
-        <div className={styles.artwork}>
-          <Image
-            priority
-            className={styles.verticalArt}
-            src={images.vertical.src}
-            alt={images.vertical.alt}
-            width={images.vertical.width}
-            height={images.vertical.height}
-          />
-          <Image
-            priority
-            className={styles.horizontalArt}
-            src={images.horizontal.src}
-            alt={images.horizontal.alt}
-            width={images.horizontal.width}
-            height={images.horizontal.height}
-          />
-        </div>
       </div>
     </motion.section>
   );

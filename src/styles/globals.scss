@@ -312,7 +312,9 @@ body.dark .app-shell__header {
 
 .app-shell__main {
   flex: 1;
-  padding-block: var(--space-3xl);
+  display: flex;
+  flex-direction: column;
+  padding-block-end: var(--space-3xl);
 }
 
 .app-shell__footer {
