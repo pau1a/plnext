@@ -32,22 +32,28 @@
   display: grid;
   gap: clamp(2.5rem, 6vw, 4.5rem);
   align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "portrait"
+    "copy";
 }
 
 .heroCopy {
   max-width: 36ch;
   justify-self: start;
+  grid-area: copy;
 }
 
 .heroPortrait {
-  order: -1;
   justify-self: center;
+  grid-area: portrait;
+  max-width: min(19rem, 70vw);
 }
 
 .eyebrow {
   letter-spacing: 0.32em;
   font-size: var(--font-size-xs);
-  color: color-mix(in srgb, var(--text-primary) 45%, var(--surface-base) 55%);
+  color: #ffffff;
 }
 
 .heroTitle {
@@ -59,11 +65,7 @@
   font-size: clamp(2.75rem, 5vw, 4rem);
   line-height: 1.05;
   font-weight: 700;
-  color: color-mix(in srgb, var(--surface-base) 18%, var(--color-graphite-900) 82%);
-}
-
-:global(body.dark) .heroTitle {
-  color: color-mix(in srgb, var(--surface-base) 65%, var(--color-teal-100) 35%);
+  color: #ffffff;
 }
 
 .heroTitleDivider {
@@ -78,14 +80,14 @@
   margin-top: clamp(1.25rem, 3vw, 1.75rem);
   font-size: clamp(1.125rem, 2.6vw, 1.5rem);
   line-height: 1.4;
-  color: color-mix(in srgb, var(--surface-base) 25%, var(--text-primary) 75%);
+  color: #ffffff;
 }
 
 .heroIntro {
   margin-top: clamp(1.25rem, 3.5vw, 2rem);
   font-size: clamp(1rem, 2.4vw, 1.1875rem);
   line-height: 1.7;
-  color: color-mix(in srgb, var(--text-primary) 78%, var(--surface-base) 22%);
+  color: #ffffff;
 }
 
 .heroIntro,
@@ -121,31 +123,23 @@
   object-fit: cover;
 }
 
-@media (min-width: 48rem) {
-  .heroInner {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .heroPortrait {
-    max-width: min(18rem, 55vw);
-  }
-}
-
 @media (min-width: 64rem) {
   .heroInner {
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: clamp(3rem, 6vw, 5rem);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-template-areas: "copy portrait";
+    gap: clamp(3rem, 7vw, 6rem);
   }
 
   .heroPortrait {
-    order: initial;
     justify-self: end;
     align-self: center;
     margin-top: clamp(1rem, 2vw, 1.5rem);
+    max-width: min(20rem, 30vw);
   }
 
   .heroCopy {
     justify-self: start;
+    align-self: center;
   }
 }
 

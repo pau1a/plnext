@@ -134,15 +134,6 @@ export default function AboutPageContent({
     <main className={styles.main}>
       <motion.section className={styles.hero} {...heroContainerMotion}>
         <div className={styles.heroInner}>
-          <motion.div className={styles.heroPortrait} {...heroPortraitMotion}>
-            <div className={styles.portraitFrame}>
-              <div className={styles.portraitMedia}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
-              </div>
-            </div>
-          </motion.div>
-
           <div className={styles.heroCopy}>
             <motion.p {...heroEyebrowMotion} className={styles.eyebrow}>
               ABOUT
@@ -165,6 +156,15 @@ export default function AboutPageContent({
               technology and AI-driven automation meet—and where risk multiplies fastest.
             </motion.p>
           </div>
+
+          <motion.div className={styles.heroPortrait} {...heroPortraitMotion}>
+            <div className={styles.portraitFrame}>
+              <div className={styles.portraitMedia}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
+              </div>
+            </div>
+          </motion.div>
         </div>
       </motion.section>
 
