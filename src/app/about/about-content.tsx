@@ -8,12 +8,6 @@ import styles from "./about.module.scss";
 const photoUrl =
   "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
 
-const heroSummaryHighlights = [
-  "Industrial automation and AI security.",
-  "Measurement-led, code-first controls.",
-  "Layered defence for calm recovery.",
-] as const;
-
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
@@ -34,11 +28,92 @@ export default function AboutPageContent({
 }: AboutPageContentProps) {
   const shouldReduceMotion = useReducedMotion();
 
-  const heroMotion = useMemo(
+  const heroContainerMotion = useMemo(
     () =>
       shouldReduceMotion
         ? { initial: false, animate: false }
-        : { variants: fadeUp, initial: "hidden" as const, animate: "show" as const },
+        : {
+            initial: { opacity: 0 },
+            animate: {
+              opacity: 1,
+              transition: { duration: 0.6, ease: "easeOut" },
+            },
+          },
+    [shouldReduceMotion],
+  );
+
+  const heroEyebrowMotion = useMemo(
+    () =>
+      shouldReduceMotion
+        ? { initial: false, animate: false }
+        : {
+            initial: { opacity: 0, y: 10 },
+            animate: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.35, ease: "easeOut", delay: 0.15 },
+            },
+          },
+    [shouldReduceMotion],
+  );
+
+  const heroHeadlineMotion = useMemo(
+    () =>
+      shouldReduceMotion
+        ? { initial: false, animate: false }
+        : {
+            initial: { opacity: 0, y: 10 },
+            animate: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.4, ease: "easeOut", delay: 0.22 },
+            },
+          },
+    [shouldReduceMotion],
+  );
+
+  const heroBodyMotion = useMemo(
+    () =>
+      shouldReduceMotion
+        ? { initial: false, animate: false }
+        : {
+            initial: { opacity: 0, y: 10 },
+            animate: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.4, ease: "easeOut", delay: 0.32 },
+            },
+          },
+    [shouldReduceMotion],
+  );
+
+  const heroIntroMotion = useMemo(
+    () =>
+      shouldReduceMotion
+        ? { initial: false, animate: false }
+        : {
+            initial: { opacity: 0, y: 10 },
+            animate: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.4, ease: "easeOut", delay: 0.38 },
+            },
+          },
+    [shouldReduceMotion],
+  );
+
+  const heroPortraitMotion = useMemo(
+    () =>
+      shouldReduceMotion
+        ? { initial: false, animate: false }
+        : {
+            initial: { opacity: 0, y: 12 },
+            animate: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.5, ease: "easeOut", delay: 0.45 },
+            },
+          },
     [shouldReduceMotion],
   );
 
@@ -57,46 +132,41 @@ export default function AboutPageContent({
 
   return (
     <main className={styles.main}>
-      <section className={styles.hero}>
+      <motion.section className={styles.hero} {...heroContainerMotion}>
         <div className={styles.heroInner}>
-          <div className={styles.heroCopy}>
-            <motion.p {...heroMotion} className={styles.eyebrow}>
-              ABOUT
-            </motion.p>
-
-            <motion.h1 {...heroMotion} className={styles.heroTitle}>
-              Building calm in complex systems
-            </motion.h1>
-
-            <motion.p {...heroMotion} className={styles.heroSubhead}>
-              I am an engineer who helps build and secure automated systems and the interconnected networks that run them. My
-              focus is where operational technology, networks, and AI-enabled automation overlap. My job is to narrow the blast
-              radius.
-            </motion.p>
-          </div>
-
-          <motion.div {...heroMotion} className={styles.heroSummary}>
-            <div className={styles.heroSummaryCard}>
-              <div className={styles.heroSummarySwatch} aria-hidden="true" />
-              <div className={styles.heroSummaryContent}>
-                <p className={styles.heroSummaryEyebrow}>At a glance</p>
-                <div className={styles.heroSummaryHighlights}>
-                  {heroSummaryHighlights.map((highlight) => (
-                    <div key={highlight} className={styles.heroSummaryHighlight}>
-                      <span
-                        className={styles.heroSummaryAccent}
-                        aria-hidden="true"
-                      />
-                      <p>{highlight}</p>
-                    </div>
-                  ))}
-                </div>
+          <motion.div className={styles.heroPortrait} {...heroPortraitMotion}>
+            <div className={styles.portraitFrame}>
+              <div className={styles.portraitMedia}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
               </div>
             </div>
           </motion.div>
-        </div>
 
-      </section>
+          <div className={styles.heroCopy}>
+            <motion.p {...heroEyebrowMotion} className={styles.eyebrow}>
+              ABOUT
+            </motion.p>
+
+            <motion.h1 {...heroHeadlineMotion} className={styles.heroTitle}>
+              <span>Engineer</span>
+              <span aria-hidden="true" className={styles.heroTitleDivider} />
+              <span>Adventurer</span>
+              <span aria-hidden="true" className={styles.heroTitleDivider} />
+              <span>Optimist</span>
+            </motion.h1>
+
+            <motion.p {...heroBodyMotion} className={styles.heroSubhead}>
+              Building calm in complex systems.
+            </motion.p>
+
+            <motion.p {...heroIntroMotion} className={styles.heroIntro}>
+              I help build and secure automated systems and the networks that connect them. My focus is where operational
+              technology and AI-driven automation meet—and where risk multiplies fastest.
+            </motion.p>
+          </div>
+        </div>
+      </motion.section>
 
       <section className={styles.bodySection}>
         <motion.article {...articleMotion} className={styles.biography}>

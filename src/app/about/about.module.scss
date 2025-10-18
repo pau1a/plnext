@@ -1,156 +1,152 @@
 .main {
+  background: var(--surface-base);
   padding-bottom: clamp(4rem, 6vw, 6rem);
 }
 
 .hero {
   position: relative;
-  background: radial-gradient(110% 110% at 18% 28%, var(--color-teal-300) 0%, transparent 55%);
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-teal-800) 88%, var(--color-graphite-900) 12%) 0%,
+    color-mix(in srgb, var(--color-teal-700) 82%, var(--color-graphite-800) 18%) 42%,
+    color-mix(in srgb, var(--surface-base) 75%, var(--color-teal-700) 25%) 100%
+  );
 }
 
 :global(body.dark) .hero {
-  background: radial-gradient(110% 110% at 18% 28%, var(--color-teal-400) 0%, transparent 55%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-teal-700) 70%, var(--color-graphite-900) 30%) 0%,
+    color-mix(in srgb, var(--color-teal-800) 68%, var(--color-graphite-800) 32%) 48%,
+    color-mix(in srgb, var(--surface-base) 70%, var(--color-teal-900) 30%) 100%
+  );
 }
 
 .heroInner {
   width: min(100%, var(--max-content-lg));
   margin: 0 auto;
-  padding-top: clamp(2.25rem, 6vw, 3.5rem);
-  padding-bottom: clamp(2.75rem, 7vw, 3.5rem);
+  padding: clamp(3rem, 8vw, 5.5rem) clamp(1.5rem, 4vw, 3rem);
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  align-items: center;
 }
 
 .heroCopy {
-  padding-left: clamp(1.5rem, 4vw, 3rem);
-  padding-right: clamp(1.5rem, 4vw, 3rem);
+  max-width: 36ch;
+  justify-self: start;
 }
 
-@media (min-width: 64rem) {
-  .heroCopy {
-    padding-right: calc(clamp(1.5rem, 4vw, 3rem) + 26.25rem);
-  }
+.heroPortrait {
+  order: -1;
+  justify-self: center;
 }
 
 .eyebrow {
-  letter-spacing: 0.35em;
+  letter-spacing: 0.32em;
   font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  color: color-mix(in srgb, var(--text-primary) 45%, var(--surface-base) 55%);
 }
 
 .heroTitle {
-  margin-top: var(--space-sm);
-  font-size: clamp(2.5rem, 5vw, 3.75rem);
-  line-height: var(--line-height-tight);
-  color: var(--color-teal-800);
+  margin-top: clamp(0.75rem, 2vw, 1rem);
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.4rem, 1.1vw, 0.75rem);
+  font-size: clamp(2.75rem, 5vw, 4rem);
+  line-height: 1.05;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--surface-base) 18%, var(--color-graphite-900) 82%);
 }
 
 :global(body.dark) .heroTitle {
-  color: var(--color-teal-200);
+  color: color-mix(in srgb, var(--surface-base) 65%, var(--color-teal-100) 35%);
+}
+
+.heroTitleDivider {
+  width: clamp(0.375rem, 1vw, 0.5rem);
+  height: clamp(0.375rem, 1vw, 0.5rem);
+  border-radius: 50%;
+  background: var(--color-crimson-500);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-crimson-500) 55%, transparent);
 }
 
 .heroSubhead {
-  margin-top: var(--space-lg);
-  max-width: 48rem;
-  font-size: clamp(1rem, 2.4vw, 1.25rem);
-  line-height: var(--line-height-base);
-  color: var(--text-muted);
+  margin-top: clamp(1.25rem, 3vw, 1.75rem);
+  font-size: clamp(1.125rem, 2.6vw, 1.5rem);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--surface-base) 25%, var(--text-primary) 75%);
 }
 
-.heroSummary {
-  margin-top: clamp(1.5rem, 4vw, 2.5rem);
-  padding-left: clamp(1.5rem, 4vw, 3rem);
-  padding-right: clamp(1.5rem, 4vw, 3rem);
+.heroIntro {
+  margin-top: clamp(1.25rem, 3.5vw, 2rem);
+  font-size: clamp(1rem, 2.4vw, 1.1875rem);
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--text-primary) 78%, var(--surface-base) 22%);
 }
 
-.heroSummaryCard {
+.heroIntro,
+.heroSubhead {
+  max-width: 32ch;
+}
+
+.portraitFrame {
   position: relative;
-  width: 100%;
-  padding: clamp(1.35rem, 4vw, 1.85rem) clamp(1.5rem, 4vw, 2.5rem);
   border-radius: 1.75rem;
+  padding: clamp(0.65rem, 2vw, 0.85rem);
+  background: color-mix(in srgb, var(--surface-base) 75%, transparent);
+  border: 2px solid color-mix(in srgb, var(--color-crimson-500) 70%, transparent);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.22);
+  backdrop-filter: blur(6px);
+}
+
+:global(body.dark) .portraitFrame {
+  background: color-mix(in srgb, var(--surface-base) 55%, transparent);
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.55);
+}
+
+.portraitMedia {
+  aspect-ratio: 4 / 5;
+  border-radius: 1.35rem;
   overflow: hidden;
-  background: color-mix(in srgb, var(--surface-elevated) 85%, transparent);
-  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.18);
-  border: 1px solid color-mix(in srgb, var(--surface-elevated) 55%, transparent);
-  backdrop-filter: blur(14px);
+}
+
+.portraitMedia img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
 @media (min-width: 48rem) {
-  .heroSummaryCard {
-    padding-block: clamp(1.5rem, 4vw, 2rem);
-    padding-inline: 0;
+  .heroInner {
+    grid-template-columns: minmax(0, 1fr);
   }
-}
 
-:global(body.dark) .heroSummaryCard {
-  background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
-  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.42);
-  border-color: color-mix(in srgb, var(--surface-elevated) 48%, transparent);
-}
-
-.heroSummarySwatch {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 0.6rem;
-  background: var(--color-teal-500);
-}
-
-:global(body.dark) .heroSummarySwatch {
-  background: var(--color-teal-600);
-}
-
-.heroSummaryContent {
-  position: relative;
-  padding-left: clamp(1.75rem, 4vw, 2.75rem);
-  padding-right: clamp(1.5rem, 4vw, 2.75rem);
-}
-
-@media (min-width: 48rem) {
-  .heroSummaryContent {
-    padding-left: clamp(2.75rem, 5vw, 3.25rem);
-    padding-right: clamp(2rem, 4vw, 3rem);
+  .heroPortrait {
+    max-width: min(18rem, 55vw);
   }
 }
 
 @media (min-width: 64rem) {
-  .heroSummaryContent {
-    padding-left: clamp(3rem, 4vw, 3.75rem);
+  .heroInner {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(3rem, 6vw, 5rem);
   }
-}
 
-.heroSummaryEyebrow {
-  font-size: 0.7rem;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.heroSummaryHighlights {
-  margin-top: clamp(1rem, 3vw, 1.5rem);
-  display: grid;
-  gap: clamp(0.85rem, 2.8vw, 1.25rem);
-}
-
-@media (min-width: 48rem) {
-  .heroSummaryHighlights {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: clamp(1.5rem, 4vw, 2.25rem);
+  .heroPortrait {
+    order: initial;
+    justify-self: end;
+    align-self: center;
+    margin-top: clamp(1rem, 2vw, 1.5rem);
   }
-}
 
-.heroSummaryHighlight {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-sm);
-  font-size: clamp(0.9375rem, 2.4vw, 1.05rem);
-  line-height: 1.6;
-  color: var(--text-primary);
-}
-
-.heroSummaryAccent {
-  flex: none;
-  margin-top: 0.5rem;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 50%;
-  background: var(--color-crimson-500);
+  .heroCopy {
+    justify-self: start;
+  }
 }
 
 .portraitCard {
@@ -168,17 +164,6 @@
     transform: translateY(-4px);
     box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22);
   }
-}
-
-.portraitMedia {
-  aspect-ratio: 4 / 5;
-}
-
-.portraitMedia img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 .badge {
