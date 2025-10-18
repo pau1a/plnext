@@ -255,15 +255,6 @@ export default function AboutPageContent({
           )}
           style={createMotionVars(shouldAnimate, 0.15, 24, 0.5)}
         >
-          <div className={styles.biographyAside}>
-            <div className={styles.portraitCard}>
-              <div className={styles.portraitMedia}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
-              </div>
-            </div>
-          </div>
-
           <h2 className={styles.biographyHeading}>From RF to AI-secured automation</h2>
           {biography.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
