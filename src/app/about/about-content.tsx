@@ -14,6 +14,30 @@ import styles from "./about.module.scss";
 const photoUrl =
   "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
 
+const heroTraits = [
+  {
+    key: "optimist",
+    title: "Optimist",
+    description:
+      "Lead with hope and steadiness so every project has space for better outcomes.",
+    glyph: "☀️",
+  },
+  {
+    key: "engineer",
+    title: "Engineer",
+    description:
+      "Shape resilient systems from first principles, refining the intricate until it feels inevitable.",
+    glyph: "🛠️",
+  },
+  {
+    key: "adventurer",
+    title: "Adventurer",
+    description:
+      "Seek unfamiliar terrain, learn quickly, and bring those lessons back to the teams I serve.",
+    glyph: "🧭",
+  },
+] as const;
+
 type MotionVars = CSSProperties & {
   "--motion-delay"?: string;
   "--motion-duration"?: string;
@@ -242,6 +266,33 @@ export default function AboutPageContent({
               ))}
             </div>
           </div>
+        </div>
+
+        <div
+          className={clsx(
+            styles.heroCards,
+            shouldAnimate && styles.motionFade,
+            shouldAnimate && heroReady && styles.motionFadeReady,
+          )}
+          style={createMotionVars(shouldAnimate, 0.55, 18, 0.6)}
+        >
+          {heroTraits.map((trait, index) => (
+            <article
+              key={trait.key}
+              className={clsx(
+                styles.heroCard,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.65 + index * 0.08, 14, 0.5)}
+            >
+              <span className={styles.heroCardGlyph} aria-hidden>
+                {trait.glyph}
+              </span>
+              <h2 className={styles.heroCardTitle}>{trait.title}</h2>
+              <p className={styles.heroCardBody}>{trait.description}</p>
+            </article>
+          ))}
         </div>
       </section>
 
