@@ -114,11 +114,9 @@ export default function AboutPageContent({
             </motion.p>
 
             <motion.h1 {...heroHeadlineMotion} className={styles.heroTitle}>
-              <span>Optimist</span>
-              <span aria-hidden="true" className={styles.heroTitleDivider} />
-              <span>Engineer</span>
-              <span aria-hidden="true" className={styles.heroTitleDivider} />
-              <span>Adventurer</span>
+              <span className={styles.heroTitleWord}>Optimist</span>
+              <span className={styles.heroTitleWord}>Engineer</span>
+              <span className={styles.heroTitleWord}>Adventurer</span>
             </motion.h1>
 
             <motion.p {...heroBodyMotion} className={styles.heroSubhead}>

@@ -61,14 +61,21 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: clamp(0.4rem, 1.1vw, 0.75rem);
+  gap: clamp(0.75rem, 2vw, 1.5rem);
   font-size: clamp(2.75rem, 5vw, 4rem);
   line-height: 1.05;
   font-weight: 700;
   color: #ffffff;
 }
 
-.heroTitleDivider {
+.heroTitleWord {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.4rem, 1vw, 0.7rem);
+}
+
+.heroTitleWord::before {
+  content: "";
   width: clamp(0.375rem, 1vw, 0.5rem);
   height: clamp(0.375rem, 1vw, 0.5rem);
   border-radius: 50%;
