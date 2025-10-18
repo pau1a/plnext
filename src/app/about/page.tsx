@@ -10,21 +10,22 @@ const PRINCIPLES = [
   {
     title: "Narrow the blast radius.",
     description:
-      "Segment every control plane and fail closed so incidents stay contained.",
+      "Partition control paths and prefer defaults that fail closed so disruption stays local.",
   },
   {
     title: "Increase visibility.",
-    description: "Measure the estate continuously and surface gaps before users do.",
+    description:
+      "Instrument services and links continuously so drift is caught before customers notice.",
   },
   {
     title: "Shorten recovery.",
     description:
-      "Drill the response paths and automate rollback until recovery is routine.",
+      "Exercise rollback and incident drills until the response is practiced, quick, and quiet.",
   },
   {
     title: "Keep people and processes out of the headlines.",
     description:
-      "Design procedures and guardrails that protect both operators and outcomes.",
+      "Design operations that protect both operators and outcomes with measured guardrails.",
   },
 ] as const;
 
@@ -32,29 +33,29 @@ const PHASES = [
   {
     heading: "RF and Satellite Systems",
     paragraphs: [
-      "Paula maintains RF discipline from satellite ground segment integration and defence radio programmes.",
-      "She calculates link budgets, supervises spectrum compliance, and proves telemetry paths end to end before deployment.",
+      "Paula integrates ground stations and tactical radio networks with disciplined RF engineering.",
+      "She calculates link budgets, validates spectral compliance, and closes telemetry paths before launch windows open.",
     ],
   },
   {
     heading: "Networks at Scale",
     paragraphs: [
-      "She architects IP backbones and OT networks that stay observable under change windows and peak load.",
-      "She scripts configuration baselines, validates failover in staged labs, and documents runbooks that operations teams execute without escalation.",
+      "She shapes IP and OT topologies that remain observable under change control and peak demand.",
+      "She scripts configuration baselines, proves redundancy in staged environments, and documents runbooks operations teams follow without escalation.",
     ],
   },
   {
     heading: "Industrial AI and Cryptography",
     paragraphs: [
-      "Paula secures machine learning pipelines for industrial automation with signed artefacts, lineage tracking, and adversarial testing.",
-      "She applies cryptography pragmatically, selecting attestations and transparency logs where they reduce risk and audit time.",
+      "Paula secures automation platforms where machine learning, robotics, and humans meet on the factory floor.",
+      "She enforces signed artefacts, audit trails, and pragmatic cryptography so safety cases stand up to regulators.",
     ],
   },
   {
     heading: "Measurement and Simplicity",
     paragraphs: [
-      "She instruments systems so metrics, traces, and logs tell a consistent story that engineers can act on immediately.",
-      "She removes ornate architecture, favouring simple components that teams can rehearse, recover, and explain under pressure.",
+      "She instruments services so metrics, traces, and logs align to a single operational story.",
+      "She removes ornamental complexity, leaving components teams can rehearse, recover, and explain under pressure.",
     ],
   },
 ] as const;
@@ -62,7 +63,7 @@ const PHASES = [
 export const metadata: Metadata = {
   title: "About | Paula Livingstone",
   description:
-    "Optimist. Engineer. Adventurer. Paula Livingstone designs dependable automation and security systems.",
+    "Optimist. Engineer. Adventurer. Paula Livingstone builds calm, observable systems across infrastructure and automation.",
 };
 
 export default function AboutPage() {
@@ -74,35 +75,31 @@ export default function AboutPage() {
             Optimist. Engineer. Adventurer.
           </h1>
           <p className={styles.heroSubtitle}>
-            Paula Livingstone designs dependable automation and security systems for industrial operations.
+            Building calm in complex systems through secure automation and measured networks.
           </p>
         </div>
       </section>
 
-      <section className={styles.profile} aria-labelledby="profile-summary">
-        <div className={styles.profileMedia}>
+      <section className={styles.summary} aria-labelledby="profile-summary">
+        <div className={styles.summaryPortrait}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={PORTRAIT_URL} alt="Paula Livingstone" loading="lazy" />
         </div>
-        <div className={styles.profileCopy}>
-          <h2 id="profile-summary" className={styles.profileHeading}>
-            Profile
+        <div className={styles.summaryCopy}>
+          <h2 id="profile-summary" className={styles.summaryTitle}>
+            Profile summary
           </h2>
           <p>
-            Paula leads engineering programmes that bring order to complex infrastructure and the software wrapped around it.
-          </p>
-          <p>
-            She aligns firmware, network, and platform teams around measured interfaces that hold under load.
-          </p>
-          <p>
-            She rehearses incident response and change control until calm recovery is the standard outcome.
+            Paula stabilises RF, network, and automation estates that cannot afford silence or surprise. She unifies firmware,
+            infrastructure, and software teams through measured interfaces and rehearsed procedures. She keeps AI-enabled control
+            systems auditable so operators trust them in production.
           </p>
         </div>
       </section>
 
       <section className={styles.narrative} aria-labelledby="career-narrative">
         <div className={styles.narrativeInner}>
-          <h2 id="career-narrative" className={styles.narrativeHeading}>
+          <h2 id="career-narrative" className={styles.narrativeLabel}>
             Practice
           </h2>
           <article className={styles.narrativeColumn}>
@@ -120,14 +117,14 @@ export default function AboutPage() {
 
       <section className={styles.principles} aria-labelledby="constants-heading">
         <div className={styles.principlesInner}>
-          <h2 id="constants-heading" className={styles.principlesHeading}>
+          <h2 id="constants-heading" className={styles.principlesTitle}>
             Constants
           </h2>
           <div className={styles.principlesGrid}>
             {PRINCIPLES.map((principle) => (
               <div key={principle.title} className={styles.principleCard}>
-                <h3 className={styles.principleTitle}>{principle.title}</h3>
-                <p className={styles.principleDescription}>{principle.description}</p>
+                <h3>{principle.title}</h3>
+                <p>{principle.description}</p>
               </div>
             ))}
           </div>
@@ -137,7 +134,7 @@ export default function AboutPage() {
       <section className={styles.closing} aria-labelledby="closing-note">
         <div className={styles.closingInner}>
           <p id="closing-note" className={styles.closingStatement}>
-            I design systems that stay calm when the environment does not.
+            The work is simple: keep critical systems composed when everything around them is not.
           </p>
           <Link className={styles.contactLink} href="/contact">
             Contact Paula

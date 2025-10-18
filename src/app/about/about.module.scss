@@ -1,26 +1,25 @@
 .page {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(var(--space-3xl), 8vw, 6rem);
-  padding-block-end: clamp(4rem, 8vw, 6rem);
+  display: grid;
+  gap: clamp(var(--space-2xl), 8vw, calc(var(--space-3xl) * 1.6));
+  padding-block-end: clamp(var(--space-3xl), 10vw, calc(var(--space-3xl) * 2));
 }
 
 .hero {
   color: var(--text-on-inverse);
   background: radial-gradient(
-    circle at 50% 45%,
-    color-mix(in srgb, var(--color-teal-300) 92%, transparent) 0%,
-    color-mix(in srgb, var(--color-teal-300) 26%, var(--color-graphite-700)) 60%,
+    circle at 50% 42%,
+    color-mix(in srgb, var(--color-teal-300) 70%, transparent) 0%,
+    color-mix(in srgb, var(--color-teal-300) 18%, var(--color-graphite-800)) 58%,
     var(--color-graphite-900) 100%
   );
-  padding-block: clamp(4rem, 12vw, 8rem);
+  padding-block: clamp(calc(var(--space-3xl) * 2), 14vw, calc(var(--space-3xl) * 3));
 }
 
 :global(body.dark) .hero {
   background: radial-gradient(
-    circle at 50% 45%,
-    color-mix(in srgb, var(--color-teal-400) 88%, transparent) 0%,
-    color-mix(in srgb, var(--color-teal-400) 24%, var(--color-graphite-900)) 60%,
+    circle at 50% 42%,
+    color-mix(in srgb, var(--color-teal-300) 64%, transparent) 0%,
+    color-mix(in srgb, var(--color-teal-300) 16%, var(--color-graphite-900)) 58%,
     var(--color-graphite-900) 100%
   );
 }
@@ -29,54 +28,53 @@
   margin: 0 auto;
   width: min(var(--max-content-md), 100%);
   display: grid;
-  gap: clamp(var(--space-xl), 2.5vw, var(--space-2xl));
+  justify-items: center;
+  gap: clamp(var(--space-xl), 3vw, var(--space-2xl));
   text-align: center;
-  animation: breathe-in 0.9s ease-out both;
 }
 
 .heroTitle {
   margin: 0;
-  font-size: clamp(2.5rem, 2.2rem + 1.6vw, 3.5rem);
+  font-size: clamp(var(--font-size-3xl), 2.2rem + 1vw, var(--font-size-4xl));
+  font-weight: 500;
+  letter-spacing: 0.01em;
   line-height: var(--line-height-tight);
-  letter-spacing: 0.02em;
 }
 
 .heroSubtitle {
-  margin: 0 auto;
-  max-width: 42ch;
-  font-size: clamp(var(--font-size-lg), 1rem + 0.35vw, var(--font-size-xl));
-  line-height: 1.55;
+  margin: 0;
+  max-width: 48ch;
+  font-size: clamp(var(--font-size-lg), 1.05rem + 0.3vw, var(--font-size-xl));
+  font-weight: 400;
+  color: color-mix(in srgb, var(--text-on-inverse) 78%, transparent);
 }
 
-.profile {
+.summary {
   display: grid;
-  gap: clamp(var(--space-xl), 3vw, var(--space-2xl));
+  gap: clamp(var(--space-xl), 6vw, var(--space-2xl));
   align-items: center;
-  padding-inline: clamp(var(--space-xl), 6vw, var(--space-4xl));
-  animation: breathe-in 0.9s ease-out both;
-  animation-delay: 0.1s;
+  width: min(var(--max-content-lg), 100%);
+  margin: 0 auto;
+  padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
 }
 
-@media (min-width: 56rem) {
-  .profile {
-    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+@media (min-width: 54rem) {
+  .summary {
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
   }
 }
 
-.profileMedia {
-  justify-self: center;
+
+.summaryPortrait {
   position: relative;
-  padding: clamp(var(--space-2xs), 0.4vw, var(--space-xs));
-  border-radius: calc(var(--radius-lg) + var(--space-xs));
-  background: color-mix(in srgb, var(--color-crimson-500) 12%, transparent);
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.14);
+  justify-self: center;
+  display: inline-grid;
+  padding: var(--space-2xs);
+  border-radius: calc(var(--radius-lg) + var(--space-2xs));
+  background: var(--surface-base);
 }
 
-:global(body.dark) .profileMedia {
-  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.35);
-}
-
-.profileMedia img {
+.summaryPortrait img {
   display: block;
   width: clamp(12rem, 28vw, 16rem);
   aspect-ratio: 4 / 5;
@@ -85,48 +83,47 @@
   border: 2px solid var(--color-crimson-500);
 }
 
-.profileCopy {
+.summaryCopy {
   display: grid;
-  gap: var(--space-md);
-  max-width: 40ch;
+  gap: var(--space-lg);
+  max-width: 44ch;
 }
 
-.profileHeading {
+.summaryTitle {
   margin: 0;
-  font-size: clamp(var(--font-size-lg), 1rem + 0.35vw, var(--font-size-xl));
+  font-size: clamp(var(--font-size-xl), 1.1rem + 0.4vw, var(--font-size-2xl));
+  font-variant-caps: small-caps;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-teal-600);
 }
 
-:global(body.dark) .profileHeading {
-  color: var(--color-teal-300);
+.summaryCopy p {
+  margin: 0;
+  line-height: 1.65;
 }
 
 .narrative {
-  padding-inline: clamp(var(--space-xl), 6vw, var(--space-4xl));
+  width: min(var(--max-content-lg), 100%);
+  margin: 0 auto;
+  padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
 }
 
 .narrativeInner {
-  width: min(var(--max-content-lg), 100%);
-  margin: 0 auto;
   display: grid;
-  gap: clamp(var(--space-xl), 3vw, var(--space-2xl));
-  animation: breathe-in 0.9s ease-out both;
-  animation-delay: 0.2s;
+  gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
 }
 
-.narrativeHeading {
+.narrativeLabel {
   margin: 0;
-  font-size: clamp(var(--font-size-xl), 1.1rem + 0.6vw, 2rem);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-crimson-500);
+  font-size: clamp(var(--font-size-lg), 1rem + 0.4vw, var(--font-size-xl));
+  font-weight: 500;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--color-teal-400) 55%, var(--text-primary));
 }
 
 .narrativeColumn {
   display: grid;
-  gap: clamp(var(--space-xl), 2vw, var(--space-2xl));
+  gap: clamp(var(--space-xl), 3vw, calc(var(--space-2xl) * 1.1));
   max-width: 65ch;
 }
 
@@ -137,44 +134,43 @@
 
 .phaseHeading {
   margin: 0;
-  font-size: clamp(var(--font-size-lg), 1.1rem + 0.4vw, var(--font-size-2xl));
+  font-size: clamp(var(--font-size-xl), 1.15rem + 0.35vw, var(--font-size-2xl));
+  font-weight: 500;
   line-height: var(--line-height-snug);
 }
 
 .phase p {
   margin: 0;
+  line-height: 1.7;
   color: var(--text-muted);
-  line-height: 1.65;
 }
 
 .principles {
-  padding-inline: clamp(var(--space-xl), 6vw, var(--space-4xl));
+  width: min(var(--max-content-lg), 100%);
+  margin: 0 auto;
+  padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
 }
 
 .principlesInner {
-  width: min(var(--max-content-lg), 100%);
-  margin: 0 auto;
   display: grid;
-  gap: clamp(var(--space-xl), 3vw, var(--space-2xl));
-  animation: breathe-in 0.9s ease-out both;
-  animation-delay: 0.3s;
+  gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
 }
 
-.principlesHeading {
+.principlesTitle {
   margin: 0;
-  font-size: clamp(var(--font-size-xl), 1.1rem + 0.6vw, 2rem);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-crimson-500);
+  font-size: clamp(var(--font-size-lg), 1rem + 0.4vw, var(--font-size-xl));
+  font-weight: 500;
+  font-variant-caps: small-caps;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--color-crimson-500) 60%, var(--text-primary));
 }
 
 .principlesGrid {
   display: grid;
-  gap: clamp(var(--space-lg), 2vw, var(--space-xl));
-  grid-template-columns: 1fr;
+  gap: clamp(var(--space-lg), 4vw, var(--space-xl));
 }
 
-@media (min-width: 54rem) {
+@media (min-width: 52rem) {
   .principlesGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -185,80 +181,120 @@
   gap: var(--space-sm);
   padding: clamp(var(--space-lg), 2vw, var(--space-2xl));
   border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--surface-elevated) 85%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-crimson-500) 30%, transparent);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  background: var(--surface-elevated);
+  border: 1px solid color-mix(in srgb, var(--color-crimson-500) 28%, transparent);
+  box-shadow: var(--shadow-sm);
 }
 
 :global(body.dark) .principleCard {
-  background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-md);
 }
 
-.principleTitle {
+.principleCard h3 {
   margin: 0;
-  font-size: clamp(var(--font-size-lg), 1rem + 0.3vw, var(--font-size-xl));
-  line-height: var(--line-height-snug);
+  font-size: clamp(var(--font-size-lg), 1rem + 0.28vw, var(--font-size-xl));
+  font-weight: 500;
 }
 
-.principleDescription {
+.principleCard p {
   margin: 0;
+  line-height: 1.65;
   color: var(--text-muted);
-  line-height: 1.6;
 }
 
 .closing {
-  padding-inline: clamp(var(--space-xl), 6vw, var(--space-4xl));
+  width: min(var(--max-content-md), 100%);
+  margin: 0 auto;
+  padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
 }
 
 .closingInner {
-  width: min(var(--max-content-md), 100%);
-  margin: 0 auto;
   display: grid;
   justify-items: center;
   gap: var(--space-md);
   text-align: center;
-  animation: breathe-in 0.9s ease-out both;
-  animation-delay: 0.4s;
 }
 
 .closingStatement {
   margin: 0;
   font-size: clamp(var(--font-size-lg), 1rem + 0.35vw, var(--font-size-xl));
+  line-height: 1.6;
 }
 
 .contactLink {
-  font-weight: 600;
+  position: relative;
+  font-weight: 500;
   color: var(--link-color);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
   padding-block-end: var(--space-2xs);
 }
 
-.contactLink:hover,
-.contactLink:focus-visible {
-  color: var(--link-hover);
-  border-bottom-color: currentColor;
+.contactLink::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.4;
+  transition: opacity var(--transition-base);
 }
 
-@keyframes breathe-in {
+.contactLink:hover::after,
+.contactLink:focus-visible::after {
+  opacity: 1;
+}
+
+.heroInner,
+.summary,
+.narrativeInner,
+.principlesInner,
+.closingInner {
+  animation: settle-in 600ms ease-out both;
+}
+
+.summary {
+  animation-delay: 80ms;
+}
+
+.narrativeInner {
+  animation-delay: 140ms;
+}
+
+.principlesInner {
+  animation-delay: 200ms;
+}
+
+.closingInner {
+  animation-delay: 260ms;
+}
+
+@keyframes settle-in {
   from {
     opacity: 0;
-    transform: translateY(18px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .heroInner,
-  .profile,
+  .summary,
   .narrativeInner,
   .principlesInner,
   .closingInner {
     animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .summary,
+  .narrative,
+  .principles,
+  .closing {
+    scroll-margin-top: var(--space-xl);
   }
 }
