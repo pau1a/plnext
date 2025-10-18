@@ -414,6 +414,7 @@
 
 :where(.closerCard p) {
   margin: 0;
+  text-wrap: wrap;
 }
 
 :global(body.dark) .closerCard {
