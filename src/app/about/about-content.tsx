@@ -1,18 +1,120 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import type { MotionProps, Transition } from "framer-motion";
+import clsx from "clsx";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
 import styles from "./about.module.scss";
 
 const photoUrl =
   "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-} as const;
+type MotionVars = CSSProperties & {
+  "--motion-delay"?: string;
+  "--motion-duration"?: string;
+  "--motion-ease"?: string;
+  "--motion-offset"?: string;
+};
+
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
+    const updatePreference = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    updatePreference();
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", updatePreference);
+      return () => mediaQuery.removeEventListener("change", updatePreference);
+    }
+
+    mediaQuery.addListener(updatePreference);
+
+    return () => mediaQuery.removeListener(updatePreference);
+  }, []);
+
+  return prefersReducedMotion;
+}
+
+function useRevealOnView<T extends HTMLElement>(
+  enabled: boolean,
+  options: IntersectionObserverInit,
+) {
+  const ref = useRef<T | null>(null);
+  const [isVisible, setIsVisible] = useState(!enabled);
+
+  useEffect(() => {
+    if (!enabled) {
+      setIsVisible(true);
+      return;
+    }
+
+    if (typeof window === "undefined" || !window.IntersectionObserver) {
+      setIsVisible(true);
+      return;
+    }
+
+    const target = ref.current;
+
+    if (!target) {
+      return;
+    }
+
+    let didCancel = false;
+
+    const observer = new IntersectionObserver((entries, observerRef) => {
+      entries.forEach((entry) => {
+        if (!didCancel && entry.isIntersecting) {
+          setIsVisible(true);
+          observerRef.disconnect();
+        }
+      });
+    }, options);
+
+    observer.observe(target);
+
+    return () => {
+      didCancel = true;
+      observer.disconnect();
+    };
+  }, [enabled, options]);
+
+  return { ref, isVisible } as const;
+}
+
+function createMotionVars(
+  shouldAnimate: boolean,
+  delay: number,
+  offset = 10,
+  duration = 0.4,
+): MotionVars | undefined {
+  if (!shouldAnimate) {
+    return undefined;
+  }
+
+  return {
+    "--motion-delay": `${delay}s`,
+    "--motion-duration": `${duration}s`,
+    "--motion-ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "--motion-offset": `${offset}px`,
+  } satisfies MotionVars;
+}
 
 type AboutPageContentProps = {
   badges: readonly string[];
@@ -27,121 +129,124 @@ export default function AboutPageContent({
   principles,
   closingStatement,
 }: AboutPageContentProps) {
-  const shouldReduceMotion = useReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const shouldAnimate = !prefersReducedMotion;
 
-  const heroEase = useMemo<Transition>(
-    () => ({
-      duration: 0.4,
-      ease: [0.16, 1, 0.3, 1],
-    }),
+  const [heroReady, setHeroReady] = useState(!shouldAnimate);
+
+  useEffect(() => {
+    if (!shouldAnimate) {
+      setHeroReady(true);
+      return;
+    }
+
+    setHeroReady(false);
+
+    const frame = requestAnimationFrame(() => {
+      setHeroReady(true);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [shouldAnimate]);
+
+  const observerOptions = useMemo<IntersectionObserverInit>(
+    () => ({ threshold: 0.2 }),
     [],
   );
 
-  const heroContainerMotion = useMemo<MotionProps>(() => {
-    if (shouldReduceMotion) {
-      return { initial: false, animate: { opacity: 1 } };
-    }
-
-    return {
-      initial: { opacity: 0 },
-      animate: {
-        opacity: 1,
-        transition: { ...heroEase, duration: 0.6 },
-      },
-    };
-  }, [shouldReduceMotion, heroEase]);
-
-  const buildHeroMotion = useCallback(
-    (delay: number, offset = 10): MotionProps => {
-      if (shouldReduceMotion) {
-        return { initial: false, animate: { opacity: 1, y: 0 } };
-      }
-
-      return {
-        initial: { opacity: 0, y: offset },
-        animate: {
-          opacity: 1,
-          y: 0,
-          transition: { ...heroEase, delay },
-        },
-      };
-    },
-    [shouldReduceMotion, heroEase],
-  );
-
-  const heroEyebrowMotion = useMemo<MotionProps>(() => buildHeroMotion(0.15), [buildHeroMotion]);
-
-  const heroHeadlineMotion = useMemo<MotionProps>(
-    () => buildHeroMotion(0.22),
-    [buildHeroMotion],
-  );
-
-  const heroBodyMotion = useMemo<MotionProps>(
-    () => buildHeroMotion(0.32),
-    [buildHeroMotion],
-  );
-
-  const heroIntroMotion = useMemo<MotionProps>(
-    () => buildHeroMotion(0.38),
-    [buildHeroMotion],
-  );
-
-  const heroPortraitMotion = useMemo<MotionProps>(
-    () => buildHeroMotion(0.45, 12),
-    [buildHeroMotion],
-  );
-
-  const articleMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, whileInView: undefined }
-        : {
-            variants: fadeUp,
-            initial: "hidden" as const,
-            whileInView: "show" as const,
-            viewport: { once: true, amount: 0.2 },
-          },
-    [shouldReduceMotion],
+  const { ref: biographyRef, isVisible: biographyVisible } = useRevealOnView<HTMLElement>(
+    shouldAnimate,
+    observerOptions,
   );
 
   return (
     <main className={styles.main}>
-      <motion.section className={styles.hero} {...heroContainerMotion}>
+      <section
+        className={clsx(
+          styles.hero,
+          shouldAnimate && styles.motionFade,
+          shouldAnimate && heroReady && styles.motionFadeReady,
+        )}
+        style={createMotionVars(shouldAnimate, 0, 0, 0.6)}
+      >
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
-            <motion.p {...heroEyebrowMotion} className={styles.eyebrow}>
+            <p
+              className={clsx(
+                styles.eyebrow,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.15)}
+            >
               ABOUT ME
-            </motion.p>
+            </p>
 
-            <motion.h1 {...heroHeadlineMotion} className={styles.heroTitle}>
+            <h1
+              className={clsx(
+                styles.heroTitle,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.22)}
+            >
               <span className={styles.heroTitleWord}>Optimist</span>
               <span className={styles.heroTitleWord}>Engineer</span>
               <span className={styles.heroTitleWord}>Adventurer</span>
-            </motion.h1>
+            </h1>
 
-            <motion.p {...heroBodyMotion} className={styles.heroSubhead}>
+            <p
+              className={clsx(
+                styles.heroSubhead,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.32)}
+            >
               Building calm in complex systems.
-            </motion.p>
+            </p>
 
-            <motion.p {...heroIntroMotion} className={styles.heroIntro}>
+            <p
+              className={clsx(
+                styles.heroIntro,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.38)}
+            >
               I help build and secure automated systems and the networks that connect them. My focus is where operational
               technology and AI-driven automation meet—and where risk multiplies fastest.
-            </motion.p>
+            </p>
           </div>
 
-          <motion.div className={styles.heroPortrait} {...heroPortraitMotion}>
+          <div
+            className={clsx(
+              styles.heroPortrait,
+              shouldAnimate && styles.motionFade,
+              shouldAnimate && heroReady && styles.motionFadeReady,
+            )}
+            style={createMotionVars(shouldAnimate, 0.45, 12, 0.5)}
+          >
             <div className={styles.portraitFrame}>
               <div className={styles.portraitMedia}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
       <section className={styles.bodySection}>
-        <motion.article {...articleMotion} className={styles.biography}>
+        <article
+          ref={biographyRef}
+          className={clsx(
+            styles.biography,
+            shouldAnimate && styles.motionFade,
+            shouldAnimate && biographyVisible && styles.motionFadeReady,
+          )}
+          style={createMotionVars(shouldAnimate, 0.15, 24, 0.5)}
+        >
           <div className={styles.biographyAside}>
             <div className={styles.portraitCard}>
               <div className={styles.portraitMedia}>
@@ -163,7 +268,7 @@ export default function AboutPageContent({
           {biography.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
-        </motion.article>
+        </article>
       </section>
 
       <section className={styles.constantsSection}>
