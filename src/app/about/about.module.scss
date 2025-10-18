@@ -1,61 +1,89 @@
 .page {
   display: grid;
-  gap: clamp(var(--space-2xl), 8vw, calc(var(--space-3xl) * 1.6));
-  padding-block-end: clamp(var(--space-3xl), 10vw, calc(var(--space-3xl) * 2));
+  gap: clamp(calc(var(--space-3xl) * 1.1), 10vw, calc(var(--space-4xl) * 1.05));
+  padding-block-end: clamp(calc(var(--space-3xl) * 1.1), 12vw, calc(var(--space-4xl) * 1.4));
 }
 
 .hero {
+  position: relative;
   color: var(--text-on-inverse);
   background: radial-gradient(
     circle at 50% 42%,
-    color-mix(in srgb, var(--color-teal-300) 70%, transparent) 0%,
-    color-mix(in srgb, var(--color-teal-300) 18%, var(--color-graphite-800)) 58%,
-    var(--color-graphite-900) 100%
+    color-mix(in srgb, var(--color-teal-300) 52%, transparent) 0%,
+    color-mix(in srgb, var(--color-teal-300) 16%, var(--color-graphite-800)) 58%,
+    color-mix(in srgb, var(--color-graphite-800) 78%, var(--color-graphite-900)) 100%
   );
-  padding-block: clamp(calc(var(--space-3xl) * 2), 14vw, calc(var(--space-3xl) * 3));
+  padding-block: clamp(calc(var(--space-3xl) * 2.2), 16vw, calc(var(--space-4xl) * 1.25));
 }
 
 :global(body.dark) .hero {
   background: radial-gradient(
     circle at 50% 42%,
-    color-mix(in srgb, var(--color-teal-300) 64%, transparent) 0%,
-    color-mix(in srgb, var(--color-teal-300) 16%, var(--color-graphite-900)) 58%,
-    var(--color-graphite-900) 100%
+    color-mix(in srgb, var(--color-teal-300) 46%, transparent) 0%,
+    color-mix(in srgb, var(--color-teal-300) 14%, var(--color-graphite-900)) 58%,
+    color-mix(in srgb, var(--color-graphite-900) 82%, var(--color-graphite-950)) 100%
+  );
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: clamp(var(--space-2xl), 10vw, calc(var(--space-3xl) * 1.4));
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-graphite-800) 12%, transparent) 0%,
+    color-mix(in srgb, var(--surface-base) 45%, transparent) 60%,
+    var(--surface-base) 100%
+  );
+  pointer-events: none;
+}
+
+:global(body.dark) .hero::after {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-graphite-900) 18%, transparent) 0%,
+    color-mix(in srgb, var(--surface-base) 35%, transparent) 60%,
+    var(--surface-base) 100%
   );
 }
 
 .heroInner {
   margin: 0 auto;
-  width: min(var(--max-content-md), 100%);
+  width: min(54rem, 100%);
   display: grid;
   justify-items: center;
-  gap: clamp(var(--space-xl), 3vw, var(--space-2xl));
+  gap: clamp(var(--space-2xl), 4vw, calc(var(--space-3xl) * 0.9));
   text-align: center;
+  animation: hero-fade 140ms ease-out both;
 }
 
 .heroTitle {
   margin: 0;
   font-size: clamp(var(--font-size-3xl), 2.2rem + 1vw, var(--font-size-4xl));
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.004em;
   line-height: var(--line-height-tight);
 }
 
 .heroSubtitle {
   margin: 0;
-  max-width: 48ch;
-  font-size: clamp(var(--font-size-lg), 1.05rem + 0.3vw, var(--font-size-xl));
+  max-width: 52ch;
+  font-size: clamp(var(--font-size-md), 1rem + 0.25vw, var(--font-size-lg));
   font-weight: 400;
-  color: color-mix(in srgb, var(--text-on-inverse) 78%, transparent);
+  color: color-mix(in srgb, var(--text-on-inverse) 82%, transparent);
+  margin-block-end: clamp(var(--space-xl), 3vw, calc(var(--space-2xl) * 0.9));
 }
 
 .summary {
   display: grid;
   gap: clamp(var(--space-xl), 6vw, var(--space-2xl));
-  align-items: center;
-  width: min(var(--max-content-lg), 100%);
+  align-items: start;
+  width: min(64rem, 100%);
   margin: 0 auto;
   padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
+  padding-block-start: clamp(calc(var(--space-4xl) * 0.9), 12vw, calc(var(--space-4xl) * 1.2));
 }
 
 @media (min-width: 54rem) {
@@ -68,9 +96,10 @@
 .summaryPortrait {
   position: relative;
   justify-self: center;
+  align-self: start;
   display: inline-grid;
-  padding: var(--space-2xs);
-  border-radius: calc(var(--radius-lg) + var(--space-2xs));
+  padding: var(--space-3xs);
+  border-radius: var(--radius-lg);
   background: var(--surface-base);
 }
 
@@ -85,15 +114,14 @@
 
 .summaryCopy {
   display: grid;
-  gap: var(--space-lg);
+  gap: clamp(var(--space-lg), 3vw, var(--space-xl));
   max-width: 44ch;
 }
 
 .summaryTitle {
   margin: 0;
-  font-size: clamp(var(--font-size-xl), 1.1rem + 0.4vw, var(--font-size-2xl));
-  font-variant-caps: small-caps;
-  letter-spacing: 0.08em;
+  font-size: clamp(var(--font-size-lg), 1.05rem + 0.35vw, var(--font-size-xl));
+  font-weight: 500;
 }
 
 .summaryCopy p {
@@ -102,7 +130,7 @@
 }
 
 .narrative {
-  width: min(var(--max-content-lg), 100%);
+  width: min(64rem, 100%);
   margin: 0 auto;
   padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
 }
@@ -114,11 +142,11 @@
 
 .narrativeLabel {
   margin: 0;
-  font-size: clamp(var(--font-size-lg), 1rem + 0.4vw, var(--font-size-xl));
+  font-size: clamp(var(--font-size-lg), 1rem + 0.35vw, var(--font-size-xl));
   font-weight: 500;
   font-variant-caps: small-caps;
-  letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--color-teal-400) 55%, var(--text-primary));
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--color-teal-400) 38%, var(--text-primary));
 }
 
 .narrativeColumn {
@@ -146,7 +174,7 @@
 }
 
 .principles {
-  width: min(var(--max-content-lg), 100%);
+  width: min(64rem, 100%);
   margin: 0 auto;
   padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
 }
@@ -158,11 +186,11 @@
 
 .principlesTitle {
   margin: 0;
-  font-size: clamp(var(--font-size-lg), 1rem + 0.4vw, var(--font-size-xl));
+  font-size: clamp(var(--font-size-lg), 1rem + 0.35vw, var(--font-size-xl));
   font-weight: 500;
   font-variant-caps: small-caps;
-  letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--color-crimson-500) 60%, var(--text-primary));
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, var(--color-crimson-500) 35%, var(--text-primary));
 }
 
 .principlesGrid {
@@ -182,7 +210,7 @@
   padding: clamp(var(--space-lg), 2vw, var(--space-2xl));
   border-radius: var(--radius-md);
   background: var(--surface-elevated);
-  border: 1px solid color-mix(in srgb, var(--color-crimson-500) 28%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-crimson-500) 18%, transparent);
   box-shadow: var(--shadow-sm);
 }
 
@@ -203,7 +231,7 @@
 }
 
 .closing {
-  width: min(var(--max-content-md), 100%);
+  width: min(46rem, 100%);
   margin: 0 auto;
   padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
 }
@@ -245,31 +273,7 @@
   opacity: 1;
 }
 
-.heroInner,
-.summary,
-.narrativeInner,
-.principlesInner,
-.closingInner {
-  animation: settle-in 600ms ease-out both;
-}
-
-.summary {
-  animation-delay: 80ms;
-}
-
-.narrativeInner {
-  animation-delay: 140ms;
-}
-
-.principlesInner {
-  animation-delay: 200ms;
-}
-
-.closingInner {
-  animation-delay: 260ms;
-}
-
-@keyframes settle-in {
+@keyframes hero-fade {
   from {
     opacity: 0;
   }
@@ -280,11 +284,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroInner,
-  .summary,
-  .narrativeInner,
-  .principlesInner,
-  .closingInner {
+  .heroInner {
     animation: none;
   }
 }

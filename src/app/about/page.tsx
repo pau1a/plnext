@@ -75,7 +75,7 @@ export default function AboutPage() {
             Optimist. Engineer. Adventurer.
           </h1>
           <p className={styles.heroSubtitle}>
-            Building calm in complex systems through secure automation and measured networks.
+            Building calm in complex systems — where automation is secure and networks are measured.
           </p>
         </div>
       </section>
@@ -87,7 +87,7 @@ export default function AboutPage() {
         </div>
         <div className={styles.summaryCopy}>
           <h2 id="profile-summary" className={styles.summaryTitle}>
-            Profile summary
+            Profile
           </h2>
           <p>
             Paula stabilises RF, network, and automation estates that cannot afford silence or surprise. She unifies firmware,
