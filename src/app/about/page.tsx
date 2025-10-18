@@ -1,59 +1,144 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import AboutPageContent from "./about-content";
+import styles from "./about.module.scss";
 
-const BADGES = [
-  "Industrial automation",
-  "AI security",
-  "OT & networks",
-  "Python-first",
-  "Measurement-led",
-] as const;
+const PORTRAIT_URL =
+  "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
 
 const PRINCIPLES = [
   {
-    title: "Narrow the blast radius",
-    body: "Design for safe failure. Isolate. Contain. Make incidents small and boring.",
+    title: "Narrow the blast radius.",
+    description:
+      "Partition control paths and prefer defaults that fail closed so disruption stays local.",
   },
   {
-    title: "Increase visibility",
-    body: "Instrument the estate. Measure risk rather than guess it. Logs that tell the truth.",
+    title: "Increase visibility.",
+    description:
+      "Instrument services and links continuously so drift is caught before customers notice.",
   },
   {
-    title: "Shorten recovery",
-    body: "Lower MTTR with clear runbooks, good alerts, and tested recovery paths.",
+    title: "Shorten recovery.",
+    description:
+      "Exercise rollback and incident drills until the response is practiced, quick, and quiet.",
   },
   {
-    title: "Keep people out of headlines",
-    body: "Protect teams and users by making systems resilient and decisions auditable.",
+    title: "Keep people and processes out of the headlines.",
+    description:
+      "Design operations that protect both operators and outcomes with measured guardrails.",
   },
 ] as const;
 
-const BIOGRAPHY = [
-  "My career began in military radio and satellite systems and matured through large-scale IP networking. Today I focus on AI-enabled operations for industrial environments. I design layered defences, instrument estates so risk is measured not guessed, and remove toil with code so teams can focus on the hard problems.",
-  "I shape security by design for OT and automation programmes and align controls to recognised standards such as IEC 62443. I am the person teams tap to untangle cross-discipline problems when they cut across layers and refuse to fit into one box.",
-  "Over the past year I have gone deep on Python-first machine learning and modern data tooling. I build guardrails that let models survive contact with production, including secure MLOps, model and data lineage, drift detection, and adversarial robustness.",
-  "Postgraduate study sharpened the theory. I hold an MSc Cyber Security and a PGDip Cyber. My dissertation explored how cryptographic transparency and distributed ledgers can strengthen identity and provenance across industrial supply chains. Applied cryptography is part of the toolbox. I use signatures, attestations and transparency logs, with blockchain only where it reduces risk and friction for integrity, provenance and tamper-evident logging.",
-  "My operating style is measurement-led. Results look like lower MTTR, fewer false positives, safer change windows and quieter on-call. I prefer simple, observable architectures to clever, brittle ones. Controls and infrastructure should be code. Runbooks should be testable. Recovery should be unremarkable.",
-  "Earlier in my journey I founded an AI venture and chose to wind it down when the stack was not ready. That experience sharpened timing and judgement and reinforced a bias for pragmatic engineering.",
+const PHASES = [
+  {
+    heading: "RF and Satellite Systems",
+    paragraphs: [
+      "Paula integrates ground stations and tactical radio networks with disciplined RF engineering.",
+      "She calculates link budgets, validates spectral compliance, and closes telemetry paths before launch windows open.",
+    ],
+  },
+  {
+    heading: "Networks at Scale",
+    paragraphs: [
+      "She shapes IP and OT topologies that remain observable under change control and peak demand.",
+      "She scripts configuration baselines, proves redundancy in staged environments, and documents runbooks operations teams follow without escalation.",
+    ],
+  },
+  {
+    heading: "Industrial AI and Cryptography",
+    paragraphs: [
+      "Paula secures automation platforms where machine learning, robotics, and humans meet on the factory floor.",
+      "She enforces signed artefacts, audit trails, and pragmatic cryptography so safety cases stand up to regulators.",
+    ],
+  },
+  {
+    heading: "Measurement and Simplicity",
+    paragraphs: [
+      "She instruments services so metrics, traces, and logs align to a single operational story.",
+      "She removes ornamental complexity, leaving components teams can rehearse, recover, and explain under pressure.",
+    ],
+  },
 ] as const;
-
-const CLOSING_STATEMENT =
-  "If the future is AI and automation, it needs engineers who can secure it end to end. That is my lane.";
 
 export const metadata: Metadata = {
   title: "About | Paula Livingstone",
   description:
-    "Industrial automation and AI security. Narrow the blast radius, increase visibility, shorten recovery.",
+    "Optimist. Engineer. Adventurer. Paula Livingstone builds calm, observable systems across infrastructure and automation.",
 };
 
 export default function AboutPage() {
   return (
-    <AboutPageContent
-      badges={BADGES}
-      biography={BIOGRAPHY}
-      principles={PRINCIPLES}
-      closingStatement={CLOSING_STATEMENT}
-    />
+    <main className={styles.page}>
+      <section className={styles.hero} aria-labelledby="about-hero-title">
+        <div className={styles.heroInner}>
+          <h1 id="about-hero-title" className={styles.heroTitle}>
+            Optimist. Engineer. Adventurer.
+          </h1>
+          <p className={styles.heroSubtitle}>
+            Building calm in complex systems — where automation is secure and networks are measured.
+          </p>
+        </div>
+      </section>
+
+      <section className={styles.profileArea} aria-labelledby="profile-heading">
+        <div className={styles.profileInner}>
+          <div className={styles.portraitFrame}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={PORTRAIT_URL} alt="Paula Livingstone" loading="lazy" />
+          </div>
+          <div className={styles.profileCopy}>
+            <h2 id="profile-heading" className={styles.profileTitle}>
+              Profile
+            </h2>
+            <p>
+              Paula stabilises RF, network, and automation estates that cannot afford silence or surprise. She unifies firmware,
+              infrastructure, and software teams through measured interfaces and rehearsed procedures. She keeps AI-enabled control
+              systems auditable so operators trust them in production.
+            </p>
+
+            <section className={styles.practice} aria-labelledby="practice-heading">
+              <h2 id="practice-heading" className={styles.practiceTitle}>
+                Practice
+              </h2>
+              {PHASES.map((phase) => (
+                <section key={phase.heading} className={styles.phase}>
+                  <h3 className={styles.phaseHeading}>{phase.heading}</h3>
+                  {phase.paragraphs.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </section>
+              ))}
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.principles} aria-labelledby="constants-heading">
+        <div className={styles.principlesInner}>
+          <h2 id="constants-heading" className={styles.principlesTitle}>
+            Constants
+          </h2>
+          <div className={styles.principlesGrid}>
+            {PRINCIPLES.map((principle) => (
+              <div key={principle.title} className={styles.principleCard}>
+                <h3>{principle.title}</h3>
+                <p>{principle.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.closing} aria-labelledby="closing-note">
+        <div className={styles.closingInner}>
+          <p id="closing-note" className={styles.closingStatement}>
+            The work is simple: keep critical systems composed when everything around them is not.
+          </p>
+          <Link className={styles.contactLink} href="/contact">
+            Contact Paula
+          </Link>
+        </div>
+      </section>
+    </main>
   );
 }
