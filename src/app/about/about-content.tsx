@@ -33,7 +33,7 @@ const heroTraits = [
     key: "adventurer",
     title: "Adventurer",
     description:
-      "Pursue unfamiliar horizons with measured daring and swashbuckling verve, carrying fresh momentum back to every team I serve.",
+      "Chase the unfamiliar with deliberate daring, returning with insight and verve that keeps every team primed.",
     glyph: "🧭",
   },
 ] as const;
