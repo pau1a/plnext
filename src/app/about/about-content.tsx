@@ -136,15 +136,15 @@ export default function AboutPageContent({
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
             <motion.p {...heroEyebrowMotion} className={styles.eyebrow}>
-              ABOUT
+              ABOUT ME
             </motion.p>
 
             <motion.h1 {...heroHeadlineMotion} className={styles.heroTitle}>
+              <span>Optimist</span>
+              <span aria-hidden="true" className={styles.heroTitleDivider} />
               <span>Engineer</span>
               <span aria-hidden="true" className={styles.heroTitleDivider} />
               <span>Adventurer</span>
-              <span aria-hidden="true" className={styles.heroTitleDivider} />
-              <span>Optimist</span>
             </motion.h1>
 
             <motion.p {...heroBodyMotion} className={styles.heroSubhead}>
