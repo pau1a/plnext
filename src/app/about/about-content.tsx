@@ -1,23 +1,144 @@
 "use client";
 
-import { useMemo } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import clsx from "clsx";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
 import styles from "./about.module.scss";
 
 const photoUrl =
   "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
 
-const heroSummaryHighlights = [
-  "Industrial automation and AI security.",
-  "Measurement-led, code-first controls.",
-  "Layered defence for calm recovery.",
+const heroTraits = [
+  {
+    key: "optimist",
+    title: "Optimist",
+    description:
+      "Hold to bright possibilities, steady under strain so calm, generous outcomes stay within reach.",
+    glyph: "☀️",
+  },
+  {
+    key: "engineer",
+    title: "Engineer",
+    description:
+      "Shape resilient systems from first principles, refining the intricate until it feels inevitable.",
+    glyph: "🛠️",
+  },
+  {
+    key: "adventurer",
+    title: "Adventurer",
+    description:
+      "Explore unfamiliar ground with measured courage, bringing back fresh insight that keeps momentum alive.",
+    glyph: "🧭",
+  },
 ] as const;
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-} as const;
+type MotionVars = CSSProperties & {
+  "--motion-delay"?: string;
+  "--motion-duration"?: string;
+  "--motion-ease"?: string;
+  "--motion-offset"?: string;
+};
+
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
+    const updatePreference = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    updatePreference();
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", updatePreference);
+      return () => mediaQuery.removeEventListener("change", updatePreference);
+    }
+
+    mediaQuery.addListener(updatePreference);
+
+    return () => mediaQuery.removeListener(updatePreference);
+  }, []);
+
+  return prefersReducedMotion;
+}
+
+function useRevealOnView<T extends HTMLElement>(
+  enabled: boolean,
+  options: IntersectionObserverInit,
+) {
+  const ref = useRef<T | null>(null);
+  const [isVisible, setIsVisible] = useState(!enabled);
+
+  useEffect(() => {
+    if (!enabled) {
+      setIsVisible(true);
+      return;
+    }
+
+    if (typeof window === "undefined" || !window.IntersectionObserver) {
+      setIsVisible(true);
+      return;
+    }
+
+    const target = ref.current;
+
+    if (!target) {
+      return;
+    }
+
+    let didCancel = false;
+
+    const observer = new IntersectionObserver((entries, observerRef) => {
+      entries.forEach((entry) => {
+        if (!didCancel && entry.isIntersecting) {
+          setIsVisible(true);
+          observerRef.disconnect();
+        }
+      });
+    }, options);
+
+    observer.observe(target);
+
+    return () => {
+      didCancel = true;
+      observer.disconnect();
+    };
+  }, [enabled, options]);
+
+  return { ref, isVisible } as const;
+}
+
+function createMotionVars(
+  shouldAnimate: boolean,
+  delay: number,
+  offset = 10,
+  duration = 0.4,
+): MotionVars | undefined {
+  if (!shouldAnimate) {
+    return undefined;
+  }
+
+  return {
+    "--motion-delay": `${delay}s`,
+    "--motion-duration": `${duration}s`,
+    "--motion-ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "--motion-offset": `${offset}px`,
+  } satisfies MotionVars;
+}
 
 type AboutPageContentProps = {
   badges: readonly string[];
@@ -32,83 +153,112 @@ export default function AboutPageContent({
   principles,
   closingStatement,
 }: AboutPageContentProps) {
-  const shouldReduceMotion = useReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const shouldAnimate = !prefersReducedMotion;
 
-  const heroMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, animate: false }
-        : { variants: fadeUp, initial: "hidden" as const, animate: "show" as const },
-    [shouldReduceMotion],
+  const [heroReady, setHeroReady] = useState(!shouldAnimate);
+
+  useEffect(() => {
+    if (!shouldAnimate) {
+      setHeroReady(true);
+      return;
+    }
+
+    setHeroReady(false);
+
+    const frame = requestAnimationFrame(() => {
+      setHeroReady(true);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [shouldAnimate]);
+
+  const observerOptions = useMemo<IntersectionObserverInit>(
+    () => ({ threshold: 0.2 }),
+    [],
   );
 
-  const articleMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, whileInView: undefined }
-        : {
-            variants: fadeUp,
-            initial: "hidden" as const,
-            whileInView: "show" as const,
-            viewport: { once: true, amount: 0.2 },
-          },
-    [shouldReduceMotion],
+  const { ref: biographyRef, isVisible: biographyVisible } = useRevealOnView<HTMLElement>(
+    shouldAnimate,
+    observerOptions,
   );
 
   return (
     <main className={styles.main}>
-      <section className={styles.hero}>
+      <section
+        className={clsx(
+          styles.hero,
+          shouldAnimate && styles.motionFade,
+          shouldAnimate && heroReady && styles.motionFadeReady,
+        )}
+        style={createMotionVars(shouldAnimate, 0, 0, 0.6)}
+      >
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
-            <motion.p {...heroMotion} className={styles.eyebrow}>
-              ABOUT
-            </motion.p>
+            <p
+              className={clsx(
+                styles.eyebrow,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.15)}
+            >
+              ABOUT ME
+            </p>
 
-            <motion.h1 {...heroMotion} className={styles.heroTitle}>
-              Building calm in complex systems
-            </motion.h1>
+            <h1
+              className={clsx(
+                styles.heroTitle,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.22)}
+            >
+              <span className={styles.heroTitleWord}>Optimist</span>
+              <span className={styles.heroTitleWord}>Engineer</span>
+              <span className={styles.heroTitleWord}>Adventurer</span>
+            </h1>
 
-            <motion.p {...heroMotion} className={styles.heroSubhead}>
-              I am an engineer who helps build and secure automated systems and the interconnected networks that run them. My
-              focus is where operational technology, networks, and AI-enabled automation overlap. My job is to narrow the blast
-              radius.
-            </motion.p>
+            <p
+              className={clsx(
+                styles.heroSubhead,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.32)}
+            >
+              Building calm in complex systems.
+            </p>
+
+            <p
+              className={clsx(
+                styles.heroIntro,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.38)}
+            >
+              I help build and secure automated systems and the networks that connect them. My focus is where operational
+              technology and AI-driven automation meet—and where risk multiplies fastest.
+            </p>
           </div>
 
-          <motion.div {...heroMotion} className={styles.heroSummary}>
-            <div className={styles.heroSummaryCard}>
-              <div className={styles.heroSummarySwatch} aria-hidden="true" />
-              <div className={styles.heroSummaryContent}>
-                <p className={styles.heroSummaryEyebrow}>At a glance</p>
-                <div className={styles.heroSummaryHighlights}>
-                  {heroSummaryHighlights.map((highlight) => (
-                    <div key={highlight} className={styles.heroSummaryHighlight}>
-                      <span
-                        className={styles.heroSummaryAccent}
-                        aria-hidden="true"
-                      />
-                      <p>{highlight}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-      </section>
-
-      <section className={styles.bodySection}>
-        <motion.article {...articleMotion} className={styles.biography}>
-          <div className={styles.biographyAside}>
-            <div className={styles.portraitCard}>
+          <div
+            className={clsx(
+              styles.heroPortrait,
+              shouldAnimate && styles.motionFade,
+              shouldAnimate && heroReady && styles.motionFadeReady,
+            )}
+            style={createMotionVars(shouldAnimate, 0.45, 12, 0.5)}
+          >
+            <div className={styles.portraitFrame}>
               <div className={styles.portraitMedia}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
               </div>
             </div>
 
-            <div className={styles.badgeCluster}>
+            <div className={styles.heroBadgeCluster}>
               {badges.map((label) => (
                 <span key={label} className={styles.badge}>
                   {label}
@@ -116,12 +266,51 @@ export default function AboutPageContent({
               ))}
             </div>
           </div>
+        </div>
 
+        <div
+          className={clsx(
+            styles.heroCards,
+            shouldAnimate && styles.motionFade,
+            shouldAnimate && heroReady && styles.motionFadeReady,
+          )}
+          style={createMotionVars(shouldAnimate, 0.55, 18, 0.6)}
+        >
+          {heroTraits.map((trait, index) => (
+            <article
+              key={trait.key}
+              className={clsx(
+                styles.heroCard,
+                shouldAnimate && styles.motionFade,
+                shouldAnimate && heroReady && styles.motionFadeReady,
+              )}
+              style={createMotionVars(shouldAnimate, 0.65 + index * 0.08, 14, 0.5)}
+            >
+              <span className={styles.heroCardGlyph} aria-hidden>
+                {trait.glyph}
+              </span>
+              <h2 className={styles.heroCardTitle}>{trait.title}</h2>
+              <p className={styles.heroCardBody}>{trait.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.bodySection}>
+        <article
+          ref={biographyRef}
+          className={clsx(
+            styles.biography,
+            shouldAnimate && styles.motionFade,
+            shouldAnimate && biographyVisible && styles.motionFadeReady,
+          )}
+          style={createMotionVars(shouldAnimate, 0.15, 24, 0.5)}
+        >
           <h2 className={styles.biographyHeading}>From RF to AI-secured automation</h2>
           {biography.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
-        </motion.article>
+        </article>
       </section>
 
       <section className={styles.constantsSection}>
