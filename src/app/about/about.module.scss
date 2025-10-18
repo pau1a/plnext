@@ -1,35 +1,35 @@
 .page {
   --field-surface: color-mix(
     in srgb,
-    var(--surface-base) 84%,
-    color-mix(in srgb, var(--color-graphite-100) 55%, transparent)
+    var(--surface-base) 88%,
+    color-mix(in srgb, var(--color-graphite-200) 55%, transparent)
   );
 
   display: grid;
   row-gap: 0;
   padding-block-end: clamp(calc(var(--space-3xl) * 1.1), 12vw, calc(var(--space-4xl) * 1.4));
-  background: var(--surface-base);
+  background: var(--field-surface);
 }
 
 .hero {
   position: relative;
   color: var(--text-on-inverse);
   background: radial-gradient(
-      circle at 50% 42%,
-      color-mix(in srgb, var(--color-teal-300) 36%, transparent) 0%,
-      color-mix(in srgb, var(--color-teal-300) 18%, var(--color-graphite-700)) 56%,
-      color-mix(in srgb, var(--color-graphite-700) 72%, var(--color-graphite-800)) 100%
+      circle at 50% 44%,
+      color-mix(in srgb, var(--color-teal-200) 26%, transparent) 0%,
+      color-mix(in srgb, var(--color-teal-200) 14%, var(--color-graphite-700)) 55%,
+      color-mix(in srgb, var(--color-graphite-800) 86%, var(--color-graphite-900)) 100%
     )
     fixed;
-  padding-block: clamp(calc(var(--space-3xl) * 2.1), 18vw, calc(var(--space-3xl) * 3));
+  padding-block: clamp(calc(var(--space-3xl) * 2.2), 20vw, calc(var(--space-3xl) * 3.1));
 }
 
 :global(body.dark) .hero {
   background: radial-gradient(
-      circle at 50% 42%,
-      color-mix(in srgb, var(--color-teal-300) 32%, transparent) 0%,
-      color-mix(in srgb, var(--color-teal-300) 16%, var(--color-graphite-900)) 56%,
-      color-mix(in srgb, var(--color-graphite-900) 78%, var(--color-graphite-950)) 100%
+      circle at 50% 44%,
+      color-mix(in srgb, var(--color-teal-200) 22%, transparent) 0%,
+      color-mix(in srgb, var(--color-teal-200) 12%, var(--color-graphite-900)) 55%,
+      color-mix(in srgb, var(--color-graphite-900) 82%, var(--color-graphite-950)) 100%
     )
     fixed;
 }
@@ -42,8 +42,8 @@
   height: clamp(calc(var(--space-3xl) * 1.2), 12vw, calc(var(--space-3xl) * 1.8));
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--color-graphite-800) 10%, transparent) 0%,
-    color-mix(in srgb, var(--field-surface) 60%, transparent) 58%,
+    color-mix(in srgb, var(--color-graphite-800) 8%, transparent) 0%,
+    color-mix(in srgb, var(--color-graphite-700) 12%, transparent) 46%,
     var(--field-surface) 100%
   );
   pointer-events: none;
@@ -52,8 +52,8 @@
 :global(body.dark) .hero::after {
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--color-graphite-900) 16%, transparent) 0%,
-    color-mix(in srgb, var(--field-surface) 52%, transparent) 58%,
+    color-mix(in srgb, var(--color-graphite-900) 14%, transparent) 0%,
+    color-mix(in srgb, var(--color-graphite-800) 20%, transparent) 46%,
     var(--field-surface) 100%
   );
 }
@@ -79,16 +79,16 @@
 .heroSubtitle {
   margin: 0;
   max-width: 52ch;
-  font-size: clamp(var(--font-size-md), 0.95rem + 0.25vw, var(--font-size-lg));
+  font-size: clamp(var(--font-size-md), 0.9rem + 0.28vw, var(--font-size-lg));
   font-weight: 400;
-  color: color-mix(in srgb, var(--text-on-inverse) 76%, transparent);
+  color: color-mix(in srgb, var(--text-on-inverse) 68%, transparent);
   margin-block-end: clamp(var(--space-2xl), 6vw, calc(var(--space-3xl) * 0.9));
 }
 
 .profileArea {
   background: var(--field-surface);
   padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
-  padding-block-start: clamp(calc(var(--space-3xl) * 2.6), 14vw, calc(var(--space-3xl) * 3));
+  padding-block-start: clamp(calc(var(--space-3xl) * 2.4), 15vw, calc(var(--space-3xl) * 2.8));
   padding-block-end: clamp(calc(var(--space-3xl) * 1.4), 12vw, calc(var(--space-3xl) * 2));
 }
 
@@ -111,12 +111,13 @@
   display: grid;
   padding: var(--space-3xs);
   border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--field-surface) 82%, var(--surface-base));
+  background: color-mix(in srgb, var(--field-surface) 85%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-crimson-500) 28%, transparent);
 }
 
 .portraitFrame img {
   display: block;
-  width: clamp(12rem, 26vw, 16.5rem);
+  width: clamp(11.25rem, 24vw, 15rem);
   aspect-ratio: 4 / 5;
   object-fit: cover;
   border-radius: var(--radius-lg);
@@ -126,14 +127,16 @@
 .profileCopy {
   display: grid;
   gap: clamp(var(--space-lg), 4vw, var(--space-xl));
-  color: var(--text-primary);
+  max-width: 42rem;
+  color: color-mix(in srgb, var(--text-primary) 94%, transparent);
 }
 
 .profileTitle {
   margin: 0;
   font-size: clamp(var(--font-size-lg), 1.05rem + 0.35vw, var(--font-size-xl));
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
+  color: color-mix(in srgb, var(--text-primary) 96%, transparent);
 }
 
 .profileCopy p {
@@ -142,7 +145,7 @@
 }
 
 .practice {
-  margin-block-start: clamp(calc(var(--space-3xl) * 1.8), 12vw, calc(var(--space-3xl) * 2.2));
+  margin-block-start: clamp(calc(var(--space-3xl) * 1.6), 11vw, calc(var(--space-3xl) * 2));
   display: grid;
   gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
   max-width: 65ch;
@@ -152,7 +155,8 @@
   margin: 0;
   font-size: clamp(var(--font-size-lg), 1.05rem + 0.35vw, var(--font-size-xl));
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
+  color: color-mix(in srgb, var(--text-primary) 96%, transparent);
 }
 
 .phase {
@@ -162,23 +166,24 @@
 
 .phaseHeading {
   margin: 0;
-  font-size: clamp(var(--font-size-xl), 1.15rem + 0.35vw, var(--font-size-2xl));
+  font-size: clamp(var(--font-size-lg), 1.05rem + 0.3vw, var(--font-size-xl));
   font-weight: 500;
+  letter-spacing: 0.01em;
   line-height: var(--line-height-snug);
-  color: var(--text-primary);
+  color: color-mix(in srgb, var(--text-primary) 92%, transparent);
 }
 
 .phase p {
   margin: 0;
   line-height: 1.75;
-  color: color-mix(in srgb, var(--text-primary) 90%, transparent);
+  color: color-mix(in srgb, var(--text-primary) 88%, transparent);
 }
 
 .principles {
   width: min(64rem, 100%);
   margin: 0 auto;
   padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
-  padding-block-start: clamp(calc(var(--space-3xl) * 1.8), 10vw, calc(var(--space-3xl) * 2.1));
+  padding-block-start: clamp(calc(var(--space-3xl) * 1.7), 10vw, calc(var(--space-3xl) * 2));
 }
 
 .principlesInner {
@@ -209,13 +214,13 @@
   gap: var(--space-sm);
   padding: clamp(var(--space-lg), 2vw, var(--space-2xl));
   border-radius: var(--radius-md);
-  background: var(--surface-elevated);
-  border: 1px solid color-mix(in srgb, var(--color-crimson-500) 18%, transparent);
-  box-shadow: var(--shadow-sm);
+  background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-crimson-500) 14%, transparent);
+  box-shadow: var(--shadow-xs);
 }
 
 :global(body.dark) .principleCard {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .principleCard h3 {
