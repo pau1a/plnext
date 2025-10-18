@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import type { MotionProps, Transition } from "framer-motion";
 
 import styles from "./about.module.scss";
 
@@ -28,93 +29,66 @@ export default function AboutPageContent({
 }: AboutPageContentProps) {
   const shouldReduceMotion = useReducedMotion();
 
-  const heroContainerMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, animate: false }
-        : {
-            initial: { opacity: 0 },
-            animate: {
-              opacity: 1,
-              transition: { duration: 0.6, ease: "easeOut" },
-            },
-          },
-    [shouldReduceMotion],
+  const heroEase = useMemo<Transition>(
+    () => ({
+      duration: 0.4,
+      ease: [0.16, 1, 0.3, 1],
+    }),
+    [],
   );
 
-  const heroEyebrowMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, animate: false }
-        : {
-            initial: { opacity: 0, y: 10 },
-            animate: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.35, ease: "easeOut", delay: 0.15 },
-            },
-          },
-    [shouldReduceMotion],
+  const heroContainerMotion = useMemo<MotionProps>(() => {
+    if (shouldReduceMotion) {
+      return { initial: false, animate: { opacity: 1 } };
+    }
+
+    return {
+      initial: { opacity: 0 },
+      animate: {
+        opacity: 1,
+        transition: { ...heroEase, duration: 0.6 },
+      },
+    };
+  }, [shouldReduceMotion, heroEase]);
+
+  const buildHeroMotion = useCallback(
+    (delay: number, offset = 10): MotionProps => {
+      if (shouldReduceMotion) {
+        return { initial: false, animate: { opacity: 1, y: 0 } };
+      }
+
+      return {
+        initial: { opacity: 0, y: offset },
+        animate: {
+          opacity: 1,
+          y: 0,
+          transition: { ...heroEase, delay },
+        },
+      };
+    },
+    [shouldReduceMotion, heroEase],
   );
 
-  const heroHeadlineMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, animate: false }
-        : {
-            initial: { opacity: 0, y: 10 },
-            animate: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.4, ease: "easeOut", delay: 0.22 },
-            },
-          },
-    [shouldReduceMotion],
+  const heroEyebrowMotion = useMemo<MotionProps>(() => buildHeroMotion(0.15), [buildHeroMotion]);
+
+  const heroHeadlineMotion = useMemo<MotionProps>(
+    () => buildHeroMotion(0.22),
+    [buildHeroMotion],
   );
 
-  const heroBodyMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, animate: false }
-        : {
-            initial: { opacity: 0, y: 10 },
-            animate: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.4, ease: "easeOut", delay: 0.32 },
-            },
-          },
-    [shouldReduceMotion],
+  const heroBodyMotion = useMemo<MotionProps>(
+    () => buildHeroMotion(0.32),
+    [buildHeroMotion],
   );
 
-  const heroIntroMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, animate: false }
-        : {
-            initial: { opacity: 0, y: 10 },
-            animate: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.4, ease: "easeOut", delay: 0.38 },
-            },
-          },
-    [shouldReduceMotion],
+  const heroIntroMotion = useMemo<MotionProps>(
+    () => buildHeroMotion(0.38),
+    [buildHeroMotion],
   );
 
-  const heroPortraitMotion = useMemo(
-    () =>
-      shouldReduceMotion
-        ? { initial: false, animate: false }
-        : {
-            initial: { opacity: 0, y: 12 },
-            animate: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.5, ease: "easeOut", delay: 0.45 },
-            },
-          },
-    [shouldReduceMotion],
+  const heroPortraitMotion = useMemo<MotionProps>(
+    () => buildHeroMotion(0.45, 12),
+    [buildHeroMotion],
   );
 
   const articleMotion = useMemo(
