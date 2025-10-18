@@ -80,38 +80,36 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className={styles.summary} aria-labelledby="profile-summary">
-        <div className={styles.summaryPortrait}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={PORTRAIT_URL} alt="Paula Livingstone" loading="lazy" />
-        </div>
-        <div className={styles.summaryCopy}>
-          <h2 id="profile-summary" className={styles.summaryTitle}>
-            Profile
-          </h2>
-          <p>
-            Paula stabilises RF, network, and automation estates that cannot afford silence or surprise. She unifies firmware,
-            infrastructure, and software teams through measured interfaces and rehearsed procedures. She keeps AI-enabled control
-            systems auditable so operators trust them in production.
-          </p>
-        </div>
-      </section>
+      <section className={styles.profileArea} aria-labelledby="profile-heading">
+        <div className={styles.profileInner}>
+          <div className={styles.portraitFrame}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={PORTRAIT_URL} alt="Paula Livingstone" loading="lazy" />
+          </div>
+          <div className={styles.profileCopy}>
+            <h2 id="profile-heading" className={styles.profileTitle}>
+              Profile
+            </h2>
+            <p>
+              Paula stabilises RF, network, and automation estates that cannot afford silence or surprise. She unifies firmware,
+              infrastructure, and software teams through measured interfaces and rehearsed procedures. She keeps AI-enabled control
+              systems auditable so operators trust them in production.
+            </p>
 
-      <section className={styles.narrative} aria-labelledby="career-narrative">
-        <div className={styles.narrativeInner}>
-          <h2 id="career-narrative" className={styles.narrativeLabel}>
-            Practice
-          </h2>
-          <article className={styles.narrativeColumn}>
-            {PHASES.map((phase) => (
-              <section key={phase.heading} className={styles.phase}>
-                <h3 className={styles.phaseHeading}>{phase.heading}</h3>
-                {phase.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </section>
-            ))}
-          </article>
+            <section className={styles.practice} aria-labelledby="practice-heading">
+              <h2 id="practice-heading" className={styles.practiceTitle}>
+                Practice
+              </h2>
+              {PHASES.map((phase) => (
+                <section key={phase.heading} className={styles.phase}>
+                  <h3 className={styles.phaseHeading}>{phase.heading}</h3>
+                  {phase.paragraphs.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </section>
+              ))}
+            </section>
+          </div>
         </div>
       </section>
 

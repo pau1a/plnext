@@ -1,28 +1,37 @@
 .page {
+  --field-surface: color-mix(
+    in srgb,
+    var(--surface-base) 84%,
+    color-mix(in srgb, var(--color-graphite-100) 55%, transparent)
+  );
+
   display: grid;
-  gap: clamp(calc(var(--space-3xl) * 1.1), 10vw, calc(var(--space-4xl) * 1.05));
+  row-gap: 0;
   padding-block-end: clamp(calc(var(--space-3xl) * 1.1), 12vw, calc(var(--space-4xl) * 1.4));
+  background: var(--surface-base);
 }
 
 .hero {
   position: relative;
   color: var(--text-on-inverse);
   background: radial-gradient(
-    circle at 50% 42%,
-    color-mix(in srgb, var(--color-teal-300) 52%, transparent) 0%,
-    color-mix(in srgb, var(--color-teal-300) 16%, var(--color-graphite-800)) 58%,
-    color-mix(in srgb, var(--color-graphite-800) 78%, var(--color-graphite-900)) 100%
-  );
-  padding-block: clamp(calc(var(--space-3xl) * 2.2), 16vw, calc(var(--space-4xl) * 1.25));
+      circle at 50% 42%,
+      color-mix(in srgb, var(--color-teal-300) 36%, transparent) 0%,
+      color-mix(in srgb, var(--color-teal-300) 18%, var(--color-graphite-700)) 56%,
+      color-mix(in srgb, var(--color-graphite-700) 72%, var(--color-graphite-800)) 100%
+    )
+    fixed;
+  padding-block: clamp(calc(var(--space-3xl) * 2.1), 18vw, calc(var(--space-3xl) * 3));
 }
 
 :global(body.dark) .hero {
   background: radial-gradient(
-    circle at 50% 42%,
-    color-mix(in srgb, var(--color-teal-300) 46%, transparent) 0%,
-    color-mix(in srgb, var(--color-teal-300) 14%, var(--color-graphite-900)) 58%,
-    color-mix(in srgb, var(--color-graphite-900) 82%, var(--color-graphite-950)) 100%
-  );
+      circle at 50% 42%,
+      color-mix(in srgb, var(--color-teal-300) 32%, transparent) 0%,
+      color-mix(in srgb, var(--color-teal-300) 16%, var(--color-graphite-900)) 56%,
+      color-mix(in srgb, var(--color-graphite-900) 78%, var(--color-graphite-950)) 100%
+    )
+    fixed;
 }
 
 .hero::after {
@@ -30,12 +39,12 @@
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  height: clamp(var(--space-2xl), 10vw, calc(var(--space-3xl) * 1.4));
+  height: clamp(calc(var(--space-3xl) * 1.2), 12vw, calc(var(--space-3xl) * 1.8));
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--color-graphite-800) 12%, transparent) 0%,
-    color-mix(in srgb, var(--surface-base) 45%, transparent) 60%,
-    var(--surface-base) 100%
+    color-mix(in srgb, var(--color-graphite-800) 10%, transparent) 0%,
+    color-mix(in srgb, var(--field-surface) 60%, transparent) 58%,
+    var(--field-surface) 100%
   );
   pointer-events: none;
 }
@@ -43,9 +52,9 @@
 :global(body.dark) .hero::after {
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--color-graphite-900) 18%, transparent) 0%,
-    color-mix(in srgb, var(--surface-base) 35%, transparent) 60%,
-    var(--surface-base) 100%
+    color-mix(in srgb, var(--color-graphite-900) 16%, transparent) 0%,
+    color-mix(in srgb, var(--field-surface) 52%, transparent) 58%,
+    var(--field-surface) 100%
   );
 }
 
@@ -54,14 +63,14 @@
   width: min(54rem, 100%);
   display: grid;
   justify-items: center;
-  gap: clamp(var(--space-2xl), 4vw, calc(var(--space-3xl) * 0.9));
+  gap: clamp(var(--space-xl), 4vw, calc(var(--space-3xl) * 0.8));
   text-align: center;
   animation: hero-fade 140ms ease-out both;
 }
 
 .heroTitle {
   margin: 0;
-  font-size: clamp(var(--font-size-3xl), 2.2rem + 1vw, var(--font-size-4xl));
+  font-size: clamp(var(--font-size-2xl), 2rem + 1vw, var(--font-size-4xl));
   font-weight: 500;
   letter-spacing: 0.004em;
   line-height: var(--line-height-tight);
@@ -70,94 +79,85 @@
 .heroSubtitle {
   margin: 0;
   max-width: 52ch;
-  font-size: clamp(var(--font-size-md), 1rem + 0.25vw, var(--font-size-lg));
+  font-size: clamp(var(--font-size-md), 0.95rem + 0.25vw, var(--font-size-lg));
   font-weight: 400;
-  color: color-mix(in srgb, var(--text-on-inverse) 82%, transparent);
-  margin-block-end: clamp(var(--space-xl), 3vw, calc(var(--space-2xl) * 0.9));
+  color: color-mix(in srgb, var(--text-on-inverse) 76%, transparent);
+  margin-block-end: clamp(var(--space-2xl), 6vw, calc(var(--space-3xl) * 0.9));
 }
 
-.summary {
+.profileArea {
+  background: var(--field-surface);
+  padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
+  padding-block-start: clamp(calc(var(--space-3xl) * 2.6), 14vw, calc(var(--space-3xl) * 3));
+  padding-block-end: clamp(calc(var(--space-3xl) * 1.4), 12vw, calc(var(--space-3xl) * 2));
+}
+
+.profileInner {
+  margin: 0 auto;
+  width: min(64rem, 100%);
   display: grid;
   gap: clamp(var(--space-xl), 6vw, var(--space-2xl));
   align-items: start;
-  width: min(64rem, 100%);
-  margin: 0 auto;
-  padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
-  padding-block-start: clamp(calc(var(--space-4xl) * 0.9), 12vw, calc(var(--space-4xl) * 1.2));
 }
 
 @media (min-width: 54rem) {
-  .summary {
-    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+  .profileInner {
+    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
   }
 }
 
-
-.summaryPortrait {
-  position: relative;
+.portraitFrame {
   justify-self: center;
-  align-self: start;
-  display: inline-grid;
+  display: grid;
   padding: var(--space-3xs);
   border-radius: var(--radius-lg);
-  background: var(--surface-base);
+  background: color-mix(in srgb, var(--field-surface) 82%, var(--surface-base));
 }
 
-.summaryPortrait img {
+.portraitFrame img {
   display: block;
-  width: clamp(12rem, 28vw, 16rem);
+  width: clamp(12rem, 26vw, 16.5rem);
   aspect-ratio: 4 / 5;
   object-fit: cover;
   border-radius: var(--radius-lg);
   border: 2px solid var(--color-crimson-500);
 }
 
-.summaryCopy {
+.profileCopy {
   display: grid;
-  gap: clamp(var(--space-lg), 3vw, var(--space-xl));
-  max-width: 44ch;
+  gap: clamp(var(--space-lg), 4vw, var(--space-xl));
+  color: var(--text-primary);
 }
 
-.summaryTitle {
+.profileTitle {
   margin: 0;
   font-size: clamp(var(--font-size-lg), 1.05rem + 0.35vw, var(--font-size-xl));
   font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
-.summaryCopy p {
+.profileCopy p {
   margin: 0;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
-.narrative {
-  width: min(64rem, 100%);
-  margin: 0 auto;
-  padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
-}
-
-.narrativeInner {
+.practice {
+  margin-block-start: clamp(calc(var(--space-3xl) * 1.8), 12vw, calc(var(--space-3xl) * 2.2));
   display: grid;
   gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
-}
-
-.narrativeLabel {
-  margin: 0;
-  font-size: clamp(var(--font-size-lg), 1rem + 0.35vw, var(--font-size-xl));
-  font-weight: 500;
-  font-variant-caps: small-caps;
-  letter-spacing: 0.06em;
-  color: color-mix(in srgb, var(--color-teal-400) 38%, var(--text-primary));
-}
-
-.narrativeColumn {
-  display: grid;
-  gap: clamp(var(--space-xl), 3vw, calc(var(--space-2xl) * 1.1));
   max-width: 65ch;
+}
+
+.practiceTitle {
+  margin: 0;
+  font-size: clamp(var(--font-size-lg), 1.05rem + 0.35vw, var(--font-size-xl));
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .phase {
   display: grid;
-  gap: var(--space-md);
+  gap: clamp(var(--space-sm), 1.6vw, var(--space-md));
 }
 
 .phaseHeading {
@@ -165,18 +165,20 @@
   font-size: clamp(var(--font-size-xl), 1.15rem + 0.35vw, var(--font-size-2xl));
   font-weight: 500;
   line-height: var(--line-height-snug);
+  color: var(--text-primary);
 }
 
 .phase p {
   margin: 0;
-  line-height: 1.7;
-  color: var(--text-muted);
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--text-primary) 90%, transparent);
 }
 
 .principles {
   width: min(64rem, 100%);
   margin: 0 auto;
   padding-inline: clamp(var(--space-lg), 6vw, calc(var(--space-3xl) * 1.1));
+  padding-block-start: clamp(calc(var(--space-3xl) * 1.8), 10vw, calc(var(--space-3xl) * 2.1));
 }
 
 .principlesInner {
@@ -188,9 +190,7 @@
   margin: 0;
   font-size: clamp(var(--font-size-lg), 1rem + 0.35vw, var(--font-size-xl));
   font-weight: 500;
-  font-variant-caps: small-caps;
-  letter-spacing: 0.06em;
-  color: color-mix(in srgb, var(--color-crimson-500) 35%, var(--text-primary));
+  letter-spacing: 0.01em;
 }
 
 .principlesGrid {
@@ -291,8 +291,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero,
-  .summary,
-  .narrative,
+  .profileArea,
   .principles,
   .closing {
     scroll-margin-top: var(--space-xl);
