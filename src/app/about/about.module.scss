@@ -21,16 +21,26 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 100vh;
+  min-height: 150vh;
+  background: var(--surface-base);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: min(100vh, 100%);
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--color-teal-800) 88%, var(--color-graphite-900) 12%) 0%,
     color-mix(in srgb, var(--color-teal-700) 82%, var(--color-graphite-800) 18%) 42%,
     color-mix(in srgb, var(--surface-base) 75%, var(--color-teal-700) 25%) 100%
   );
+  z-index: 0;
 }
 
-:global(body.dark) .hero {
+:global(body.dark) .hero::before {
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--color-teal-700) 70%, var(--color-graphite-900) 30%) 0%,
@@ -50,6 +60,8 @@
   grid-template-areas:
     "portrait"
     "copy";
+  position: relative;
+  z-index: 1;
 }
 
 .heroCopy {
