@@ -412,6 +412,11 @@
   line-height: var(--line-height-base);
 }
 
+:where(.closerCard p) {
+  margin: 0;
+  text-wrap: balance;
+}
+
 :global(body.dark) .closerCard {
   background: var(--surface-elevated);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
