@@ -233,6 +233,14 @@ export default function AboutPageContent({
                 <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
               </div>
             </div>
+
+            <div className={styles.heroBadgeCluster}>
+              {badges.map((label) => (
+                <span key={label} className={styles.badge}>
+                  {label}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -253,14 +261,6 @@ export default function AboutPageContent({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
               </div>
-            </div>
-
-            <div className={styles.badgeCluster}>
-              {badges.map((label) => (
-                <span key={label} className={styles.badge}>
-                  {label}
-                </span>
-              ))}
             </div>
           </div>
 
