@@ -35,7 +35,8 @@
     180deg,
     color-mix(in srgb, var(--color-teal-800) 88%, var(--color-graphite-900) 12%) 0%,
     color-mix(in srgb, var(--color-teal-700) 82%, var(--color-graphite-800) 18%) 42%,
-    color-mix(in srgb, var(--surface-base) 75%, var(--color-teal-700) 25%) 100%
+    color-mix(in srgb, var(--color-teal-600) 35%, #ffffff 65%) 78%,
+    var(--surface-base) 100%
   );
   z-index: 0;
 }
@@ -45,7 +46,8 @@
     180deg,
     color-mix(in srgb, var(--color-teal-700) 70%, var(--color-graphite-900) 30%) 0%,
     color-mix(in srgb, var(--color-teal-800) 68%, var(--color-graphite-800) 32%) 48%,
-    color-mix(in srgb, var(--surface-base) 70%, var(--color-teal-900) 30%) 100%
+    color-mix(in srgb, var(--color-teal-900) 55%, var(--surface-base) 45%) 78%,
+    var(--surface-base) 100%
   );
 }
 
