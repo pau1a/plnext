@@ -19,7 +19,7 @@ const heroTraits = [
     key: "optimist",
     title: "Optimist",
     description:
-      "Lead with hope and steadiness so every project has space for better outcomes.",
+      "Meet each challenge with hopeful steadiness so calm, generous outcomes stay within reach.",
     glyph: "☀️",
   },
   {
@@ -33,7 +33,7 @@ const heroTraits = [
     key: "adventurer",
     title: "Adventurer",
     description:
-      "Seek unfamiliar terrain, learn quickly, and bring those lessons back to the teams I serve.",
+      "Pursue unfamiliar horizons with measured daring and swashbuckling verve, carrying fresh momentum back to every team I serve.",
     glyph: "🧭",
   },
 ] as const;
