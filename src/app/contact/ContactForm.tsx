@@ -2,6 +2,7 @@
 
 // src/app/contact/ContactForm.tsx
 
+import clsx from "clsx";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 
@@ -12,7 +13,11 @@ import styles from "./contact.module.scss";
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button className="button button--primary" type="submit" disabled={pending}>
+    <button
+      className={clsx("button button--primary", styles.submitButton)}
+      type="submit"
+      disabled={pending}
+    >
       <i className="fa-solid fa-paper-plane" aria-hidden="true" />
       <span>{pending ? "Sending…" : "SEND IT"}</span>
     </button>
@@ -50,13 +55,13 @@ export default function ContactForm() {
         {errorMessage && <p className="u-text-danger">{errorMessage}</p>}
       </div>
       <div className="form-field">
-        <label className="form-field__label" htmlFor="name">
+        <label className={clsx("form-field__label", styles.formLabel)} htmlFor="name">
           Name
         </label>
         <input id="name" name="name" className="form-field__control" required autoComplete="name" />
       </div>
       <div className="form-field">
-        <label className="form-field__label" htmlFor="email">
+        <label className={clsx("form-field__label", styles.formLabel)} htmlFor="email">
           Email
         </label>
         <input
@@ -69,7 +74,7 @@ export default function ContactForm() {
         />
       </div>
       <div className="form-field">
-        <label className="form-field__label" htmlFor="message">
+        <label className={clsx("form-field__label", styles.formLabel)} htmlFor="message">
           Message
         </label>
         <textarea
