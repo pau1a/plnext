@@ -2,6 +2,7 @@
 import clsx from "clsx";
 import type { Metadata } from "next";
 
+import ContactColorCalibrator from "./ContactColorCalibrator";
 import ContactForm from "./ContactForm";
 import styles from "./contact.module.scss";
 
@@ -34,6 +35,11 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <section className={styles.contactRoot}>
+      <ContactColorCalibrator
+        imgSrc="https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png"
+        targetSelector={`.${styles.contactRoot}`}
+        sampleHeightPct={12}
+      />
       <div className={styles.stage}>
         <div className={styles.card}>
           <header className={styles.header}>
@@ -48,6 +54,7 @@ export default function ContactPage() {
           <ContactForm />
         </div>
       </div>
+      <div aria-hidden="true" className={styles.belowBlend} />
     </section>
   );
 }
