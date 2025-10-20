@@ -43,9 +43,7 @@ export default function ContactPage() {
       <div className={styles.stage}>
         <div className={styles.card}>
           <header className={styles.header}>
-            <h1 className={clsx("heading-section", styles.hTitle)}>
-              Contact
-            </h1>
+            <h1 className={clsx("heading-section", styles.hTitle)}>Contact</h1>
             <p className={styles.preface}>
               If you’ve got something real to say, this lands straight in my inbox.
             </p>
