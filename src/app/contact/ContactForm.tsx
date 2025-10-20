@@ -99,7 +99,7 @@ export default function ContactForm() {
         <label htmlFor="company">Company</label>
         <input id="company" name="honeypot" tabIndex={-1} autoComplete="off" />
       </div>
-      <div className={styles.submitRow}>
+      <div className={styles.actions}>
         <SubmitButton />
       </div>
       <p className={styles.footerNote}>

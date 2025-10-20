@@ -76,8 +76,7 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  padding-block: 10vh;
-  padding-bottom: calc(10vh + 8vh);
+  padding-block: 10vh 12vh;
 }
 
 .belowBlend {
@@ -105,25 +104,34 @@
   max-width: var(--max-content-md);
   width: 100%;
   border-radius: 1.75rem;
-  background: color-mix(in oklab, white 78%, transparent);
-  border: 1px solid color-mix(in oklab, var(--surface-border) 60%, transparent);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.34);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #ffffff 36%, transparent),
-    0 20px 48px color-mix(in oklab, hsl(var(--crimson-500)) 10%, black 82%);
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 18px 44px color-mix(in oklab, hsl(var(--crimson-500)) 10%, black 82%);
   padding: clamp(1.35rem, 2.5vw, 2.1rem);
   opacity: 0;
   transform: translateY(10px);
   animation: contactCardLift 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   overflow: visible;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
 }
 
 :global(body.dark) :local(.card) {
-  background: color-mix(in oklab, black 80%, transparent);
-  border-color: color-mix(in oklab, var(--surface-border) 55%, transparent);
+  background: rgba(12, 14, 16, 0.86);
+  border-color: rgba(255, 255, 255, 0.08);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, rgba(255, 255, 255, 0.22) 100%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 22px 52px color-mix(in oklab, hsl(var(--crimson-500)) 12%, black 86%);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .header {
@@ -134,11 +142,11 @@
 .hTitle {
   display: inline-block;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.005em;
   position: relative;
   padding-bottom: 0.5rem;
-  padding-left: 1.5rem;
-  font-size: clamp(2.85rem, 5.2vw, 3.6rem);
+  padding-left: 1.1rem;
+  font-size: clamp(3rem, 5.4vw, 3.8rem);
   line-height: 1.05;
 }
 
@@ -147,33 +155,39 @@
   position: absolute;
   left: 0;
   bottom: 0;
-  width: clamp(3.5rem, 18vw, 6rem);
-  height: 0.2rem;
+  width: clamp(3.8rem, 22vw, 6.8rem);
+  height: 0.22rem;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-crimson-500) 68%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-crimson-500) 32%, transparent);
+  background: hsl(var(--crimson-500));
+  opacity: 0.9;
+}
+
+.hTitle::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.58em;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: hsl(var(--crimson-500));
+  box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--crimson-500)) 22%, transparent);
 }
 
 .preface {
   margin-top: 0.35rem;
-  color: color-mix(in srgb, var(--text-muted) 48%, #ffffff 52%);
+  color: color-mix(in srgb, var(--text-muted) 45%, #ffffff 55%);
+  max-width: 42ch;
   font-size: 0.95rem;
 }
 
-.hDot {
-  position: absolute;
-  left: 0;
-  top: 0.58em;
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background: hsl(var(--crimson-500));
-  box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--crimson-500)) 18%, transparent);
+:global(body.dark) :local(.preface) {
+  color: color-mix(in srgb, #ffffff 70%, var(--text-muted) 30%);
 }
 
 .formLabel {
-  color: color-mix(in srgb, var(--text-muted) 68%, #ffffff 32%);
-  font-weight: 500;
+  color: color-mix(in srgb, var(--text-muted) 75%, #ffffff 25%);
+  font-weight: 600;
 }
 
 :global(body.dark) :local(.formLabel) {
@@ -181,15 +195,15 @@
 }
 
 .formControl {
-  background: color-mix(in srgb, var(--surface-elevated) 55%, rgba(255, 255, 255, 0.65) 45%);
-  border-color: color-mix(in srgb, var(--surface-border) 55%, transparent);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: color-mix(in oklab, var(--surface-border) 65%, transparent);
   color: inherit;
   transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
 :global(body.dark) :local(.formControl) {
-  background: color-mix(in srgb, rgba(19, 21, 23, 0.82) 100%, transparent);
-  border-color: color-mix(in srgb, rgba(255, 255, 255, 0.12) 100%, transparent);
+  background: rgba(10, 12, 14, 0.9);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .formControl:focus-visible {
@@ -200,7 +214,7 @@
   margin-top: var(--space-lg);
   font-size: 0.875rem;
   line-height: 1.4;
-  color: color-mix(in srgb, var(--text-muted) 52%, #ffffff 48%);
+  color: color-mix(in srgb, var(--text-muted) 38%, #ffffff 62%);
 }
 
 :global(body.dark) :local(.footerNote) {
@@ -226,14 +240,15 @@
   }
 }
 
-.submitRow {
+.actions {
   margin-top: var(--space-md);
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   width: 100%;
 }
 
 .submitButton {
+  letter-spacing: 0.02em;
   transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
