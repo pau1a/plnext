@@ -114,7 +114,7 @@
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.34);
   box-shadow: 0 10px 32px
-    color-mix(in oklab, hsl(var(--crimson-500)) 24%, rgba(0, 0, 0, 0.32));
+    color-mix(in oklab, var(--color-crimson-500) 24%, rgba(0, 0, 0, 0.32));
   padding: clamp(1.35rem, 2.5vw, 2.1rem);
   opacity: 0;
   transform: translateY(10px);
@@ -132,7 +132,7 @@
   );
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 11px 30px
-    color-mix(in oklab, hsl(var(--crimson-500)) 20%, rgba(0, 0, 0, 0.38));
+    color-mix(in oklab, var(--color-crimson-500) 20%, rgba(0, 0, 0, 0.38));
 }
 
 .card::before {
@@ -185,8 +185,8 @@
   width: 7px;
   height: 7px;
   border-radius: 9999px;
-  background: hsl(var(--crimson-500));
-  box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--crimson-500)) 22%, transparent);
+  background: var(--color-crimson-500);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-crimson-500) 22%, transparent);
 }
 
 .hTitle::after {
@@ -197,7 +197,7 @@
   width: clamp(3.8rem, 22vw, 6.8rem);
   height: 0.22rem;
   border-radius: 9999px;
-  background: hsl(var(--crimson-500));
+  background: var(--color-crimson-500);
   opacity: 0.9;
 }
 
