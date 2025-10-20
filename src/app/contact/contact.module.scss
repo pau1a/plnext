@@ -32,7 +32,7 @@
 
 :global(body.dark) :local(.contactRoot)::after {
   background: radial-gradient(120% 85% at 50% 22%, color-mix(in srgb, var(--color-crimson-500) 6%, transparent) 0%, transparent 72%),
-    rgba(0, 0, 0, 0.55);
+    rgba(0, 0, 0, 0.5);
 }
 
 @supports (-webkit-touch-callout: none) {
@@ -55,9 +55,10 @@
   max-width: var(--max-content-md);
   width: 100%;
   border-radius: 1.75rem;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid var(--surface-border);
-  box-shadow: var(--shadow-md);
+  background: color-mix(in oklab, white 88%, transparent);
+  border: 1px solid transparent;
+  border-color: color-mix(in oklab, var(--surface-border) 70%, transparent);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   padding: clamp(1.25rem, 2.5vw, 2rem);
   opacity: 0;
   transform: translateY(10px);
@@ -65,22 +66,23 @@
 }
 
 :global(body.dark) :local(.card) {
-  background: rgba(24, 26, 28, 0.85);
+  background: color-mix(in oklab, black 85%, transparent);
 }
 
 .header {
   margin-bottom: var(--space-lg);
 }
 
-.title {
+.hTitle {
   display: inline-block;
   font-weight: 700;
   letter-spacing: 0.015em;
   position: relative;
   padding-bottom: 0.5rem;
+  padding-left: 1.25rem;
 }
 
-.title::after {
+.hTitle::after {
   content: "";
   position: absolute;
   left: 0;
@@ -90,6 +92,17 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--color-crimson-500) 68%, transparent);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-crimson-500) 32%, transparent);
+}
+
+.hDot {
+  position: absolute;
+  left: 0;
+  top: 0.58em;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: hsl(var(--crimson-500));
+  box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--crimson-500)) 18%, transparent);
 }
 
 .preface {
