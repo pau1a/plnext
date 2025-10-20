@@ -3,33 +3,47 @@
   min-height: 100vh;
   isolation: isolate;
   background-color: #0b0f12;
-  background-image: url("https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png");
-  background-size: cover;
-  background-position: center 60%;
-  background-attachment: fixed;
+  overflow: hidden;
 }
 
 .contactRoot::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(10, 12, 14, 0.4);
   z-index: 0;
+  background-image: url("https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png");
+  background-size: cover;
+  background-position: center 60%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  opacity: 0;
+  animation: contactBackgroundFade 400ms ease-out forwards;
 }
 
-:global(body.dark) .contactRoot::before {
-  background: rgba(0, 0, 0, 0.55);
+.contactRoot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 18%, color-mix(in srgb, var(--color-teal-500) 7%, transparent) 0%, transparent 70%),
+    rgba(10, 12, 14, 0.4);
+}
+
+:global(body.dark) :local(.contactRoot)::after {
+  background: radial-gradient(120% 85% at 50% 22%, color-mix(in srgb, var(--color-crimson-500) 6%, transparent) 0%, transparent 72%),
+    rgba(0, 0, 0, 0.55);
 }
 
 @supports (-webkit-touch-callout: none) {
-  .contactRoot {
+  .contactRoot::before {
     background-attachment: scroll;
   }
 }
 
 .stage {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   place-items: center;
   padding-block: 10vh;
@@ -37,34 +51,95 @@
 
 .card {
   position: relative;
+  z-index: 3;
   max-width: var(--max-content-md);
   width: 100%;
   border-radius: 1.75rem;
-  background: var(--surface-elevated);
+  background: rgba(255, 255, 255, 0.88);
   border: 1px solid var(--surface-border);
   box-shadow: var(--shadow-md);
   padding: clamp(1.25rem, 2.5vw, 2rem);
-  backdrop-filter: none;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: contactCardLift 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+:global(body.dark) :local(.card) {
+  background: rgba(24, 26, 28, 0.85);
 }
 
 .header {
   margin-bottom: var(--space-lg);
 }
 
+.title {
+  display: inline-block;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: clamp(3.5rem, 18vw, 6rem);
+  height: 0.2rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-crimson-500) 68%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-crimson-500) 32%, transparent);
+}
+
 .preface {
-  margin-top: 0.25rem;
-  color: var(--text-muted);
+  margin-top: 0.35rem;
+  color: color-mix(in srgb, var(--text-muted) 70%, #ffffff 30%);
   font-size: 0.95rem;
 }
 
-.motionFade {
-  /* hook for reduced-motion override */
+.footerNote {
+  margin-top: var(--space-md);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--text-muted) 65%, #ffffff 35%);
+}
+
+:global(body.dark) :local(.footerNote) {
+  color: color-mix(in srgb, #ffffff 65%, var(--text-muted) 35%);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .motionFade {
+  .contactRoot::before {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .card {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+@keyframes contactBackgroundFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contactCardLift {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

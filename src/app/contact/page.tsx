@@ -35,9 +35,9 @@ export default function ContactPage() {
   return (
     <section className={styles.contactRoot}>
       <div className={styles.stage}>
-        <div className={clsx("motion-fade-in", styles.motionFade, styles.card)}>
+        <div className={styles.card}>
           <header className={styles.header}>
-            <h1 className="heading-section">Contact</h1>
+            <h1 className={clsx("heading-section", styles.title)}>Contact</h1>
             <p className={styles.preface}>
               If you want to talk, this form comes straight to me.
             </p>

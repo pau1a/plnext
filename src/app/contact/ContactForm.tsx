@@ -7,6 +7,7 @@ import { useFormStatus } from "react-dom";
 
 import { initialState } from "./state";
 import { sendMessage } from "./send";
+import styles from "./contact.module.scss";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -88,6 +89,9 @@ export default function ContactForm() {
         <input id="company" name="honeypot" tabIndex={-1} autoComplete="off" />
       </div>
       <SubmitButton />
+      <p className={styles.footerNote}>
+        You’re writing to a real person. Machines help, but I answer myself.
+      </p>
     </form>
   );
 }
