@@ -1,0 +1,70 @@
+.contactRoot {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+  background-color: #0b0f12;
+  background-image: url("https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png");
+  background-size: cover;
+  background-position: center 60%;
+  background-attachment: fixed;
+}
+
+.contactRoot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 14, 0.4);
+  z-index: 0;
+}
+
+:global(body.dark) .contactRoot::before {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+@supports (-webkit-touch-callout: none) {
+  .contactRoot {
+    background-attachment: scroll;
+  }
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding-block: 10vh;
+}
+
+.card {
+  position: relative;
+  max-width: var(--max-content-md);
+  width: 100%;
+  border-radius: 1.75rem;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-md);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  backdrop-filter: none;
+}
+
+.header {
+  margin-bottom: var(--space-lg);
+}
+
+.preface {
+  margin-top: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.motionFade {
+  /* hook for reduced-motion override */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motionFade {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

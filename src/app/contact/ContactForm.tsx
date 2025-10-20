@@ -1,6 +1,6 @@
 "use client";
 
-// src/app/contact/contact-form.tsx
+// src/app/contact/ContactForm.tsx
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
@@ -13,7 +13,7 @@ function SubmitButton() {
   return (
     <button className="button button--primary" type="submit" disabled={pending}>
       <i className="fa-solid fa-paper-plane" aria-hidden="true" />
-      <span>{pending ? "Sending…" : "Send"}</span>
+      <span>{pending ? "Sending…" : "SEND IT"}</span>
     </button>
   );
 }
@@ -40,17 +40,11 @@ export default function ContactForm() {
   const showSuccess = state.status === "success";
 
   return (
-    <form
-      ref={formRef}
-      action={formAction}
-      className="surface u-pad-2xl form-shell u-max-w-md u-center"
-      noValidate
-    >
-      <h1 className="heading-section">Contact</h1>
+    <form ref={formRef} action={formAction} className="form-shell" noValidate>
       <input type="hidden" name="submittedAt" value={loadedAt} readOnly />
       <div aria-live="polite" className="u-stack-sm" role="status">
         {showSuccess && (
-          <p className="u-text-success">Thanks for reaching out! I&apos;ll get back to you soon.</p>
+          <p className="u-text-success">Message sent. I’ll reply when I can do it properly.</p>
         )}
         {errorMessage && <p className="u-text-danger">{errorMessage}</p>}
       </div>

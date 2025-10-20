@@ -1,17 +1,19 @@
 // src/app/contact/page.tsx
+import clsx from "clsx";
 import type { Metadata } from "next";
 
-import ContactForm from "./contact-form";
+import ContactForm from "./ContactForm";
+import styles from "./contact.module.scss";
 
 export const metadata: Metadata = {
-  title: "Contact Paula Livingstone",
-  description: "Start a conversation about security, reliability, or AI delivery support.",
+  title: "Contact | Paula Livingstone",
+  description: "Reach Paula directly — messages here come straight to her.",
   alternates: {
     canonical: "/contact",
   },
   openGraph: {
-    title: "Contact Paula Livingstone",
-    description: "Start a conversation about security, reliability, or AI delivery support.",
+    title: "Contact | Paula Livingstone",
+    description: "Reach Paula directly — messages here come straight to her.",
     url: "/contact",
     images: [
       {
@@ -23,16 +25,26 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: "Contact Paula Livingstone",
-    description: "Start a conversation about security, reliability, or AI delivery support.",
+    title: "Contact | Paula Livingstone",
+    description: "Reach Paula directly — messages here come straight to her.",
     images: ["/window.svg"],
   },
 };
 
-export default function Contact() {
+export default function ContactPage() {
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
-      <ContactForm />
-    </div>
+    <section className={styles.contactRoot}>
+      <div className={styles.stage}>
+        <div className={clsx("motion-fade-in", styles.motionFade, styles.card)}>
+          <header className={styles.header}>
+            <h1 className="heading-section">Contact</h1>
+            <p className={styles.preface}>
+              If you want to talk, this form comes straight to me.
+            </p>
+          </header>
+          <ContactForm />
+        </div>
+      </div>
+    </section>
   );
 }
