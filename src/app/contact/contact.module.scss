@@ -104,12 +104,17 @@
   max-width: var(--max-content-md);
   width: 100%;
   border-radius: 1.75rem;
-  background: rgba(255, 255, 255, 0.8);
-  background: color-mix(in oklab, white 80%, transparent);
+  background-color: rgba(255, 255, 255, 0.8);
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklab, white 82%, transparent) 0%,
+    color-mix(in oklab, white 80%, transparent) 48%,
+    color-mix(in oklab, white 88%, transparent) 100%
+  );
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.34);
-  box-shadow: 0 12px 36px
-    color-mix(in oklab, var(--color-crimson-500) 8%, rgba(0, 0, 0, 0.22));
+  box-shadow: 0 10px 32px
+    color-mix(in oklab, hsl(var(--crimson-500)) 24%, rgba(0, 0, 0, 0.32));
   padding: clamp(1.35rem, 2.5vw, 2.1rem);
   opacity: 0;
   transform: translateY(10px);
@@ -118,11 +123,16 @@
 }
 
 :global(body.dark) :local(.card) {
-  background: rgba(12, 14, 16, 0.86);
-  background: color-mix(in oklab, black 86%, transparent);
+  background-color: rgba(12, 14, 16, 0.86);
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklab, black 82%, transparent) 0%,
+    color-mix(in oklab, black 84%, transparent) 46%,
+    color-mix(in oklab, black 90%, transparent) 100%
+  );
   border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 36px
-    color-mix(in oklab, var(--color-crimson-500) 6%, rgba(0, 0, 0, 0.28));
+  box-shadow: 0 11px 30px
+    color-mix(in oklab, hsl(var(--crimson-500)) 20%, rgba(0, 0, 0, 0.38));
 }
 
 .card::before {
@@ -175,8 +185,8 @@
   width: 7px;
   height: 7px;
   border-radius: 9999px;
-  background: var(--color-crimson-500);
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-crimson-500) 22%, transparent);
+  background: hsl(var(--crimson-500));
+  box-shadow: 0 0 0 3px color-mix(in oklab, hsl(var(--crimson-500)) 22%, transparent);
 }
 
 .hTitle::after {
@@ -187,7 +197,7 @@
   width: clamp(3.8rem, 22vw, 6.8rem);
   height: 0.22rem;
   border-radius: 9999px;
-  background: var(--color-crimson-500);
+  background: hsl(var(--crimson-500));
   opacity: 0.9;
 }
 
@@ -231,7 +241,7 @@
   margin-top: var(--space-lg);
   font-size: 0.875rem;
   line-height: 1.4;
-  color: color-mix(in srgb, var(--text-muted) 38%, #ffffff 62%);
+  color: color-mix(in srgb, var(--text-muted) 32%, #ffffff 68%);
 }
 
 :global(body.dark) :local(.footerNote) {
