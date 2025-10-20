@@ -88,7 +88,9 @@ export default function ContactForm() {
         <label htmlFor="company">Company</label>
         <input id="company" name="honeypot" tabIndex={-1} autoComplete="off" />
       </div>
-      <SubmitButton />
+      <div className={styles.submitRow}>
+        <SubmitButton />
+      </div>
       <p className={styles.footerNote}>
         You’re writing to a real person. Machines help, but I answer myself.
       </p>

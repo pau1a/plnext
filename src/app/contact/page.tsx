@@ -44,7 +44,6 @@ export default function ContactPage() {
         <div className={styles.card}>
           <header className={styles.header}>
             <h1 className={clsx("heading-section", styles.hTitle)}>
-              <span aria-hidden className={styles.hDot} />
               Contact
             </h1>
             <p className={styles.preface}>
