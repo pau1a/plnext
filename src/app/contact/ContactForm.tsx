@@ -58,7 +58,13 @@ export default function ContactForm() {
         <label className={clsx("form-field__label", styles.formLabel)} htmlFor="name">
           Name
         </label>
-        <input id="name" name="name" className="form-field__control" required autoComplete="name" />
+        <input
+          id="name"
+          name="name"
+          className={clsx("form-field__control", styles.formControl)}
+          required
+          autoComplete="name"
+        />
       </div>
       <div className="form-field">
         <label className={clsx("form-field__label", styles.formLabel)} htmlFor="email">
@@ -68,7 +74,7 @@ export default function ContactForm() {
           id="email"
           name="email"
           type="email"
-          className="form-field__control"
+          className={clsx("form-field__control", styles.formControl)}
           required
           autoComplete="email"
         />
@@ -80,7 +86,7 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
-          className="form-field__control"
+          className={clsx("form-field__control", styles.formControl)}
           rows={5}
           required
         />
