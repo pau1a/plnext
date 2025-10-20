@@ -1,3 +1,11 @@
+:root {
+  --moor-fade-color: #0b0f12;
+}
+
+:global(body.dark) {
+  --moor-fade-color: #0a0c0e;
+}
+
 .contactRoot {
   position: relative;
   min-height: 100vh;
@@ -20,19 +28,40 @@
   animation: contactBackgroundFade 400ms ease-out forwards;
 }
 
+
 .contactRoot::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(120% 80% at 50% 18%, color-mix(in srgb, var(--color-teal-500) 7%, transparent) 0%, transparent 70%),
-    rgba(10, 12, 14, 0.4);
+  background:
+    radial-gradient(
+      120% 80% at 50% 18%,
+      color-mix(in srgb, var(--color-teal-500) 7%, transparent) 0%,
+      transparent 70%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 65%,
+      var(--moor-fade-color) 85%,
+      var(--surface-base) 100%
+    );
 }
 
 :global(body.dark) :local(.contactRoot)::after {
-  background: radial-gradient(120% 85% at 50% 22%, color-mix(in srgb, var(--color-crimson-500) 6%, transparent) 0%, transparent 72%),
-    rgba(0, 0, 0, 0.5);
+  background:
+    radial-gradient(
+      120% 85% at 50% 22%,
+      color-mix(in srgb, var(--color-crimson-500) 6%, transparent) 0%,
+      transparent 72%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 65%,
+      var(--moor-fade-color) 85%,
+      var(--surface-base) 100%
+    );
 }
 
 @supports (-webkit-touch-callout: none) {
