@@ -1,0 +1,19 @@
+// Shared layout utilities for constrained content shells.
+// Provides a responsive width constraint with clamp-based padding
+// so sections across the site follow the same inner rhythm.
+@mixin section-shell(
+  $padding-block: clamp(3rem, 8vw, 5.5rem),
+  $padding-inline: clamp(1.5rem, 4vw, 3rem)
+) {
+  box-sizing: border-box;
+  width: min(100%, var(--max-content-lg));
+  margin-inline: auto;
+  padding-block: $padding-block;
+  padding-inline: $padding-inline;
+}
+
+// Utility class for templates that prefer to opt-in via markup
+// instead of SCSS modules.
+.u-section-shell {
+  @include section-shell();
+}

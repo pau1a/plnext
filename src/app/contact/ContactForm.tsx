@@ -46,7 +46,12 @@ export default function ContactForm() {
   const showSuccess = state.status === "success";
 
   return (
-    <form ref={formRef} action={formAction} className="form-shell" noValidate>
+    <form
+      ref={formRef}
+      action={formAction}
+      className={clsx("form-shell", styles.formContainer)}
+      noValidate
+    >
       <input type="hidden" name="submittedAt" value={loadedAt} readOnly />
       <div aria-live="polite" className="u-stack-sm" role="status">
         {showSuccess && (
