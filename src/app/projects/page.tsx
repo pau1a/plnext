@@ -107,7 +107,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   const visibleProjects = hasProjects ? projects.slice(state.startIndex, state.endIndex) : [];
 
   return (
-    <PageShell className="motion-fade-in u-pad-block-3xl">
+    <PageShell as="main" className="motion-fade-in u-pad-block-3xl">
       <section className="u-stack u-gap-2xl">
         <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
           <h1 className="heading-display-lg">Projects &amp; Programmes</h1>

@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   if (postError) {
     return (
-      <PageShell className="motion-fade-in u-pad-block-3xl">
+      <PageShell as="main" className="motion-fade-in u-pad-block-3xl">
         <article className="u-stack u-gap-2xl u-max-w-lg u-center">
           <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
             <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">
@@ -129,7 +129,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const resolvedPost = post!;
 
   return (
-    <PageShell className="motion-fade-in u-pad-block-3xl">
+    <PageShell as="main" className="motion-fade-in u-pad-block-3xl">
       <article className="u-stack u-gap-2xl u-max-w-lg u-center">
         <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
           <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">

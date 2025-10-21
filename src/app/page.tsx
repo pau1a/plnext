@@ -109,7 +109,7 @@ export default async function Home() {
         ]}
       />
 
-      <PageShell className={clsx("motion-fade-in", styles.page)}>
+      <PageShell as="main" className={clsx("motion-fade-in", styles.page)}>
         <section className={styles.section} aria-labelledby="services-heading">
           <div className={styles.sectionHeader}>
             <span className={styles.sectionEyebrow}>How we can work together</span>

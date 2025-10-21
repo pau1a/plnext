@@ -212,7 +212,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const nextHref = page.nextCursor ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor) : null;
 
   return (
-    <PageShell className="motion-fade-in u-pad-block-3xl">
+    <PageShell as="main" className="motion-fade-in u-pad-block-3xl">
       <section className="u-stack u-gap-2xl">
         <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
           <h1 className="heading-display-lg">Insights &amp; Updates</h1>
