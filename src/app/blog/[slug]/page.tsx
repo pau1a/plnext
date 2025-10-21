@@ -1,8 +1,10 @@
+import clsx from "clsx";
 import { Suspense } from "react";
 
 import { CommentForm } from "@/components/comment-form";
 import { CommentList } from "@/components/comment-list";
 import { CommentProvider } from "@/components/comment-context";
+import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import { getBlogPost, getBlogPostSummaries, getBlogSlugs } from "@/lib/mdx";
@@ -198,7 +200,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {relatedPosts.length > 0 ? (
           <MotionFade delay={0.1}>
-            <aside className="surface u-pad-xl u-stack u-gap-sm">
+            <aside
+              className={clsx(
+                elevatedSurfaceStyles.elevatedSurface,
+                "u-pad-xl u-stack u-gap-sm",
+              )}
+            >
               <h2 className="heading-subtitle u-text-muted">Keep reading</h2>
               <ul className="u-stack u-gap-sm">
                 {relatedPosts.map((related) => (

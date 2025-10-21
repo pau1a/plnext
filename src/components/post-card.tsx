@@ -14,6 +14,7 @@ import {
   viewportDefaults,
 } from "@/lib/motion";
 
+import elevatedSurfaceStyles from "./elevated-surface.module.scss";
 import styles from "./card.module.scss";
 
 export interface PostCardProps {
@@ -105,7 +106,12 @@ export function PostCard({
 
   return (
     <motion.article
-      className={clsx("surface", "surface--interactive", styles.card, className)}
+      className={clsx(
+        elevatedSurfaceStyles.elevatedSurface,
+        elevatedSurfaceStyles.elevatedSurfaceInteractive,
+        styles.card,
+        className,
+      )}
       variants={variants}
       initial={resolvedInitial}
       whileInView="visible"
@@ -114,7 +120,7 @@ export function PostCard({
       whileTap={tapMotion}
     >
       <Link
-        className={clsx("surface__link", styles.link)}
+        className={clsx(elevatedSurfaceStyles.elevatedSurfaceLink, styles.link)}
         href={href}
         aria-label={`Read blog post: ${summary.title}`}
       >

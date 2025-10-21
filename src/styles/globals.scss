@@ -448,38 +448,6 @@ body.dark .app-shell__header {
   gap: var(--space-sm);
 }
 
-/* Surface system */
-.surface {
-  background-color: var(--surface-elevated);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--surface-border);
-  box-shadow: var(--shadow-sm);
-  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
-  color: inherit;
-}
-
-.surface--interactive:hover,
-.surface--interactive:focus-within {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(20, 184, 166, 0.25);
-}
-
-.surface__link {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: var(--space-xl);
-  color: inherit;
-  text-decoration: none;
-  gap: var(--space-md);
-}
-
-.surface__link:hover,
-.surface__link:focus-visible {
-  color: inherit;
-}
-
 /* Buttons */
 .button {
   --button-bg: var(--color-teal-500);

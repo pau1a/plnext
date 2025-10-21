@@ -1,0 +1,107 @@
+.elevatedSurface {
+  --elevated-surface-radius: 1.75rem;
+  --elevated-surface-bg-light: color-mix(in srgb, #ffffff 82%, var(--color-teal-100) 18%);
+  --elevated-surface-bg-dark: color-mix(in srgb, var(--color-graphite-900) 82%, var(--color-teal-800) 18%);
+  --elevated-surface-border-light: color-mix(in srgb, var(--color-teal-500) 30%, transparent);
+  --elevated-surface-border-dark: color-mix(in srgb, var(--color-teal-200) 40%, transparent);
+  --elevated-surface-shadow-light: 0 28px 60px rgba(15, 23, 42, 0.22);
+  --elevated-surface-shadow-dark: 0 30px 70px rgba(0, 0, 0, 0.55);
+  --elevated-surface-glaze-light: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--color-teal-500) 18%, transparent) 0%,
+    transparent 55%
+  );
+  --elevated-surface-glaze-dark: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--color-teal-300) 20%, transparent) 0%,
+    transparent 55%
+  );
+  --elevated-surface-glaze-opacity: 1;
+  position: relative;
+  border-radius: var(--elevated-surface-radius);
+  background: var(--elevated-surface-bg, var(--elevated-surface-bg-light));
+  border: 1px solid var(--elevated-surface-border, var(--elevated-surface-border-light));
+  box-shadow: var(--elevated-surface-shadow, var(--elevated-surface-shadow-light));
+  color: inherit;
+  isolation: isolate;
+  z-index: 0;
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base),
+    background-color var(--transition-base);
+}
+
+:global(body.dark) :local(.elevatedSurface) {
+  background: var(--elevated-surface-bg-dark);
+  border-color: var(--elevated-surface-border-dark);
+  box-shadow: var(--elevated-surface-shadow-dark);
+  --elevated-surface-glaze: var(--elevated-surface-glaze-dark);
+}
+
+.elevatedSurface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--elevated-surface-glaze, var(--elevated-surface-glaze-light));
+  opacity: var(--elevated-surface-glaze-opacity);
+  z-index: -1;
+}
+
+.elevatedSurfaceInteractive {
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+  will-change: transform;
+}
+
+.elevatedSurfaceInteractive:hover,
+.elevatedSurfaceInteractive:focus-within {
+  transform: translateY(-6px);
+  box-shadow: var(
+    --elevated-surface-shadow-hover,
+    0 32px 72px rgba(15, 23, 42, 0.28)
+  );
+  border-color: var(
+    --elevated-surface-border-hover,
+    color-mix(in srgb, var(--color-teal-500) 45%, transparent)
+  );
+}
+
+:global(body.dark) :local(.elevatedSurfaceInteractive:hover),
+:global(body.dark) :local(.elevatedSurfaceInteractive:focus-within) {
+  box-shadow: var(
+    --elevated-surface-shadow-hover-dark,
+    0 36px 80px rgba(0, 0, 0, 0.6)
+  );
+  border-color: var(
+    --elevated-surface-border-hover-dark,
+    color-mix(in srgb, var(--color-teal-200) 50%, transparent)
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .elevatedSurfaceInteractive:hover,
+  .elevatedSurfaceInteractive:focus-within {
+    transform: none;
+  }
+}
+
+.elevatedSurfaceLink {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: clamp(var(--space-lg), 1.8vw, var(--space-xl));
+  border-radius: inherit;
+  color: inherit;
+  text-decoration: none;
+  gap: var(--space-md);
+}
+
+.elevatedSurfaceLink:hover,
+.elevatedSurfaceLink:focus-visible {
+  color: inherit;
+}

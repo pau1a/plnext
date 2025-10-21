@@ -75,34 +75,8 @@
   flex-direction: column;
   gap: clamp(0.85rem, 2.4vw, 1.25rem);
   padding: clamp(1.75rem, 4vw, 2.35rem);
-  border-radius: 1.75rem;
-  background: color-mix(in srgb, #ffffff 82%, var(--color-teal-100) 18%);
-  box-shadow: 0 28px 60px rgba(15, 23, 42, 0.22);
-  border: 1px solid color-mix(in srgb, var(--color-teal-500) 30%, transparent);
   min-height: 100%;
   height: 100%;
-  isolation: isolate;
-  z-index: 0;
-}
-
-:global(body.dark) .heroCard {
-  background: color-mix(in srgb, var(--color-graphite-900) 82%, var(--color-teal-800) 18%);
-  border-color: color-mix(in srgb, var(--color-teal-200) 40%, transparent);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
-}
-
-.heroCard::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    140deg,
-    color-mix(in srgb, var(--color-teal-500) 18%, transparent) 0%,
-    transparent 55%
-  );
-  pointer-events: none;
-  z-index: -1;
 }
 
 .heroCardGlyph {

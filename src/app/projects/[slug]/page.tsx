@@ -1,3 +1,6 @@
+import clsx from "clsx";
+
+import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import {
@@ -117,7 +120,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         {otherProjects.length > 0 ? (
           <MotionFade delay={0.05}>
-            <aside className="surface u-pad-xl u-stack u-gap-sm">
+            <aside
+              className={clsx(
+                elevatedSurfaceStyles.elevatedSurface,
+                "u-pad-xl u-stack u-gap-sm",
+              )}
+            >
               <h2 className="heading-subtitle u-text-muted">
                 More client work
               </h2>

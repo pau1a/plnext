@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 
+import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
 import Hero from "@/components/hero";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
@@ -139,7 +140,10 @@ export default async function Home() {
               {services.map((service) => (
                 <article
                   key={service.title}
-                  className={clsx("surface", styles.serviceCard)}
+                  className={clsx(
+                    elevatedSurfaceStyles.elevatedSurface,
+                    styles.serviceCard,
+                  )}
                 >
                   <span className={styles.serviceIcon} aria-hidden="true">
                     <i className={clsx("fa-solid", service.icon)} />
