@@ -1,3 +1,4 @@
+import PageShell from "@/components/layout/PageShell";
 import { Pagination } from "@/components/pagination";
 import { ProjectCard } from "@/components/project-card";
 import cardStyles from "@/components/card.module.scss";
@@ -106,7 +107,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   const visibleProjects = hasProjects ? projects.slice(state.startIndex, state.endIndex) : [];
 
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
+    <PageShell className="motion-fade-in u-pad-block-3xl">
       <section className="u-stack u-gap-2xl">
         <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
           <h1 className="heading-display-lg">Projects &amp; Programmes</h1>
@@ -135,6 +136,6 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
           />
         ) : null}
       </section>
-    </div>
+    </PageShell>
   );
 }

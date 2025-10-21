@@ -2,6 +2,8 @@
 import clsx from "clsx";
 import type { Metadata } from "next";
 
+import PageShell from "@/components/layout/PageShell";
+
 import ContactColorCalibrator from "./ContactColorCalibrator";
 import ContactForm from "./ContactForm";
 import styles from "./contact.module.scss";
@@ -34,24 +36,26 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <section className={styles.contactRoot}>
-      <ContactColorCalibrator
-        imgSrc="https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png"
-        targetSelector={`.${styles.contactRoot}`}
-        sampleHeightPct={12}
-      />
-      <div className={styles.stage}>
-        <div className={styles.card}>
-          <header className={styles.header}>
-            <h1 className={clsx("heading-section", styles.hTitle)}>Contact</h1>
-            <p className={styles.preface}>
-              If you’ve got something real to say, this lands straight in my inbox.
-            </p>
-          </header>
-          <ContactForm />
+    <PageShell fullWidth>
+      <section className={styles.contactRoot}>
+        <ContactColorCalibrator
+          imgSrc="https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png"
+          targetSelector={`.${styles.contactRoot}`}
+          sampleHeightPct={12}
+        />
+        <div className={styles.stage}>
+          <div className={styles.card}>
+            <header className={styles.header}>
+              <h1 className={clsx("heading-section", styles.hTitle)}>Contact</h1>
+              <p className={styles.preface}>
+                If you’ve got something real to say, this lands straight in my inbox.
+              </p>
+            </header>
+            <ContactForm />
+          </div>
         </div>
-      </div>
-      <div aria-hidden="true" className={styles.belowBlend} />
-    </section>
+        <div aria-hidden="true" className={styles.belowBlend} />
+      </section>
+    </PageShell>
   );
 }
