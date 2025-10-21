@@ -1,4 +1,5 @@
 @use "../../styles/utilities.scss" as utils;
+@use "../../styles/accents.scss" as accents;
 
 :root {
   --moor-fade-color: #0b0f12;
@@ -74,12 +75,72 @@
   }
 }
 
+.hero {
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  color: #ffffff;
+  background: color-mix(in srgb, var(--surface-base) 80%, transparent);
+  overflow: hidden;
+  @include accents.brand-gradient-overlay;
+}
+
+.heroInner {
+  @include utils.section-shell(
+    $padding-block: clamp(4.5rem, 12vw, 8rem),
+    $padding-inline: clamp(1.5rem, 4.5vw, 3.5rem)
+  );
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(1.2rem, 3.5vw, 2rem);
+  max-width: min(56ch, 100%);
+}
+
+.heroEyebrow {
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #ffffff 88%, rgba(20, 184, 166, 0.45) 12%);
+}
+
+.heroTitle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 2vw, 1rem);
+  font-size: clamp(2.85rem, 6vw, 4rem);
+  line-height: 1.05;
+  font-weight: 700;
+}
+
+.heroTitleWord {
+  @include accents.brand-dot-label();
+}
+
+.heroDivider {
+  @include accents.brand-accent-divider(
+    $height: 0.25rem,
+    $width: clamp(3.5rem, 18vw, 6.5rem)
+  );
+  opacity: 0.92;
+}
+
+.heroLead {
+  font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+  line-height: 1.65;
+  color: color-mix(in srgb, #ffffff 88%, rgba(20, 184, 166, 0.28) 12%);
+}
+
+:global(body.dark) :local(.heroLead) {
+  color: color-mix(in srgb, #ffffff 85%, rgba(45, 212, 191, 0.4) 15%);
+}
+
 .stage {
   position: relative;
   z-index: 2;
   display: grid;
   place-items: center;
-  padding-block: 10vh 12vh;
+  padding-block: clamp(3rem, 7vh, 5rem) clamp(6rem, 12vh, 9rem);
 }
 
 .belowBlend {
@@ -173,38 +234,16 @@
   margin-bottom: var(--space-lg);
 }
 
-.hTitle {
-  position: relative;
-  padding-left: 1.1rem;
-  letter-spacing: 0.005em;
-  padding-bottom: 0.5rem;
-  font-weight: 700;
-  font-size: clamp(2.75rem, 5.6vw, 3.6rem);
-  line-height: 1.05;
+.formTitle {
+  font-weight: 650;
+  font-size: clamp(1.85rem, 4.6vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--text-primary) 80%, #ffffff 20%);
 }
 
-.hTitle::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.58em;
-  width: 7px;
-  height: 7px;
-  border-radius: 9999px;
-  background: var(--color-crimson-500);
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-crimson-500) 22%, transparent);
-}
-
-.hTitle::after {
-  content: "";
-  position: absolute;
-  left: 1.1rem;
-  bottom: -0.35rem;
-  width: clamp(3.8rem, 22vw, 6.8rem);
-  height: 0.22rem;
-  border-radius: 9999px;
-  background: var(--color-crimson-500);
-  opacity: 0.9;
+:global(body.dark) :local(.formTitle) {
+  color: color-mix(in srgb, #ffffff 82%, var(--text-primary) 18%);
 }
 
 .preface {
