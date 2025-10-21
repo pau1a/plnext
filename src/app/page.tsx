@@ -1,3 +1,4 @@
+import PageShell from "@/components/layout/PageShell";
 import clsx from "clsx";
 import Link from "next/link";
 
@@ -108,7 +109,7 @@ export default async function Home() {
         ]}
       />
 
-      <div className={clsx("l-container motion-fade-in", styles.page)}>
+      <PageShell contentClassName={clsx("motion-fade-in", styles.page)}>
         <section className={styles.section} aria-labelledby="services-heading">
           <div className={styles.sectionHeader}>
             <span className={styles.sectionEyebrow}>How we can work together</span>
@@ -231,7 +232,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
-      </div>
+      </PageShell>
     </>
   );
 }

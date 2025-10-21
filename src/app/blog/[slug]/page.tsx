@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import PageShell from "@/components/layout/PageShell";
 import { CommentForm } from "@/components/comment-form";
 import { CommentList } from "@/components/comment-list";
 import { CommentProvider } from "@/components/comment-context";
@@ -103,7 +104,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   if (postError) {
     return (
-      <div className="l-container motion-fade-in u-pad-block-3xl">
+      <PageShell contentClassName="motion-fade-in u-pad-block-3xl">
         <article className="u-stack u-gap-2xl u-max-w-lg u-center">
           <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
             <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">
@@ -121,14 +122,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             Something went wrong while loading the article. Our team has been notified.
           </p>
         </article>
-      </div>
+      </PageShell>
     );
   }
 
   const resolvedPost = post!;
 
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
+    <PageShell contentClassName="motion-fade-in u-pad-block-3xl">
       <article className="u-stack u-gap-2xl u-max-w-lg u-center">
         <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
           <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">
@@ -186,6 +187,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </aside>
         ) : null}
       </article>
-    </div>
+    </PageShell>
   );
 }
