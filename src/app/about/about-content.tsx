@@ -9,6 +9,8 @@ import {
   useRevealOnView,
 } from "@/lib/motion";
 
+import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
+
 import styles from "./about.module.scss";
 
 const photoUrl =
@@ -178,6 +180,7 @@ export default function AboutPageContent({
             <article
               key={trait.key}
               className={clsx(
+                elevatedSurfaceStyles.elevatedSurface,
                 styles.heroCard,
                 shouldAnimate && "motionFade",
                 shouldAnimate && heroReady && "motionFadeReady",

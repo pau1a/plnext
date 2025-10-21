@@ -15,6 +15,7 @@ import {
   viewportDefaults,
 } from "@/lib/motion";
 
+import elevatedSurfaceStyles from "./elevated-surface.module.scss";
 import styles from "./card.module.scss";
 
 export interface ProjectCardProps {
@@ -105,7 +106,12 @@ export function ProjectCard({
 
   return (
     <motion.article
-      className={clsx("surface", "surface--interactive", styles.card, className)}
+      className={clsx(
+        elevatedSurfaceStyles.elevatedSurface,
+        elevatedSurfaceStyles.elevatedSurfaceInteractive,
+        styles.card,
+        className,
+      )}
       variants={variants}
       initial={resolvedInitial}
       whileInView="visible"
@@ -114,7 +120,7 @@ export function ProjectCard({
       whileTap={tapMotion}
     >
       <Link
-        className={clsx("surface__link", styles.link)}
+        className={clsx(elevatedSurfaceStyles.elevatedSurfaceLink, styles.link)}
         href={href}
         aria-label={`View project case study: ${summary.title}`}
       >

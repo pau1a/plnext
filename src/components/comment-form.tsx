@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import React, { useId, useMemo, useState } from "react";
 
+import elevatedSurfaceStyles from "./elevated-surface.module.scss";
 import { useCommentContext } from "./comment-context";
 import styles from "./comment-list.module.scss";
 
@@ -86,7 +87,11 @@ export function CommentForm({ slug, className }: CommentFormProps) {
 
   return (
     <form
-      className={clsx("surface u-pad-xl u-stack u-gap-md", className)}
+      className={clsx(
+        elevatedSurfaceStyles.elevatedSurface,
+        "u-pad-xl u-stack u-gap-md",
+        className,
+      )}
       onSubmit={handleSubmit}
       aria-describedby={status === "success" || status === "error" ? "comment-form-status" : undefined}
     >

@@ -2,6 +2,7 @@
 import clsx from "clsx";
 import type { Metadata } from "next";
 
+import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 
@@ -46,7 +47,7 @@ export default function ContactPage() {
         />
         <div className={styles.stage}>
           <MotionFade delay={0.05}>
-            <div className={styles.card}>
+            <div className={clsx(elevatedSurfaceStyles.elevatedSurface, styles.card)}>
               <MotionFade delay={0.15}>
                 <div>
                   <header className={styles.header}>
