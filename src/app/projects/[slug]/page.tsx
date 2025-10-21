@@ -1,3 +1,4 @@
+import PageShell from "@/components/layout/PageShell";
 import { getProjectDocument, getProjectSlugs, getProjectSummaries } from "@/lib/mdx";
 import { format } from "date-fns";
 import type { Metadata } from "next";
@@ -50,7 +51,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const otherProjects = (await getProjectSummaries()).filter((item) => item.slug !== project.slug);
 
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
+    <PageShell as="main" className="motion-fade-in u-pad-block-3xl">
       <article className="u-stack u-gap-2xl u-max-w-lg u-center">
         <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
           <Link className="u-inline-flex u-items-center u-gap-xs" href="/projects">
@@ -109,6 +110,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </aside>
         ) : null}
       </article>
-    </div>
+    </PageShell>
   );
 }

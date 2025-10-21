@@ -1,3 +1,4 @@
+import PageShell from "@/components/layout/PageShell";
 import { PostCard } from "@/components/post-card";
 import cardStyles from "@/components/card.module.scss";
 import paginationStyles from "@/components/pagination.module.scss";
@@ -211,7 +212,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const nextHref = page.nextCursor ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor) : null;
 
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
+    <PageShell as="main" className="motion-fade-in u-pad-block-3xl">
       <section className="u-stack u-gap-2xl">
         <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
           <h1 className="heading-display-lg">Insights &amp; Updates</h1>
@@ -273,6 +274,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </nav>
         ) : null}
       </section>
-    </div>
+    </PageShell>
   );
 }

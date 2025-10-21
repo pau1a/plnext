@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import PageShell from "@/components/layout/PageShell";
 import type { CommentStatus } from "@/lib/supabase/service";
 import { fetchModerationQueue } from "@/lib/moderation/comments";
 
@@ -70,7 +71,7 @@ export default async function CommentsPage({ searchParams }: CommentsPageProps) 
   const baseUrl = new URL("/admin/comments", "http://localhost");
 
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
+    <PageShell className="motion-fade-in u-pad-block-3xl">
       <div className="u-stack u-gap-2xl">
         <section className="u-stack u-gap-lg">
           <div className="u-flex u-flex-wrap u-gap-sm" role="tablist" aria-label="Status filters">
@@ -126,6 +127,6 @@ export default async function CommentsPage({ searchParams }: CommentsPageProps) 
           totalCount={queue.totalCount}
         />
       </div>
-    </div>
+    </PageShell>
   );
 }
