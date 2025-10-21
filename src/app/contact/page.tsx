@@ -1,6 +1,8 @@
 // src/app/contact/page.tsx
 import type { Metadata } from "next";
 
+import PageShell from "@/components/layout/PageShell";
+
 import ContactForm from "./contact-form";
 
 export const metadata: Metadata = {
@@ -31,8 +33,8 @@ export const metadata: Metadata = {
 
 export default function Contact() {
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
+    <PageShell contentClassName="motion-fade-in u-pad-block-3xl">
       <ContactForm />
-    </div>
+    </PageShell>
   );
 }

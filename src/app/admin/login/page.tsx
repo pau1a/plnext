@@ -1,3 +1,4 @@
+import PageShell from "@/components/layout/PageShell";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -39,7 +40,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   }
 
   return (
-    <div className="l-container motion-fade-in u-pad-block-3xl">
+    <PageShell contentClassName="motion-fade-in u-pad-block-3xl">
       <div className="u-stack u-gap-xl">
         <h1 className="u-text-3xl u-font-semibold">Admin sign-in</h1>
         <p className="u-text-muted u-max-w-prose">
@@ -51,6 +52,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <Link href="/">Return to site home</Link>
         </p>
       </div>
-    </div>
+    </PageShell>
   );
 }
