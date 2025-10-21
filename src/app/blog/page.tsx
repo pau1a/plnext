@@ -1,4 +1,5 @@
 import PageShell from "@/components/layout/PageShell";
+import MotionFade from "@/components/motion/MotionFade";
 import { PostCard } from "@/components/post-card";
 import cardStyles from "@/components/card.module.scss";
 import paginationStyles from "@/components/pagination.module.scss";
@@ -21,20 +22,23 @@ const BASE_PATH = "/blog";
 export const revalidate = BLOG_INDEX_REVALIDATE_SECONDS;
 
 function resolvePageSize() {
-  const raw = process.env.BLOG_PAGE_SIZE ?? process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE;
+  const raw =
+    process.env.BLOG_PAGE_SIZE ?? process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE;
   const parsed = Number.parseInt(raw ?? "", 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 6;
 }
 
 const BASE_METADATA: Metadata = {
   title: "Blog",
-  description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
+  description:
+    "Updates on cybersecurity, AI operations, and the engineering work behind them.",
   alternates: {
     canonical: BASE_PATH,
   },
   openGraph: {
     title: "Blog",
-    description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
+    description:
+      "Updates on cybersecurity, AI operations, and the engineering work behind them.",
     url: BASE_PATH,
     images: [
       {
@@ -47,7 +51,8 @@ const BASE_METADATA: Metadata = {
   },
   twitter: {
     title: "Blog",
-    description: "Updates on cybersecurity, AI operations, and the engineering work behind them.",
+    description:
+      "Updates on cybersecurity, AI operations, and the engineering work behind them.",
     images: ["/window.svg"],
   },
 };
@@ -63,7 +68,9 @@ interface BlogPageProps {
   searchParams?: SearchParamsInput;
 }
 
-function isURLSearchParamsLike(value: unknown): value is URLSearchParams | ReadonlyURLSearchParams {
+function isURLSearchParamsLike(
+  value: unknown,
+): value is URLSearchParams | ReadonlyURLSearchParams {
   return Boolean(
     value &&
       typeof (value as URLSearchParams).entries === "function" &&
@@ -71,7 +78,9 @@ function isURLSearchParamsLike(value: unknown): value is URLSearchParams | Reado
   );
 }
 
-async function resolveSearchParams(searchParams: SearchParamsInput): Promise<URLSearchParams> {
+async function resolveSearchParams(
+  searchParams: SearchParamsInput,
+): Promise<URLSearchParams> {
   if (!searchParams) {
     return new URLSearchParams();
   }
@@ -127,10 +136,16 @@ async function getSearchParamValue(
   return values.length === 1 ? values[0] : values;
 }
 
-export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: BlogPageProps): Promise<Metadata> {
   const PAGE_SIZE = resolvePageSize();
-  const after = parseCursorParam(await getSearchParamValue(searchParams, BLOG_AFTER_PARAM));
-  const before = parseCursorParam(await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM));
+  const after = parseCursorParam(
+    await getSearchParamValue(searchParams, BLOG_AFTER_PARAM),
+  );
+  const before = parseCursorParam(
+    await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM),
+  );
   const canonicalPath = before
     ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, before)
     : after
@@ -190,8 +205,12 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const PAGE_SIZE = resolvePageSize();
-  const after = parseCursorParam(await getSearchParamValue(searchParams, BLOG_AFTER_PARAM));
-  const before = parseCursorParam(await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM));
+  const after = parseCursorParam(
+    await getSearchParamValue(searchParams, BLOG_AFTER_PARAM),
+  );
+  const before = parseCursorParam(
+    await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM),
+  );
 
   let page;
   try {
@@ -209,17 +228,22 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const previousHref = page.prevCursor
     ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, page.prevCursor)
     : null;
-  const nextHref = page.nextCursor ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor) : null;
+  const nextHref = page.nextCursor
+    ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor)
+    : null;
 
   return (
-    <PageShell as="main" className="motion-fade-in u-pad-block-3xl">
+    <PageShell as="main" className="u-pad-block-3xl">
       <section className="u-stack u-gap-2xl">
-        <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
-          <h1 className="heading-display-lg">Insights &amp; Updates</h1>
-          <p className="u-text-lead u-center u-max-w-md">
-            Notes from the field on cybersecurity, AI, and practical engineering.
-          </p>
-        </header>
+        <MotionFade>
+          <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
+            <h1 className="heading-display-lg">Insights &amp; Updates</h1>
+            <p className="u-text-lead u-center u-max-w-md">
+              Notes from the field on cybersecurity, AI, and practical
+              engineering.
+            </p>
+          </header>
+        </MotionFade>
 
         {hasPosts ? (
           <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
@@ -227,51 +251,68 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               <PostCard
                 key={post.slug}
                 summary={post}
-                commentCount={commentCounts ? commentCounts[post.slug] ?? 0 : undefined}
+                commentCount={
+                  commentCounts ? (commentCounts[post.slug] ?? 0) : undefined
+                }
               />
             ))}
           </div>
         ) : (
-          <p className="u-text-center u-text-muted">New writing is on the way.</p>
+          <MotionFade>
+            <p className="u-text-center u-text-muted">
+              New writing is on the way.
+            </p>
+          </MotionFade>
         )}
 
         {hasPosts ? (
-          <nav aria-label="Pagination" className={paginationStyles.pagination}>
-            <ul className={paginationStyles.list}>
-              <li className={paginationStyles.item}>
-                {previousHref ? (
-                  <Link
-                    className={paginationStyles.button}
-                    href={previousHref}
-                    aria-label="View newer posts"
-                    prefetch={false}
-                  >
-                    Newer posts
-                  </Link>
-                ) : (
-                  <span className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`} aria-disabled="true">
-                    Newer posts
-                  </span>
-                )}
-              </li>
-              <li className={paginationStyles.item}>
-                {nextHref ? (
-                  <Link
-                    className={paginationStyles.button}
-                    href={nextHref}
-                    aria-label="View older posts"
-                    prefetch={false}
-                  >
-                    Older posts
-                  </Link>
-                ) : (
-                  <span className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`} aria-disabled="true">
-                    Older posts
-                  </span>
-                )}
-              </li>
-            </ul>
-          </nav>
+          <MotionFade delay={0.05}>
+            <nav
+              aria-label="Pagination"
+              className={paginationStyles.pagination}
+            >
+              <ul className={paginationStyles.list}>
+                <li className={paginationStyles.item}>
+                  {previousHref ? (
+                    <Link
+                      className={paginationStyles.button}
+                      href={previousHref}
+                      aria-label="View newer posts"
+                      prefetch={false}
+                    >
+                      Newer posts
+                    </Link>
+                  ) : (
+                    <span
+                      className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`}
+                      aria-disabled="true"
+                    >
+                      Newer posts
+                    </span>
+                  )}
+                </li>
+                <li className={paginationStyles.item}>
+                  {nextHref ? (
+                    <Link
+                      className={paginationStyles.button}
+                      href={nextHref}
+                      aria-label="View older posts"
+                      prefetch={false}
+                    >
+                      Older posts
+                    </Link>
+                  ) : (
+                    <span
+                      className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`}
+                      aria-disabled="true"
+                    >
+                      Older posts
+                    </span>
+                  )}
+                </li>
+              </ul>
+            </nav>
+          </MotionFade>
         ) : null}
       </section>
     </PageShell>

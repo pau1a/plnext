@@ -1,7 +1,8 @@
-import PageShell from "@/components/layout/PageShell";
 import { Pagination } from "@/components/pagination";
 import { ProjectCard } from "@/components/project-card";
 import cardStyles from "@/components/card.module.scss";
+import PageShell from "@/components/layout/PageShell";
+import MotionFade from "@/components/motion/MotionFade";
 import { getProjectSummaries } from "@/lib/mdx";
 import {
   buildPageHref,
@@ -23,7 +24,8 @@ const BASE_METADATA: Metadata = {
   },
   openGraph: {
     title: "Projects",
-    description: "A snapshot of security and AI programmes delivered end-to-end.",
+    description:
+      "A snapshot of security and AI programmes delivered end-to-end.",
     url: BASE_PATH,
     images: [
       {
@@ -36,12 +38,16 @@ const BASE_METADATA: Metadata = {
   },
   twitter: {
     title: "Projects",
-    description: "A snapshot of security and AI programmes delivered end-to-end.",
+    description:
+      "A snapshot of security and AI programmes delivered end-to-end.",
     images: ["/window.svg"],
   },
 };
 
-type SearchParamsInput = SearchParamRecord | Promise<SearchParamRecord> | undefined;
+type SearchParamsInput =
+  | SearchParamRecord
+  | Promise<SearchParamRecord>
+  | undefined;
 
 interface ProjectsPageProps {
   searchParams?: SearchParamsInput;
@@ -54,13 +60,17 @@ async function normalizeSearchParams(
     return undefined;
   }
 
-  const candidate = searchParams as Promise<SearchParamRecord> | SearchParamRecord;
+  const candidate = searchParams as
+    | Promise<SearchParamRecord>
+    | SearchParamRecord;
   return typeof (candidate as Promise<SearchParamRecord>)?.then === "function"
     ? await (candidate as Promise<SearchParamRecord>)
     : (candidate as SearchParamRecord);
 }
 
-export async function generateMetadata({ searchParams }: ProjectsPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: ProjectsPageProps): Promise<Metadata> {
   const projects = await getProjectSummaries();
   const totalCount = projects.length;
   const resolvedSearchParams = await normalizeSearchParams(searchParams);
@@ -71,10 +81,18 @@ export async function generateMetadata({ searchParams }: ProjectsPageProps): Pro
     pageParam: PAGE_PARAM,
   });
 
-  const previous = state.currentPage > 1 ? buildPageHref(BASE_PATH, state.currentPage - 1, PAGE_PARAM) : undefined;
+  const previous =
+    state.currentPage > 1
+      ? buildPageHref(BASE_PATH, state.currentPage - 1, PAGE_PARAM)
+      : undefined;
   const hasNext = totalCount > 0 && state.currentPage < state.totalPages;
-  const next = hasNext ? buildPageHref(BASE_PATH, state.currentPage + 1, PAGE_PARAM) : undefined;
-  const canonicalPath = state.currentPage > 1 ? buildPageHref(BASE_PATH, state.currentPage, PAGE_PARAM) : BASE_PATH;
+  const next = hasNext
+    ? buildPageHref(BASE_PATH, state.currentPage + 1, PAGE_PARAM)
+    : undefined;
+  const canonicalPath =
+    state.currentPage > 1
+      ? buildPageHref(BASE_PATH, state.currentPage, PAGE_PARAM)
+      : BASE_PATH;
 
   return {
     ...BASE_METADATA,
@@ -92,7 +110,9 @@ export async function generateMetadata({ searchParams }: ProjectsPageProps): Pro
   };
 }
 
-export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
+export default async function ProjectsPage({
+  searchParams,
+}: ProjectsPageProps) {
   const projects = await getProjectSummaries();
   const totalCount = projects.length;
   const resolvedSearchParams = await normalizeSearchParams(searchParams);
@@ -104,17 +124,22 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   });
 
   const hasProjects = totalCount > 0;
-  const visibleProjects = hasProjects ? projects.slice(state.startIndex, state.endIndex) : [];
+  const visibleProjects = hasProjects
+    ? projects.slice(state.startIndex, state.endIndex)
+    : [];
 
   return (
-    <PageShell as="main" className="motion-fade-in u-pad-block-3xl">
+    <PageShell as="main" className="u-pad-block-3xl">
       <section className="u-stack u-gap-2xl">
-        <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
-          <h1 className="heading-display-lg">Projects &amp; Programmes</h1>
-          <p className="u-text-lead u-center u-max-w-md">
-            Selected engagements that blend cyber operations, automation, and measurable business outcomes.
-          </p>
-        </header>
+        <MotionFade>
+          <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
+            <h1 className="heading-display-lg">Projects &amp; Programmes</h1>
+            <p className="u-text-lead u-center u-max-w-md">
+              Selected engagements that blend cyber operations, automation, and
+              measurable business outcomes.
+            </p>
+          </header>
+        </MotionFade>
 
         {hasProjects ? (
           <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridProjects}`}>
@@ -123,17 +148,23 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
             ))}
           </div>
         ) : (
-          <p className="u-text-center u-text-muted">Project case studies are coming soon.</p>
+          <MotionFade>
+            <p className="u-text-center u-text-muted">
+              Project case studies are coming soon.
+            </p>
+          </MotionFade>
         )}
 
         {hasProjects ? (
-          <Pagination
-            totalCount={totalCount}
-            pageSize={state.pageSize}
-            currentPage={state.currentPage}
-            basePath={BASE_PATH}
-            pageParam={PAGE_PARAM}
-          />
+          <MotionFade delay={0.05}>
+            <Pagination
+              totalCount={totalCount}
+              pageSize={state.pageSize}
+              currentPage={state.currentPage}
+              basePath={BASE_PATH}
+              pageParam={PAGE_PARAM}
+            />
+          </MotionFade>
         ) : null}
       </section>
     </PageShell>

@@ -24,7 +24,11 @@ function SubmitButton() {
   );
 }
 
-export default function ContactForm() {
+type ContactFormProps = {
+  className?: string;
+};
+
+export default function ContactForm({ className }: ContactFormProps = {}) {
   const [state, formAction] = useActionState(sendMessage, initialState);
   const [loadedAt, setLoadedAt] = useState(() => new Date().toISOString());
   const formRef = useRef<HTMLFormElement>(null);
@@ -49,7 +53,7 @@ export default function ContactForm() {
     <form
       ref={formRef}
       action={formAction}
-      className={clsx("form-shell", styles.formContainer)}
+      className={clsx("form-shell", styles.formContainer, className)}
       noValidate
     >
       <input type="hidden" name="submittedAt" value={loadedAt} readOnly />

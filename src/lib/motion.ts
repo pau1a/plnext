@@ -1,100 +1,110 @@
-import { useMemo } from "react";
-import type { TargetAndTransition, Transition, Variants } from "framer-motion";
-import { useReducedMotion } from "framer-motion";
+"use client";
 
-export const motionDurations = {
-  xshort: 0.12,
-  short: 0.2,
-  base: 0.35,
-  long: 0.6,
-} as const;
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
-export const motionEasings = {
-  standard: [0.2, 0, 0.2, 1] as Transition["ease"],
-  emphasized: [0.16, 1, 0.3, 1] as Transition["ease"],
-} as const;
-
-export type EntranceConfig = {
-  delay?: number;
-  duration?: number;
-  offset?: number;
+export type MotionVars = CSSProperties & {
+  "--motion-delay"?: string;
+  "--motion-duration"?: string;
+  "--motion-ease"?: string;
+  "--motion-offset"?: string;
 };
 
-export const viewportDefaults = {
-  once: true,
-  amount: 0.35,
-  margin: "0px 0px -60px 0px",
-} as const;
+export function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-const zeroTransition: Transition = { duration: 0 };
-
-export function createFadeInVariants({
-  delay = 0,
-  duration = motionDurations.base,
-}: Omit<EntranceConfig, "offset"> = {}): Variants {
-  return {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delay,
-        duration,
-        ease: motionEasings.standard,
-      },
-    },
-  };
-}
-
-export function createFadeInUpVariants({
-  delay = 0,
-  duration = motionDurations.long,
-  offset = 32,
-}: EntranceConfig = {}): Variants {
-  return {
-    hidden: {
-      opacity: 0,
-      y: offset,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay,
-        duration,
-        ease: motionEasings.emphasized,
-      },
-    },
-  };
-}
-
-export function useMotionVariants(variants: Variants) {
-  const shouldReduceMotion = useReducedMotion();
-
-  const resolvedVariants = useMemo(() => {
-    if (!shouldReduceMotion) {
-      return variants;
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) {
+      return;
     }
 
-    const visible = variants.visible;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    if (typeof visible === "function") {
-      return variants;
+    const updatePreference = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    updatePreference();
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", updatePreference);
+      return () => mediaQuery.removeEventListener("change", updatePreference);
     }
 
-    const neutralState: TargetAndTransition =
-      visible && typeof visible === "object"
-        ? { ...visible, transition: zeroTransition }
-        : { opacity: 1, transition: zeroTransition };
+    mediaQuery.addListener(updatePreference);
 
-    return {
-      ...variants,
-      hidden: neutralState,
-      visible: neutralState,
-    } satisfies Variants;
-  }, [shouldReduceMotion, variants]);
+    return () => mediaQuery.removeListener(updatePreference);
+  }, []);
+
+  return prefersReducedMotion;
+}
+
+export function useRevealOnView<T extends HTMLElement>(
+  enabled: boolean,
+  options: IntersectionObserverInit,
+) {
+  const ref = useRef<T | null>(null);
+  const [isVisible, setIsVisible] = useState(!enabled);
+
+  useEffect(() => {
+    if (!enabled) {
+      setIsVisible(true);
+      return;
+    }
+
+    if (typeof window === "undefined" || !window.IntersectionObserver) {
+      setIsVisible(true);
+      return;
+    }
+
+    const target = ref.current;
+
+    if (!target) {
+      return;
+    }
+
+    let didCancel = false;
+
+    const observer = new IntersectionObserver((entries, observerRef) => {
+      entries.forEach((entry) => {
+        if (!didCancel && entry.isIntersecting) {
+          setIsVisible(true);
+          observerRef.disconnect();
+        }
+      });
+    }, options);
+
+    observer.observe(target);
+
+    return () => {
+      didCancel = true;
+      observer.disconnect();
+    };
+  }, [enabled, options]);
+
+  return useMemo(() => ({ ref, isVisible }) as const, [isVisible]);
+}
+
+export function createMotionVars(
+  shouldAnimate: boolean,
+  delay: number,
+  offset = 10,
+  duration = 0.4,
+): MotionVars | undefined {
+  if (!shouldAnimate) {
+    return undefined;
+  }
 
   return {
-    variants: resolvedVariants,
-    shouldReduceMotion,
-  } as const;
+    "--motion-delay": `${delay}s`,
+    "--motion-duration": `${duration}s`,
+    "--motion-ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "--motion-offset": `${offset}px`,
+  } satisfies MotionVars;
 }
+

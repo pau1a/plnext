@@ -3,6 +3,7 @@ import clsx from "clsx";
 import type { Metadata } from "next";
 
 import PageShell from "@/components/layout/PageShell";
+import MotionFade from "@/components/motion/MotionFade";
 
 import ContactColorCalibrator from "./ContactColorCalibrator";
 import ContactForm from "./ContactForm";
@@ -44,15 +45,24 @@ export default function ContactPage() {
           sampleHeightPct={12}
         />
         <div className={styles.stage}>
-          <div className={styles.card}>
-            <header className={styles.header}>
-              <h1 className={clsx("heading-section", styles.hTitle)}>Contact</h1>
-              <p className={styles.preface}>
-                If you’ve got something real to say, this lands straight in my inbox.
-              </p>
-            </header>
-            <ContactForm />
-          </div>
+          <MotionFade delay={0.05}>
+            <div className={styles.card}>
+              <MotionFade delay={0.15}>
+                <div>
+                  <header className={styles.header}>
+                    <h1 className={clsx("heading-section", styles.hTitle)}>
+                      Contact
+                    </h1>
+                    <p className={styles.preface}>
+                      If you’ve got something real to say, this lands straight
+                      in my inbox.
+                    </p>
+                  </header>
+                  <ContactForm />
+                </div>
+              </MotionFade>
+            </div>
+          </MotionFade>
         </div>
         <div aria-hidden="true" className={styles.belowBlend} />
       </section>
