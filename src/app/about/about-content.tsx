@@ -1,13 +1,13 @@
 "use client";
 
 import clsx from "clsx";
+import { useEffect, useMemo, useState } from "react";
+
 import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-} from "react";
+  createMotionVars,
+  usePrefersReducedMotion,
+  useRevealOnView,
+} from "@/lib/motion";
 
 import styles from "./about.module.scss";
 
@@ -37,108 +37,6 @@ const heroTraits = [
     glyph: "🧭",
   },
 ] as const;
-
-type MotionVars = CSSProperties & {
-  "--motion-delay"?: string;
-  "--motion-duration"?: string;
-  "--motion-ease"?: string;
-  "--motion-offset"?: string;
-};
-
-function usePrefersReducedMotion() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) {
-      return;
-    }
-
-    const mediaQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
-
-    const updatePreference = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    updatePreference();
-
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener("change", updatePreference);
-      return () => mediaQuery.removeEventListener("change", updatePreference);
-    }
-
-    mediaQuery.addListener(updatePreference);
-
-    return () => mediaQuery.removeListener(updatePreference);
-  }, []);
-
-  return prefersReducedMotion;
-}
-
-function useRevealOnView<T extends HTMLElement>(
-  enabled: boolean,
-  options: IntersectionObserverInit,
-) {
-  const ref = useRef<T | null>(null);
-  const [isVisible, setIsVisible] = useState(!enabled);
-
-  useEffect(() => {
-    if (!enabled) {
-      setIsVisible(true);
-      return;
-    }
-
-    if (typeof window === "undefined" || !window.IntersectionObserver) {
-      setIsVisible(true);
-      return;
-    }
-
-    const target = ref.current;
-
-    if (!target) {
-      return;
-    }
-
-    let didCancel = false;
-
-    const observer = new IntersectionObserver((entries, observerRef) => {
-      entries.forEach((entry) => {
-        if (!didCancel && entry.isIntersecting) {
-          setIsVisible(true);
-          observerRef.disconnect();
-        }
-      });
-    }, options);
-
-    observer.observe(target);
-
-    return () => {
-      didCancel = true;
-      observer.disconnect();
-    };
-  }, [enabled, options]);
-
-  return { ref, isVisible } as const;
-}
-
-function createMotionVars(
-  shouldAnimate: boolean,
-  delay: number,
-  offset = 10,
-  duration = 0.4,
-): MotionVars | undefined {
-  if (!shouldAnimate) {
-    return undefined;
-  }
-
-  return {
-    "--motion-delay": `${delay}s`,
-    "--motion-duration": `${duration}s`,
-    "--motion-ease": "cubic-bezier(0.16, 1, 0.3, 1)",
-    "--motion-offset": `${offset}px`,
-  } satisfies MotionVars;
-}
 
 type AboutPageContentProps = {
   badges: readonly string[];
@@ -188,8 +86,8 @@ export default function AboutPageContent({
       <section
         className={clsx(
           styles.hero,
-          shouldAnimate && styles.motionFade,
-          shouldAnimate && heroReady && styles.motionFadeReady,
+          shouldAnimate && "motionFade",
+          shouldAnimate && heroReady && "motionFadeReady",
         )}
         style={createMotionVars(shouldAnimate, 0, 0, 0.6)}
       >
@@ -198,8 +96,8 @@ export default function AboutPageContent({
             <p
               className={clsx(
                 styles.eyebrow,
-                shouldAnimate && styles.motionFade,
-                shouldAnimate && heroReady && styles.motionFadeReady,
+                shouldAnimate && "motionFade",
+                shouldAnimate && heroReady && "motionFadeReady",
               )}
               style={createMotionVars(shouldAnimate, 0.15)}
             >
@@ -209,8 +107,8 @@ export default function AboutPageContent({
             <h1
               className={clsx(
                 styles.heroTitle,
-                shouldAnimate && styles.motionFade,
-                shouldAnimate && heroReady && styles.motionFadeReady,
+                shouldAnimate && "motionFade",
+                shouldAnimate && heroReady && "motionFadeReady",
               )}
               style={createMotionVars(shouldAnimate, 0.22)}
             >
@@ -222,8 +120,8 @@ export default function AboutPageContent({
             <p
               className={clsx(
                 styles.heroSubhead,
-                shouldAnimate && styles.motionFade,
-                shouldAnimate && heroReady && styles.motionFadeReady,
+                shouldAnimate && "motionFade",
+                shouldAnimate && heroReady && "motionFadeReady",
               )}
               style={createMotionVars(shouldAnimate, 0.32)}
             >
@@ -233,8 +131,8 @@ export default function AboutPageContent({
             <p
               className={clsx(
                 styles.heroIntro,
-                shouldAnimate && styles.motionFade,
-                shouldAnimate && heroReady && styles.motionFadeReady,
+                shouldAnimate && "motionFade",
+                shouldAnimate && heroReady && "motionFadeReady",
               )}
               style={createMotionVars(shouldAnimate, 0.38)}
             >
@@ -246,8 +144,8 @@ export default function AboutPageContent({
           <div
             className={clsx(
               styles.heroPortrait,
-              shouldAnimate && styles.motionFade,
-              shouldAnimate && heroReady && styles.motionFadeReady,
+              shouldAnimate && "motionFade",
+              shouldAnimate && heroReady && "motionFadeReady",
             )}
             style={createMotionVars(shouldAnimate, 0.45, 12, 0.5)}
           >
@@ -271,8 +169,8 @@ export default function AboutPageContent({
         <div
           className={clsx(
             styles.heroCards,
-            shouldAnimate && styles.motionFade,
-            shouldAnimate && heroReady && styles.motionFadeReady,
+            shouldAnimate && "motionFade",
+            shouldAnimate && heroReady && "motionFadeReady",
           )}
           style={createMotionVars(shouldAnimate, 0.55, 18, 0.6)}
         >
@@ -281,8 +179,8 @@ export default function AboutPageContent({
               key={trait.key}
               className={clsx(
                 styles.heroCard,
-                shouldAnimate && styles.motionFade,
-                shouldAnimate && heroReady && styles.motionFadeReady,
+                shouldAnimate && "motionFade",
+                shouldAnimate && heroReady && "motionFadeReady",
               )}
               style={createMotionVars(shouldAnimate, 0.65 + index * 0.08, 14, 0.5)}
             >
@@ -301,8 +199,8 @@ export default function AboutPageContent({
           ref={biographyRef}
           className={clsx(
             styles.biography,
-            shouldAnimate && styles.motionFade,
-            shouldAnimate && biographyVisible && styles.motionFadeReady,
+            shouldAnimate && "motionFade",
+            shouldAnimate && biographyVisible && "motionFadeReady",
           )}
           style={createMotionVars(shouldAnimate, 0.15, 24, 0.5)}
         >
