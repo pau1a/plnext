@@ -5,6 +5,8 @@
  * classes that power the design system across the application.
  */
 
+@use "./utilities.scss" as *;
+
 // Color palette: graphite neutrals and vibrant teal accent
 $graphite-50: #f8fafc;
 $graphite-100: #f1f5f9;

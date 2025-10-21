@@ -1,3 +1,5 @@
+@use "../../styles/utilities.scss" as utils;
+
 :root {
   --moor-fade-color: #0b0f12;
 }
@@ -65,6 +67,7 @@
     );
 }
 
+/* iOS Safari doesn’t support fixed backgrounds on body/large containers */
 @supports (-webkit-touch-callout: none) {
   .contactRoot::before {
     background-attachment: scroll;
@@ -120,6 +123,18 @@
   transform: translateY(10px);
   animation: contactCardLift 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   overflow: visible;
+}
+
+.formContainer {
+  @include utils.section-shell(
+    $padding-block: clamp(1rem, 3.5vw, 2rem),
+    $padding-inline: clamp(1rem, 3.5vw, 2rem)
+  );
+  /* prevent over-padding on tight screens; card already provides cushion */
+  @media (max-width: 480px) {
+    padding-block: 0;
+    padding-inline: clamp(0.75rem, 3vw, 1rem);
+  }
 }
 
 :global(body.dark) :local(.card) {
