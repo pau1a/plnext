@@ -1,0 +1,36 @@
+.devOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.devOverlayLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 2px dashed rgba(239, 68, 68, 0.85);
+}
+
+.devOverlayLabel {
+  position: absolute;
+  top: -0.75rem;
+  left: clamp(var(--space-sm), 2vw, var(--space-lg));
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 68, 68, 0.8);
+  background: color-mix(in srgb, var(--surface-base) 85%, rgba(239, 68, 68, 0.15));
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(185, 28, 28, 0.95);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+@supports not (color-mix(in srgb, black 50%, white 50%)) {
+  .devOverlayLabel {
+    background: rgba(255, 255, 255, 0.85);
+  }
+}
