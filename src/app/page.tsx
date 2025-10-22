@@ -92,6 +92,7 @@ export default async function Home() {
   return (
     <>
       <Hero
+        data-home-hero
         copy={{
           eyebrow: "Fractional security leadership",
           title: "Build fearless software for regulated teams",

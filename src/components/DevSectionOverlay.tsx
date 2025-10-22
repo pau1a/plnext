@@ -30,19 +30,25 @@ export default function DevSectionOverlay() {
     const getSections = () =>
       Array.from(root.querySelectorAll<HTMLElement>("[data-home-section]"));
 
+    const getHero = () =>
+      document.querySelector<HTMLElement>("[data-home-hero]");
+
     const updateLines = () => {
       const sections = getSections();
+      const hero = getHero();
+      const zones = [...(hero ? [hero] : []), ...sections];
 
-      if (sections.length === 0) {
+      if (zones.length <= 1) {
         setLines([]);
         return;
       }
 
       const rootRectTop = root.getBoundingClientRect().top + window.scrollY;
 
-      const nextLines = sections.slice(0, -1).map((section, index) => {
-        const rect = section.getBoundingClientRect();
-        const position = rect.bottom + window.scrollY - rootRectTop;
+      const nextLines = zones.slice(0, -1).map((zone, index) => {
+        const rect = zone.getBoundingClientRect();
+        const rawPosition = rect.bottom + window.scrollY - rootRectTop;
+        const position = index === 0 && hero ? Math.max(0, rawPosition) : rawPosition;
 
         return { index: index + 1, position } satisfies OverlayLine;
       });
@@ -55,6 +61,10 @@ export default function DevSectionOverlay() {
     const resizeObserver = new ResizeObserver(() => updateLines());
 
     resizeObserver.observe(root);
+    const hero = getHero();
+    if (hero) {
+      resizeObserver.observe(hero);
+    }
     getSections().forEach((section) => resizeObserver.observe(section));
     window.addEventListener("resize", updateLines);
 
