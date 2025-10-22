@@ -481,11 +481,26 @@ body.dark .app-shell__header {
   transition: transform var(--transition-base), box-shadow var(--transition-base), background-color var(--transition-base), color var(--transition-base), border-color var(--transition-base);
 }
 
-.button:hover,
-.button:focus-visible {
+.button:hover {
   background: var(--button-bg-hover);
   transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
+}
+
+.button:focus-visible {
+  background: var(--button-bg-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover {
+    transform: none;
+  }
 }
 
 .button--primary {
