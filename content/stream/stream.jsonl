@@ -1,0 +1,3 @@
+{"id":"2025-01-15T08:30:12Z-01","timestamp":"2025-01-15T08:30:12Z","body":"Shipped the first pass of the telemetry bridge so the OT #stream can push health into the enterprise lake without leaking secrets.","visibility":"PUBLIC","tags":["operations"]}
+{"id":"2024-12-02T19:04:55Z-01","timestamp":"2024-12-02T19:04:55Z","body":"Putting together a low-noise [[ot-safety-playbook]] for crews who need to triage automation faults on nights. Shipping soon.","visibility":"PUBLIC","tags":["writing","ops"]}
+{"id":"2024-11-18T06:42:01Z-01","timestamp":"2024-11-18T06:42:01Z","body":"Rehearsed the brownfield segmentation runbook with the ops team. Private notes captured for now.","visibility":"PRIVATE","tags":["ops"]}

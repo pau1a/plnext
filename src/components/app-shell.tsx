@@ -29,13 +29,8 @@ export default function AppShell({ children }: PropsWithChildren) {
 
                 <ul className="app-nav__links">
                   <li className="app-nav__item">
-                    <Link className="app-nav__link" href="/about">
-                      About
-                    </Link>
-                  </li>
-                  <li className="app-nav__item">
-                    <Link className="app-nav__link" href="/projects">
-                      Projects
+                    <Link className="app-nav__link" href="/">
+                      Home
                     </Link>
                   </li>
                   <li className="app-nav__item app-nav__item--has-submenu">
@@ -49,12 +44,38 @@ export default function AppShell({ children }: PropsWithChildren) {
                     <ul aria-label="Writing sections" className="app-nav__submenu">
                       <li>
                         <Link className="app-nav__sublink" href="/writing">
-                          All writing
+                          Essays
                         </Link>
                       </li>
                       <li>
                         <Link className="app-nav__sublink" href="/notes">
                           Notes
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
+                  <li className="app-nav__item">
+                    <Link className="app-nav__link" href="/projects">
+                      Projects
+                    </Link>
+                  </li>
+                  <li className="app-nav__item app-nav__item--has-submenu">
+                    <Link
+                      aria-haspopup="true"
+                      className="app-nav__link"
+                      href="/about"
+                    >
+                      About
+                    </Link>
+                    <ul aria-label="About sections" className="app-nav__submenu">
+                      <li>
+                        <Link className="app-nav__sublink" href="/about">
+                          Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="app-nav__sublink" href="/stream">
+                          Stream
                         </Link>
                       </li>
                     </ul>
