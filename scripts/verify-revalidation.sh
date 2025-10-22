@@ -82,7 +82,7 @@ printf '\n'
 
 sleep 1
 
-blog_url="$TARGET_BASE_URL/blog/$slug_payload"
+blog_url="$TARGET_BASE_URL/writing/$slug_payload"
 fetch_meta=$(curl \
   -sS \
   -o "$body_tmp" \

@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("blog pagination", () => {
+test.describe("writing pagination", () => {
   test("navigates forward and backward across cursor pages", async ({ page }) => {
-    await page.goto("/blog", { waitUntil: "networkidle" });
+    await page.goto("/writing", { waitUntil: "networkidle" });
 
     const firstHeading = page.getByRole("heading", { level: 2 }).first();
     await expect(firstHeading).toBeVisible();
@@ -54,7 +54,7 @@ test.describe("blog pagination", () => {
   });
 
   test("returns 404 for malformed cursor", async ({ page }) => {
-    const response = await page.goto("/blog?after=not-a-cursor", { waitUntil: "domcontentloaded" });
+    const response = await page.goto("/writing?after=not-a-cursor", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(404);
   });
 });

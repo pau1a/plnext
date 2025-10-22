@@ -47,8 +47,8 @@ export async function GET(request: Request) {
       return `
         <item>
           <title><![CDATA[${post.title}]]></title>
-          <link>${siteUrl}/blog/${post.slug}</link>
-          <guid isPermaLink="true">${siteUrl}/blog/${post.slug}</guid>
+          <link>${siteUrl}/writing/${post.slug}</link>
+          <guid isPermaLink="true">${siteUrl}/writing/${post.slug}</guid>
           <pubDate>${new Date(post.date).toUTCString()}</pubDate>
           <description><![CDATA[${post.description}]]></description>
           <content:encoded><![CDATA[${content}]]></content:encoded>

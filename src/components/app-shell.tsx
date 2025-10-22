@@ -39,8 +39,8 @@ export default function AppShell({ children }: PropsWithChildren) {
                     </Link>
                   </li>
                   <li>
-                    <Link className="app-nav__link" href="/blog">
-                      Blog
+                    <Link className="app-nav__link" href="/writing">
+                      Writing
                     </Link>
                   </li>
                   <li>
