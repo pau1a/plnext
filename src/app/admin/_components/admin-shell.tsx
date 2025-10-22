@@ -14,7 +14,7 @@ export function AdminShell({ actor, title, children }: AdminShellProps) {
       <header className="u-flex u-items-center u-justify-between">
         <div>
           <p className="u-text-sm u-text-muted">Signed in as {actor.name}</p>
-          <h1 className="u-text-3xl u-font-semibold">{title}</h1>
+          <h1 className="u-heading-lg u-font-semibold">{title}</h1>
         </div>
         <LogoutButton />
       </header>

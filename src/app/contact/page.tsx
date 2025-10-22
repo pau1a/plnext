@@ -51,7 +51,7 @@ export default function ContactPage() {
               <MotionFade delay={0.15}>
                 <div>
                   <header className={styles.header}>
-                    <h1 className={clsx("heading-section", styles.hTitle)}>
+                    <h1 className={clsx("u-heading-display", styles.hTitle)}>
                       Contact
                     </h1>
                     <p className={styles.preface}>
