@@ -131,7 +131,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <MotionFade>
             <div className="u-stack u-gap-sm">
               <header className="u-stack u-gap-sm">
-                <h1 className="u-heading-display">
+                <h1 className="heading-display-lg">
                   We couldn&apos;t load this post
                 </h1>
                 <p className="u-text-lead">Please try again later.</p>
@@ -165,7 +165,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <time className="u-text-uppercase u-text-xs u-text-muted">
               {format(new Date(resolvedPost.date), "MMMM d, yyyy")}
             </time>
-            <h1 className="u-heading-display">{resolvedPost.title}</h1>
+            <h1 className="heading-display-lg">{resolvedPost.title}</h1>
             <p className="u-text-lead">{resolvedPost.description}</p>
             {resolvedPost.tags?.length ? (
               <ul className="tag-list">

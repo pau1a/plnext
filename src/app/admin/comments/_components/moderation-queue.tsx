@@ -128,7 +128,7 @@ export function ModerationQueue({
   return (
     <section className="u-stack u-gap-xl">
       <header className="u-flex u-items-center u-justify-between">
-        <h2 className="u-heading-md u-font-semibold">Queue</h2>
+        <h2 className="u-text-2xl u-font-semibold">Queue</h2>
         <span className="u-text-sm u-text-muted">{pageDescription}</span>
       </header>
 
@@ -143,7 +143,7 @@ export function ModerationQueue({
               <div className="u-stack u-gap-xs">
                 <div className="u-flex u-justify-between u-items-start">
                   <div>
-                    <h3 className="u-heading-sm u-font-semibold">{item.authorName}</h3>
+                    <h3 className="u-text-lg u-font-semibold">{item.authorName}</h3>
                     <p className="u-text-sm u-text-muted">{item.authorEmail ?? "No email provided"}</p>
                   </div>
                   <span className="badge badge--outline">{item.status}</span>

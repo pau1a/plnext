@@ -78,7 +78,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <MotionFade>
           <header className="u-stack u-gap-md">
-            <h1 className="u-heading-display">{project.title}</h1>
+            <h1 className="heading-display-lg">{project.title}</h1>
             <p className="u-text-lead">{project.summary}</p>
             <dl className="u-flex u-flex-wrap u-gap-lg u-text-sm u-text-muted">
               <div className="u-stack u-gap-2xs">
