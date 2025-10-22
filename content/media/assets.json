@@ -1,0 +1,7 @@
+[
+  { "label": "Headshot (JPG)", "path": "/media/headshot.jpg", "bytes": 0 },
+  { "label": "Headshot (WEBP)", "path": "/media/headshot.webp", "bytes": 0 },
+  { "label": "Logo (dark SVG)", "path": "/media/logo-dark.svg", "bytes": 0 },
+  { "label": "Logo (light SVG)", "path": "/media/logo-light.svg", "bytes": 0 },
+  { "label": "Bio (PDF)", "path": "/media/paula-livingstone-bio.pdf", "bytes": 0 }
+]
