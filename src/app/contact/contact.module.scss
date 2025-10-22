@@ -1,18 +1,18 @@
 @use "../../styles/utilities.scss" as utils;
 
 :root {
-  --moor-fade-color: #0b0f12;
+  --moor-fade-color: var(--color-graphite-900);
 }
 
 :global(body.dark) {
-  --moor-fade-color: #0a0c0e;
+  --moor-fade-color: color-mix(in srgb, var(--color-graphite-900) 94%, black 6%);
 }
 
 .contactRoot {
   position: relative;
   min-height: 100vh;
   isolation: isolate;
-  background-color: #0b0f12;
+  background-color: var(--color-graphite-900);
 }
 
 .contactRoot::before {
