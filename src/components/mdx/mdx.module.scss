@@ -1,0 +1,56 @@
+.heading2 {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  margin-top: var(--space-2xl);
+  scroll-margin-top: var(--header-height, 6rem);
+}
+
+.heading3 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-top: var(--space-xl);
+  scroll-margin-top: var(--header-height, 6rem);
+}
+
+.link {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.blockquote {
+  border-inline-start: 3px solid var(--color-teal-400);
+  padding-inline: var(--space-lg);
+  color: var(--text-muted);
+  margin: 0;
+  font-style: italic;
+}
+
+.pre {
+  font-family: "Fira Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  background: rgba(15, 23, 42, 0.06);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.code {
+  font-family: "Fira Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  background: rgba(15, 23, 42, 0.1);
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.35rem;
+}
+
+:global(body.dark) :local(.pre) {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+:global(body.dark) :local(.code) {
+  background: rgba(148, 163, 184, 0.28);
+}
