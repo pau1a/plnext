@@ -67,8 +67,8 @@ export function Hero({
     >
       <div className={styles.heroMedia}>
         <Image
-          src="/hero-vertical.svg"
-          alt="Abstract gradient illustration evoking forward momentum"
+          src="https://cdn.networklayer.co.uk/paulalivingstone/images/freefall.jpg"
+          alt="Paula Livingstone in freefall — precision under pressure"
           fill
           priority
           sizes="100vw"
