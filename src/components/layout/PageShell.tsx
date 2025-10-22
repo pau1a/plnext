@@ -12,7 +12,7 @@ type PageShellProps = ComponentPropsWithoutRef<"div"> & {
   fullWidth?: boolean;
 };
 
-const PageShell = forwardRef<HTMLElement, PageShellProps>(function PageShell(
+const PageShell = forwardRef<HTMLDivElement, PageShellProps>(function PageShell(
   { as = "div", children, className, outerClassName, fullWidth = false, ...rest },
   ref,
 ) {

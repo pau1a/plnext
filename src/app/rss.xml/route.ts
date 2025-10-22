@@ -8,7 +8,6 @@ import {
   getBlogIndexPage,
   parseCursorParam,
 } from "@/lib/supabase/blog";
-import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactElement } from "react";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://paulalivingstone.com";
@@ -35,6 +34,8 @@ export async function GET(request: Request) {
   }
 
   const posts = page.items;
+
+  const { renderToStaticMarkup } = await import("react-dom/server");
 
   const items = await Promise.all(
     posts.map(async (post) => {
