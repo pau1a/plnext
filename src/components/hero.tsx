@@ -71,6 +71,7 @@ export function Hero({
           alt="Paula Livingstone in freefall — precision under pressure"
           fill
           priority
+          unoptimized
           sizes="100vw"
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
