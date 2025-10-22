@@ -45,6 +45,19 @@ export default function ContactPage() {
           targetSelector={`.${styles.contactRoot}`}
           sampleHeightPct={12}
         />
+        <div className={styles.hero}>
+          <div className={styles.heroInner}>
+            <p className={styles.heroEyebrow}>Direct channel</p>
+            <h1 className={styles.heroTitle}>
+              <span className={styles.heroTitleWord}>Contact</span>
+              <span className={styles.heroTitleWord}>Paula</span>
+            </h1>
+            <span aria-hidden="true" className={styles.heroDivider} />
+            <p className={styles.heroLead}>
+              Reach Paula directly — messages here come straight to her.
+            </p>
+          </div>
+        </div>
         <div className={styles.stage}>
           <MotionFade delay={0.05}>
             <div className={clsx(elevatedSurfaceStyles.elevatedSurface, styles.card)}>
@@ -55,8 +68,8 @@ export default function ContactPage() {
                       Contact
                     </h1>
                     <p className={styles.preface}>
-                      If you’ve got something real to say, this lands straight
-                      in my inbox.
+                      Provide context, timeline, and stakes so Paula can
+                      respond quickly.
                     </p>
                   </header>
                   <ContactForm />
