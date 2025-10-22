@@ -64,7 +64,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   );
 
   return (
-    <PageShell as="main" className="u-pad-block-3xl">
+    <PageShell className="u-pad-block-3xl">
       <article className="u-stack u-gap-2xl u-max-w-lg u-center">
         <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
           <Link

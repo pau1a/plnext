@@ -69,10 +69,10 @@ export async function generateMetadata({
       tags: post.tags,
       images: [
         {
-          url: `${siteUrl}/window.svg`,
+          url: `${siteUrl}/opengraph-image`,
           width: 1200,
           height: 630,
-          alt: "Paula Livingstone window mark",
+          alt: "Paula Livingstone brand card",
         },
       ],
     },
@@ -80,7 +80,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: [`${siteUrl}/window.svg`],
+      images: [`${siteUrl}/twitter-image`],
     },
   };
 }
@@ -116,7 +116,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   if (postError) {
     return (
-      <PageShell as="main" className="u-pad-block-3xl">
+      <PageShell className="u-pad-block-3xl">
         <article className="u-stack u-gap-2xl u-max-w-lg u-center">
           <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
             <Link
@@ -151,7 +151,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const resolvedPost = post!;
 
   return (
-    <PageShell as="main" className="u-pad-block-3xl">
+    <PageShell className="u-pad-block-3xl">
       <article className="u-stack u-gap-2xl u-max-w-lg u-center">
         <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
           <Link className="u-inline-flex u-items-center u-gap-xs" href="/blog">

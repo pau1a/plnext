@@ -32,10 +32,10 @@ export const metadata: Metadata = {
     siteName: "Paula Livingstone",
     images: [
       {
-        url: `${siteUrl}/window.svg`,
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Paula Livingstone window mark",
+        alt: "Paula Livingstone brand card",
       },
     ],
   },
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Paula Livingstone",
     description: "Cybersecurity leader building resilient platforms that balance risk, speed, and clarity.",
-    images: [`${siteUrl}/window.svg`],
+    images: ["/twitter-image"],
   },
   alternates: {
     canonical: siteUrl,

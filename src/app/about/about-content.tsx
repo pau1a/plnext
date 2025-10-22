@@ -84,7 +84,7 @@ export default function AboutPageContent({
   );
 
   return (
-    <main className={styles.main}>
+    <div className={styles.main}>
       <section
         className={clsx(
           styles.hero,
@@ -233,6 +233,6 @@ export default function AboutPageContent({
           <p>{closingStatement}</p>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

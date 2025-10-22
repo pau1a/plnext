@@ -22,23 +22,23 @@ export const metadata: Metadata = {
     url: "/contact",
     images: [
       {
-        url: "/window.svg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Paula Livingstone window mark",
+        alt: "Paula Livingstone brand card",
       },
     ],
   },
   twitter: {
     title: "Contact | Paula Livingstone",
     description: "Reach Paula directly — messages here come straight to her.",
-    images: ["/window.svg"],
+    images: ["/twitter-image"],
   },
 };
 
 export default function ContactPage() {
   return (
-    <PageShell as="main" fullWidth>
+    <PageShell fullWidth>
       <section className={styles.contactRoot}>
         <ContactColorCalibrator
           imgSrc="https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png"
