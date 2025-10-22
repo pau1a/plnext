@@ -1,0 +1,15 @@
+[
+  {
+    "title": "Designing Data-Intensive Applications",
+    "author": "Martin Kleppmann",
+    "year": 2017,
+    "link": "https://dataintensive.net",
+    "note": "Clear mental models for reliability and scalability."
+  },
+  {
+    "title": "The Checklist Manifesto",
+    "author": "Atul Gawande",
+    "year": 2009,
+    "note": "Operational humility; error reduction through process."
+  }
+]

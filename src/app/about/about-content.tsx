@@ -241,6 +241,10 @@ export default function AboutPageContent({
           For what I’m currently focused on, see my {" "}
           <Link href="/now">Now page</Link>.
         </p>
+        <p className={styles.streamNote}>
+          Annotated reading lives in the {" "}
+          <Link href="/library">Library</Link>.
+        </p>
       </section>
     </main>
   );
