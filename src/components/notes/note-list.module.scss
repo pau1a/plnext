@@ -1,0 +1,17 @@
+.noteList {
+  display: grid;
+  gap: var(--space-2xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.wrapper {
+  width: min(100%, 55rem);
+  margin-inline: auto;
+}
