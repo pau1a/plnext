@@ -237,6 +237,10 @@ export default function AboutPageContent({
           I occasionally post brief thoughts and observations in my {" "}
           <Link href="/stream">Stream</Link>&mdash;fragments, notes, and in-progress ideas.
         </p>
+        <p className={styles.streamNote}>
+          For what I’m currently focused on, see my {" "}
+          <Link href="/now">Now page</Link>.
+        </p>
       </section>
     </main>
   );

@@ -4,6 +4,7 @@ import AnalyticsConsentBanner from "@/components/analytics-consent-banner";
 import { AnalyticsConsentProvider } from "@/components/analytics-consent-provider";
 import AnalyticsPreferences from "@/components/analytics-preferences";
 import BodyThemeSync from "@/components/body-theme-sync";
+import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/theme-toggle";
 import Link from "next/link";
 import { ThemeProvider } from "next-themes";
@@ -98,15 +99,9 @@ export default function AppShell({ children }: PropsWithChildren) {
             {children}
           </main>
 
-          <footer className="app-shell__footer">
-            <div className="l-container">
-              <small className="u-inline-flex u-items-center u-gap-xs">
-                <i className="fa-regular fa-copyright" aria-hidden="true" />
-                <span>{new Date().getFullYear()} Paula Livingstone</span>
-              </small>
-              <AnalyticsPreferences />
-            </div>
-          </footer>
+          <Footer>
+            <AnalyticsPreferences />
+          </Footer>
 
           <AnalyticsConsentBanner />
         </ThemeProvider>
