@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
 
@@ -232,6 +233,10 @@ export default function AboutPageContent({
         <div className={styles.closerCard}>
           <p>{closingStatement}</p>
         </div>
+        <p className={styles.streamNote}>
+          I occasionally post brief thoughts and observations in my {" "}
+          <Link href="/stream">Stream</Link>&mdash;fragments, notes, and in-progress ideas.
+        </p>
       </section>
     </main>
   );

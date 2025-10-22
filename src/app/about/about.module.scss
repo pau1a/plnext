@@ -379,6 +379,24 @@
   text-wrap: pretty;
 }
 
+:where(.streamNote) {
+  margin-top: clamp(1.5rem, 4vw, 2.25rem);
+  color: var(--text-muted);
+  font-size: var(--type-body-md);
+}
+
+.streamNote a {
+  color: var(--color-teal-400);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.streamNote a:hover,
+.streamNote a:focus-visible {
+  text-decoration: underline;
+  color: var(--color-teal-300);
+}
+
 :global(body.dark) .closerCard {
   background: var(--surface-elevated);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
