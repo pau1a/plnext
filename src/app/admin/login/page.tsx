@@ -51,7 +51,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <PageShell className="u-pad-block-3xl">
       <MotionFade>
         <div className="u-stack u-gap-xl">
-          <h1 className="u-text-3xl u-font-semibold">Admin sign-in</h1>
+          <h1 className="u-heading-lg u-font-semibold">Admin sign-in</h1>
           <p className="u-text-muted u-max-w-prose">
             Use the access token assigned to you in the governance playbook.
             Tokens are scoped per role. Contact the site owner if you need

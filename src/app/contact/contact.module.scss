@@ -234,12 +234,12 @@
   margin-bottom: var(--space-lg);
 }
 
-.formTitle {
-  font-weight: 650;
-  font-size: clamp(1.85rem, 4.6vw, 2.75rem);
-  line-height: 1.1;
-  letter-spacing: 0.01em;
-  color: color-mix(in srgb, var(--text-primary) 80%, #ffffff 20%);
+.hTitle {
+  position: relative;
+  padding-left: 1.1rem;
+  letter-spacing: 0.005em;
+  padding-bottom: 0.5rem;
+  font-weight: 700;
 }
 
 :global(body.dark) :local(.formTitle) {

@@ -133,7 +133,7 @@ export default async function ProjectsPage({
       <section className="u-stack u-gap-2xl">
         <MotionFade>
           <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
-            <h1 className="heading-display-lg">Projects &amp; Programmes</h1>
+            <h1 className="u-heading-display">Projects &amp; Programmes</h1>
             <p className="u-text-lead u-center u-max-w-md">
               Selected engagements that blend cyber operations, automation, and
               measurable business outcomes.
