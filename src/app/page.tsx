@@ -116,7 +116,11 @@ export default async function Home() {
         ]}
       />
 
-      <PageShell as="main" className={styles.page}>
+      <PageShell
+        as="main"
+        className={styles.page}
+        outerClassName={styles.pageShellFade}
+      >
         <MotionFade>
           <section
             className={styles.section}

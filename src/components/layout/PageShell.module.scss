@@ -1,17 +1,6 @@
 .shell {
   position: relative;
   isolation: isolate;
-  background-color: var(--surface-base);
-  background-image: linear-gradient(
-    to bottom,
-    var(--moor-fade-color, var(--surface-base)) 0%,
-    color-mix(
-        in srgb,
-        var(--moor-fade-color, var(--surface-base)) 35%,
-        var(--surface-base) 65%
-      )
-      22%,
-    var(--surface-base) 44%
-  );
+  background: var(--surface-base);
   padding-bottom: clamp(4rem, 6vw, 6rem);
 }
