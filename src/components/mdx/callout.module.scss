@@ -1,0 +1,33 @@
+.callout {
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--color-teal-500) 20%, transparent);
+  background: color-mix(in srgb, var(--color-teal-500) 8%, transparent);
+  padding: var(--space-lg);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
+
+.title {
+  margin: 0 0 var(--space-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.body {
+  display: grid;
+  gap: var(--space-xs);
+  color: var(--text-primary);
+}
+
+:global(body.dark) :local(.callout) {
+  border-color: color-mix(in srgb, var(--color-teal-300) 28%, transparent);
+  background: color-mix(in srgb, var(--color-teal-700) 18%, transparent);
+}
+
+:global(body.dark) :local(.title) {
+  color: var(--color-teal-100);
+}
+
+:global(body.dark) :local(.body) {
+  color: var(--color-graphite-100);
+}

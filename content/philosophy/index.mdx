@@ -1,0 +1,82 @@
+---
+title: "Philosophy"
+updated: "2025-10-22"
+summary: "Guiding principles for engineering and design."
+toc: true
+---
+
+## Why principles matter
+
+Engineering disciplines drift without a shared compass. These principles keep my work anchored in outcomes, not tools. They remind teams that risk is the problem, people are the constant, and clarity beats cleverness.
+
+- Name the mission and the blast radius before touching keyboards.
+- Optimise for boring runbooks and predictable recovery.
+- Treat every control as an experiment that must be measured.
+
+<Callout title="North star">
+  The aim is calm, observable systems that let people sleep. Every design choice should be defensible in that light.
+</Callout>
+
+## Risk
+
+Risk is the only reason systems need engineers. Everything starts with understanding what can go wrong and how badly.
+
+### Frame the exposure
+
+- Map critical assets and dependencies before proposing solutions.
+- Capture credible threats, not science fiction. Use scenarios people recognise.
+- Quantify impact ranges so stakeholders can choose the risk they are willing to carry.
+
+### Design for containment
+
+Systems should fail within guardrails.
+
+- Segment aggressively: break large estates into compartments with clear blast radii.
+- Build controls that default to safe states when telemetry disappears.
+- Keep human intervention for unusual paths; automate the common shutdowns.
+
+## Resilience
+
+Resilience is the ability to absorb disruption and return quickly to stable service.
+
+- Prefer redundant paths over perfect components. Diversity reduces correlated failure.
+- Instrument recovery paths and rehearse them until the steps feel ordinary.
+- Document decisions so that future teams can recover context, not just state.
+
+### People first
+
+- Run incident reviews that protect people and interrogate process.
+- Make on-call humane with pacing, escalation clarity, and backstops.
+- Align incentives so resilience work is rewarded, not sidelined as invisible toil.
+
+## Simplicity
+
+Simplicity is a defence mechanism. Complex stacks hide failure modes and slow recovery.
+
+- Collapse layers when an integration adds more fragility than value.
+- Use the minimum viable protocol or service. Every dependency is a future incident.
+- Write runbooks that fit on a single page; complexity signals a design smell.
+
+<Callout title="Bias for clarity">
+  Default to transparent architectures. If a design cannot be explained quickly to operations and risk leaders, it is not ready.
+</Callout>
+
+## Measurement
+
+What we do not measure, we cannot claim is secure or reliable.
+
+### Instrument everything meaningful
+
+- Capture baselines before changing controls so improvements are visible.
+- Monitor risk debt the same way finance tracks liabilities.
+- Alert on trend shifts, not single spikes. Pace matters more than noise.
+
+### Close the loop
+
+- Pair every objective with a metric and a review cadence.
+- Feed operational data back into design decisions to retire outdated assumptions.
+- Share measurements widely so trust builds on evidence, not persuasion.
+
+## Putting it together
+
+Risk awareness, resilient design, simplicity, and measurement reinforce each other. Together they produce systems that withstand shocks without burning people out. That is the standard I hold my work to—and the promise I make to teams who invite me in.

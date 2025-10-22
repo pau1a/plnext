@@ -175,3 +175,25 @@ export async function getProjectSlugs() {
   const files = await readDirectory(PROJECTS_DIR);
   return files.map((file) => ({ slug: file.replace(/\.mdx$/, "") }));
 }
+
+export function extractH2H3(src: string) {
+  const lines = src.split("\n");
+  const items: { id: string; text: string; level: 2 | 3 }[] = [];
+
+  for (const line of lines) {
+    const h2 = /^##\s+(.+)$/.exec(line);
+    const h3 = /^###\s+(.+)$/.exec(line);
+
+    if (h2 || h3) {
+      const text = (h2?.[1] || h3?.[1] || "").trim();
+      const id = text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-");
+
+      items.push({ id, text, level: h2 ? 2 : 3 });
+    }
+  }
+
+  return items;
+}
