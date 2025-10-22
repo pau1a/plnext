@@ -16,7 +16,13 @@ export const revalidate = BLOG_INDEX_REVALIDATE_SECONDS;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  const baseRoutes: MetadataRoute.Sitemap = ["", "/about", "/projects", "/blog", "/contact"].map((route) => ({
+  const baseRoutes: MetadataRoute.Sitemap = [
+    "",
+    "/about",
+    "/projects",
+    "/writing",
+    "/contact",
+  ].map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: now,
   }));
@@ -39,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     if (!isFirst && afterToken) {
-      const pageUrl = `${siteUrl}${createCursorHref("/blog", BLOG_AFTER_PARAM, afterToken)}`;
+      const pageUrl = `${siteUrl}${createCursorHref("/writing", BLOG_AFTER_PARAM, afterToken)}`;
       paginationRoutes.push({
         url: pageUrl,
         lastModified: new Date(page.items[0].date),
@@ -57,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const postRoutes: MetadataRoute.Sitemap = allPosts.map((post) => ({
-    url: `${siteUrl}/blog/${post.slug}`,
+    url: `${siteUrl}/writing/${post.slug}`,
     lastModified: new Date(post.date),
   }));
 
@@ -72,7 +78,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       JSON.stringify({
         event: "sitemap-cache-hint",
         revalidate: BLOG_INDEX_REVALIDATE_SECONDS,
-        blogIndexPageCount: paginationRoutes.length + 1, // include base `/blog`
+        blogIndexPageCount: paginationRoutes.length + 1, // include base `/writing`
         blogPostCount: allPosts.length,
       }),
     );

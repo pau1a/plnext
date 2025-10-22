@@ -30,7 +30,7 @@ export interface PostCardProps {
 
 export function PostCard({
   summary,
-  href = `/blog/${summary.slug}`,
+  href = `/writing/${summary.slug}`,
   meta,
   tags,
   description,
@@ -122,7 +122,7 @@ export function PostCard({
       <Link
         className={clsx(elevatedSurfaceStyles.elevatedSurfaceLink, styles.link)}
         href={href}
-        aria-label={`Read blog post: ${summary.title}`}
+        aria-label={`Read writing: ${summary.title}`}
       >
         <header className={styles.header}>
           <div className={styles.metaRow}>

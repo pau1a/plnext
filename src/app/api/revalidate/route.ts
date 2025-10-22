@@ -143,7 +143,7 @@ export async function POST(request: Request) {
   }
 
   const revalidatedTags = new Set<string>([BLOG_LIST_CACHE_TAG]);
-  const revalidatedPaths = new Set<string>(["/blog"]);
+  const revalidatedPaths = new Set<string>(["/writing", "/blog"]);
 
   try {
     revalidateTag(BLOG_LIST_CACHE_TAG);
@@ -152,6 +152,7 @@ export async function POST(request: Request) {
       const tag = getBlogPostCacheTag(slug);
       revalidatedTags.add(tag);
       revalidateTag(tag);
+      revalidatedPaths.add(`/writing/${slug}`);
       revalidatedPaths.add(`/blog/${slug}`);
     }
 
