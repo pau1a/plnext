@@ -68,8 +68,8 @@ export default function ContactPage() {
                       Contact
                     </h1>
                     <p className={styles.preface}>
-                      Share context, timeframes, and stakes. The more signal
-                      you provide, the faster the reply.
+                      Provide context, timeline, and stakes so Paula can
+                      respond quickly.
                     </p>
                   </header>
                   <ContactForm />
