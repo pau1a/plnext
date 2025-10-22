@@ -29,10 +29,10 @@ const BASE_METADATA: Metadata = {
     url: BASE_PATH,
     images: [
       {
-        url: "/window.svg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Paula Livingstone window mark",
+        alt: "Paula Livingstone brand card",
       },
     ],
   },
@@ -40,7 +40,7 @@ const BASE_METADATA: Metadata = {
     title: "Projects",
     description:
       "A snapshot of security and AI programmes delivered end-to-end.",
-    images: ["/window.svg"],
+    images: ["/twitter-image"],
   },
 };
 
@@ -129,7 +129,7 @@ export default async function ProjectsPage({
     : [];
 
   return (
-    <PageShell as="main" className="u-pad-block-3xl">
+    <PageShell className="u-pad-block-3xl">
       <section className="u-stack u-gap-2xl">
         <MotionFade>
           <header className="u-stack u-gap-sm u-text-center u-mb-3xl">

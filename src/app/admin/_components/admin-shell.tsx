@@ -25,7 +25,9 @@ export function AdminShell({ actor, title, children }: AdminShellProps) {
         </a>
       </nav>
 
-      <main className="u-stack u-gap-xl">{children}</main>
+      <section aria-label="Admin workspace" className="u-stack u-gap-xl">
+        {children}
+      </section>
     </div>
   );
 }

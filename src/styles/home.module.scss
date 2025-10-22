@@ -1,3 +1,40 @@
+.pageShellFade {
+  position: relative;
+  background: var(--surface-base);
+}
+
+.pageShellFade::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: calc(-1 * clamp(4rem, 12vh, 8rem));
+  height: calc(clamp(4rem, 12vh, 8rem) + clamp(18rem, 36vh, 30rem));
+  background: linear-gradient(
+    to bottom,
+    var(--moor-fade-color) 0%,
+    color-mix(in srgb, var(--moor-fade-color) 28%, transparent) 36%,
+    color-mix(in srgb, var(--moor-fade-color) 12%, var(--surface-base) 88%) 72%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+:global(body.dark) :local(.pageShellFade)::before {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--moor-fade-color) 88%, black 12%) 0%,
+    color-mix(in srgb, var(--moor-fade-color) 40%, transparent) 40%,
+    color-mix(in srgb, var(--moor-fade-color) 18%, var(--surface-base) 82%) 72%,
+    transparent 100%
+  );
+}
+
+.pageShellFade > * {
+  position: relative;
+  z-index: 1;
+}
+
 .page {
   display: flex;
   flex-direction: column;
