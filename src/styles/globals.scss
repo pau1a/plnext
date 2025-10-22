@@ -532,8 +532,9 @@ body.dark .app-shell__header {
 }
 
 .button--primary {
-  --button-bg: var(--color-teal-500);
-  --button-bg-hover: var(--color-teal-400);
+  --button-bg: color-mix(in srgb, var(--color-teal-800) 65%, var(--color-teal-600) 35%);
+  --button-bg-hover: color-mix(in srgb, var(--color-teal-800) 45%, var(--color-teal-600) 55%);
+  --button-border: color-mix(in srgb, var(--color-teal-300) 28%, transparent);
   --button-color: var(--color-graphite-50);
 }
 
