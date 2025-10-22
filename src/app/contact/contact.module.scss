@@ -100,7 +100,8 @@
   background: linear-gradient(
     to bottom,
     var(--moor-fade-color) 0%,
-    #ffffff 100%
+    color-mix(in srgb, var(--moor-fade-color) 12%, var(--surface-base) 88%) 32%,
+    var(--surface-base) 100%
   );
 }
 
