@@ -142,13 +142,13 @@
 
 .formContainer {
   @include utils.section-shell(
-    $padding-block: clamp(1rem, 3.5vw, 2rem),
-    $padding-inline: clamp(1rem, 3.5vw, 2rem)
+    $padding-block: clamp(var(--space-lg), 3.5vw, var(--space-2xl)),
+    $padding-inline: clamp(var(--space-lg), 3.5vw, var(--space-2xl))
   );
   /* prevent over-padding on tight screens; card already provides cushion */
   @media (max-width: 480px) {
     padding-block: 0;
-    padding-inline: clamp(0.75rem, 3vw, 1rem);
+    padding-inline: clamp(var(--space-md), 3vw, var(--space-lg));
   }
 }
 
@@ -192,9 +192,9 @@
 
 .hTitle {
   position: relative;
-  padding-left: 1.1rem;
+  padding-left: calc(var(--space-lg) + var(--space-2xs));
   letter-spacing: 0.005em;
-  padding-bottom: 0.5rem;
+  padding-bottom: var(--space-sm);
   font-weight: 700;
 }
 
@@ -213,8 +213,8 @@
 .hTitle::after {
   content: "";
   position: absolute;
-  left: 1.1rem;
-  bottom: -0.35rem;
+  left: calc(var(--space-lg) + var(--space-2xs));
+  bottom: calc(-1 * (var(--space-xs) + var(--space-2xs)));
   width: clamp(3.8rem, 22vw, 6.8rem);
   height: 0.22rem;
   border-radius: 9999px;
@@ -223,7 +223,7 @@
 }
 
 .preface {
-  margin-top: 0.35rem;
+  margin-top: calc(var(--space-xs) + var(--space-2xs));
   color: color-mix(in srgb, var(--text-muted) 45%, #ffffff 55%);
   max-width: 42ch;
   font-size: 0.95rem;
