@@ -91,6 +91,7 @@
   display: grid;
   place-items: center;
   padding-block: 10vh 12vh;
+  padding-inline: clamp(var(--space-xl), 6vw, var(--space-3xl));
 }
 
 .belowBlend {
