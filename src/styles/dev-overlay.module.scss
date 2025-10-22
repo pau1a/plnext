@@ -11,9 +11,6 @@
   height: 0;
   --overlay-line-thickness: 3px;
   --overlay-line-gap: 8px;
-  --overlay-label-offset: calc(
-    var(--overlay-line-gap) + var(--overlay-line-thickness) + 0.75rem
-  );
 }
 
 .devOverlayLine::before,
@@ -31,7 +28,6 @@
 
 .devOverlayLabel {
   position: absolute;
-  top: var(--overlay-label-offset);
   left: clamp(var(--space-sm), 2vw, var(--space-lg));
   padding: 0.35rem 1.25rem;
   border-radius: 1.5rem;

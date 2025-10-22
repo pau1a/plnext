@@ -90,7 +90,7 @@ export default async function Home() {
   const featuredProjects = projects.slice(0, 2);
 
   return (
-    <>
+    <div className={styles.home} data-dev-shell="home">
       <Hero
         data-home-hero
         copy={{
@@ -118,8 +118,7 @@ export default async function Home() {
         ]}
       />
 
-      <PageShell as="main" className={styles.page} data-dev-shell="home">
-        <DevSectionOverlay />
+      <PageShell as="main" className={styles.page}>
         <MotionFade>
           <section
             className={styles.section}
@@ -294,6 +293,7 @@ export default async function Home() {
           </section>
         </MotionFade>
       </PageShell>
-    </>
+      <DevSectionOverlay />
+    </div>
   );
 }
