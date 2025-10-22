@@ -83,8 +83,12 @@
     );
 }
 
-/* iOS Safari doesn’t support fixed backgrounds on body/large containers */
-@supports (-webkit-touch-callout: none) {
+/*
+ * iOS Safari doesn’t support fixed backgrounds on body/large containers.
+ * Require both iOS-only WebKit features so we don’t accidentally target
+ * desktop Safari builds that also expose -webkit-touch-callout.
+ */
+@supports (-webkit-touch-callout: none) and (-webkit-overflow-scrolling: touch) {
   .contactRoot::before {
     background-attachment: scroll;
   }
