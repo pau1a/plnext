@@ -90,8 +90,13 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  padding-block: 10vh 12vh;
+  box-sizing: border-box;
+  max-width: var(--max-content-md);
+  margin-inline: auto;
+  min-block-size: min(100vh, 60rem);
+  padding-block: clamp(6rem, 10vh, 8rem);
   padding-inline: clamp(var(--space-xl), 6vw, var(--space-3xl));
+  width: 100%;
 }
 
 .belowBlend {
