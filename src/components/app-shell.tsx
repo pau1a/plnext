@@ -28,22 +28,38 @@ export default function AppShell({ children }: PropsWithChildren) {
                 </Link>
 
                 <ul className="app-nav__links">
-                  <li>
+                  <li className="app-nav__item">
                     <Link className="app-nav__link" href="/about">
                       About
                     </Link>
                   </li>
-                  <li>
+                  <li className="app-nav__item">
                     <Link className="app-nav__link" href="/projects">
                       Projects
                     </Link>
                   </li>
-                  <li>
-                    <Link className="app-nav__link" href="/writing">
+                  <li className="app-nav__item app-nav__item--has-submenu">
+                    <Link
+                      aria-haspopup="true"
+                      className="app-nav__link"
+                      href="/writing"
+                    >
                       Writing
                     </Link>
+                    <ul aria-label="Writing sections" className="app-nav__submenu">
+                      <li>
+                        <Link className="app-nav__sublink" href="/writing">
+                          All writing
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="app-nav__sublink" href="/notes">
+                          Notes
+                        </Link>
+                      </li>
+                    </ul>
                   </li>
-                  <li>
+                  <li className="app-nav__item">
                     <Link className="app-nav__link" href="/contact">
                       Contact
                     </Link>
