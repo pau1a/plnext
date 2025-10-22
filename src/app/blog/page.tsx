@@ -237,7 +237,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <section className="u-stack u-gap-2xl">
         <MotionFade>
           <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
-            <h1 className="heading-display-lg">Insights &amp; Updates</h1>
+            <h1 className="u-heading-display">Insights &amp; Updates</h1>
             <p className="u-text-lead u-center u-max-w-md">
               Notes from the field on cybersecurity, AI, and practical
               engineering.
