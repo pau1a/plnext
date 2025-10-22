@@ -1,0 +1,62 @@
+.footer {
+  margin-top: clamp(4rem, 10vw, 6rem);
+  border-top: 1px solid rgba(148, 163, 184, 0.4);
+  padding-block: clamp(2rem, 6vw, 3rem);
+  color: var(--text-muted);
+  background-color: transparent;
+}
+
+.inner {
+  width: min(55rem, 100%);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.linkRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.link {
+  color: var(--color-teal-400);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-base), text-decoration-color var(--transition-base);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--color-teal-300);
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-teal-400);
+  outline-offset: 2px;
+}
+
+.copy {
+  font-size: var(--font-size-xs);
+  text-align: center;
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.utility {
+  display: flex;
+  justify-content: center;
+}
+
+.utility :global(button) {
+  font-size: var(--font-size-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}
