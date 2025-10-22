@@ -228,13 +228,13 @@
 
 .preface {
   margin-top: calc(var(--space-xs) + var(--space-2xs));
-  color: color-mix(in srgb, var(--text-muted) 45%, #ffffff 55%);
+  color: color-mix(in srgb, var(--text-muted) 65%, var(--text-primary) 35%);
   max-width: 42ch;
   font-size: 0.95rem;
 }
 
 :global(body.dark) :local(.preface) {
-  color: color-mix(in srgb, #ffffff 70%, var(--text-muted) 30%);
+  color: color-mix(in srgb, var(--text-on-inverse) 80%, var(--text-muted) 20%);
 }
 
 .formLabel {
