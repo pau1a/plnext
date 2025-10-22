@@ -84,6 +84,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .elevatedSurface,
+  .elevatedSurfaceInteractive {
+    transition: none;
+  }
+
   .elevatedSurfaceInteractive:hover,
   .elevatedSurfaceInteractive:focus-within {
     transform: none;

@@ -498,7 +498,35 @@ body.dark .app-shell__header {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button:hover {
+  :root {
+    --transition-base: 0s;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  body,
+  .skip-link,
+  a,
+  .app-nav__link::after,
+  .button,
+  .button--link,
+  .form-field__control,
+  input,
+  textarea,
+  select {
+    transition: none !important;
+  }
+
+  .button:hover,
+  .button:focus-visible,
+  .button:active {
     transform: none;
   }
 }
