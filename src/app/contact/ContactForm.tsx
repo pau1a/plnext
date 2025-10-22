@@ -10,6 +10,9 @@ import { initialState } from "./state";
 import { sendMessage } from "./send";
 import styles from "./contact.module.scss";
 
+const FOOTER_NOTE_COPY =
+  "You’re writing to a real person. Machines help, but I answer myself.";
+
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
@@ -111,9 +114,7 @@ export default function ContactForm({ className }: ContactFormProps = {}) {
       <div className={styles.actions}>
         <SubmitButton />
       </div>
-      <p className={styles.footerNote}>
-        You’re writing to a real person. Machines help, but I answer myself.
-      </p>
+      <p className={styles.footerNote}>{FOOTER_NOTE_COPY}</p>
     </form>
   );
 }
