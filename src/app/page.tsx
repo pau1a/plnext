@@ -4,7 +4,7 @@ import PageShell from "@/components/layout/PageShell";
 import AboutCapsule from "@/components/home/AboutCapsule";
 import KnowledgeLayer from "@/components/home/KnowledgeLayer";
 import ExecutionLayer from "@/components/home/ExecutionLayer";
-import NowExcerpt from "@/components/home/NowExcerpt";
+import ContinuityLayer from "@/components/home/ContinuityLayer";
 import MotionFade from "@/components/motion/MotionFade";
 
 import styles from "@/styles/home.module.scss";
@@ -45,9 +45,7 @@ export default function Home() {
           </MotionFade>
           <KnowledgeLayer />
           <ExecutionLayer />
-          <MotionFade delay={0.25}>
-            <NowExcerpt />
-          </MotionFade>
+          <ContinuityLayer />
         </div>
       </PageShell>
       <DevSectionOverlay />
