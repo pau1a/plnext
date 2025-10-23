@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import Link from "next/link";
+import Image from "next/image";
 import { useMemo } from "react";
 
 import MotionFade from "@/components/motion/MotionFade";
@@ -10,6 +11,9 @@ import { usePrefersReducedMotion, useRevealOnView } from "@/lib/motion";
 import styles from "./AboutCapsule.module.scss";
 
 import type { HomeSectionProps } from "./types";
+
+const profileImageUrl =
+  "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
 
 export default function AboutCapsule({
   className,
@@ -45,10 +49,6 @@ export default function AboutCapsule({
           <aside className={styles.rail}>
             <div className={styles.labelGroup}>
               <span className={clsx("u-eyebrow", styles.eyebrow)}>ABOUT</span>
-              <p className={styles.meta}>
-                <span>Updated </span>
-                <time dateTime="2024-07">July 2024</time>
-              </p>
             </div>
             <div className={styles.accentTrack} aria-hidden="true">
               <div className={styles.accentBar} />
@@ -56,39 +56,58 @@ export default function AboutCapsule({
           </aside>
 
           <div className={styles.main}>
-            <MotionFade delay={0.18} duration={0.2} offset={10}>
-              <h2 className={styles.heading}>Calm engineering under pressure</h2>
-            </MotionFade>
+            <div className={styles.copy}>
+              <MotionFade delay={0.18} duration={0.2} offset={10}>
+                <h2 className={styles.heading}>Calm engineering under pressure</h2>
+              </MotionFade>
 
-            <MotionFade delay={0.24} duration={0.2} offset={10}>
-              <p className={styles.firstParagraph}>
-                <span className={clsx("u-text-lead", styles.leadWord)}>
-                  There’s
-                </span>{" "}
-                a moment when turbulence has to turn into control. That’s where I
-                work.
-              </p>
-            </MotionFade>
+              <MotionFade delay={0.24} duration={0.2} offset={10}>
+                <p className={styles.firstParagraph}>
+                  <span className={clsx("u-text-lead", styles.leadWord)}>
+                    There’s
+                  </span>{" "}
+                  a moment when turbulence has to turn into control. That’s where I
+                  work.
+                </p>
+              </MotionFade>
 
-            <MotionFade delay={0.3} duration={0.2} offset={10}>
+              <MotionFade delay={0.3} duration={0.2} offset={10}>
+                <p>
+                  I build systems that stay steady when things get unpredictable
+                  {"\u200a—\u200a"}
+                  the kind that keep automation, energy, and industry safe to rely
+                  on. Decades of engineering have taught me that reliability isn’t a
+                  by-product of technology; it’s the outcome of clarity, rehearsal,
+                  and restraint.
+                </p>
+              </MotionFade>
               <p>
-                I build systems that stay steady when things get unpredictable
+                My work is about keeping that clarity as automation grows more
+                intelligent and the stakes rise. Making complexity calm. Turning
+                risk into rhythm. Keeping everything that matters flying straight
                 {"\u200a—\u200a"}
-                the kind that keep automation, energy, and industry safe to rely
-                on. Decades of engineering have taught me that reliability isn’t a
-                by-product of technology; it’s the outcome of clarity, rehearsal,
-                and restraint.
+                <Link href="/about" className={styles.link}>
+                  More →
+                </Link>
               </p>
+            </div>
+
+            <MotionFade delay={0.32} duration={0.24} offset={12}>
+              <figure className={styles.portrait} aria-label="Portrait of Paula Livingstone">
+                <div className={styles.portraitGlow} aria-hidden="true" />
+                <div className={styles.portraitFrame}>
+                  <Image
+                    src={profileImageUrl}
+                    alt="Paula Livingstone"
+                    className={styles.portraitImage}
+                    width={340}
+                    height={460}
+                    sizes="(min-width: 1200px) 280px, (min-width: 992px) 240px, (min-width: 768px) 200px, 160px"
+                    priority={false}
+                  />
+                </div>
+              </figure>
             </MotionFade>
-            <p>
-              My work is about keeping that clarity as automation grows more
-              intelligent and the stakes rise. Making complexity calm. Turning
-              risk into rhythm. Keeping everything that matters flying straight
-              {"\u200a—\u200a"}
-              <Link href="/about" className={styles.link}>
-                More →
-              </Link>
-            </p>
           </div>
         </div>
       </div>
