@@ -1,0 +1,49 @@
+.devOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.devOverlayLine {
+  position: absolute;
+  inset-inline: 0;
+  height: 0;
+  --overlay-line-thickness: 3px;
+  --overlay-line-gap: 8px;
+}
+
+.devOverlayLine::before,
+.devOverlayLine::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: var(--overlay-line-thickness);
+  background: rgba(239, 68, 68, 0.92);
+}
+
+.devOverlayLine::after {
+  transform: translateY(var(--overlay-line-gap));
+}
+
+.devOverlayLabel {
+  position: absolute;
+  left: clamp(var(--space-sm), 2vw, var(--space-lg));
+  padding: 0.35rem 1.25rem;
+  border-radius: 1.5rem;
+  border: 2px solid rgba(239, 68, 68, 0.75);
+  background: color-mix(in srgb, var(--surface-base) 88%, rgba(239, 68, 68, 0.2));
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(185, 28, 28, 0.95);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+@supports not (color-mix(in srgb, black 50%, white 50%)) {
+  .devOverlayLabel {
+    background: rgba(255, 255, 255, 0.88);
+  }
+}

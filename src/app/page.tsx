@@ -2,6 +2,7 @@ import clsx from "clsx";
 import Link from "next/link";
 
 import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
+import DevSectionOverlay from "@/components/DevSectionOverlay";
 import Hero from "@/components/hero";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
@@ -89,8 +90,9 @@ export default async function Home() {
   const featuredProjects = projects.slice(0, 2);
 
   return (
-    <>
+    <div className={styles.home} data-dev-shell="home">
       <Hero
+        data-home-hero
         copy={{
           eyebrow: "Fractional security leadership",
           title: "Build fearless software for regulated teams",
@@ -121,6 +123,7 @@ export default async function Home() {
           <section
             className={styles.section}
             aria-labelledby="services-heading"
+            data-home-section
           >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionEyebrow}>
@@ -167,6 +170,7 @@ export default async function Home() {
           <section
             className={styles.section}
             aria-labelledby="approach-heading"
+            data-home-section
           >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionEyebrow}>Engagement rhythm</span>
@@ -197,6 +201,7 @@ export default async function Home() {
           <section
             className={styles.section}
             aria-labelledby="projects-heading"
+            data-home-section
           >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionEyebrow}>Recent wins</span>
@@ -228,7 +233,11 @@ export default async function Home() {
         </MotionFade>
 
         <MotionFade delay={0.15}>
-          <section className={styles.section} aria-labelledby="proof-heading">
+          <section
+            className={styles.section}
+            aria-labelledby="proof-heading"
+            data-home-section
+          >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionEyebrow}>Proof points</span>
               <h2 id="proof-heading" className={styles.sectionTitle}>
@@ -257,6 +266,7 @@ export default async function Home() {
           <section
             className={clsx(styles.section, styles.ctaSection)}
             aria-labelledby="cta-heading"
+            data-home-section
           >
             <div className={styles.ctaCard}>
               <div>
@@ -283,6 +293,7 @@ export default async function Home() {
           </section>
         </MotionFade>
       </PageShell>
-    </>
+      <DevSectionOverlay />
+    </div>
   );
 }

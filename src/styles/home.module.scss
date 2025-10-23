@@ -1,4 +1,11 @@
+.home {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
 .page {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: clamp(var(--space-3xl), 8vw, 6rem);
