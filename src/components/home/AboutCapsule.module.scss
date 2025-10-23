@@ -119,14 +119,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.5rem;
   align-items: flex-start;
 }
 
 @media (max-width: 40rem) {
   .labelGroup {
     align-items: center;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.35rem;
   }
 }
 
@@ -223,7 +223,7 @@
   margin-top: 0;
   margin-bottom: 1rem;
   font-size: var(--font-size-2xl);
-  line-height: 1.2;
+  line-height: 1.25;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -236,7 +236,7 @@
 }
 
 .main p + p {
-  margin-block-start: var(--space-md);
+  margin-block-start: calc(var(--space-md) + var(--space-sm) / 2);
 }
 
 .firstParagraph {
