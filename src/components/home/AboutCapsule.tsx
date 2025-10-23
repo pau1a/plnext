@@ -1,5 +1,11 @@
+"use client";
+
 import clsx from "clsx";
 import Link from "next/link";
+import { useMemo } from "react";
+
+import MotionFade from "@/components/motion/MotionFade";
+import { usePrefersReducedMotion, useRevealOnView } from "@/lib/motion";
 
 import styles from "./AboutCapsule.module.scss";
 
@@ -9,32 +15,77 @@ export default function AboutCapsule({
   className,
   style,
 }: HomeSectionProps) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const shouldAnimate = !prefersReducedMotion;
+
+  const observerOptions = useMemo<IntersectionObserverInit>(
+    () => ({ threshold: 0.35 }),
+    [],
+  );
+
+  const { ref: sectionRef, isVisible } = useRevealOnView<HTMLElement>(
+    shouldAnimate,
+    observerOptions,
+  );
+
   return (
     <section
+      ref={sectionRef}
       id="section-home-aboutcapsule"
-      className={clsx(styles.aboutSection, className)}
+      className={clsx(
+        styles.aboutSection,
+        shouldAnimate && isVisible && styles.isVisible,
+        className,
+      )}
       data-home-section
       style={style}
     >
       <div className={styles.inner}>
-        <div className={styles.seamRule} aria-hidden="true" />
-
         <div className={styles.content}>
-          <h2 className={styles.heading}>About</h2>
-          <div className={styles.copy}>
-            <p>There’s a moment when turbulence has to turn into control.</p>
-            <p>That’s where I work.</p>
-            <p>
-              I build systems that stay steady when things get unpredictable —
-              the kind that keep automation, energy, and industry safe to rely
-              on. Decades of engineering have taught me that reliability isn’t a
-              by-product of technology; it’s the outcome of clarity, rehearsal,
-              and restraint.
+          <aside className={styles.rail}>
+            <span className={clsx("u-eyebrow", styles.eyebrow)}>ABOUT</span>
+            <span className={styles.glyph} aria-hidden="true">
+              &bull;
+            </span>
+            <div className={styles.accentTrack} aria-hidden="true">
+              <div className={styles.accentBar} />
+            </div>
+            <p className={styles.meta}>
+              <span className={styles.metaLabel}>Updated</span>
+              <time dateTime="2024-07">July 2024</time>
             </p>
+          </aside>
+
+          <div className={styles.main}>
+            <MotionFade duration={0.2} offset={10}>
+              <h2 className={styles.heading}>Calm engineering under pressure</h2>
+            </MotionFade>
+
+            <MotionFade delay={0.05} duration={0.2} offset={10}>
+              <p className={styles.firstParagraph}>
+                <span className={clsx("u-text-lead", styles.leadWord)}>
+                  There’s
+                </span>{" "}
+                a moment when turbulence has to turn into control. That’s where I
+                work.
+              </p>
+            </MotionFade>
+
+            <MotionFade delay={0.1} duration={0.2} offset={10}>
+              <p>
+                I build systems that stay steady when things get unpredictable
+                {"\u200A—\u200A"}
+                the kind that keep automation, energy, and industry safe to rely
+                on. Decades of engineering have taught me that reliability isn’t a
+                by-product of technology; it’s the outcome of clarity, rehearsal,
+                and restraint.
+              </p>
+            </MotionFade>
             <p>
               My work is about keeping that clarity as automation grows more
               intelligent and the stakes rise. Making complexity calm. Turning
-              risk into rhythm. Keeping everything that matters flying straight.
+              risk into rhythm. Keeping everything that matters flying straight
+              {"\u200A—\u200A"}
               {" "}
               <Link href="/about" className={styles.link}>
                 More →
