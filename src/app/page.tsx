@@ -1,5 +1,5 @@
 import DevSectionOverlay from "@/components/DevSectionOverlay";
-import Hero from "@/components/hero";
+import Hero from "@/components/home/Hero";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import AboutCapsule from "@/components/home/AboutCapsule";
@@ -17,21 +17,22 @@ export default function Home() {
         data-home-hero
         copy={{
           eyebrow: "Optimist | Engineer | Adventurer",
-          title: "Securing intelligent systems.",
-          subheading: "Industrial automation, AI, and OT reliability.",
+          title: "Building fearless systems in a fragile world.",
+          subheading:
+            "From industrial automation to AI security, I work where reliability meets risk.",
           description:
-            "I help engineering orgs translate compliance into actionable guardrails, ship AI capabilities safely, and keep operations resilient when everything is on the line.",
+            "I shape systems that stay composed when it counts — translating complex requirements into the confidence to operate and evolve safely.",
         }}
         ctas={[
           {
-            label: "Explore my work.",
+            label: "Explore my work",
             href: "/projects",
             icon: (
               <i className="fa-solid fa-diagram-project" aria-hidden="true" />
             ),
           },
           {
-            label: "Read latest notes.",
+            label: "Read latest notes",
             href: "/notes",
             variant: "ghost",
             icon: <i className="fa-solid fa-book" aria-hidden="true" />,
