@@ -1,0 +1,282 @@
+.executionLayer {
+  position: relative;
+  isolation: isolate;
+}
+
+.executionLayer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.06), transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(45, 212, 191, 0.06), transparent 45%),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.035) 0,
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+  opacity: 0.65;
+  mix-blend-mode: screen;
+}
+
+.inner {
+  padding-block: clamp(4.5rem, 9vw, 6.75rem);
+  display: grid;
+  gap: clamp(var(--space-2xl), 6vw, var(--space-3xl));
+}
+
+.header {
+  text-align: center;
+  display: grid;
+  gap: var(--space-sm);
+  max-width: 60ch;
+  margin-inline: auto;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2.25rem, 2rem + 1vw, 3rem);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.caption {
+  margin: 0;
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  color: color-mix(in srgb, var(--text-on-inverse) 75%, transparent);
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
+}
+
+.card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface-inverse) 80%, rgba(17, 24, 39, 0.85));
+  border: 1px solid color-mix(in srgb, var(--color-teal-300) 28%, transparent);
+  box-shadow:
+    0 35px 65px rgba(0, 0, 0, 0.35),
+    0 15px 35px rgba(13, 37, 63, 0.5);
+  transition: transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.cardMedia {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background:
+    radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--color-teal-400) 65%, transparent), transparent 65%),
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-teal-900) 80%, black 5%) 0%,
+      color-mix(in srgb, var(--color-teal-700) 55%, #0f172a 45%) 54%,
+      color-mix(in srgb, var(--color-teal-500) 65%, #1f2937 30%) 100%
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardSignal {
+  width: clamp(3rem, 8vw, 4.75rem);
+  height: clamp(3rem, 8vw, 4.75rem);
+  border-radius: 999px;
+  border: 2px solid color-mix(in srgb, white 70%, transparent);
+  box-shadow:
+    inset 0 0 25px rgba(45, 212, 191, 0.4),
+    0 0 45px rgba(13, 148, 136, 0.4);
+  position: relative;
+}
+
+.cardSignal::after {
+  content: "";
+  position: absolute;
+  inset: 25%;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  opacity: 0.65;
+}
+
+.cardBody {
+  padding: clamp(1.75rem, 3.5vw, 2.5rem);
+  display: grid;
+  gap: clamp(var(--space-md), 3vw, var(--space-lg));
+}
+
+.cardHeader {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.cardStatus {
+  justify-self: start;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--color-teal-200) 85%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-teal-200) 35%, transparent);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.35rem + 0.6vw, 1.95rem);
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.cardTitle a {
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+}
+
+.cardTitle a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.2rem;
+  width: 0%;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-teal-300) 80%, transparent);
+  transition: width 220ms ease;
+}
+
+.cardSummary {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--text-on-inverse) 80%, transparent);
+}
+
+.cardStack {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.cardStackItem {
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--text-on-inverse) 25%, transparent);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-on-inverse) 70%, transparent);
+}
+
+.cardLink {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--color-teal-200) 80%, transparent);
+  letter-spacing: 0.04em;
+}
+
+.cardLinkArrow {
+  display: inline-block;
+  transform: translateX(-4px);
+  transition: transform 200ms ease;
+}
+
+.cardLink:hover .cardLinkArrow,
+.cardLink:focus-visible .cardLinkArrow {
+  transform: translateX(0);
+}
+
+.card:hover,
+.card:focus-within {
+  transform: translateY(-6px);
+  box-shadow:
+    0 45px 85px rgba(0, 0, 0, 0.42),
+    0 20px 45px rgba(13, 37, 63, 0.55);
+}
+
+.card:hover .cardTitle a::after,
+.card:focus-within .cardTitle a::after {
+  width: 100%;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+}
+
+.footerCta {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--color-teal-200) 85%, transparent);
+}
+
+.footerCta:hover,
+.footerCta:focus-visible {
+  color: var(--color-teal-100);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: cardFade 520ms ease forwards;
+    animation-delay: calc(0.08s * var(--card-index, 0));
+  }
+
+  .cardSignal {
+    animation: signalPulse 6s ease-in-out infinite;
+  }
+
+  @keyframes cardFade {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes signalPulse {
+    0%,
+    100% {
+      box-shadow:
+        inset 0 0 20px rgba(45, 212, 191, 0.35),
+        0 0 40px rgba(13, 148, 136, 0.35);
+    }
+
+    50% {
+      box-shadow:
+        inset 0 0 30px rgba(45, 212, 191, 0.5),
+        0 0 55px rgba(13, 148, 136, 0.55);
+    }
+  }
+}
+
+@media (min-width: 48rem) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 75rem) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

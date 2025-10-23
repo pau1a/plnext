@@ -3,7 +3,7 @@ import Hero from "@/components/home/Hero";
 import PageShell from "@/components/layout/PageShell";
 import AboutCapsule from "@/components/home/AboutCapsule";
 import KnowledgeLayer from "@/components/home/KnowledgeLayer";
-import ProjectPreview from "@/components/home/ProjectPreview";
+import ExecutionLayer from "@/components/home/ExecutionLayer";
 import NowExcerpt from "@/components/home/NowExcerpt";
 import MotionFade from "@/components/motion/MotionFade";
 
@@ -44,9 +44,7 @@ export default function Home() {
             <AboutCapsule />
           </MotionFade>
           <KnowledgeLayer />
-          <MotionFade delay={0.2}>
-            <ProjectPreview />
-          </MotionFade>
+          <ExecutionLayer />
           <MotionFade delay={0.25}>
             <NowExcerpt />
           </MotionFade>
