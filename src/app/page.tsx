@@ -1,4 +1,3 @@
-import DevSectionOverlay from "@/components/DevSectionOverlay";
 import Hero from "@/components/home/Hero";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
@@ -62,7 +61,6 @@ export default function Home() {
           </MotionFade>
         </div>
       </PageShell>
-      <DevSectionOverlay />
     </div>
   );
 }
