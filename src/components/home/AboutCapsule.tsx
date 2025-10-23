@@ -55,7 +55,7 @@ export default function AboutCapsule({
 
           <div className={styles.main}>
             <MotionFade delay={0.18} duration={0.2} offset={10}>
-              <h2 className={styles.heading}>Calm engineering under pressure.</h2>
+              <h2 className={styles.heading}>Calm engineering under pressure</h2>
             </MotionFade>
 
             <MotionFade delay={0.24} duration={0.2} offset={10}>
@@ -71,7 +71,7 @@ export default function AboutCapsule({
             <MotionFade delay={0.3} duration={0.2} offset={10}>
               <p>
                 I build systems that stay steady when things get unpredictable
-                {"\u200A—\u200A"}
+                {"\u2009—\u2009"}
                 the kind that keep automation, energy, and industry safe to rely
                 on. Decades of engineering have taught me that reliability isn’t a
                 by-product of technology; it’s the outcome of clarity, rehearsal,
@@ -82,8 +82,7 @@ export default function AboutCapsule({
               My work is about keeping that clarity as automation grows more
               intelligent and the stakes rise. Making complexity calm. Turning
               risk into rhythm. Keeping everything that matters flying straight
-              {"\u200A—\u200A"}
-              {" "}
+              {"\u2009—\u2009"}
               <Link href="/about" className={styles.link}>
                 More →
               </Link>
