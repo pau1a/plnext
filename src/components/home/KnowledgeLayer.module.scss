@@ -1,0 +1,476 @@
+.knowledgeLayer {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface-base) 85%, white 15%) 0%,
+    color-mix(in srgb, var(--surface-base) 70%, white 30%) 100%
+  );
+  color: var(--text-primary);
+  position: relative;
+  isolation: isolate;
+}
+
+.knowledgeLayer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--color-graphite-100) 16%, transparent) 0,
+      color-mix(in srgb, var(--color-graphite-100) 16%, transparent) 1px,
+      transparent 1px,
+      transparent 32px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-graphite-100) 12%, transparent) 0,
+      color-mix(in srgb, var(--color-graphite-100) 12%, transparent) 1px,
+      transparent 1px,
+      transparent 32px
+    );
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(4rem, 8vw, 6rem);
+  display: grid;
+  gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
+}
+
+.intro {
+  display: grid;
+  gap: clamp(var(--space-md), 3vw, var(--space-lg));
+}
+
+.heading {
+  margin: 0;
+  font-weight: 600;
+  font-size: clamp(2rem, 1.85rem + 0.9vw, 2.75rem);
+  line-height: 1.25;
+}
+
+.subheading {
+  margin: 0;
+  max-width: 42ch;
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.timelineLabel {
+  display: grid;
+  gap: var(--space-2xs);
+  align-content: start;
+}
+
+.timelineTitle {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--text-primary) 75%, transparent);
+}
+
+.timelineCaption {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.layout {
+  display: grid;
+  gap: clamp(var(--space-2xl), 6vw, var(--space-3xl));
+}
+
+.writingPanel {
+  position: relative;
+  display: grid;
+  gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
+  align-items: start;
+}
+
+.writingPanel::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: var(--home-flight-line-offset);
+  width: 1px;
+  background: color-mix(in srgb, var(--color-teal-400) 35%, transparent);
+  opacity: 0.6;
+}
+
+.featured {
+  background: color-mix(in srgb, white 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-teal-200) 35%, transparent);
+  border-radius: 1.25rem;
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  display: grid;
+  gap: clamp(var(--space-sm), 2vw, var(--space-md));
+  box-shadow:
+    0 25px 60px rgba(17, 24, 39, 0.08),
+    0 10px 25px rgba(17, 24, 39, 0.06);
+}
+
+.featuredLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant: all-small-caps;
+  color: color-mix(in srgb, var(--color-teal-600) 65%, var(--text-primary) 35%);
+}
+
+.featuredBullet {
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 0.1rem;
+  background: var(--color-teal-500);
+  box-shadow: 0 0 0.35rem color-mix(in srgb, var(--color-teal-400) 50%, transparent);
+}
+
+.featuredDate {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant: all-small-caps;
+  color: color-mix(in srgb, var(--text-muted) 80%, transparent);
+}
+
+.featuredTitle {
+  font-size: clamp(1.5rem, 1.35rem + 0.8vw, 2rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: inherit;
+  text-decoration: none;
+}
+
+.featuredTitle:hover,
+.featuredTitle:focus-visible {
+  color: var(--link-hover);
+}
+
+.featuredSummary {
+  margin: 0;
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.125rem);
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--text-muted) 90%, transparent);
+}
+
+.featuredCta {
+  align-self: flex-start;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.supporting {
+  position: relative;
+  padding-inline-start: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.supportingList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: clamp(var(--space-lg), 4vw, var(--space-xl));
+}
+
+.supportingItem {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.supportingTitle {
+  font-size: clamp(1.125rem, 1.05rem + 0.5vw, 1.4rem);
+  font-weight: 700;
+  line-height: 1.35;
+  color: inherit;
+  text-decoration: none;
+}
+
+.supportingTitle:hover,
+.supportingTitle:focus-visible {
+  color: var(--link-hover);
+}
+
+.supportingDate {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  font-variant: all-small-caps;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-muted) 80%, transparent);
+}
+
+.supportingSummary {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--text-muted) 85%, transparent);
+}
+
+.supportingFooter {
+  margin-top: clamp(var(--space-lg), 4vw, var(--space-xl));
+  display: flex;
+  justify-content: flex-end;
+}
+
+.browseCta {
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.browseCta:hover,
+.browseCta:focus-visible {
+  color: var(--link-hover);
+}
+
+.timeline {
+  position: relative;
+}
+
+.timelineList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(var(--space-lg), 3vw, var(--space-xl));
+}
+
+.timelineItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(var(--space-md), 2vw, var(--space-lg));
+  align-items: start;
+  color: inherit;
+}
+
+.timelineItem::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0.565rem;
+  top: 1.2rem;
+  bottom: -clamp(var(--space-sm), 2vw, var(--space-md));
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-teal-400) 35%, transparent) 0%,
+    color-mix(in srgb, var(--color-graphite-300) 35%, transparent) 100%
+  );
+  opacity: 0.4;
+}
+
+.timelineItem:last-child::after {
+  display: none;
+}
+
+.timelineAxis {
+  position: relative;
+  display: flex;
+  width: 1.25rem;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 1rem;
+}
+
+.timelineTick {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-teal-500);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--color-teal-500) 35%, transparent),
+    0 0 18px color-mix(in srgb, var(--color-teal-400) 45%, transparent);
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+
+.timelineItem_note .timelineTick {
+  background: var(--color-teal-500);
+}
+
+.timelineItem_stream .timelineTick {
+  background: color-mix(in srgb, var(--color-teal-500) 70%, var(--color-teal-300) 30%);
+}
+
+.timelineItem_stream .timelineSource {
+  color: color-mix(in srgb, var(--color-teal-600) 60%, var(--text-primary) 40%);
+}
+
+.timelineCard {
+  background: color-mix(in srgb, white 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-graphite-200) 40%, transparent);
+  border-radius: 1rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  display: grid;
+  gap: var(--space-sm);
+  box-shadow:
+    0 18px 45px rgba(17, 24, 39, 0.08),
+    0 5px 16px rgba(17, 24, 39, 0.06);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.timelineHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.timelineSource {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant: all-small-caps;
+  color: color-mix(in srgb, var(--text-primary) 68%, transparent);
+}
+
+.timelineDate {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  font-variant: all-small-caps;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-muted) 80%, transparent);
+}
+
+.timelineLink {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  text-decoration: none;
+  color: inherit;
+}
+
+.timelineSummary {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.timelineArrow {
+  opacity: 0;
+  transform: translate3d(0, 0.2rem, 0);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.timelineItem:hover .timelineTick,
+.timelineItem:focus-within .timelineTick {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 0 6px color-mix(in srgb, var(--color-teal-500) 25%, transparent),
+    0 0 28px color-mix(in srgb, var(--color-teal-300) 50%, transparent);
+}
+
+.timelineItem:hover .timelineCard,
+.timelineItem:focus-within .timelineCard {
+  transform: translate3d(0, -0.25rem, 0);
+  box-shadow:
+    0 24px 60px rgba(17, 24, 39, 0.12),
+    0 10px 24px rgba(17, 24, 39, 0.08);
+}
+
+.timelineItem:hover .timelineArrow,
+.timelineItem:focus-within .timelineArrow {
+  opacity: 1;
+  transform: translate3d(0.15rem, 0, 0);
+}
+
+.timelineItem:hover::after,
+.timelineItem:focus-within::after {
+  opacity: 0.7;
+}
+
+.timelineItem:hover .timelineLink,
+.timelineItem:focus-within .timelineLink {
+  color: var(--link-hover);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .timelineItem {
+    animation: knowledgeFade 420ms ease forwards;
+    opacity: 0;
+    transform: translateY(16px);
+    animation-delay: calc(60ms * var(--item-index, 0));
+  }
+
+  @keyframes knowledgeFade {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (min-width: 48rem) {
+  .intro {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+  }
+}
+
+@media (min-width: 62rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .writingPanel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    padding-inline-end: clamp(2rem, 4vw, 3rem);
+  }
+
+  .writingPanel::before {
+    left: calc(var(--home-flight-line-offset));
+    opacity: 0.5;
+  }
+
+  .supporting {
+    padding-inline-start: clamp(3.5rem, 6vw, 4rem);
+  }
+}
+
+@media (max-width: 47.9375rem) {
+  .inner {
+    padding-inline: clamp(1.25rem, 6vw, 1.75rem);
+  }
+
+  .layout {
+    gap: clamp(var(--space-xl), 6vw, var(--space-2xl));
+  }
+
+  .writingPanel::before,
+  .timelineItem::after {
+    display: none;
+  }
+
+  .timelineItem {
+    grid-template-columns: 1fr;
+  }
+
+  .timelineAxis {
+    display: none;
+  }
+
+  .timelineCard {
+    padding: clamp(1rem, 3vw, 1.25rem);
+  }
+
+  .supportingFooter {
+    justify-content: flex-start;
+  }
+
+  .browseCta {
+    font-weight: 600;
+  }
+}

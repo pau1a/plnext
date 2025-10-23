@@ -1,13 +1,11 @@
 import DevSectionOverlay from "@/components/DevSectionOverlay";
 import Hero from "@/components/home/Hero";
 import PageShell from "@/components/layout/PageShell";
-import MotionFade from "@/components/motion/MotionFade";
 import AboutCapsule from "@/components/home/AboutCapsule";
-import NowExcerpt from "@/components/home/NowExcerpt";
-import NotesPreview from "@/components/home/NotesPreview";
+import KnowledgeLayer from "@/components/home/KnowledgeLayer";
 import ProjectPreview from "@/components/home/ProjectPreview";
-import StreamPreview from "@/components/home/StreamPreview";
-import WritingPreview from "@/components/home/WritingPreview";
+import NowExcerpt from "@/components/home/NowExcerpt";
+import MotionFade from "@/components/motion/MotionFade";
 
 import styles from "@/styles/home.module.scss";
 export default function Home() {
@@ -41,19 +39,11 @@ export default function Home() {
       />
 
       <PageShell as="main" className={styles.main} fullWidth>
-        <div className={styles.sectionStack}>
+        <div className={styles.strata}>
           <MotionFade>
             <AboutCapsule />
           </MotionFade>
-          <MotionFade delay={0.05} duration={0.25} offset={20}>
-            <WritingPreview />
-          </MotionFade>
-          <MotionFade delay={0.1}>
-            <NotesPreview />
-          </MotionFade>
-          <MotionFade delay={0.15}>
-            <StreamPreview />
-          </MotionFade>
+          <KnowledgeLayer />
           <MotionFade delay={0.2}>
             <ProjectPreview />
           </MotionFade>
