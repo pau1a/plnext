@@ -44,9 +44,6 @@ export default function AboutCapsule({
         <div className={styles.content}>
           <aside className={styles.rail}>
             <span className={clsx("u-eyebrow", styles.eyebrow)}>ABOUT</span>
-            <span className={styles.glyph} aria-hidden="true">
-              &bull;
-            </span>
             <div className={styles.accentTrack} aria-hidden="true">
               <div className={styles.accentBar} />
             </div>
@@ -57,11 +54,11 @@ export default function AboutCapsule({
           </aside>
 
           <div className={styles.main}>
-            <MotionFade duration={0.2} offset={10}>
+            <MotionFade delay={0.06} duration={0.2} offset={10}>
               <h2 className={styles.heading}>Calm engineering under pressure</h2>
             </MotionFade>
 
-            <MotionFade delay={0.05} duration={0.2} offset={10}>
+            <MotionFade delay={0.12} duration={0.2} offset={10}>
               <p className={styles.firstParagraph}>
                 <span className={clsx("u-text-lead", styles.leadWord)}>
                   There’s
@@ -71,7 +68,7 @@ export default function AboutCapsule({
               </p>
             </MotionFade>
 
-            <MotionFade delay={0.1} duration={0.2} offset={10}>
+            <MotionFade delay={0.18} duration={0.2} offset={10}>
               <p>
                 I build systems that stay steady when things get unpredictable
                 {"\u200A—\u200A"}
