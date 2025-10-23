@@ -58,6 +58,7 @@
   position: relative;
   z-index: 1;
   @include utils.section-shell();
+  padding-block-start: calc(clamp(3rem, 8vw, 5.5rem) - 1rem);
 }
 
 .content {
