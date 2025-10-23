@@ -159,7 +159,7 @@
 .accentBar {
   width: 100%;
   height: 100%;
-  background: color-mix(in srgb, var(--color-teal-500) 85%, transparent);
+  background: color-mix(in srgb, var(--color-teal-500) 75%, transparent);
   transform: scaleY(0);
   transform-origin: top;
   transition: transform 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -215,8 +215,14 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  color: var(--text-primary);
+  color: color-mix(in srgb, var(--text-primary) 92%, var(--surface-0) 8%);
   text-align: left;
+}
+
+@media (prefers-color-scheme: dark) {
+  .main {
+    color: var(--text-primary);
+  }
 }
 
 .heading {
@@ -226,6 +232,10 @@
   line-height: 1.25;
   font-weight: 600;
   letter-spacing: -0.01em;
+}
+
+.main .heading {
+  color: var(--text-primary);
 }
 
 .main p {
@@ -249,7 +259,7 @@
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   letter-spacing: normal;
-  color: var(--text-primary);
+  color: inherit;
 }
 
 @media (max-width: 40rem) {
