@@ -22,6 +22,12 @@
   position: absolute;
   inset: 0;
   z-index: 0;
+  background: radial-gradient(
+      circle at 30% 20%,
+      rgba(35, 73, 96, 0.45),
+      transparent 55%
+    ),
+    linear-gradient(180deg, #040d16 0%, #091b2c 65%, #030a12 100%);
 }
 
 .heroOverlay {

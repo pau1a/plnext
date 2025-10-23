@@ -1,4 +1,3 @@
-import DevSectionOverlay from "@/components/DevSectionOverlay";
 import Hero from "@/components/home/Hero";
 import PageShell from "@/components/layout/PageShell";
 import AboutCapsule from "@/components/home/AboutCapsule";
@@ -48,7 +47,6 @@ export default function Home() {
           <ContinuityLayer />
         </div>
       </PageShell>
-      <DevSectionOverlay />
     </div>
   );
 }

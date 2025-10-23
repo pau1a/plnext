@@ -100,9 +100,9 @@ export default function AboutCapsule({
                     src={profileImageUrl}
                     alt="Paula Livingstone"
                     className={styles.portraitImage}
-                    width={340}
-                    height={460}
-                    sizes="(min-width: 1200px) 280px, (min-width: 992px) 240px, (min-width: 768px) 200px, 160px"
+                    width={520}
+                    height={578}
+                    sizes="(min-width: 1280px) 420px, (min-width: 1024px) 340px, (min-width: 768px) 260px, 200px"
                     priority={false}
                   />
                 </div>

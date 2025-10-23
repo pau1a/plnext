@@ -1,8 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import clsx from "clsx";
-import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  useLayoutEffect,
+  useRef,
+  type CSSProperties,
+} from "react";
 
 import {
   createMotionVars,
@@ -16,6 +24,88 @@ import styles from "./about.module.scss";
 
 const photoUrl =
   "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
+
+type PolaroidSpec = {
+  src: string;
+  alt: string;
+  rotation: number;
+};
+
+const polaroidImages: PolaroidSpec[] = [
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/prejump.jpg",
+    alt: "Gear check on the drop zone before a jump.",
+    rotation: -12,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/portugalfreefall.jpg",
+    alt: "Freefall over the Portuguese coast.",
+    rotation: 9,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/lookup.jpg",
+    alt: "Looking up at the canopy mid-flight.",
+    rotation: -7,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/landers.jpg",
+    alt: "Landing team regrouping on the field.",
+    rotation: 11,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/IMG_2040.jpeg",
+    alt: "Toolkit prep on the tailgate of the truck.",
+    rotation: -6,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/IMG_1409.jpeg",
+    alt: "Night operations brief under the hangar lights.",
+    rotation: 13,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/helo.jpg",
+    alt: "Helicopter pickup on the ridge line.",
+    rotation: -18,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/freefall.jpg",
+    alt: "Tracking through the clouds.",
+    rotation: 8,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/flare.jpg",
+    alt: "Flaring for landing at dusk.",
+    rotation: -9,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/climb.jpg",
+    alt: "Climbing out on the wing strut.",
+    rotation: 7,
+  },
+  {
+    src: "https://cdn.networklayer.co.uk/paulalivingstone/images/army.jpg",
+    alt: "With the engineering team at the test range.",
+    rotation: -5,
+  },
+];
+
+const topClusterSlots = [
+  { top: 18, left: 18, width: 22, rotation: -12, zIndex: 3 },
+  { top: 32, left: 40, width: 20, rotation: 6, zIndex: 2 },
+  { top: 12, left: 62, width: 18, rotation: -4, zIndex: 4 },
+  { top: 38, left: 78, width: 21, rotation: 11, zIndex: 3 },
+  { top: 24, left: 92, width: 19, rotation: -8, zIndex: 5 },
+  { top: 42, left: 56, width: 22, rotation: 7, zIndex: 2 },
+];
+
+const bottomClusterSlots = [
+  { top: 18, left: 16, width: 21, rotation: 10, zIndex: 3 },
+  { top: 36, left: 28, width: 19, rotation: -9, zIndex: 2 },
+  { top: 22, left: 50, width: 23, rotation: 6, zIndex: 4 },
+  { top: 14, left: 72, width: 20, rotation: -7, zIndex: 3 },
+  { top: 36, left: 86, width: 22, rotation: 5, zIndex: 5 },
+  { top: 24, left: 60, width: 21, rotation: -12, zIndex: 2 },
+];
 
 const heroTraits = [
   {
@@ -83,6 +173,77 @@ export default function AboutPageContent({
     shouldAnimate,
     observerOptions,
   );
+
+  const [topPolaroids, setTopPolaroids] = useState<PolaroidSpec[]>(
+    polaroidImages.slice(0, 5),
+  );
+  const [bottomPolaroids, setBottomPolaroids] = useState<PolaroidSpec[]>(
+    polaroidImages.slice(5),
+  );
+  const [topClusterGap, setTopClusterGap] = useState<number | null>(null);
+  const [bottomClusterGap, setBottomClusterGap] = useState<number | null>(null);
+
+  useEffect(() => {
+    const images = [...polaroidImages];
+
+    for (let i = images.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [images[i], images[j]] = [images[j], images[i]];
+    }
+
+    setTopPolaroids(images.slice(0, 5));
+    setBottomPolaroids(images.slice(5));
+  }, []);
+
+  const topClusterRef = useRef<HTMLDivElement | null>(null);
+  const bottomClusterRef = useRef<HTMLDivElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+
+  useLayoutEffect(() => {
+    function clampValue(min: number, pref: number, max: number) {
+      return Math.max(min, Math.min(pref, max));
+    }
+
+    function evaluateSpacing() {
+      if (!topClusterRef.current || !bottomClusterRef.current || !headingRef.current || !biographyRef.current) {
+        return;
+      }
+
+      const topRect = topClusterRef.current.getBoundingClientRect();
+      const bottomRect = bottomClusterRef.current.getBoundingClientRect();
+
+      if (topRect.width === 0 && bottomRect.width === 0) {
+        setTopClusterGap(null);
+        setBottomClusterGap(null);
+        return;
+      }
+
+      const headingRect = headingRef.current.getBoundingClientRect();
+      const biographyRect = biographyRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+
+      const topBase = clampValue(6.5 * 16, viewportWidth * 0.13, 9.1 * 16); // px
+      const desiredTopGap = Math.max(topBase, 16);
+      const currentTopGap = headingRect.top - topRect.bottom;
+      const resolvedTopGap = currentTopGap >= desiredTopGap ? currentTopGap : desiredTopGap;
+
+      const bottomBase = clampValue(6.5 * 16, viewportWidth * 0.13, 9.1 * 16);
+      const desiredBottomGap = Math.max(bottomBase, 16);
+      const currentBottomGap = bottomRect.top - biographyRect.bottom;
+      const resolvedBottomGap = currentBottomGap >= desiredBottomGap ? currentBottomGap : desiredBottomGap;
+
+      setTopClusterGap(resolvedTopGap);
+      setBottomClusterGap(resolvedBottomGap);
+    }
+
+    const run = () => evaluateSpacing();
+    const raf = requestAnimationFrame(run);
+    window.addEventListener("resize", run);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", run);
+    };
+  }, [topPolaroids, bottomPolaroids, biographyRef, headingRef]);
 
   return (
     <main className={styles.main}>
@@ -199,20 +360,116 @@ export default function AboutPageContent({
       </section>
 
       <section className={styles.bodySection}>
-        <article
-          ref={biographyRef}
-          className={clsx(
-            styles.biography,
-            shouldAnimate && "motionFade",
-            shouldAnimate && biographyVisible && "motionFadeReady",
-          )}
-          style={createMotionVars(shouldAnimate, 0.15, 24, 0.5)}
-        >
-          <h2 className={styles.biographyHeading}>From RF to AI-secured automation</h2>
-          {biography.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </article>
+        <div className={styles.biographyLayout}>
+          <div
+            ref={topClusterRef}
+            className={styles.polaroidClusterTop}
+            aria-hidden="true"
+            style={topClusterGap ? { marginBottom: `${topClusterGap * 0.75}px` } : undefined}
+          >
+            {topPolaroids.map((photo, index) => {
+              const slot = topClusterSlots[index % topClusterSlots.length];
+              return (
+                <figure
+                  key={`top-${photo.src}`}
+                  className={styles.polaroid}
+                  style={
+                    {
+                      "--cluster-top": `${slot.top}%`,
+                      "--cluster-left": `${slot.left}%`,
+                      "--photo-size": `${slot.width}%`,
+                      "--rotation": `${slot.rotation + photo.rotation}deg`,
+                      "--photo-z": slot.zIndex,
+                    } as CSSProperties
+                  }
+                >
+                  <Image
+                    src={photo.src}
+                    alt=""
+                    width={800}
+                    height={900}
+                    sizes="(min-width: 1200px) 320px, (min-width: 992px) 280px, 220px"
+                    className={styles.polaroidImage}
+                    priority={index < 2}
+                  />
+                </figure>
+              );
+            })}
+          </div>
+
+          <article
+            ref={biographyRef}
+            className={clsx(
+              styles.biography,
+              shouldAnimate && "motionFade",
+              shouldAnimate && biographyVisible && "motionFadeReady",
+            )}
+            style={createMotionVars(shouldAnimate, 0.15, 24, 0.5)}
+          >
+            <h2 ref={headingRef} className={styles.biographyHeading}>
+              From RF to AI-secured automation
+            </h2>
+            {biography.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </article>
+
+          <div
+            ref={bottomClusterRef}
+            className={styles.polaroidClusterBottom}
+            aria-hidden="true"
+            style={bottomClusterGap ? { marginTop: `${bottomClusterGap * 1.5}px` } : undefined}
+          >
+            {bottomPolaroids.map((photo, index) => {
+              const slot = bottomClusterSlots[index % bottomClusterSlots.length];
+              return (
+                <figure
+                  key={`bottom-${photo.src}`}
+                  className={styles.polaroid}
+                  style={
+                    {
+                      "--cluster-top": `${slot.top}%`,
+                      "--cluster-left": `${slot.left}%`,
+                      "--photo-size": `${slot.width}%`,
+                      "--rotation": `${slot.rotation + photo.rotation}deg`,
+                      "--photo-z": slot.zIndex,
+                    } as CSSProperties
+                  }
+                >
+                  <Image
+                    src={photo.src}
+                    alt=""
+                    width={800}
+                    height={900}
+                    sizes="(min-width: 1200px) 320px, (min-width: 992px) 280px, 220px"
+                    className={styles.polaroidImage}
+                    priority={false}
+                  />
+                </figure>
+              );
+            })}
+          </div>
+
+          <div className={styles.photoCarousel}>
+            {[...topPolaroids, ...bottomPolaroids].map((photo, index) => (
+              <figure
+                key={`mobile-${photo.src}`}
+                className={styles.polaroidMobile}
+                style={{ "--rotate": `${photo.rotation / 2}deg` } as CSSProperties}
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  width={520}
+                  height={578}
+                  sizes="(min-width: 48rem) 220px, 70vw"
+                  className={styles.polaroidImage}
+                  priority={index < 2}
+                />
+              </figure>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section className={styles.constantsSection}>

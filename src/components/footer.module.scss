@@ -1,9 +1,10 @@
 .footer {
   margin-top: clamp(4rem, 10vw, 6rem);
-  border-top: 1px solid rgba(148, 163, 184, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-block: clamp(2rem, 6vw, 3rem);
-  color: var(--text-muted);
-  background-color: transparent;
+  color: var(--text-on-inverse);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.75));
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.05), 0 -25px 60px rgba(6, 16, 24, 0.45);
 }
 
 .inner {
@@ -13,6 +14,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-lg);
+  text-align: center;
 }
 
 .linkRow {
@@ -23,7 +25,7 @@
 }
 
 .link {
-  color: var(--color-teal-400);
+  color: color-mix(in srgb, var(--color-teal-200) 85%, white 15%);
   text-decoration: none;
   font-size: var(--font-size-sm);
   transition: color var(--transition-base), text-decoration-color var(--transition-base);
@@ -31,19 +33,19 @@
 
 .link:hover,
 .link:focus-visible {
-  color: var(--color-teal-300);
+  color: var(--color-teal-200);
   text-decoration: underline;
 }
 
 .link:focus-visible {
-  outline: 2px solid var(--color-teal-400);
+  outline: 2px solid var(--color-teal-200);
   outline-offset: 2px;
 }
 
 .copy {
   font-size: var(--font-size-xs);
   text-align: center;
-  color: rgba(148, 163, 184, 0.8);
+  color: color-mix(in srgb, var(--text-on-inverse) 65%, rgba(148, 163, 184, 0.8) 35%);
 }
 
 .utility {

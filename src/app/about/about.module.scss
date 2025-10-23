@@ -277,10 +277,14 @@
 }
 
 .biography {
+  position: relative;
+  z-index: 2;
   color: var(--text-primary);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   display: flow-root;
+  max-width: clamp(72ch, 82ch, 92ch);
+  margin-inline: auto;
 }
 
 .biographyHeading {
@@ -295,6 +299,126 @@
 
 .biography p + p {
   margin-top: var(--space-lg);
+}
+
+.biographyLayout {
+  position: relative;
+  padding: clamp(2.75rem, 6vw, 4rem) clamp(1.5rem, 4vw, 3.25rem);
+  border-radius: clamp(2rem, 5vw, 3rem);
+  background: color-mix(in srgb, var(--surface-base) 96%, white 4%);
+  box-shadow: var(--shadow-md);
+  overflow: visible;
+}
+
+:global(body.dark) .biographyLayout {
+  background: color-mix(in srgb, var(--surface-elevated) 90%, rgba(15, 23, 42, 0.6) 10%);
+  box-shadow: 0 24px 48px rgba(3, 7, 18, 0.45);
+}
+
+.polaroidClusterTop,
+.polaroidClusterBottom {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .polaroidClusterTop,
+  .polaroidClusterBottom {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-inline: auto;
+    pointer-events: none;
+  }
+
+  .polaroidClusterTop {
+    height: clamp(12rem, 22vw, 16rem);
+    margin-bottom: 0;
+  }
+
+  .polaroidClusterBottom {
+    height: clamp(13rem, 24vw, 18rem);
+    margin-top: 0;
+  }
+}
+
+.polaroid {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .polaroid {
+    display: block;
+    position: absolute;
+    top: var(--cluster-top);
+    left: var(--cluster-left);
+    width: clamp(18rem, calc(var(--photo-size) * 2), 36rem);
+    aspect-ratio: 9 / 10;
+    transform: translate(-50%, -50%) rotate(var(--rotation));
+    background: #fff;
+    padding: clamp(0.5rem, 1.1vw, 0.85rem) clamp(0.5rem, 1.1vw, 0.85rem) clamp(1.1rem, 2vw, 1.6rem);
+    border-radius: 0.65rem;
+    box-shadow:
+      0 18px 35px rgba(15, 23, 42, 0.22),
+      0 8px 18px rgba(15, 23, 42, 0.18);
+    z-index: var(--photo-z);
+    filter: drop-shadow(0 12px 25px rgba(15, 23, 42, 0.16));
+    transition: transform 220ms ease, box-shadow 220ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .polaroid:hover {
+    transform: translate(-50%, -50%) rotate(calc(var(--rotation) * 0.85));
+    box-shadow:
+      0 22px 42px rgba(15, 23, 42, 0.26),
+      0 10px 20px rgba(15, 23, 42, 0.22);
+  }
+}
+
+.polaroidImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 0.35rem;
+  object-fit: cover;
+}
+
+.photoCarousel {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  display: flex;
+  gap: clamp(var(--space-md), 4vw, var(--space-xl));
+  overflow-x: auto;
+  padding-block: var(--space-sm);
+  padding-inline: clamp(var(--space-sm), 3vw, var(--space-md));
+  scroll-snap-type: x mandatory;
+}
+
+.photoCarousel::-webkit-scrollbar {
+  display: none;
+}
+
+.polaroidMobile {
+  scroll-snap-align: center;
+  flex: 0 0 clamp(9.5rem, 45vw, 13rem);
+  background: #fff;
+  padding: clamp(0.45rem, 1vw, 0.75rem) clamp(0.45rem, 1vw, 0.75rem) clamp(0.9rem, 2vw, 1.3rem);
+  border-radius: 0.55rem;
+  box-shadow:
+    0 12px 28px rgba(15, 23, 42, 0.18),
+    0 8px 16px rgba(15, 23, 42, 0.16);
+  transform: rotate(var(--rotate));
+  aspect-ratio: 9 / 10;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 64rem) {
+  .photoCarousel {
+    display: none;
+  }
 }
 
 .constantsSection {

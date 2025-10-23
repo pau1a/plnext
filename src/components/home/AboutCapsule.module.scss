@@ -80,10 +80,10 @@
 
 @media (min-width: 64rem) {
   .content {
-    grid-template-columns: minmax(0, 0.26fr) minmax(0, 0.74fr);
+    grid-template-columns: minmax(0, 0.11fr) minmax(0, 0.89fr);
     align-items: stretch;
-    column-gap: clamp(0.25rem, 2vw, 0.75rem);
-    margin-inline-start: clamp(3rem, 5vw, 3.5rem);
+    column-gap: clamp(0.2rem, 1vw, 0.4rem);
+    margin-inline-start: clamp(0.8rem, 2.25vw, 1.125rem);
   }
 }
 
@@ -220,7 +220,7 @@
 
 @media (min-width: 64rem) {
   .main {
-    grid-template-columns: minmax(0, 0.62fr) minmax(0, 0.38fr);
+    grid-template-columns: minmax(0, 0.48fr) minmax(0, 0.52fr);
     align-items: stretch;
   }
 }
@@ -228,7 +228,6 @@
 .copy {
   display: grid;
   gap: clamp(var(--space-md), 2vw, var(--space-lg));
-  max-width: 60ch;
   color: color-mix(in srgb, var(--text-primary) 92%, var(--surface-0) 8%);
 }
 
@@ -281,7 +280,7 @@
   position: relative;
   margin: 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .portraitGlow {
@@ -300,10 +299,10 @@
 .portraitFrame {
   position: relative;
   z-index: 1;
-  width: clamp(12rem, 28vw, 18rem);
-  aspect-ratio: 3 / 4;
-  border-radius: 48% / 58%;
-  padding: clamp(0.35rem, 0.9vw, 0.55rem);
+  width: clamp(16rem, 42vw, 30rem);
+  aspect-ratio: 9 / 10;
+  border-radius: 50% / 60%;
+  padding: clamp(0.35rem, 0.8vw, 0.5rem);
   background: linear-gradient(
     145deg,
     color-mix(in srgb, var(--surface-base) 95%, white 5%) 0%,

@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 
 import { getProjectSummaries } from "@/lib/mdx";
 
@@ -11,6 +10,16 @@ import styles from "./ExecutionLayer.module.scss";
 import type { HomeSectionProps } from "./types";
 
 const PROJECT_LIMIT = 3;
+
+function formatYear(value: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return String(date.getFullYear());
+}
 
 export default async function ExecutionLayer({
   className,
@@ -37,67 +46,76 @@ export default async function ExecutionLayer({
       <div className={clsx(homeStyles.bandInner, styles.inner)}>
         <span className={homeStyles.flightLine} aria-hidden="true" />
 
-        <header className={styles.header}>
-          <h2 className={styles.title}>Projects</h2>
-          <p className={styles.caption}>
-            Systems that bring disciplined engineering down from the clouds and into
-            production.
-          </p>
-        </header>
+        <div className={styles.panel}>
+          <header className={styles.header}>
+            <div className={styles.headerText}>
+              <span className={styles.eyebrow}>Execution layer</span>
+              <h2 className={styles.heading}>Projects</h2>
+              <p className={styles.subheading}>
+                Fully shipped engagements where calm engineering met real-world
+                constraints.
+              </p>
+            </div>
+            <p className={styles.headerMeta}>
+              Selected work across cloud security, automation, and resilience.
+            </p>
+          </header>
 
-        <div className={styles.grid}>
-          {projects.map((project, index) => (
-            <article
-              key={project.slug}
-              className={styles.card}
-              style={{ "--card-index": index } as CSSProperties}
-            >
-              <div className={styles.cardMedia} aria-hidden="true">
-                <span className={styles.cardSignal} />
-              </div>
+          <div className={styles.grid}>
+            {projects.map((project) => {
+              const year = formatYear(project.date);
 
-              <div className={styles.cardBody}>
-                <header className={styles.cardHeader}>
-                  {project.status ? (
-                    <span className={styles.cardStatus}>{project.status}</span>
+              return (
+                <article key={project.slug} className={styles.card}>
+                  <span className={styles.cardAccent} aria-hidden="true" />
+
+                  <header className={styles.cardHeader}>
+                    <div className={styles.cardMeta}>
+                      {year ? (
+                        <time className={styles.cardYear} dateTime={project.date}>
+                          {year}
+                        </time>
+                      ) : null}
+                      {project.status ? (
+                        <span className={styles.cardStatus}>{project.status}</span>
+                      ) : null}
+                    </div>
+
+                    <h3 className={styles.cardTitle}>
+                      <Link href={`/projects/${project.slug}`}>
+                        {project.title}
+                      </Link>
+                    </h3>
+
+                    <p className={styles.cardSummary}>{project.summary}</p>
+                  </header>
+
+                  {project.stack && project.stack.length > 0 ? (
+                    <ul className={styles.cardStack} aria-label="Technologies">
+                      {project.stack.map((item) => (
+                        <li key={item} className={styles.cardStackItem}>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
                   ) : null}
-                  <h3 className={styles.cardTitle}>
-                    <Link href={`/projects/${project.slug}`}>
-                      {project.title}
-                    </Link>
-                  </h3>
-                </header>
 
-                <p className={styles.cardSummary}>{project.summary}</p>
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className={styles.cardLink}
+                  >
+                    View project →
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
 
-                {project.stack && project.stack.length > 0 ? (
-                  <ul className={styles.cardStack} aria-label="Technologies">
-                    {project.stack.map((item) => (
-                      <li key={item} className={styles.cardStackItem}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className={styles.cardLink}
-                >
-                  <span>Project deep dive</span>
-                  <span aria-hidden="true" className={styles.cardLinkArrow}>
-                    →
-                  </span>
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className={styles.footer}>
-          <Link href="/projects" className={styles.footerCta}>
-            View all projects →
-          </Link>
+          <div className={styles.footer}>
+            <Link href="/projects" className={styles.footerCta}>
+              View all projects →
+            </Link>
+          </div>
         </div>
       </div>
     </section>

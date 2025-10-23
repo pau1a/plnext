@@ -58,13 +58,7 @@ export function Hero({
   const resolvedAnimate = animate ?? "visible";
 
   return (
-    <motion.section
-      className={clsx(styles.hero, className)}
-      variants={heroVariants}
-      initial={resolvedInitial}
-      animate={resolvedAnimate}
-      {...motionProps}
-    >
+    <section className={clsx(styles.hero, className)}>
       <div className={styles.heroMedia}>
         <Image
           src="https://cdn.networklayer.co.uk/paulalivingstone/images/freefall.jpg"
@@ -73,11 +67,19 @@ export function Hero({
           priority
           unoptimized
           sizes="100vw"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHBwgHBgoICAoKCgkLCgkKDRcNDhANDg8NFREWFhURExMYHSggGBolHRUTITEhJSkrLi4uFx8zODMsNygtLisBCgoKDg0OGxAQGi0lHyUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAOEA4QMBIgACEQEDEQH/xAAVAAEBAAAAAAAAAAAAAAAAAAAABv/EABYBAQEBAAAAAAAAAAAAAAAAAAABAv/aAAwDAQACEAMQAAAB9AA//8QAGRAAAgMBAAAAAAAAAAAAAAAAAQIAERMx/9oACAEBAAE/AGX5i5cqOK//xAAWEQADAAAAAAAAAAAAAAAAAAABACH/2gAIAQMBAT8AYf/EABYRAQEBAAAAAAAAAAAAAAAAAAEAEf/aAAgBAgEBPwCxl//EABoQAQACAgMAAAAAAAAAAAAAAAEAESExQXH/2gAIAQEABj8C2nVjXjzIg1YQn//EABkQAQACAwAAAAAAAAAAAAAAAAEAESHx0f/aAAgBAQABPyHTifMumB8d9bUEpQqj/2gAMAwEAAgADAAAAEB//xAAWEQEBAQAAAAAAAAAAAAAAAAABABH/2gAIAQMBAT8Qxf/EABcRAQEBAQAAAAAAAAAAAAAAAAEAERL/2gAIAQIBAT8QEms//8QAGxABAAMBAAMAAAAAAAAAAAAAAQARITFBUXH/2gAIAQEAAT8Qhe4wEa8R0xEKLThg4gS0F1eq//9k="
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
       </div>
       <div className={styles.heroOverlay} />
-      <div className={styles.heroContent}>
+      <motion.div
+        className={styles.heroContent}
+        variants={heroVariants}
+        initial={resolvedInitial}
+        animate={resolvedAnimate}
+        {...motionProps}
+      >
         {copy.eyebrow ? <span className={styles.eyebrow}>{copy.eyebrow}</span> : null}
         <h1 className={styles.heading}>{copy.title}</h1>
         {copy.subheading ? (
@@ -103,8 +105,8 @@ export function Hero({
             ))}
           </div>
         ) : null}
-      </div>
-    </motion.section>
+      </motion.div>
+    </section>
   );
 }
 

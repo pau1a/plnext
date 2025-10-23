@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 
 import { getNotes, stripMarkdown } from "@/lib/notes";
 import { loadStream } from "@/lib/stream";
@@ -152,160 +151,145 @@ export default async function KnowledgeLayer({
       <div className={clsx(homeStyles.bandInner, styles.inner)}>
         <span className={homeStyles.flightLine} aria-hidden="true" />
 
-        <header className={styles.intro}>
-          <div>
-            <h2 className={styles.heading}>Writing</h2>
-            <p className={styles.subheading}>
-              Essays on resilient systems, operational calm, and the craft of
-              engineering.
-            </p>
-          </div>
-
-          {hasTimeline ? (
-            <div className={styles.timelineLabel}>
-              <span className={styles.timelineTitle}>Activity rail</span>
-              <p className={styles.timelineCaption}>
-                Notes and live stream entries braided into one signal.
+        <div className={styles.panel}>
+          <header className={styles.header}>
+            <div className={styles.headerText}>
+              <span className={styles.eyebrow}>Knowledge layer</span>
+              <h2 className={styles.heading}>Writing</h2>
+              <p className={styles.subheading}>
+                Signals from the lab — essays, notes, and stream entries in one
+                disciplined feed.
               </p>
             </div>
-          ) : null}
-        </header>
 
-        <div className={styles.layout}>
-          {featuredEssay ? (
-            <div className={styles.writingPanel}>
-              <article className={styles.featured}>
-                <span className={styles.featuredLabel}>
-                  <span className={styles.featuredBullet} aria-hidden="true" />
-                  Featured essay
-                </span>
+            {hasTimeline ? (
+              <div className={styles.headerAside}>
+                <p className={styles.headerAsideLabel}>Latest activity</p>
+                <p className={styles.headerAsideCopy}>
+                  Notes and live stream updates in chronological order.
+                </p>
+              </div>
+            ) : null}
+          </header>
 
-                <time
-                  dateTime={featuredEssay.date}
-                  className={styles.featuredDate}
-                >
-                  {formatDate(featuredEssay.date)}
-                </time>
+          <div
+            className={clsx(
+              styles.columns,
+              !featuredEssay && styles.columnsCondensed,
+            )}
+          >
+            {featuredEssay ? (
+              <div className={styles.writing}>
+                <article className={styles.featured}>
+                  <div className={styles.featuredMeta}>
+                    <span className={styles.featuredLabel}>Featured essay</span>
+                    <time
+                      dateTime={featuredEssay.date}
+                      className={styles.featuredDate}
+                    >
+                      {formatDate(featuredEssay.date)}
+                    </time>
+                  </div>
 
-                <Link
-                  href={`/writing/${featuredEssay.slug}`}
-                  className={styles.featuredTitle}
-                >
-                  {featuredEssay.title}
-                </Link>
+                  <h3 className={styles.featuredTitle}>
+                    <Link href={`/writing/${featuredEssay.slug}`}>
+                      {featuredEssay.title}
+                    </Link>
+                  </h3>
 
-                {featuredSummary ? (
-                  <p className={styles.featuredSummary}>{featuredSummary}</p>
+                  {featuredSummary ? (
+                    <p className={styles.featuredSummary}>{featuredSummary}</p>
+                  ) : null}
+
+                  <Link
+                    href={`/writing/${featuredEssay.slug}`}
+                    className={styles.featuredCta}
+                  >
+                    Read the essay →
+                  </Link>
+                </article>
+
+                {supportingEssays.length > 0 ? (
+                  <div className={styles.supporting}>
+                    <ul className={styles.supportingList}>
+                      {supportingEssays.map((essay) => {
+                        const summary = normaliseEssaySummary(essay.summary);
+
+                        return (
+                          <li key={essay.slug} className={styles.supportingItem}>
+                            <div className={styles.supportingMeta}>
+                              <time
+                                dateTime={essay.date}
+                                className={styles.supportingDate}
+                              >
+                                {formatDate(essay.date, {
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                              </time>
+                            </div>
+
+                            <h4 className={styles.supportingTitle}>
+                              <Link href={`/writing/${essay.slug}`}>
+                                {essay.title}
+                              </Link>
+                            </h4>
+
+                            {summary ? (
+                              <p className={styles.supportingSummary}>
+                                {summary}
+                              </p>
+                            ) : null}
+                          </li>
+                        );
+                      })}
+                    </ul>
+
+                    <div className={styles.actions}>
+                      <Link href="/writing" className={styles.moreLink}>
+                        Browse all essays →
+                      </Link>
+                    </div>
+                  </div>
                 ) : null}
+              </div>
+            ) : null}
 
-                <Link
-                  href={`/writing/${featuredEssay.slug}`}
-                  className={styles.featuredCta}
-                >
-                  Read the essay →
-                </Link>
-              </article>
-
-              {supportingEssays.length > 0 ? (
-                <aside className={styles.supporting}>
-                  <ul className={styles.supportingList}>
-                    {supportingEssays.map((essay) => {
-                      const summary = normaliseEssaySummary(essay.summary);
-
-                      return (
-                        <li key={essay.slug} className={styles.supportingItem}>
-                          <Link
-                            href={`/writing/${essay.slug}`}
-                            className={styles.supportingTitle}
+            {hasTimeline ? (
+              <aside className={styles.timeline}>
+                <ol className={styles.timelineList}>
+                  {timelineEntries.map((entry) => (
+                    <li key={entry.id} className={styles.timelineItem}>
+                      <span className={styles.timelineMarker} aria-hidden="true" />
+                      <article className={styles.timelineCard}>
+                        <header className={styles.timelineHeader}>
+                          <span className={styles.timelineSource}>
+                            {entry.from}
+                          </span>
+                          <time
+                            dateTime={entry.isoDate}
+                            className={styles.timelineDate}
                           >
-                            {essay.title}
-                        </Link>
-
-                        <time
-                          dateTime={essay.date}
-                          className={styles.supportingDate}
-                        >
-                            {formatDate(essay.date, {
+                            {formatDate(entry.isoDate, {
                               month: "short",
                               day: "numeric",
                             })}
                           </time>
-
-                          {summary ? (
-                            <p className={styles.supportingSummary}>
-                              {summary}
-                            </p>
-                          ) : null}
-                        </li>
-                      );
-                    })}
-                  </ul>
-
-                  <div className={styles.supportingFooter}>
-                    <Link href="/writing" className={styles.browseCta}>
-                      Browse all essays →
-                    </Link>
-                  </div>
-                </aside>
-              ) : null}
-            </div>
-          ) : null}
-
-          {hasTimeline ? (
-            <aside className={styles.timeline}>
-              <ol className={styles.timelineList}>
-                {timelineEntries.map((entry, index) => (
-                  <li
-                    key={entry.id}
-                    className={clsx(
-                      styles.timelineItem,
-                      styles[`timelineItem_${entry.type}`],
-                    )}
-                    style={
-                      { "--item-index": index } as CSSProperties
-                    }
-                  >
-                    <span className={styles.timelineAxis} aria-hidden="true">
-                      <span className={styles.timelineTick} />
-                    </span>
-
-                    <article className={styles.timelineCard}>
-                      <header className={styles.timelineHeader}>
-                        <span className={styles.timelineSource}>
-                          {entry.from}
-                        </span>
-                        <time
-                          dateTime={entry.isoDate}
-                          className={styles.timelineDate}
+                        </header>
+                        <Link
+                          href={entry.href}
+                          className={styles.timelineLink}
+                          aria-label={`${entry.from}: ${entry.title}`}
                         >
-                          {formatDate(entry.isoDate, {
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </time>
-                      </header>
-
-                      <Link
-                        href={entry.href}
-                        className={styles.timelineLink}
-                        aria-label={`${entry.from}: ${entry.title}`}
-                      >
-                        <span className={styles.timelineSummary}>
                           {entry.summary}
-                        </span>
-                        <span
-                          className={styles.timelineArrow}
-                          aria-hidden="true"
-                        >
-                          ↗
-                        </span>
-                      </Link>
-                    </article>
-                  </li>
-                ))}
-              </ol>
-            </aside>
-          ) : null}
+                        </Link>
+                      </article>
+                    </li>
+                  ))}
+                </ol>
+              </aside>
+            ) : null}
+          </div>
         </div>
       </div>
     </section>

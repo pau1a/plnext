@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="#e23b6b P logo">
+  <rect width="512" height="512" fill="#fff"/>
+  <defs>
+    <mask id="p-mask" maskUnits="userSpaceOnUse">
+      <rect width="512" height="512" fill="#000"/>
+      <rect x="112" y="96" width="112" height="352" fill="#fff"/>
+      <circle cx="320" cy="208" r="144" fill="#fff"/>
+      <circle cx="320" cy="208" r="80" fill="#000"/>
+      <rect x="224" y="288" width="256" height="224" fill="#000"/>
+    </mask>
+  </defs>
+  <rect width="512" height="512" fill="#e23b6b" mask="url(#p-mask)"/>
+</svg>
