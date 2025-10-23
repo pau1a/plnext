@@ -43,14 +43,16 @@ export default function AboutCapsule({
       <div className={styles.inner}>
         <div className={styles.content}>
           <aside className={styles.rail}>
-            <span className={clsx("u-eyebrow", styles.eyebrow)}>ABOUT</span>
+            <div className={styles.labelGroup}>
+              <span className={clsx("u-eyebrow", styles.eyebrow)}>ABOUT</span>
+              <p className={styles.meta}>
+                <span>Updated </span>
+                <time dateTime="2024-07">July 2024</time>
+              </p>
+            </div>
             <div className={styles.accentTrack} aria-hidden="true">
               <div className={styles.accentBar} />
             </div>
-            <p className={styles.meta}>
-              <span>Updated </span>
-              <time dateTime="2024-07">July 2024</time>
-            </p>
           </aside>
 
           <div className={styles.main}>
@@ -71,7 +73,7 @@ export default function AboutCapsule({
             <MotionFade delay={0.3} duration={0.2} offset={10}>
               <p>
                 I build systems that stay steady when things get unpredictable
-                {"\u2009—\u2009"}
+                {"\u200a—\u200a"}
                 the kind that keep automation, energy, and industry safe to rely
                 on. Decades of engineering have taught me that reliability isn’t a
                 by-product of technology; it’s the outcome of clarity, rehearsal,
@@ -82,7 +84,7 @@ export default function AboutCapsule({
               My work is about keeping that clarity as automation grows more
               intelligent and the stakes rise. Making complexity calm. Turning
               risk into rhythm. Keeping everything that matters flying straight
-              {"\u2009—\u2009"}
+              {"\u200a—\u200a"}
               <Link href="/about" className={styles.link}>
                 More →
               </Link>
