@@ -48,17 +48,17 @@ export default function AboutCapsule({
               <div className={styles.accentBar} />
             </div>
             <p className={styles.meta}>
-              <span className={styles.metaLabel}>Updated</span>
+              <span>Updated </span>
               <time dateTime="2024-07">July 2024</time>
             </p>
           </aside>
 
           <div className={styles.main}>
-            <MotionFade delay={0.06} duration={0.2} offset={10}>
-              <h2 className={styles.heading}>Calm engineering under pressure</h2>
+            <MotionFade delay={0.18} duration={0.2} offset={10}>
+              <h2 className={styles.heading}>Calm engineering under pressure.</h2>
             </MotionFade>
 
-            <MotionFade delay={0.12} duration={0.2} offset={10}>
+            <MotionFade delay={0.24} duration={0.2} offset={10}>
               <p className={styles.firstParagraph}>
                 <span className={clsx("u-text-lead", styles.leadWord)}>
                   There’s
@@ -68,7 +68,7 @@ export default function AboutCapsule({
               </p>
             </MotionFade>
 
-            <MotionFade delay={0.18} duration={0.2} offset={10}>
+            <MotionFade delay={0.3} duration={0.2} offset={10}>
               <p>
                 I build systems that stay steady when things get unpredictable
                 {"\u200A—\u200A"}
