@@ -9,6 +9,7 @@ import {
   useState,
   type CSSProperties,
   type ReactElement,
+  type ReactNode,
 } from "react";
 
 import { createMotionVars, usePrefersReducedMotion } from "@/lib/motion";
@@ -19,7 +20,7 @@ type MotionFadeChild = ReactElement<{
 }>;
 
 type MotionFadeProps = {
-  children: MotionFadeChild;
+  children: MotionFadeChild | ReactNode;
   delay?: number;
   duration?: number;
   offset?: number;
@@ -31,10 +32,6 @@ export default function MotionFade({
   duration,
   offset,
 }: MotionFadeProps) {
-  if (!isValidElement(children)) {
-    throw new Error("MotionFade expects a single React element child.");
-  }
-
   const prefersReducedMotion = usePrefersReducedMotion();
   const shouldAnimate = !prefersReducedMotion;
   const [isReady, setIsReady] = useState(!shouldAnimate);
@@ -59,16 +56,26 @@ export default function MotionFade({
     [delay, duration, offset, shouldAnimate],
   );
 
-  const className = clsx(
-    children.props.className,
+  const motionClassName = clsx(
     shouldAnimate && "motionFade",
     shouldAnimate && isReady && "motionFadeReady",
   );
 
-  const style = motionVars
-    ? ({ ...children.props.style, ...motionVars } as CSSProperties)
-    : children.props.style;
+  if (isValidElement(children)) {
+    const className = clsx(children.props.className, motionClassName);
+    const style = motionVars
+      ? ({ ...children.props.style, ...motionVars } as CSSProperties)
+      : children.props.style;
 
-  return cloneElement(children, { className, style });
+    return cloneElement(children, { className, style });
+  }
+
+  const style = motionVars ?? undefined;
+
+  return (
+    <div className={motionClassName} style={style}>
+      {children}
+    </div>
+  );
 }
 
