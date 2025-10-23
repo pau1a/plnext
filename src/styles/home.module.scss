@@ -4,33 +4,27 @@
   flex-direction: column;
 }
 
-.page {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(var(--space-3xl), 8vw, 6rem);
-  margin-block-start: clamp(var(--space-2xl), 8vw, var(--space-4xl));
-  padding-block-end: clamp(4rem, 6vw, 6rem);
+.main {
+  display: block;
+  padding: 0;
+}
+
+.sectionStack {
+  display: grid;
+  gap: 0;
 }
 
 .section {
-  display: grid;
-  gap: clamp(var(--space-xl), 2.5vw, var(--space-2xl));
-  padding-inline: clamp(var(--space-xl), 5vw, var(--space-3xl));
+  position: relative;
+  padding-block: clamp(3rem, 8vw, 5.5rem);
 }
 
-.sectionHeader {
+.sectionInner {
+  width: min(100%, var(--max-content-lg));
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 4vw, 3rem);
   display: grid;
-  gap: var(--space-sm);
-  max-width: var(--max-content-md);
-}
-
-.sectionEyebrow {
-  font-size: clamp(var(--font-size-xs), 0.8rem + 0.2vw, var(--font-size-sm));
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-teal-500);
+  gap: clamp(var(--space-lg), 2vw, var(--space-xl));
 }
 
 .sectionTitle {
@@ -41,190 +35,39 @@
 
 .sectionDescription {
   margin: 0;
-  color: var(--text-muted);
   font-size: clamp(var(--font-size-md), 1rem + 0.4vw, var(--font-size-lg));
+  color: color-mix(in srgb, currentColor 85%, transparent);
 }
 
-.serviceGrid {
-  display: grid;
-  gap: clamp(var(--space-lg), 2vw, var(--space-xl));
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-}
-
-.serviceCard {
-  padding: clamp(var(--space-xl), 2.2vw, var(--space-2xl));
-  display: grid;
-  gap: var(--space-md);
-}
-
-.serviceIcon {
-  width: 3rem;
-  height: 3rem;
-  display: grid;
-  place-items: center;
-  border-radius: 0.85rem;
-  background: linear-gradient(135deg, rgba(20, 184, 166, 0.16), rgba(20, 184, 166, 0.05));
-  color: var(--color-teal-600);
-  font-size: 1.35rem;
-}
-
-.serviceTitle {
+.sectionMeta {
   margin: 0;
-  font-size: clamp(var(--font-size-lg), 1rem + 0.4vw, var(--font-size-xl));
-  line-height: var(--line-height-snug);
-}
-
-.serviceDescription {
-  margin: 0;
-  color: var(--text-muted);
-}
-
-.serviceList {
-  margin: 0;
-  padding-inline-start: 1.5rem;
-  display: grid;
-  gap: var(--space-xs);
   font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, currentColor 65%, transparent);
 }
 
-.approachList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: clamp(var(--space-lg), 1.6vw, var(--space-xl));
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+.sectionLight {
+  background: var(--surface-base);
+  color: var(--text-primary);
 }
 
-.approachItem {
-  padding: clamp(var(--space-xl), 2vw, var(--space-2xl));
-  border-radius: var(--radius-lg);
-  background: rgba(20, 184, 166, 0.06);
-  border: 1px solid rgba(20, 184, 166, 0.16);
-  display: grid;
-  gap: var(--space-md);
+.sectionDark {
+  background: var(--surface-inverse);
+  color: var(--text-on-inverse);
 }
 
-.stepNumber {
-  font-size: clamp(2rem, 1.6rem + 1vw, 2.5rem);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--color-teal-600);
+.sectionDark .sectionDescription,
+.sectionDark .sectionMeta {
+  color: color-mix(in srgb, var(--text-on-inverse) 82%, transparent);
 }
 
-.stepTitle {
-  margin: 0;
-  font-size: clamp(var(--font-size-lg), 1rem + 0.4vw, var(--font-size-xl));
+.sectionDark .sectionMeta {
+  letter-spacing: 0.12em;
 }
 
-.stepDescription {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: var(--font-size-sm);
-}
-
-.projectsGrid {
-  display: grid;
-  gap: clamp(var(--space-lg), 2vw, var(--space-2xl));
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-}
-
-.sectionFooter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-md);
-  align-items: center;
-}
-
-.sectionLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  font-weight: 600;
-  color: var(--link-color);
-  text-decoration: none;
-}
-
-.sectionLink:hover,
-.sectionLink:focus-visible {
-  color: var(--link-hover);
-}
-
-.metricsGrid {
-  display: grid;
-  gap: clamp(var(--space-lg), 1.4vw, var(--space-xl));
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-}
-
-.metric {
-  padding: clamp(var(--space-lg), 1.8vw, var(--space-xl));
-  border-radius: var(--radius-md);
-  background: var(--surface-elevated);
-  border: 1px solid var(--surface-border);
-  display: grid;
-  gap: var(--space-xs);
-}
-
-.metricValue {
-  margin: 0;
-  font-size: clamp(2rem, 1.8rem + 1vw, 2.75rem);
-  font-weight: 700;
-  color: var(--color-teal-600);
-}
-
-.metricLabel {
-  margin: 0;
-  font-weight: 600;
-}
-
-.metricDescription {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: var(--font-size-sm);
-}
-
-.ctaSection {
-  padding-inline: clamp(var(--space-xl), 5vw, var(--space-3xl));
-}
-
-.ctaCard {
-  padding: clamp(var(--space-2xl), 4vw, var(--space-3xl));
-  border-radius: var(--radius-lg);
-  background: linear-gradient(145deg, rgba(13, 148, 136, 0.12), rgba(13, 148, 136, 0.04));
-  border: 1px solid rgba(13, 148, 136, 0.24);
-  display: grid;
-  gap: var(--space-lg);
-  text-align: center;
-}
-
-.ctaTitle {
-  margin: 0;
-  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
-  line-height: var(--line-height-tight);
-}
-
-.ctaDescription {
-  margin: 0;
-  font-size: clamp(var(--font-size-md), 1rem + 0.4vw, var(--font-size-lg));
-  color: var(--text-muted);
-}
-
-.ctaActions {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--space-md);
-}
-
-@media (min-width: 72rem) {
-  .ctaCard {
-    text-align: left;
-    grid-template-columns: 2fr auto;
-    align-items: center;
-  }
-
-  .ctaActions {
-    justify-content: flex-end;
+@media (min-width: 64rem) {
+  .sectionInner {
+    padding-inline: clamp(2rem, 4vw, 4rem);
   }
 }
