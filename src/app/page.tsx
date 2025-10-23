@@ -45,7 +45,7 @@ export default function Home() {
           <MotionFade>
             <AboutCapsule />
           </MotionFade>
-          <MotionFade delay={0.05}>
+          <MotionFade delay={0.05} duration={0.25} offset={20}>
             <WritingPreview />
           </MotionFade>
           <MotionFade delay={0.1}>
