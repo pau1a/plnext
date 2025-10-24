@@ -47,12 +47,12 @@ export default async function AdminEssaysPage() {
                   </header>
 
                   <div className={styles.actions}>
-                    <Link className="button button--ghost button--sm" href={`/writing/${essay.slug}`}>
+                    <Link className="button button--ghost button--sm" href={`/essays/${essay.slug}`}>
                       View live essay
                     </Link>
-                    <button className="button button--ghost button--sm" type="button" disabled>
-                      Edit content (coming soon)
-                    </button>
+                    <Link className="button button--ghost button--sm" href={`/admin/essays/${essay.slug}`}>
+                      Edit content
+                    </Link>
                     <button className="button button--ghost button--sm" type="button" disabled>
                       Schedule publish
                     </button>

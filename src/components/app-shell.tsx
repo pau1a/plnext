@@ -21,9 +21,10 @@ export default function AppShell({ children }: PropsWithChildren) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <BodyThemeSync />
 
-          <header className="app-shell__header">
-            <div className="l-container u-pad-block-lg">
-              <nav className="app-nav" aria-label="Primary">
+          <div className="app-shell__affix">
+            <header className="app-shell__header">
+              <div className="l-container u-pad-block-sm">
+                <nav className="app-nav" aria-label="Primary">
                 <Link className="app-nav__brand" href="/">
                   <span className="app-nav__logo" aria-hidden="true">
                     <Image
@@ -53,7 +54,7 @@ export default function AppShell({ children }: PropsWithChildren) {
                     </Link>
                     <ul aria-label="Writing sections" className="app-nav__submenu">
                       <li>
-                        <Link className="app-nav__sublink" href="/writing">
+                        <Link className="app-nav__sublink" href="/essays">
                           Essays
                         </Link>
                       </li>
@@ -120,9 +121,32 @@ export default function AppShell({ children }: PropsWithChildren) {
                     <i className="fa-brands fa-github app-nav__icon" aria-hidden="true" />
                   </a>
                 </div>
-              </nav>
+                </nav>
+              </div>
+            </header>
+            <div className="app-subnav-band">
+              <div className="app-subnav__container">
+                <nav className="app-subnav" aria-label="Secondary">
+                  <form className="app-subnav__search" role="search" action="/search">
+                    <label className="sr-only" htmlFor="app-subnav-search">
+                      Search
+                    </label>
+                    <span className="app-subnav__search-icon" aria-hidden="true">
+                      <i className="fa-solid fa-magnifying-glass" />
+                    </span>
+                    <input
+                      className="app-subnav__search-input"
+                      id="app-subnav-search"
+                      name="q"
+                      type="search"
+                      placeholder="Search…"
+                      autoComplete="off"
+                    />
+                  </form>
+                </nav>
+              </div>
             </div>
-          </header>
+          </div>
 
           <main className="app-shell__main" id="main-content" tabIndex={-1}>
             {children}

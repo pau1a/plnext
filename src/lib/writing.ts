@@ -1,6 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import type { ReactNode } from "react";
+import { compileMDX } from "next-mdx-remote/rsc";
 import matter from "gray-matter";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const WRITING_DIR = path.join(CONTENT_DIR, "writing");
@@ -16,6 +21,10 @@ export interface EssayFrontMatter {
 
 export interface EssaySummary extends EssayFrontMatter {
   slug: string;
+}
+
+export interface EssayDocument extends EssaySummary {
+  content: ReactNode;
 }
 
 interface EssaySource {
@@ -90,4 +99,59 @@ export async function getEssays(options: GetEssaysOptions = {}): Promise<EssaySu
     .map((source) => source.frontMatter)
     .filter((essay) => includeDrafts || !essay.draft)
     .sort(sortByDateDesc);
+}
+
+interface GetEssayOptions {
+  includeDrafts?: boolean;
+}
+
+export async function getEssay(slug: string, options: GetEssayOptions = {}): Promise<EssayDocument | null> {
+  const includeDrafts = options.includeDrafts ?? shouldIncludeDrafts();
+  const safeSlug = normaliseSlug(slug, slug);
+  const fullPath = path.join(WRITING_DIR, `${safeSlug}.mdx`);
+
+  let source: string;
+  try {
+    source = await fs.readFile(fullPath, "utf8");
+  } catch (error) {
+    return null;
+  }
+
+  const { content, frontmatter } = await compileMDX<EssayFrontMatter>({
+    source,
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+      },
+    },
+  });
+
+  if (frontmatter.draft && !includeDrafts) {
+    return null;
+  }
+
+  const summary: EssaySummary = {
+    slug: safeSlug,
+    title: frontmatter.title ?? safeSlug,
+    date: frontmatter.date ?? new Date().toISOString(),
+    summary: frontmatter.summary,
+    featured: frontmatter.featured,
+    draft: frontmatter.draft,
+  } satisfies EssaySummary;
+
+  return {
+    ...summary,
+    content,
+  };
+}
+
+export async function getEssaySlugs(options: GetEssaysOptions = {}): Promise<string[]> {
+  const includeDrafts = options.includeDrafts ?? shouldIncludeDrafts();
+  const sources = await loadEssaySources();
+  return sources
+    .map((source) => source.frontMatter)
+    .filter((essay) => includeDrafts || !essay.draft)
+    .map((essay) => essay.slug);
 }
