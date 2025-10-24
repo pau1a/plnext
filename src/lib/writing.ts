@@ -78,8 +78,12 @@ function sortByDateDesc(a: EssaySummary, b: EssaySummary) {
   return new Date(b.date).getTime() - new Date(a.date).getTime();
 }
 
-export async function getEssays(): Promise<EssaySummary[]> {
-  const includeDrafts = shouldIncludeDrafts();
+interface GetEssaysOptions {
+  includeDrafts?: boolean;
+}
+
+export async function getEssays(options: GetEssaysOptions = {}): Promise<EssaySummary[]> {
+  const includeDrafts = options.includeDrafts ?? shouldIncludeDrafts();
   const sources = await loadEssaySources();
 
   return sources

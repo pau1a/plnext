@@ -13,6 +13,9 @@ interface AdminShellProps {
 export function AdminShell({ actor, title, children }: AdminShellProps) {
   const navLinks = [
     { href: "/admin", label: "Dashboard" },
+    ...(actorHasPermission(actor, "audit:read")
+      ? [{ href: "/admin/essays", label: "Essays" } as const]
+      : []),
     ...(actorHasPermission(actor, "comments:moderate")
       ? [{ href: "/admin/comments", label: "Comment moderation" } as const]
       : []),
