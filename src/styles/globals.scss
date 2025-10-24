@@ -501,6 +501,71 @@ body.dark .app-shell__header {
   gap: var(--space-sm);
 }
 
+.app-nav__theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-teal-500) 42%, transparent);
+  background: transparent;
+  color: var(--color-teal-500);
+  transition: color var(--transition-base), border-color var(--transition-base), background-color var(--transition-base);
+}
+
+.app-nav__theme-toggle:hover {
+  color: var(--color-teal-300);
+  border-color: color-mix(in srgb, var(--color-teal-300) 55%, transparent);
+  background-color: color-mix(in srgb, var(--color-teal-500) 6%, transparent);
+}
+
+.app-nav__theme-toggle:focus-visible {
+  outline: 3px solid var(--color-teal-400);
+  outline-offset: 2px;
+}
+
+.app-nav__theme-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.app-nav__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-teal-500);
+}
+
+.app-nav__icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-teal-500) 42%, transparent);
+  color: inherit;
+  background: transparent;
+  text-decoration: none;
+  transition: color var(--transition-base), border-color var(--transition-base), background-color var(--transition-base);
+}
+
+.app-nav__icon-link:hover,
+.app-nav__icon-link:focus-visible {
+  color: var(--color-teal-300);
+  border-color: color-mix(in srgb, var(--color-teal-300) 55%, transparent);
+  background-color: color-mix(in srgb, var(--color-teal-500) 6%, transparent);
+  text-decoration: none;
+}
+
+.app-nav__icon-link:focus-visible {
+  outline: 3px solid var(--color-teal-400);
+  outline-offset: 2px;
+}
+
 /* Buttons */
 .button {
   --button-bg: var(--color-teal-500);

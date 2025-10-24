@@ -34,11 +34,11 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
-      className="button button--ghost button--sm u-inline-flex u-items-center u-gap-xs u-nowrap"
+      className="app-nav__theme-toggle"
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={handleClick}
     >
-      <i className={`fa-solid ${iconClass}`} aria-hidden="true" />
-      <span className="u-text-xs u-font-semibold">{isDark ? "Light mode" : "Dark mode"}</span>
+      <i className={`fa-solid ${iconClass} app-nav__theme-icon`} aria-hidden="true" />
     </button>
   );
 }

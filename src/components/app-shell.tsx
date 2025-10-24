@@ -6,6 +6,7 @@ import AnalyticsPreferences from "@/components/analytics-preferences";
 import BodyThemeSync from "@/components/body-theme-sync";
 import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/theme-toggle";
+import Image from "next/image";
 import Link from "next/link";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
@@ -24,8 +25,16 @@ export default function AppShell({ children }: PropsWithChildren) {
             <div className="l-container u-pad-block-lg">
               <nav className="app-nav" aria-label="Primary">
                 <Link className="app-nav__brand" href="/">
-                  <i className="fa-solid fa-shield-halved" aria-hidden="true" />
-                  <span>Paula Livingstone</span>
+                  <span className="app-nav__logo" aria-hidden="true">
+                    <Image
+                      src="/media/logo-mark.svg"
+                      alt=""
+                      width={36}
+                      height={36}
+                      priority
+                    />
+                  </span>
+                  <span className="app-nav__brand-text">Paula Livingstone</span>
                 </Link>
 
                 <ul className="app-nav__links">
@@ -90,6 +99,26 @@ export default function AppShell({ children }: PropsWithChildren) {
 
                 <div className="app-nav__actions">
                   <ThemeToggle />
+                  <a className="app-nav__icon-link" href="https://x.com/palivula" aria-label="Paula on X">
+                    <i className="fa-brands fa-x-twitter app-nav__icon" aria-hidden="true" />
+                  </a>
+                  <a
+                    className="app-nav__icon-link"
+                    href="https://www.linkedin.com/in/plivingstone"
+                    aria-label="Paula on LinkedIn"
+                  >
+                    <i className="fa-brands fa-linkedin-in app-nav__icon" aria-hidden="true" />
+                  </a>
+                  <a
+                    className="app-nav__icon-link"
+                    href="https://stackoverflow.com/users/4374150/paula-livingstone"
+                    aria-label="Paula on Stack Overflow"
+                  >
+                    <i className="fa-brands fa-stack-overflow app-nav__icon" aria-hidden="true" />
+                  </a>
+                  <a className="app-nav__icon-link" href="https://github.com/pau1a" aria-label="Paula on GitHub">
+                    <i className="fa-brands fa-github app-nav__icon" aria-hidden="true" />
+                  </a>
                 </div>
               </nav>
             </div>

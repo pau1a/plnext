@@ -13,7 +13,7 @@ interface LoginResult {
 
 export async function loginAction(_: LoginResult, formData: FormData): Promise<LoginResult> {
   const token = formData.get("token");
-  const next = (formData.get("next") as string | null) ?? "/admin/comments";
+  const next = (formData.get("next") as string | null) ?? "/admin";
 
   if (typeof token !== "string" || !token.trim()) {
     return { error: "Enter an access token" };
@@ -21,13 +21,13 @@ export async function loginAction(_: LoginResult, formData: FormData): Promise<L
 
   try {
     const actor = await createSession(token);
-    if (!actorHasPermission(actor, "comments:moderate")) {
+    if (!actorHasPermission(actor, "comments:view")) {
       const cookieStore = await cookies();
       cookieStore.delete(getSessionCookieName());
-      return { error: "You do not have permission to moderate comments." };
+      return { error: "You do not have permission to access the admin tools." };
     }
 
-    const redirectTarget = next.startsWith("/") ? next : "/admin/comments";
+    const redirectTarget = next.startsWith("/") ? next : "/admin";
     redirect(redirectTarget);
   } catch (error) {
     if (error instanceof Error && error.message === "INVALID_CREDENTIALS") {

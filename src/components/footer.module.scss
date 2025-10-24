@@ -48,6 +48,44 @@
   color: color-mix(in srgb, var(--text-on-inverse) 65%, rgba(148, 163, 184, 0.8) 35%);
 }
 
+.social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-teal-500) 25%, transparent);
+  background: transparent;
+  color: color-mix(in srgb, var(--color-teal-200) 75%, white 25%);
+  text-decoration: none;
+  transition: color var(--transition-base), border-color var(--transition-base), background-color var(--transition-base);
+}
+
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: var(--color-teal-200);
+  border-color: color-mix(in srgb, var(--color-teal-300) 55%, transparent);
+  background: color-mix(in srgb, var(--color-teal-500) 8%, transparent);
+  text-decoration: none;
+}
+
+.socialLink:focus-visible {
+  outline: 3px solid var(--color-teal-300);
+  outline-offset: 2px;
+}
+
+.socialIcon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
 .utility {
   display: flex;
   justify-content: center;

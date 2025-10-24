@@ -1,4 +1,6 @@
-import type { AuthenticatedActor } from "@/lib/auth/rbac";
+import Link from "next/link";
+
+import { actorHasPermission, type AuthenticatedActor } from "@/lib/auth/rbac";
 
 import { LogoutButton } from "./logout-button";
 
@@ -9,6 +11,13 @@ interface AdminShellProps {
 }
 
 export function AdminShell({ actor, title, children }: AdminShellProps) {
+  const navLinks = [
+    { href: "/admin", label: "Dashboard" },
+    ...(actorHasPermission(actor, "comments:moderate")
+      ? [{ href: "/admin/comments", label: "Comment moderation" } as const]
+      : []),
+  ];
+
   return (
     <div className="u-stack u-gap-xl">
       <header className="u-flex u-items-center u-justify-between">
@@ -20,9 +29,11 @@ export function AdminShell({ actor, title, children }: AdminShellProps) {
       </header>
 
       <nav aria-label="Admin navigation" className="u-flex u-gap-md">
-        <a className="button button--ghost" href="/admin/comments">
-          Comment moderation
-        </a>
+        {navLinks.map((link) => (
+          <Link className="button button--ghost" href={link.href} key={link.href}>
+            {link.label}
+          </Link>
+        ))}
       </nav>
 
       <main className="u-stack u-gap-xl">{children}</main>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 
 import { loginAction } from "./actions";
 
@@ -9,7 +9,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ nextPath }: LoginFormProps) {
-  const [state, formAction] = useFormState(loginAction, {});
+  const [state, formAction] = useActionState(loginAction, {});
 
   return (
     <form action={formAction} className="u-stack u-gap-lg max-w-xl">
