@@ -30,15 +30,6 @@ export default function AppShell({ children }: PropsWithChildren) {
               <div className="l-container u-pad-block-sm">
                 <nav className="app-nav" aria-label="Primary">
                 <Link className="app-nav__brand" href="/">
-                  <span className="app-nav__logo" aria-hidden="true">
-                    <Image
-                      src="/media/logo-mark.svg"
-                      alt=""
-                      width={28}
-                      height={28}
-                      priority
-                    />
-                  </span>
                   <span className="app-nav__brand-text">Paula Livingstone</span>
                 </Link>
 
@@ -136,10 +127,11 @@ export default function AppShell({ children }: PropsWithChildren) {
             <div className="app-subnav-band">
               <div className="app-subnav__container">
                 <nav className="app-subnav" aria-label="Secondary">
-                  <Link className="app-subnav__brand" href="/">
-                    <Image src="/media/logo-mark.svg" alt="" width={24} height={24} priority />
-                    <span className="sr-only">Paula Livingstone</span>
-                  </Link>
+                  <div className="app-subnav__brand">
+                    <Link href="/" className="app-subnav__brand-link" aria-label="Paula Livingstone">
+                      <Image src="/media/logo-mark-white.svg" alt="" width={24} height={24} priority />
+                    </Link>
+                  </div>
                   <form className="app-subnav__search" role="search" action="/search">
                     <label className="sr-only" htmlFor="app-subnav-search">
                       Search
@@ -156,6 +148,7 @@ export default function AppShell({ children }: PropsWithChildren) {
                       autoComplete="off"
                     />
                   </form>
+                  <button type="button" className="app-subnav__cta">CONNECT WALLET</button>
                 </nav>
               </div>
             </div>
