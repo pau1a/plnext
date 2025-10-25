@@ -1,5 +1,7 @@
 import clsx from "clsx";
 
+import { formatTagLabel } from "@/lib/tags";
+
 interface TagListProps {
   tags?: string[];
   className?: string;
@@ -15,7 +17,7 @@ export function TagList({ tags, className, ariaLabel = "Tags" }: TagListProps) {
     <ul className={clsx("tag-list", className)} aria-label={ariaLabel}>
       {tags.map((tag) => (
         <li key={tag} className="tag-list__item">
-          {tag}
+          {formatTagLabel(tag)}
         </li>
       ))}
     </ul>

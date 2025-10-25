@@ -389,8 +389,8 @@ body.dark .app-shell__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-lg);
+  flex-wrap: nowrap;
+  gap: var(--space-md);
 }
 
 .app-nav__brand {
@@ -401,6 +401,13 @@ body.dark .app-shell__header {
   font-weight: 700;
   font-size: var(--font-size-lg);
   letter-spacing: 0.02em;
+  min-width: 0;
+}
+
+.app-nav__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .app-nav__brand:hover,

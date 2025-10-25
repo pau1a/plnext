@@ -8,6 +8,8 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
 import { mdxComponents } from "./mdx-components";
+import { ensureSlug } from "./slugify";
+import { resolveTagSlugs } from "./tags";
 
 export interface BlogPostComment {
   author: string;
@@ -18,6 +20,7 @@ export interface BlogPostComment {
 
 export interface BlogPostFrontMatter {
   title: string;
+  slug?: string;
   date: string;
   description: string;
   tags?: string[];
@@ -27,6 +30,7 @@ export interface BlogPostFrontMatter {
 
 export interface ProjectFrontMatter {
   title: string;
+  slug?: string;
   date: string;
   summary: string;
   role?: string;
@@ -37,10 +41,12 @@ export interface ProjectFrontMatter {
 
 export interface BlogPostSummary extends BlogPostFrontMatter {
   slug: string;
+  fileSlug: string;
 }
 
 export interface ProjectSummary extends ProjectFrontMatter {
   slug: string;
+  fileSlug: string;
 }
 
 export interface BlogPost extends BlogPostSummary {
@@ -54,6 +60,10 @@ export interface ProjectDocument extends ProjectSummary {
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const BLOG_DIR = path.join(CONTENT_DIR, "blog");
 const PROJECTS_DIR = path.join(CONTENT_DIR, "projects");
+
+function shouldIncludeDrafts() {
+  return process.env.NODE_ENV !== "production";
+}
 
 async function readDirectory(dir: string) {
   try {
@@ -83,9 +93,12 @@ export async function getBlogPostSummaries(): Promise<BlogPostSummary[]> {
 
   const posts = await Promise.all(
     files.map(async (file) => {
-      const slug = file.replace(/\.mdx$/, "");
+      const fileSlug = file.replace(/\.mdx$/, "");
       const data = await readFrontMatter<BlogPostFrontMatter>(BLOG_DIR, file);
-      return { slug, ...data } satisfies BlogPostSummary;
+      const { slug: providedSlug, tags, ...rest } = data;
+      const slug = ensureSlug(providedSlug, fileSlug);
+      const { tags: resolvedTags } = resolveTagSlugs(Array.isArray(tags) ? tags : []);
+      return { fileSlug, slug, tags: resolvedTags, ...rest } satisfies BlogPostSummary;
     }),
   );
 
@@ -94,24 +107,36 @@ export async function getBlogPostSummaries(): Promise<BlogPostSummary[]> {
     .sort(sortByDateDesc);
 }
 
-export async function getProjectSummaries(): Promise<ProjectSummary[]> {
+interface GetProjectSummariesOptions {
+  includeDrafts?: boolean;
+}
+
+export async function getProjectSummaries(options: GetProjectSummariesOptions = {}): Promise<ProjectSummary[]> {
+  const includeDrafts = options.includeDrafts ?? false;
   const files = await readDirectory(PROJECTS_DIR);
 
   const projects = await Promise.all(
     files.map(async (file) => {
-      const slug = file.replace(/\.mdx$/, "");
+      const fileSlug = file.replace(/\.mdx$/, "");
       const data = await readFrontMatter<ProjectFrontMatter>(PROJECTS_DIR, file);
-      return { slug, ...data } satisfies ProjectSummary;
+      const { slug: providedSlug, ...rest } = data;
+      const slug = ensureSlug(providedSlug, fileSlug);
+      return { fileSlug, slug, ...rest } satisfies ProjectSummary;
     }),
   );
 
   return projects
-    .filter((project) => !project.draft)
+    .filter((project) => includeDrafts || !project.draft)
     .sort(sortByDateDesc);
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  const fullPath = path.join(BLOG_DIR, `${slug}.mdx`);
+  const summaries = await getBlogPostSummaries();
+  const match = summaries.find((post) => post.slug === slug || post.fileSlug === slug);
+  const fileSlug = match?.fileSlug ?? slug;
+  const fallbackSlug = match?.slug ?? slug;
+
+  const fullPath = path.join(BLOG_DIR, `${fileSlug}.mdx`);
 
   try {
     const source = await fs.readFile(fullPath, "utf8");
@@ -131,7 +156,11 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       return null;
     }
 
-    return { slug, content, ...frontmatter } satisfies BlogPost;
+    const { slug: providedSlug, tags, ...rest } = frontmatter;
+    const canonicalSlug = ensureSlug(providedSlug, fallbackSlug);
+    const { tags: resolvedTags } = resolveTagSlugs(Array.isArray(tags) ? tags : []);
+
+    return { slug: canonicalSlug, fileSlug, content, tags: resolvedTags, ...rest } satisfies BlogPost;
   } catch (error: unknown) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       return null;
@@ -141,7 +170,12 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
 }
 
 export async function getProjectDocument(slug: string): Promise<ProjectDocument | null> {
-  const fullPath = path.join(PROJECTS_DIR, `${slug}.mdx`);
+  const summaries = await getProjectSummaries({ includeDrafts: true });
+  const match = summaries.find((project) => project.slug === slug || project.fileSlug === slug);
+  const fileSlug = match?.fileSlug ?? slug;
+  const fallbackSlug = match?.slug ?? slug;
+
+  const fullPath = path.join(PROJECTS_DIR, `${fileSlug}.mdx`);
 
   try {
     const source = await fs.readFile(fullPath, "utf8");
@@ -157,11 +191,14 @@ export async function getProjectDocument(slug: string): Promise<ProjectDocument 
       },
     });
 
-    if (frontmatter.draft) {
+    if (frontmatter.draft && !shouldIncludeDrafts()) {
       return null;
     }
 
-    return { slug, content, ...frontmatter } satisfies ProjectDocument;
+    const { slug: providedSlug, ...rest } = frontmatter;
+    const canonicalSlug = ensureSlug(providedSlug, fallbackSlug);
+
+    return { slug: canonicalSlug, fileSlug, content, ...rest } satisfies ProjectDocument;
   } catch (error: unknown) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       return null;
@@ -171,8 +208,8 @@ export async function getProjectDocument(slug: string): Promise<ProjectDocument 
 }
 
 export async function getBlogSlugs() {
-  const files = await readDirectory(BLOG_DIR);
-  return files.map((file) => ({ slug: file.replace(/\.mdx$/, "") }));
+  const summaries = await getBlogPostSummaries();
+  return summaries.map((post) => ({ slug: post.slug }));
 }
 
 export async function getProjectSlugs() {

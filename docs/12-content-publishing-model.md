@@ -47,6 +47,7 @@ This document defines how MDX content is structured, how posts and projects move
   ```
 
   The component clamps width to fit the prose column, floats left/right on larger screens, and falls back to a 16:9 aspect ratio if no dimensions are supplied. Markdown `![alt](url "caption")` automatically routes through `ContentImage`, so titles become captions and alignment defaults to the centered layout.
+- Tags are defined centrally in `src/lib/tags.ts`. Reuse the existing slugs when updating front matter (`tags: ["application-security", "operations"]`). If a genuinely new tag is required, add it to the registry with a readable name and optional aliases before using it in any content.
 
 ## 2. Draft to Publish Workflow
 

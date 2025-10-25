@@ -140,6 +140,42 @@ export function AdminShell({ actor, title, subtitle, children, className }: Admi
                       Blog posts
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      className="admin-nav__sublink"
+                      href="/admin/notes"
+                      onClick={() => {
+                        clearScheduledMenuClose();
+                        setContentMenuOpen(false);
+                      }}
+                    >
+                      Notes
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="admin-nav__sublink"
+                      href="/admin/projects"
+                      onClick={() => {
+                        clearScheduledMenuClose();
+                        setContentMenuOpen(false);
+                      }}
+                    >
+                      Projects
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="admin-nav__sublink"
+                      href="/admin/stream"
+                      onClick={() => {
+                        clearScheduledMenuClose();
+                        setContentMenuOpen(false);
+                      }}
+                    >
+                      Stream
+                    </Link>
+                  </li>
                 </ul>
               </div>
             ) : null}

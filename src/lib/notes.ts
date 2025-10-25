@@ -7,6 +7,8 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
+import { resolveTagSlugs } from "./tags";
+
 import { mdxComponents } from "./mdx-components";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
@@ -23,6 +25,7 @@ export interface NoteFrontMatter {
 
 export type NoteSummary = Omit<NoteFrontMatter, "slug"> & {
   slug: string;
+  fileSlug: string;
 };
 
 export interface Note extends NoteSummary {
@@ -70,8 +73,11 @@ async function readNoteSource(file: string): Promise<NoteSource> {
   const raw = await fs.readFile(fullPath, "utf8");
   const { data, content } = matter(raw);
   const { slug: providedSlug, ...rest } = data as NoteFrontMatter;
+  const fileSlug = file.replace(/\.mdx$/, "");
   const slug = normaliseSlug(providedSlug, file);
-  const frontMatter = { slug, ...rest } as NoteSummary;
+  const { tags, ...restFrontMatter } = rest;
+  const { tags: resolvedTags } = resolveTagSlugs(Array.isArray(tags) ? tags : []);
+  const frontMatter = { slug, fileSlug, ...restFrontMatter, tags: resolvedTags } as NoteSummary;
 
   return {
     file,
@@ -90,8 +96,12 @@ function sortByDateDesc(a: NoteSummary, b: NoteSummary) {
   return new Date(b.date).getTime() - new Date(a.date).getTime();
 }
 
-export async function getNotes(): Promise<NoteSummary[]> {
-  const includeDrafts = shouldIncludeDrafts();
+interface GetNotesOptions {
+  includeDrafts?: boolean;
+}
+
+export async function getNotes(options: GetNotesOptions = {}): Promise<NoteSummary[]> {
+  const includeDrafts = options.includeDrafts ?? shouldIncludeDrafts();
   const sources = await loadNoteSources();
 
   return sources
@@ -112,7 +122,7 @@ export async function getNoteSlugs() {
 export async function getNoteBySlug(slug: string): Promise<Note | null> {
   const includeDrafts = shouldIncludeDrafts();
   const sources = await loadNoteSources();
-  const match = sources.find((source) => source.slug === slug);
+  const match = sources.find((source) => source.slug === slug || source.frontMatter.fileSlug === slug);
 
   if (!match) {
     return null;
@@ -136,6 +146,7 @@ export async function getNoteBySlug(slug: string): Promise<Note | null> {
 
   return {
     ...match.frontMatter,
+    tags: resolveTagSlugs(match.frontMatter.tags ?? []).tags,
     content,
     body: match.body,
   } satisfies Note;

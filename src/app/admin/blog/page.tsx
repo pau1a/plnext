@@ -6,6 +6,7 @@ import PageShell from "@/components/layout/PageShell";
 import { requirePermission } from "@/lib/auth/server";
 import { formatDate } from "@/lib/date";
 import { getBlogPostSummaries } from "@/lib/mdx";
+import { formatTagLabel } from "@/lib/tags";
 
 import styles from "./blog.module.scss";
 
@@ -25,7 +26,7 @@ export default async function AdminBlogPage() {
             <p className="u-text-muted">No blog posts found. Add `.mdx` files under `content/blog` to populate this list.</p>
           ) : (
             posts.map((post) => (
-              <article className={styles.row} key={post.slug}>
+              <article className={styles.row} key={post.fileSlug}>
                 <div className={styles.primary}>
                   <div className={styles.meta}>
                     <span className={styles.date}>{formatDate(post.date)}</span>
@@ -42,7 +43,7 @@ export default async function AdminBlogPage() {
                       <div className={styles.tags}>
                         {post.tags.map((tag) => (
                           <span className={styles.tag} key={tag}>
-                            {tag}
+                            {formatTagLabel(tag)}
                           </span>
                         ))}
                       </div>
@@ -56,9 +57,9 @@ export default async function AdminBlogPage() {
                   <Link className="button button--ghost button--xs" href={`/writing/${post.slug}`}>
                     View
                   </Link>
-                  <button className="button button--ghost button--xs" type="button" disabled>
-                    Edit (soon)
-                  </button>
+                  <Link className="button button--ghost button--xs" href={`/admin/blog/${post.fileSlug}`}>
+                    Edit
+                  </Link>
                   <button className="button button--ghost button--xs" type="button" disabled>
                     Schedule
                   </button>

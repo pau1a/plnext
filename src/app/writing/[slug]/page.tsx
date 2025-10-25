@@ -8,10 +8,11 @@ import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import { getBlogPost, getBlogPostSummaries, getBlogSlugs } from "@/lib/mdx";
+import { formatTagLabel } from "@/lib/tags";
 import { format } from "date-fns";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 interface BlogPostPageParams {
   slug: string;
@@ -150,6 +151,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const resolvedPost = post!;
 
+  if (resolvedPost.slug !== slug) {
+    redirect(`/writing/${resolvedPost.slug}`);
+  }
+
   return (
     <PageShell as="main" className="u-pad-block-3xl">
       <article className="u-stack u-gap-2xl u-max-w-lg u-center">
@@ -171,7 +176,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <ul className="tag-list">
                 {resolvedPost.tags.map((tag) => (
                   <li key={tag} className="tag-list__item">
-                    {tag}
+                    {formatTagLabel(tag)}
                   </li>
                 ))}
               </ul>

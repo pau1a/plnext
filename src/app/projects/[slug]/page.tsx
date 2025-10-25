@@ -11,7 +11,7 @@ import {
 import { format } from "date-fns";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 interface ProjectPageProps {
   params: { slug: string };
@@ -57,6 +57,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   if (!project) {
     notFound();
+  }
+
+  if (project.slug !== params.slug) {
+    redirect(`/projects/${project.slug}`);
   }
 
   const otherProjects = (await getProjectSummaries()).filter(

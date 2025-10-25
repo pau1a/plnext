@@ -34,8 +34,8 @@ export default function AppShell({ children }: PropsWithChildren) {
                     <Image
                       src="/media/logo-mark.svg"
                       alt=""
-                      width={36}
-                      height={36}
+                      width={28}
+                      height={28}
                       priority
                     />
                   </span>
@@ -52,7 +52,7 @@ export default function AppShell({ children }: PropsWithChildren) {
                     <Link
                       aria-haspopup="true"
                       className="app-nav__link"
-                      href="/writing"
+                      href="/essays"
                     >
                       Writing
                     </Link>
@@ -60,6 +60,11 @@ export default function AppShell({ children }: PropsWithChildren) {
                       <li>
                         <Link className="app-nav__sublink" href="/essays">
                           Essays
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="app-nav__sublink" href="/writing">
+                          Blog
                         </Link>
                       </li>
                       <li>
@@ -131,6 +136,10 @@ export default function AppShell({ children }: PropsWithChildren) {
             <div className="app-subnav-band">
               <div className="app-subnav__container">
                 <nav className="app-subnav" aria-label="Secondary">
+                  <Link className="app-subnav__brand" href="/">
+                    <Image src="/media/logo-mark.svg" alt="" width={24} height={24} priority />
+                    <span className="sr-only">Paula Livingstone</span>
+                  </Link>
                   <form className="app-subnav__search" role="search" action="/search">
                     <label className="sr-only" htmlFor="app-subnav-search">
                       Search

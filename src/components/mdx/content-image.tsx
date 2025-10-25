@@ -29,7 +29,7 @@ export function ContentImage({
     return null;
   }
 
-  const figureClass = clsx(styles.figure, className, {
+  const containerClass = clsx(styles.figure, className, {
     [styles.figureAlignLeft]: align === "left",
     [styles.figureAlignRight]: align === "right",
     [styles.figureAlignWide]: align === "wide",
@@ -41,8 +41,10 @@ export function ContentImage({
   const resolvedWidth = Number.isFinite(widthValue) ? widthValue : 1600;
   const resolvedHeight = Number.isFinite(heightValue) ? heightValue : Math.round((resolvedWidth / 16) * 9);
 
+  const captionText = caption ?? title;
+
   return (
-    <figure className={figureClass}>
+    <span className={containerClass} role="figure" aria-label={captionText ?? undefined}>
       <Image
         className={styles.image}
         src={src}
@@ -53,7 +55,7 @@ export function ContentImage({
         sizes={align === "wide" ? "(min-width: 768px) 960px, 100vw" : "(min-width: 768px) 420px, 100vw"}
         {...restImageProps}
       />
-      {caption || title ? <figcaption className={styles.caption}>{caption ?? title}</figcaption> : null}
-    </figure>
+      {captionText ? <span className={styles.caption}>{captionText}</span> : null}
+    </span>
   );
 }

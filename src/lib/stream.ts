@@ -5,13 +5,15 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import { format, parseISO } from "date-fns";
 import remarkGfm from "remark-gfm";
 
+import { resolveTagSlugs } from "./tags";
+
 import { mdxComponents } from "./mdx-components";
 
 const STREAM_FILE = path.join(process.cwd(), "content", "stream", "stream.jsonl");
 
 export type Visibility = "PRIVATE" | "LIMITED" | "PUBLIC";
 
-type StreamSourceRecord = {
+export type StreamSourceRecord = {
   id: string;
   timestamp: string;
   body: string;
@@ -142,13 +144,13 @@ export async function loadStream(): Promise<StreamEntry[]> {
       }
 
       const hashtags = extractHashtags(record.body);
-      const tags = Array.from(new Set([...(record.tags ?? []), ...hashtags]));
+      const { tags: resolvedTags } = resolveTagSlugs([...(record.tags ?? []), ...hashtags]);
       const content = await renderMarkdown(record.body);
 
       return {
         ...record,
         visibility,
-        tags,
+        tags: resolvedTags,
         anchor: `#${record.id}`,
         content,
       } satisfies StreamEntry;
