@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import type { CommentStatus } from "@/lib/supabase/service";
 import { fetchModerationQueue } from "@/lib/moderation/comments";
@@ -84,9 +83,8 @@ export default async function CommentsPage({
   const baseUrl = new URL("/admin/comments", "http://localhost");
 
   return (
-    <PageShell className="u-pad-block-3xl">
-      <MotionFade>
-        <div className="u-stack u-gap-2xl">
+    <MotionFade>
+      <div className="u-stack u-gap-2xl">
           <section className="u-stack u-gap-lg">
             <div
               className="u-flex u-flex-wrap u-gap-sm"
@@ -151,8 +149,7 @@ export default async function CommentsPage({
             pageSize={queue.pageSize}
             totalCount={queue.totalCount}
           />
-        </div>
-      </MotionFade>
-    </PageShell>
+      </div>
+    </MotionFade>
   );
 }

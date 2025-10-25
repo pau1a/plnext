@@ -1,7 +1,9 @@
 "use client";
 
+import clsx from "clsx";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { actorHasPermission, type AuthenticatedActor } from "@/lib/auth/rbac";
 
@@ -11,11 +13,17 @@ interface AdminShellProps {
   actor: AuthenticatedActor;
   title: string;
   children: React.ReactNode;
+  className?: string;
 }
 
-export function AdminShell({ actor, title, children }: AdminShellProps) {
+export function AdminShell({ actor, title, children, className }: AdminShellProps) {
+  const [navSlot, setNavSlot] = useState<HTMLElement | null>(null);
   const [isContentMenuOpen, setContentMenuOpen] = useState(false);
   const groupRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setNavSlot(document.getElementById("app-admin-nav-slot"));
+  }, []);
 
   useEffect(() => {
     const group = groupRef.current;
@@ -73,64 +81,72 @@ export function AdminShell({ actor, title, children }: AdminShellProps) {
   const showContentMenu = actorHasPermission(actor, "audit:read");
   const showComments = actorHasPermission(actor, "comments:moderate");
 
+  const adminNav =
+    navSlot && (showContentMenu || showComments)
+      ? createPortal(
+          <nav aria-label="Admin navigation" className="admin-nav">
+            <Link className="admin-nav__link" href="/admin">
+              Dashboard
+            </Link>
+
+            {showContentMenu ? (
+              <div
+                className="admin-nav__group"
+                data-admin-nav-group
+                data-open={isContentMenuOpen ? "true" : "false"}
+                ref={groupRef}
+              >
+                <button
+                  type="button"
+                  className="admin-nav__link admin-nav__link--with-carat"
+                  data-admin-nav-trigger
+                  aria-haspopup="true"
+                  aria-expanded={isContentMenuOpen}
+                >
+                  Site content
+                </button>
+                <ul
+                  className="admin-nav__submenu"
+                  data-admin-nav-menu
+                  data-open={isContentMenuOpen ? "true" : "false"}
+                >
+                  <li>
+                    <Link className="admin-nav__sublink" href="/admin/essays">
+                      Essays
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="admin-nav__sublink" href="/admin/blog">
+                      Blog posts
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            ) : null}
+
+            {showComments ? (
+              <Link className="admin-nav__link" href="/admin/comments">
+                Comment moderation
+              </Link>
+            ) : null}
+          </nav>,
+          navSlot,
+        )
+      : null;
+
   return (
-    <div className="u-stack u-gap-xl">
-      <header className="u-flex u-items-center u-justify-between">
-        <div>
-          <p className="u-text-sm u-text-muted">Signed in as {actor.name}</p>
-          <h1 className="u-heading-lg u-font-semibold">{title}</h1>
-        </div>
-        <LogoutButton />
-      </header>
-
-      <nav aria-label="Admin navigation" className="admin-nav">
-        <Link className="admin-nav__link" href="/admin">
-          Dashboard
-        </Link>
-
-        {showContentMenu ? (
-          <div
-            className="admin-nav__group"
-            data-admin-nav-group
-            data-open={isContentMenuOpen ? "true" : "false"}
-            ref={groupRef}
-          >
-            <button
-              type="button"
-              className="admin-nav__link admin-nav__link--with-carat"
-              data-admin-nav-trigger
-              aria-haspopup="true"
-              aria-expanded={isContentMenuOpen}
-            >
-              Site content
-            </button>
-            <ul
-              className="admin-nav__submenu"
-              data-admin-nav-menu
-              data-open={isContentMenuOpen ? "true" : "false"}
-            >
-              <li>
-                <Link className="admin-nav__sublink" href="/admin/essays">
-                  Essays
-                </Link>
-              </li>
-              <li>
-                <Link className="admin-nav__sublink" href="/admin/blog">
-                  Blog posts
-                </Link>
-              </li>
-            </ul>
+    <>
+      {adminNav}
+      <div className={clsx("u-stack u-gap-xl", className)}>
+        <header className="u-flex u-items-center u-justify-between">
+          <div>
+            <p className="u-text-sm u-text-muted">Signed in as {actor.name}</p>
+            <h1 className="u-heading-lg u-font-semibold">{title}</h1>
           </div>
-        ) : null}
-
-        {showComments ? (
-          <Link className="admin-nav__link" href="/admin/comments">
-            Comment moderation
-          </Link>
-        ) : null}
-      </nav>
-
-      <main className="u-stack u-gap-xl">{children}</main>
-    </div>
+          <LogoutButton />
+        </header>
+        <section className="u-stack u-gap-xl">{children}</section>
+      </div>
+    </>
   );
 }

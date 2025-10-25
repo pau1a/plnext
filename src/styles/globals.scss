@@ -523,6 +523,69 @@ body.dark .app-shell__header {
   background: rgba(255, 255, 255, 0.08);
 }
 
+.app-admin-band {
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-teal-700) 65%, var(--color-graphite-900) 35%),
+    color-mix(in srgb, var(--color-teal-500) 55%, var(--color-graphite-900) 45%)
+  );
+  border-bottom: 1px solid color-mix(in srgb, var(--color-teal-400) 40%, transparent);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+}
+
+.app-admin-band__container {
+  display: flex;
+  align-items: center;
+  padding-block: var(--space-sm);
+}
+
+.admin-essay-editor__frontmatter-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+.admin-essay-editor__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.admin-essay-editor__field .input,
+.admin-essay-editor__field textarea {
+  width: 100%;
+}
+
+.admin-essay-editor__field-label {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.admin-essay-editor__field-help {
+  margin: 0;
+  max-width: 42ch;
+}
+
+.admin-essay-editor__field--checkbox {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--color-teal-400) 35%, transparent);
+  background: color-mix(in srgb, var(--color-graphite-50) 60%, transparent);
+  gap: var(--space-xs);
+}
+
+.admin-essay-editor__checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.admin-essay-editor__checkbox-row input[type="checkbox"] {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
 .admin-essay-editor__textarea {
   width: 100%;
   min-height: 24rem;
@@ -798,22 +861,23 @@ body.dark .app-shell__header {
   gap: var(--space-2xs);
   padding: var(--space-sm) var(--space-lg);
   border-radius: 9999px;
-  border: 1px solid color-mix(in srgb, var(--color-teal-500) 28%, transparent);
-  background: transparent;
-  color: var(--color-teal-500);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(12, 19, 26, 0.35);
+  color: #f8fafc;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: var(--font-size-xs);
   cursor: pointer;
-  transition: color var(--transition-base), border-color var(--transition-base), background-color var(--transition-base);
+  transition: color var(--transition-base), border-color var(--transition-base), background-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .admin-nav__link:hover,
 .admin-nav__link:focus-visible {
-  color: var(--color-teal-300);
-  border-color: color-mix(in srgb, var(--color-teal-300) 55%, transparent);
-  background-color: color-mix(in srgb, var(--color-teal-500) 6%, transparent);
+  color: var(--color-teal-100);
+  border-color: rgba(255, 255, 255, 0.45);
+  background-color: rgba(12, 19, 26, 0.55);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.25);
   text-decoration: none;
 }
 
@@ -854,8 +918,8 @@ body.dark .app-shell__header {
   gap: var(--space-2xs);
   padding: var(--space-sm);
   border-radius: var(--radius-md);
-  border: 1px solid color-mix(in srgb, var(--color-teal-500) 22%, transparent);
-  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: rgba(15, 23, 42, 0.98);
   box-shadow: 0 16px 48px rgba(15, 23, 42, 0.25);
   z-index: 20;
 }

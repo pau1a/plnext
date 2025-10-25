@@ -8,10 +8,14 @@ import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/theme-toggle";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
 
 export default function AppShell({ children }: PropsWithChildren) {
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith("/admin") ?? false;
+
   return (
     <body className="app-shell">
       <a className="skip-link" href="#main-content">
@@ -146,6 +150,11 @@ export default function AppShell({ children }: PropsWithChildren) {
                 </nav>
               </div>
             </div>
+            {isAdminRoute ? (
+              <div className="app-admin-band">
+                <div className="app-admin-band__container l-container" id="app-admin-nav-slot" />
+              </div>
+            ) : null}
           </div>
 
           <main className="app-shell__main" id="main-content" tabIndex={-1}>

@@ -39,17 +39,31 @@ export default async function EditEssayPage({ params }: EditEssayPageProps) {
   let rawContent: string;
   try {
     rawContent = await fs.readFile(filePath, "utf8");
-  } catch (error) {
+  } catch {
     notFound();
   }
 
   const parsed = matter(rawContent);
   const title = parsed.data?.title ? String(parsed.data.title) : slug;
+  const frontmatter = parsed.data ?? {};
+  let bodyContent = parsed.content;
+  if (bodyContent.startsWith("\r\n")) {
+    bodyContent = bodyContent.slice(2);
+  } else if (bodyContent.startsWith("\n")) {
+    bodyContent = bodyContent.slice(1);
+  }
+  const frontmatterOrder = Object.keys(frontmatter);
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">
       <AdminShell actor={actor} title="Edit essay">
-        <EssayEditor slug={slug} initialContent={rawContent} title={title} />
+        <EssayEditor
+          slug={slug}
+          title={title}
+          initialBody={bodyContent}
+          initialFrontmatter={frontmatter}
+          frontmatterOrder={frontmatterOrder}
+        />
       </AdminShell>
     </PageShell>
   );
