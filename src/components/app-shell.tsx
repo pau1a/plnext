@@ -129,7 +129,14 @@ export default function AppShell({ children }: PropsWithChildren) {
                 <nav className="app-subnav" aria-label="Secondary">
                   <div className="app-subnav__brand">
                     <Link href="/" className="app-subnav__brand-link" aria-label="Paula Livingstone">
-                      <Image src="/media/logo-mark-white.svg" alt="" width={24} height={24} priority />
+                      <Image
+                        src="/media/logo-mark-white.svg"
+                        alt=""
+                        width={48}
+                        height={48}
+                        priority
+                        style={{ height: "2.1rem", width: "auto" }}
+                      />
                     </Link>
                   </div>
                   <form className="app-subnav__search" role="search" action="/search">
