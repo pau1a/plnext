@@ -25,38 +25,42 @@ export default async function AdminBlogPage() {
             <p className="u-text-muted">No blog posts found. Add `.mdx` files under `content/blog` to populate this list.</p>
           ) : (
             posts.map((post) => (
-              <article className={styles.card} key={post.slug}>
-                <header className="u-stack u-gap-xs">
+              <article className={styles.row} key={post.slug}>
+                <div className={styles.primary}>
                   <div className={styles.meta}>
-                    <span>{formatDate(post.date)}</span>
+                    <span className={styles.date}>{formatDate(post.date)}</span>
                     <span aria-hidden="true">•</span>
-                    <span>/{post.slug}</span>
+                    <span className={styles.slug}>/{post.slug}</span>
+                    {post.comments?.length ? (
+                      <span className={styles.commentBadge}>{post.comments.length} curated comments</span>
+                    ) : null}
                   </div>
-                  <h2 className="u-heading-md u-font-semibold">{post.title}</h2>
-                  <p className="u-text-muted u-text-sm">{post.description}</p>
-                  {post.tags && post.tags.length > 0 ? (
-                    <div className={styles.tags}>
-                      {post.tags.map((tag) => (
-                        <span className={styles.tag} key={tag}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null}
-                  {post.comments?.length ? (
-                    <p className={styles.comments}>{post.comments.length} curated comments</p>
-                  ) : null}
-                </header>
+
+                  <div className={styles.heading}>
+                    <h2 className={styles.title}>{post.title}</h2>
+                    {post.tags && post.tags.length > 0 ? (
+                      <div className={styles.tags}>
+                        {post.tags.map((tag) => (
+                          <span className={styles.tag} key={tag}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <p className={styles.summary}>{post.description}</p>
+                </div>
 
                 <div className={styles.actions}>
-                  <Link className="button button--ghost button--sm" href={`/writing/${post.slug}`}>
-                    View live post
+                  <Link className="button button--ghost button--xs" href={`/writing/${post.slug}`}>
+                    View
                   </Link>
-                  <button className="button button--ghost button--sm" type="button" disabled>
-                    Edit content (coming soon)
+                  <button className="button button--ghost button--xs" type="button" disabled>
+                    Edit (soon)
                   </button>
-                  <button className="button button--ghost button--sm" type="button" disabled>
-                    Schedule publish
+                  <button className="button button--ghost button--xs" type="button" disabled>
+                    Schedule
                   </button>
                 </div>
               </article>

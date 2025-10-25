@@ -29,32 +29,34 @@ export default async function AdminEssaysPage() {
               const statusLabel = isDraft ? "Draft" : "Published";
 
               return (
-                <article className={styles.card} key={essay.slug}>
-                  <header className="u-stack u-gap-xs">
+                <article className={styles.row} key={essay.fileSlug}>
+                  <div className={styles.primary}>
                     <div className={styles.meta}>
-                      <span>{formatDate(essay.date)}</span>
+                      <span className={styles.date}>{formatDate(essay.date)}</span>
                       <span aria-hidden="true">•</span>
-                      <span>/{essay.slug}</span>
-                      {essay.featured ? <span className={styles.tag}>Featured</span> : null}
-                      {isDraft ? <span className={styles.draft}>{statusLabel}</span> : null}
+                      <span className={styles.slug}>/{essay.slug}</span>
+                      {essay.featured ? <span className={styles.flag}>Featured</span> : null}
+                      <span className={isDraft ? styles.draft : styles.status}>{statusLabel}</span>
                     </div>
-                    <h2 className="u-heading-md u-font-semibold">{essay.title}</h2>
-                    {essay.summary ? (
-                      <p className="u-text-muted u-text-sm">{essay.summary}</p>
-                    ) : (
-                      <p className="u-text-muted u-text-sm">Add a summary in the front matter to help editors scan the backlog.</p>
-                    )}
-                  </header>
+
+                    <h2 className={styles.title}>{essay.title}</h2>
+
+                    <p className={styles.summary}>
+                      {essay.summary
+                        ? essay.summary
+                        : "Add a summary in the front matter to help editors scan the backlog."}
+                    </p>
+                  </div>
 
                   <div className={styles.actions}>
-                    <Link className="button button--ghost button--sm" href={`/essays/${essay.slug}`}>
-                      View live essay
+                    <Link className="button button--ghost button--xs" href={`/essays/${essay.slug}`}>
+                      View
                     </Link>
-                    <Link className="button button--ghost button--sm" href={`/admin/essays/${essay.slug}`}>
-                      Edit content
+                    <Link className="button button--ghost button--xs" href={`/admin/essays/${essay.fileSlug}`}>
+                      Edit
                     </Link>
-                    <button className="button button--ghost button--sm" type="button" disabled>
-                      Schedule publish
+                    <button className="button button--ghost button--xs" type="button" disabled>
+                      Schedule
                     </button>
                   </div>
                 </article>

@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import matter from "gray-matter";
 
 import { requirePermission } from "@/lib/auth/server";
+import { ensureSlug } from "@/lib/slugify";
 
 const ESSAY_DIR = path.join(process.cwd(), "content", "writing");
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
@@ -48,6 +49,10 @@ export async function updateEssayAction(
     frontmatterKeys = parsedKeys;
   } catch {
     return { status: "error", message: "Could not parse the front matter fields." };
+  }
+
+  if (!frontmatterKeys.includes("slug")) {
+    frontmatterKeys = ["slug", ...frontmatterKeys];
   }
 
   const filePath = path.join(ESSAY_DIR, `${fileSlug}.mdx`);
@@ -94,13 +99,14 @@ export async function updateEssayAction(
     return { status: "error", message: "Title cannot be empty." };
   }
 
-  if ("slug" in frontmatter && typeof frontmatter.slug === "string" && frontmatter.slug.trim() === "") {
-    return { status: "error", message: "Slug cannot be empty." };
-  }
-
   if ("date" in frontmatter && typeof frontmatter.date === "string" && frontmatter.date.trim() === "") {
     return { status: "error", message: "Date cannot be empty." };
   }
+
+  const titleValue =
+    typeof frontmatter.title === "string" && frontmatter.title.trim().length > 0 ? frontmatter.title : undefined;
+  const derivedSlug = ensureSlug(titleValue ?? null, fileSlug);
+  frontmatter.slug = derivedSlug;
 
   const newlineRegex = newline === "\r\n" ? /^\r?\n+/ : /^\n+/;
   let normalizedBody = body.replace(/\r?\n/g, newline).replace(newlineRegex, "");
@@ -121,6 +127,9 @@ export async function updateEssayAction(
   revalidatePath("/admin/essays");
   revalidatePath("/essays");
   revalidatePath(`/essays/${fileSlug}`);
+  if (derivedSlug !== fileSlug) {
+    revalidatePath(`/essays/${derivedSlug}`);
+  }
 
   return { status: "success", message: "Essay updated successfully." };
 }

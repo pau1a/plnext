@@ -7,6 +7,8 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
+import { mdxComponents } from "./mdx-components";
+
 export interface BlogPostComment {
   author: string;
   role?: string;
@@ -115,6 +117,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     const source = await fs.readFile(fullPath, "utf8");
     const { content, frontmatter } = await compileMDX<BlogPostFrontMatter>({
       source,
+      components: mdxComponents,
       options: {
         parseFrontmatter: true,
         mdxOptions: {
@@ -144,6 +147,7 @@ export async function getProjectDocument(slug: string): Promise<ProjectDocument 
     const source = await fs.readFile(fullPath, "utf8");
     const { content, frontmatter } = await compileMDX<ProjectFrontMatter>({
       source,
+      components: mdxComponents,
       options: {
         parseFrontmatter: true,
         mdxOptions: {

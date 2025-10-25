@@ -116,7 +116,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </header>
         </MotionFade>
 
-        <div className="prose u-stack u-gap-lg">{project.content}</div>
+        <div className="prose">{project.content}</div>
 
         {otherProjects.length > 0 ? (
           <MotionFade delay={0.05}>

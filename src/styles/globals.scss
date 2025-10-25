@@ -540,6 +540,50 @@ body.dark .app-shell__header {
   padding-block: var(--space-sm);
 }
 
+
+.admin-shell__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.admin-shell__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.admin-shell__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3xs);
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.admin-shell__meta-item {
+  white-space: nowrap;
+}
+
+.admin-shell__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2xs);
+}
+
+.admin-shell__title-suffix {
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
 .admin-essay-editor__frontmatter-grid {
   display: grid;
   gap: var(--space-md);
@@ -567,12 +611,66 @@ body.dark .app-shell__header {
   max-width: 42ch;
 }
 
-.admin-essay-editor__field--checkbox {
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
-  border: 1px solid color-mix(in srgb, var(--color-teal-400) 35%, transparent);
-  background: color-mix(in srgb, var(--color-graphite-50) 60%, transparent);
+.admin-essay-editor__lead {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-xs);
+}
+
+
+.admin-essay-editor__statbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.admin-essay-editor__statrow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.admin-essay-editor__stat code {
+  padding: 0 var(--space-2xs);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-graphite-200) 35%, transparent);
+}
+
+.admin-essay-editor__primary-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: min(60rem, 100%);
+}
+
+.admin-essay-editor__field--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.admin-essay-editor__field--inline .admin-essay-editor__field-label {
+  min-width: 5rem;
+}
+
+.admin-essay-editor__field--inline .input {
+  flex: 1;
+  min-width: 18rem;
+}
+
+.admin-essay-editor__field--summary {
+  gap: var(--space-2xs);
+  max-width: min(60rem, 100%);
+}
+
+.admin-essay-editor__summary-input {
+  width: 100%;
+  min-height: 6rem;
+  resize: vertical;
 }
 
 .admin-essay-editor__checkbox-row {
@@ -582,8 +680,43 @@ body.dark .app-shell__header {
 }
 
 .admin-essay-editor__checkbox-row input[type="checkbox"] {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-teal-500);
+}
+
+.admin-essay-editor__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.admin-essay-editor__featured-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+.admin-essay-editor__featured-toggle input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-teal-500);
+}
+
+.admin-essay-editor__featured-label {
+  color: var(--color-graphite-600);
+}
+
+.admin-essay-editor__featured-note {
+  white-space: nowrap;
+  max-width: none;
 }
 
 .admin-essay-editor__textarea {
@@ -592,7 +725,7 @@ body.dark .app-shell__header {
   font-family: "Fira Code", "JetBrains Mono", Menlo, Consolas, monospace;
   font-size: var(--font-size-sm);
   line-height: 1.5;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .essay-card {
@@ -860,25 +993,31 @@ body.dark .app-shell__header {
   align-items: center;
   gap: var(--space-2xs);
   padding: var(--space-sm) var(--space-lg);
+  border: none;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(12, 19, 26, 0.35);
-  color: #f8fafc;
+  background: transparent;
+  color: rgba(248, 250, 252, 0.72);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: var(--font-size-xs);
   cursor: pointer;
-  transition: color var(--transition-base), border-color var(--transition-base), background-color var(--transition-base), box-shadow var(--transition-base);
+  appearance: none;
+  transition: color var(--transition-base), background-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .admin-nav__link:hover,
-.admin-nav__link:focus-visible {
-  color: var(--color-teal-100);
-  border-color: rgba(255, 255, 255, 0.45);
-  background-color: rgba(12, 19, 26, 0.55);
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.25);
+.admin-nav__link:focus-visible,
+.admin-nav__group[data-open="true"] > [data-admin-nav-trigger] {
+  color: #ffffff;
+  background: color-mix(in srgb, var(--color-teal-500) 38%, transparent);
+  box-shadow: 0 10px 24px rgba(9, 16, 25, 0.35);
   text-decoration: none;
+}
+
+.admin-nav__link:focus-visible {
+  outline: 2px solid rgba(45, 212, 191, 0.65);
+  outline-offset: 2px;
 }
 
 .admin-nav__link--with-carat::-webkit-details-marker {
@@ -917,11 +1056,17 @@ body.dark .app-shell__header {
   flex-direction: column;
   gap: var(--space-2xs);
   padding: var(--space-sm);
+  margin: 0;
+  list-style: none;
   border-radius: var(--radius-md);
   border: 1px solid rgba(148, 163, 184, 0.45);
   background: rgba(15, 23, 42, 0.98);
   box-shadow: 0 16px 48px rgba(15, 23, 42, 0.25);
   z-index: 20;
+}
+
+.admin-nav__submenu > li {
+  list-style: none;
 }
 
 .admin-nav__submenu[data-open="false"] {
@@ -1514,15 +1659,19 @@ $spaces: (
 }
 
 /* Rich text formatting */
+
 .prose {
-  display: grid;
-  gap: var(--space-lg);
+  display: flow-root;
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
 }
 
 .prose > * {
   margin: 0;
+}
+
+.prose > * + * {
+  margin-top: var(--space-lg);
 }
 
 .prose h2 {
@@ -1552,6 +1701,25 @@ $spaces: (
   padding-inline: var(--space-lg);
   color: var(--text-muted);
   font-style: italic;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+.prose figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  margin: var(--space-xl) auto;
+}
+
+.prose figcaption {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-align: center;
 }
 
 .prose pre {

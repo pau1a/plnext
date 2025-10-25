@@ -7,6 +7,10 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
+import { mdxComponents } from "./mdx-components";
+
+import { ensureSlug } from "./slugify";
+
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const WRITING_DIR = path.join(CONTENT_DIR, "writing");
 
@@ -21,6 +25,7 @@ export interface EssayFrontMatter {
 
 export interface EssaySummary extends EssayFrontMatter {
   slug: string;
+  fileSlug: string;
 }
 
 export interface EssayDocument extends EssaySummary {
@@ -51,15 +56,8 @@ async function readDirectory(dir: string) {
 }
 
 function normaliseSlug(candidate: unknown, fallback: string) {
-  if (typeof candidate === "string") {
-    const trimmed = candidate.trim();
-
-    if (trimmed) {
-      return trimmed;
-    }
-  }
-
-  return fallback.replace(/\.mdx$/, "");
+  const fallbackBase = fallback.replace(/\.mdx$/, "");
+  return ensureSlug(typeof candidate === "string" ? candidate : undefined, fallbackBase);
 }
 
 async function readEssaySource(file: string): Promise<EssaySource> {
@@ -69,7 +67,8 @@ async function readEssaySource(file: string): Promise<EssaySource> {
 
   const { slug: providedSlug, ...rest } = data as EssayFrontMatter;
   const slug = normaliseSlug(providedSlug, file);
-  const frontMatter = { slug, ...rest } as EssaySummary;
+  const fileSlug = file.replace(/\.mdx$/, "");
+  const frontMatter = { slug, fileSlug, ...rest } as EssaySummary;
 
   return {
     file,
@@ -108,17 +107,26 @@ interface GetEssayOptions {
 export async function getEssay(slug: string, options: GetEssayOptions = {}): Promise<EssayDocument | null> {
   const includeDrafts = options.includeDrafts ?? shouldIncludeDrafts();
   const safeSlug = normaliseSlug(slug, slug);
-  const fullPath = path.join(WRITING_DIR, `${safeSlug}.mdx`);
+  const sources = await loadEssaySources();
 
-  let source: string;
-  try {
-    source = await fs.readFile(fullPath, "utf8");
-  } catch (error) {
+  const matchByFrontmatter = sources.find((source) => source.frontMatter.slug === safeSlug);
+  const matchByFile = sources.find((source) => source.file.replace(/\.mdx$/, "") === safeSlug);
+  const target = matchByFrontmatter ?? matchByFile;
+
+  if (!target) {
     return null;
   }
 
+  if (target.frontMatter.draft && !includeDrafts) {
+    return null;
+  }
+
+  const fullPath = path.join(WRITING_DIR, target.file);
+  const raw = await fs.readFile(fullPath, "utf8");
+
   const { content, frontmatter } = await compileMDX<EssayFrontMatter>({
-    source,
+    source: raw,
+    components: mdxComponents,
     options: {
       parseFrontmatter: true,
       mdxOptions: {
@@ -132,13 +140,16 @@ export async function getEssay(slug: string, options: GetEssayOptions = {}): Pro
     return null;
   }
 
+  const canonicalSlug = normaliseSlug(frontmatter.slug, target.frontMatter.slug ?? target.frontMatter.fileSlug ?? safeSlug);
+
   const summary: EssaySummary = {
-    slug: safeSlug,
-    title: frontmatter.title ?? safeSlug,
-    date: frontmatter.date ?? new Date().toISOString(),
-    summary: frontmatter.summary,
-    featured: frontmatter.featured,
-    draft: frontmatter.draft,
+    slug: canonicalSlug,
+    fileSlug: target.frontMatter.fileSlug ?? target.file.replace(/\.mdx$/, ""),
+    title: frontmatter.title ?? target.frontMatter.title ?? canonicalSlug,
+    date: frontmatter.date ?? target.frontMatter.date ?? new Date().toISOString(),
+    summary: frontmatter.summary ?? target.frontMatter.summary,
+    featured: frontmatter.featured ?? target.frontMatter.featured,
+    draft: frontmatter.draft ?? target.frontMatter.draft,
   } satisfies EssaySummary;
 
   return {

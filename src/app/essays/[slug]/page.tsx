@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
@@ -32,6 +32,10 @@ export default async function EssayPage({ params }: EssayPageProps) {
 
   if (!essay) {
     notFound();
+  }
+
+  if (essay.slug !== params.slug) {
+    redirect(`/essays/${essay.slug}`);
   }
 
   return (

@@ -5,6 +5,8 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import { format, parseISO } from "date-fns";
 import remarkGfm from "remark-gfm";
 
+import { mdxComponents } from "./mdx-components";
+
 const STREAM_FILE = path.join(process.cwd(), "content", "stream", "stream.jsonl");
 
 export type Visibility = "PRIVATE" | "LIMITED" | "PUBLIC";
@@ -79,6 +81,7 @@ export async function parseJSONL(filePath: string): Promise<StreamSourceRecord[]
 export async function renderMarkdown(source: string): Promise<ReactElement> {
   const { content } = await compileMDX({
     source,
+    components: mdxComponents,
     options: {
       parseFrontmatter: false,
       mdxOptions: {

@@ -179,7 +179,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </header>
         </MotionFade>
 
-        <div className="prose u-stack u-gap-lg">{resolvedPost.content}</div>
+        <div className="prose">{resolvedPost.content}</div>
 
         <MotionFade delay={0.05}>
           <section

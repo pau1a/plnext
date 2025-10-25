@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { actorHasPermission, type AuthenticatedActor } from "@/lib/auth/rbac";
@@ -12,71 +12,64 @@ import { LogoutButton } from "./logout-button";
 interface AdminShellProps {
   actor: AuthenticatedActor;
   title: string;
+  subtitle?: string;
   children: React.ReactNode;
   className?: string;
 }
 
-export function AdminShell({ actor, title, children, className }: AdminShellProps) {
+export function AdminShell({ actor, title, subtitle, children, className }: AdminShellProps) {
   const [navSlot, setNavSlot] = useState<HTMLElement | null>(null);
   const [isContentMenuOpen, setContentMenuOpen] = useState(false);
+  const closeMenuTimeoutRef = useRef<number | null>(null);
   const groupRef = useRef<HTMLDivElement | null>(null);
+
+  const clearScheduledMenuClose = useCallback(() => {
+    if (closeMenuTimeoutRef.current !== null) {
+      window.clearTimeout(closeMenuTimeoutRef.current);
+      closeMenuTimeoutRef.current = null;
+    }
+  }, []);
+
+  const scheduleMenuClose = useCallback(() => {
+    clearScheduledMenuClose();
+    closeMenuTimeoutRef.current = window.setTimeout(() => {
+      setContentMenuOpen(false);
+      closeMenuTimeoutRef.current = null;
+    }, 120);
+  }, [clearScheduledMenuClose]);
 
   useEffect(() => {
     setNavSlot(document.getElementById("app-admin-nav-slot"));
   }, []);
 
   useEffect(() => {
-    const group = groupRef.current;
-    if (!group) {
-      return;
-    }
-
-    const trigger = group.querySelector<HTMLButtonElement>("[data-admin-nav-trigger]");
-    const menu = group.querySelector<HTMLUListElement>("[data-admin-nav-menu]");
-    if (!trigger || !menu) {
-      return;
-    }
-
-    const toggleMenu = () => setContentMenuOpen((prev) => !prev);
     const handleDocumentClick = (event: MouseEvent) => {
-      if (!group.contains(event.target as Node)) {
+      if (!groupRef.current?.contains(event.target as Node)) {
+        clearScheduledMenuClose();
         setContentMenuOpen(false);
       }
     };
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        clearScheduledMenuClose();
         setContentMenuOpen(false);
       }
     };
 
-    trigger.addEventListener("click", toggleMenu);
     document.addEventListener("click", handleDocumentClick);
     document.addEventListener("keydown", handleEscape);
 
     return () => {
-      trigger.removeEventListener("click", toggleMenu);
       document.removeEventListener("click", handleDocumentClick);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, []);
+  }, [clearScheduledMenuClose]);
 
   useEffect(() => {
-    const group = groupRef.current;
-    if (!group) {
-      return;
-    }
-
-    const trigger = group.querySelector<HTMLButtonElement>("[data-admin-nav-trigger]");
-    const menu = group.querySelector<HTMLUListElement>("[data-admin-nav-menu]");
-    if (!trigger || !menu) {
-      return;
-    }
-
-    const state = isContentMenuOpen ? "true" : "false";
-    group.dataset.open = state;
-    menu.dataset.open = state;
-    trigger.setAttribute("aria-expanded", state);
-  }, [isContentMenuOpen]);
+    return () => {
+      clearScheduledMenuClose();
+    };
+  }, [clearScheduledMenuClose]);
 
   const showContentMenu = actorHasPermission(actor, "audit:read");
   const showComments = actorHasPermission(actor, "comments:moderate");
@@ -95,6 +88,11 @@ export function AdminShell({ actor, title, children, className }: AdminShellProp
                 data-admin-nav-group
                 data-open={isContentMenuOpen ? "true" : "false"}
                 ref={groupRef}
+                onMouseEnter={() => {
+                  clearScheduledMenuClose();
+                  setContentMenuOpen(true);
+                }}
+                onMouseLeave={scheduleMenuClose}
               >
                 <button
                   type="button"
@@ -102,6 +100,14 @@ export function AdminShell({ actor, title, children, className }: AdminShellProp
                   data-admin-nav-trigger
                   aria-haspopup="true"
                   aria-expanded={isContentMenuOpen}
+                  onClick={() => {
+                    clearScheduledMenuClose();
+                    setContentMenuOpen((prev) => !prev);
+                  }}
+                  onFocus={() => {
+                    clearScheduledMenuClose();
+                    setContentMenuOpen(true);
+                  }}
                 >
                   Site content
                 </button>
@@ -111,12 +117,26 @@ export function AdminShell({ actor, title, children, className }: AdminShellProp
                   data-open={isContentMenuOpen ? "true" : "false"}
                 >
                   <li>
-                    <Link className="admin-nav__sublink" href="/admin/essays">
+                    <Link
+                      className="admin-nav__sublink"
+                      href="/admin/essays"
+                      onClick={() => {
+                        clearScheduledMenuClose();
+                        setContentMenuOpen(false);
+                      }}
+                    >
                       Essays
                     </Link>
                   </li>
                   <li>
-                    <Link className="admin-nav__sublink" href="/admin/blog">
+                    <Link
+                      className="admin-nav__sublink"
+                      href="/admin/blog"
+                      onClick={() => {
+                        clearScheduledMenuClose();
+                        setContentMenuOpen(false);
+                      }}
+                    >
                       Blog posts
                     </Link>
                   </li>
@@ -138,10 +158,15 @@ export function AdminShell({ actor, title, children, className }: AdminShellProp
     <>
       {adminNav}
       <div className={clsx("u-stack u-gap-xl", className)}>
-        <header className="u-flex u-items-center u-justify-between">
-          <div>
-            <p className="u-text-sm u-text-muted">Signed in as {actor.name}</p>
-            <h1 className="u-heading-lg u-font-semibold">{title}</h1>
+        <header className="admin-shell__header">
+          <div className="admin-shell__heading">
+            <div className="admin-shell__meta">
+              <span className="admin-shell__meta-item">Signed in as {actor.name}</span>
+            </div>
+            <h1 className="admin-shell__title u-heading-lg u-font-semibold">
+              {title}
+              {subtitle ? <span className="admin-shell__title-suffix">— {subtitle}</span> : null}
+            </h1>
           </div>
           <LogoutButton />
         </header>

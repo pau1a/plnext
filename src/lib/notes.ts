@@ -7,6 +7,8 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
+import { mdxComponents } from "./mdx-components";
+
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const NOTES_DIR = path.join(CONTENT_DIR, "notes");
 
@@ -122,6 +124,7 @@ export async function getNoteBySlug(slug: string): Promise<Note | null> {
 
   const { content } = await compileMDX<{ title: string }>({
     source: match.body,
+    components: mdxComponents,
     options: {
       parseFrontmatter: false,
       mdxOptions: {

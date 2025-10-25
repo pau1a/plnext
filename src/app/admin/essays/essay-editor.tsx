@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import { updateEssayAction } from "./actions";
+import { ensureSlug } from "@/lib/slugify";
 
 type FrontmatterValue = string | boolean;
 
@@ -32,12 +33,6 @@ const FIELD_CONFIG: Record<
     label: "Title",
     type: "text",
     placeholder: "Precision in the Loopery",
-  },
-  slug: {
-    label: "Slug",
-    type: "text",
-    placeholder: "precision-in-the-loop",
-    helpText: "Used in the URL. Changing this does not rename the file.",
   },
   date: {
     label: "Publish date",
@@ -79,28 +74,61 @@ export function EssayEditor({
   initialFrontmatter,
   frontmatterOrder,
 }: EssayEditorProps) {
-  const orderedKeys = frontmatterOrder.length > 0 ? frontmatterOrder : Object.keys(initialFrontmatter);
+  const orderedKeys = useMemo(() => {
+    const base = (frontmatterOrder.length > 0 ? frontmatterOrder : Object.keys(initialFrontmatter)).slice();
+    return base.includes("slug") ? base : ["slug", ...base];
+  }, [frontmatterOrder, initialFrontmatter]);
+
+  const editableKeys = useMemo(
+    () => orderedKeys.filter((key) => key !== "slug" && key !== "featured"),
+    [orderedKeys],
+  );
+
+  const remainingKeys = useMemo(
+    () => editableKeys.filter((key) => !["title", "date", "summary"].includes(key)),
+    [editableKeys],
+  );
+
+  const hasTitleField = editableKeys.includes("title");
+  const hasDateField = editableKeys.includes("date");
+  const hasSummaryField = editableKeys.includes("summary");
 
   const [frontmatter, setFrontmatter] = useState<Record<string, FrontmatterValue>>(() => {
-    return orderedKeys.reduce<Record<string, FrontmatterValue>>((accumulator, key) => {
+    const initial = orderedKeys.reduce<Record<string, FrontmatterValue>>((accumulator, key) => {
       accumulator[key] = normaliseFrontmatterValue(initialFrontmatter[key]);
       return accumulator;
     }, {});
+
+    const titleValue = typeof initial.title === "string" ? initial.title : title;
+    initial.slug = ensureSlug(titleValue, slug);
+
+    return initial;
   });
 
   const [body, setBody] = useState(initialBody);
   const [actionState, formAction] = useActionState(updateEssayAction, initialEssayActionState);
 
-  const displayTitle =
-    typeof frontmatter.title === "string" && frontmatter.title.trim().length > 0
-      ? frontmatter.title.trim()
-      : title;
+  const derivedSlug = useMemo(() => {
+    const titleValue = typeof frontmatter.title === "string" ? frontmatter.title : title;
+    const existingSlug = typeof frontmatter.slug === "string" ? frontmatter.slug : slug;
+    return ensureSlug(titleValue, existingSlug || slug);
+  }, [frontmatter.title, frontmatter.slug, slug, title]);
+
+  const isFeatured = frontmatter.featured === true;
 
   const handleStringFieldChange = (key: string, value: string) => {
-    setFrontmatter((previous) => ({
-      ...previous,
-      [key]: value,
-    }));
+    setFrontmatter((previous) => {
+      const next = {
+        ...previous,
+        [key]: value,
+      };
+
+      if (key === "title") {
+        next.slug = ensureSlug(value, slug);
+      }
+
+      return next;
+    });
   };
 
   const handleBooleanFieldChange = (key: string, value: boolean) => {
@@ -114,15 +142,40 @@ export function EssayEditor({
     <form className="u-stack u-gap-xl" action={formAction}>
       <div className="u-stack u-gap-sm">
         <div className="u-flex u-justify-between u-items-center u-gap-sm u-flex-wrap">
-          <div>
-            <h2 className="u-heading-md u-font-semibold">{displayTitle}</h2>
-            <p className="u-text-muted u-text-sm">Editing `content/writing/{slug}.mdx`</p>
+          <div className="admin-essay-editor__lead">
+            <div className="admin-essay-editor__statbar">
+              <div className="admin-essay-editor__statrow">
+                <span className="admin-essay-editor__stat">
+                  Editing <code>content/writing/{slug}.mdx</code>
+                </span>
+                <span className="admin-essay-editor__stat">
+                  Permalink <code>/essays/{derivedSlug}</code>
+                </span>
+              </div>
+              <div className="admin-essay-editor__statrow">
+                <label className="admin-essay-editor__featured-toggle">
+                  <input type="hidden" name="__type__featured" value="boolean" />
+                  <input type="hidden" name="featured" value="false" />
+                  <input
+                    type="checkbox"
+                    name="featured"
+                    value="true"
+                    checked={isFeatured}
+                    onChange={(event) => handleBooleanFieldChange("featured", event.target.checked)}
+                  />
+                  <span className="admin-essay-editor__featured-label">Featured</span>
+                </label>
+                <span className="admin-essay-editor__featured-note u-text-muted u-text-xs">
+                  Show in featured slots across the site.
+                </span>
+              </div>
+            </div>
           </div>
           <div className="u-flex u-gap-sm">
             <Link className="button button--ghost button--sm" href="/admin/essays">
               Back to list
             </Link>
-            <Link className="button button--ghost button--sm" href={`/essays/${slug}`}>
+            <Link className="button button--ghost button--sm" href={`/essays/${derivedSlug}`} prefetch={false}>
               View live
             </Link>
           </div>
@@ -135,20 +188,73 @@ export function EssayEditor({
 
       <input type="hidden" name="fileSlug" value={slug} />
       <input type="hidden" name="frontmatterKeys" value={JSON.stringify(orderedKeys)} />
+      <input type="hidden" name="__type__slug" value="string" />
+      <input type="hidden" name="slug" value={derivedSlug} />
 
-      {orderedKeys.length > 0 ? (
+      {editableKeys.length > 0 ? (
         <section className="u-stack u-gap-sm">
           <h3 className="u-font-semibold u-text-sm u-letter-spaced">Front matter</h3>
-          <div className="admin-essay-editor__frontmatter-grid">
-            {orderedKeys.map((key) => {
-              const config = FIELD_CONFIG[key] ?? {
-                label: formatFallbackLabel(key),
-                type: typeof frontmatter[key] === "boolean" ? "checkbox" : "text",
-              };
-              const label = config.label ?? formatFallbackLabel(key);
-              const type = config.type;
-              const fieldValue = frontmatter[key];
-              const typeHintName = `__type__${key}`;
+
+          <div className="admin-essay-editor__primary-fields">
+            {hasTitleField ? (
+              <label className="admin-essay-editor__field admin-essay-editor__field--inline" htmlFor="essay-title">
+                <span className="admin-essay-editor__field-label">Title</span>
+                <input
+                  id="essay-title"
+                  type="text"
+                  name="title"
+                  className="input"
+                  value={typeof frontmatter.title === "string" ? frontmatter.title : ""}
+                  onChange={(event) => handleStringFieldChange("title", event.target.value)}
+                  placeholder={FIELD_CONFIG.title.placeholder}
+                />
+                <input type="hidden" name="__type__title" value="string" />
+              </label>
+            ) : null}
+
+            {hasDateField ? (
+              <label className="admin-essay-editor__field admin-essay-editor__field--inline" htmlFor="essay-date">
+                <span className="admin-essay-editor__field-label">Publish date</span>
+                <input
+                  id="essay-date"
+                  type="date"
+                  name="date"
+                  className="input"
+                  value={typeof frontmatter.date === "string" ? frontmatter.date : ""}
+                  onChange={(event) => handleStringFieldChange("date", event.target.value)}
+                />
+                <input type="hidden" name="__type__date" value="string" />
+              </label>
+            ) : null}
+
+            {hasSummaryField ? (
+              <label className="admin-essay-editor__field admin-essay-editor__field--summary" htmlFor="essay-summary">
+                <span className="admin-essay-editor__field-label">Summary</span>
+                <textarea
+                  id="essay-summary"
+                  name="summary"
+                  className="input admin-essay-editor__summary-input"
+                  rows={3}
+                  placeholder={FIELD_CONFIG.summary.placeholder}
+                  value={typeof frontmatter.summary === "string" ? frontmatter.summary : ""}
+                  onChange={(event) => handleStringFieldChange("summary", event.target.value)}
+                />
+                <input type="hidden" name="__type__summary" value="string" />
+              </label>
+            ) : null}
+          </div>
+
+          {remainingKeys.length > 0 ? (
+            <div className="admin-essay-editor__frontmatter-grid">
+              {remainingKeys.map((key) => {
+                const config = FIELD_CONFIG[key] ?? {
+                  label: formatFallbackLabel(key),
+                  type: typeof frontmatter[key] === "boolean" ? "checkbox" : "text",
+                };
+                const label = config.label ?? formatFallbackLabel(key);
+                const type = config.type;
+                const fieldValue = frontmatter[key];
+                const typeHintName = `__type__${key}`;
 
               if (type === "checkbox") {
                 return (
@@ -211,8 +317,9 @@ export function EssayEditor({
                   ) : null}
                 </label>
               );
-            })}
-          </div>
+              })}
+            </div>
+          ) : null}
         </section>
       ) : null}
 

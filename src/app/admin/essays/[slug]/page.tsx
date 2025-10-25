@@ -56,7 +56,7 @@ export default async function EditEssayPage({ params }: EditEssayPageProps) {
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">
-      <AdminShell actor={actor} title="Edit essay">
+      <AdminShell actor={actor} title="Edit essay" subtitle={title}>
         <EssayEditor
           slug={slug}
           title={title}

@@ -33,7 +33,20 @@ This document defines how MDX content is structured, how posts and projects move
 
 - Keep slugs stable; never rename after publishing to avoid broken URLs.
 - Use Markdown headings consistently (`#`, `##`, `###`) for automatic TOC generation.
-- Store media in `/public/images/...` and reference with absolute paths.
+- Store media in `/public/images/...` or the CDN (see `05-cdn-and-assets.md`). When using CDN assets in MDX, prefer the `ContentImage` helper for responsive sizing and alignment:
+
+  ```mdx
+  <ContentImage
+    src="https://cdn.networklayer.co.uk/paulalivingstone/images/1000001988.jpg"
+    alt="Peep keeping watch over the control room"
+    caption="Peep keeping watch over the control room."
+    align="right"       // options: default | left | right | wide
+    width={1200}         // optional intrinsic dimensions
+    height={800}
+  />
+  ```
+
+  The component clamps width to fit the prose column, floats left/right on larger screens, and falls back to a 16:9 aspect ratio if no dimensions are supplied. Markdown `![alt](url "caption")` automatically routes through `ContentImage`, so titles become captions and alignment defaults to the centered layout.
 
 ## 2. Draft to Publish Workflow
 
