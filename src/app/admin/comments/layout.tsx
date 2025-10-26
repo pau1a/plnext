@@ -1,18 +1,12 @@
-import type { Metadata } from "next";
-
+import { requirePermission } from "@/lib/auth/server";
 import { AdminShell } from "@/app/admin/_components/admin-shell";
 import PageShell from "@/components/layout/PageShell";
-import { requirePermission } from "@/lib/auth/server";
 
-export const metadata: Metadata = {
-  title: "Comment moderation",
-};
-
-interface CommentsLayoutProps {
+export default async function CommentAdminLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default async function CommentsLayout({ children }: CommentsLayoutProps) {
+}) {
   const actor = await requirePermission("comments:moderate");
 
   return (

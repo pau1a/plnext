@@ -35,11 +35,22 @@ $crimson-100: #fbe1e7;
 $crimson-200: #f5b8c8;
 $crimson-300: #f08aa5;
 $crimson-400: #ea5d83;
-$crimson-500: var(--color-teal-500);
+$crimson-500: #e11d48;
 $crimson-600: #c22c56;
 $crimson-700: #9a2445;
 $crimson-800: #721a33;
 $crimson-900: #4a1021;
+
+$amber-50: #fffbeb;
+$amber-100: #fef3c7;
+$amber-200: #fde68a;
+$amber-300: #fcd34d;
+$amber-400: #fbbf24;
+$amber-500: #f59e0b;
+$amber-600: #d97706;
+$amber-700: #b45309;
+$amber-800: #92400e;
+$amber-900: #78350f;
 
 // Typography scale
 $font-family-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -106,6 +117,17 @@ $transition-base: 180ms ease;
   --color-crimson-700: #{$crimson-700};
   --color-crimson-800: #{$crimson-800};
   --color-crimson-900: #{$crimson-900};
+
+  --color-amber-50: #{$amber-50};
+  --color-amber-100: #{$amber-100};
+  --color-amber-200: #{$amber-200};
+  --color-amber-300: #{$amber-300};
+  --color-amber-400: #{$amber-400};
+  --color-amber-500: #{$amber-500};
+  --color-amber-600: #{$amber-600};
+  --color-amber-700: #{$amber-700};
+  --color-amber-800: #{$amber-800};
+  --color-amber-900: #{$amber-900};
 
   --accent-surface: color-mix(in srgb, var(--color-crimson-500) 8%, transparent);
   --accent-border: color-mix(in srgb, var(--color-crimson-500) 35%, transparent);
