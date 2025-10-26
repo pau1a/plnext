@@ -1018,14 +1018,14 @@ body.dark .app-shell__header {
   padding: 0 0.75rem;
   margin-left: auto;
   border-radius: var(--radius-sm);
-  border: none;
+  border: 1px solid rgba(15, 23, 42, 0.1);
   font-size: calc(var(--font-size-2xs) + 1pt);
   font-weight: 400;
   font-variation-settings: "wght" 400;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  background: #f97316;
-  color: #0f172a;
+  background: #ffffff;
+  color: rgba(15, 23, 42, 0.8);
   cursor: pointer;
   transition: filter var(--transition-base), transform var(--transition-base);
 }
