@@ -10,3 +10,14 @@
   gap: var(--space-sm);
   margin-bottom: var(--space-md);
 }
+
+.emptyState {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.errorMessage {
+  margin-bottom: var(--space-sm);
+  color: var(--color-crimson-600);
+  font-weight: 600;
+}

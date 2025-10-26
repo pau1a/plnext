@@ -8,7 +8,7 @@ import type { ModerationQueueItem } from "@/lib/moderation/comments";
 
 import { handleModerationAction } from "../actions";
 
-type ModerationAction = "approve" | "reject";
+type ModerationAction = "approve" | "reject" | "spam";
 
 interface ModerationQueueProps {
   initialItems: ModerationQueueItem[];

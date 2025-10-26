@@ -2,6 +2,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 import type { Comment } from "@/lib/comments/comment";
 
@@ -13,34 +14,30 @@ interface CommentActionsProps {
 }
 
 export function CommentActions({ comment, setComments }: CommentActionsProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const handleApprove = () => {
+  function runAction(
+    action: (id: string) => Promise<void>,
+    status: Comment["status"],
+  ) {
     startTransition(() => {
-      approveComment(comment.id);
-      setComments((prev) =>
-        prev.map((c) => (c.id === comment.id ? { ...c, status: "approved" } : c))
-      );
+      action(comment.id)
+        .then(() => {
+          setComments((prev) =>
+            prev.map((c) => (c.id === comment.id ? { ...c, status } : c)),
+          );
+          router.refresh();
+        })
+        .catch((error) => {
+          console.error("Failed to update comment", error);
+        });
     });
-  };
+  }
 
-  const handleReject = () => {
-    startTransition(() => {
-      rejectComment(comment.id);
-      setComments((prev) =>
-        prev.map((c) => (c.id === comment.id ? { ...c, status: "rejected" } : c))
-      );
-    });
-  };
-
-  const handleMarkAsSpam = () => {
-    startTransition(() => {
-      markAsSpam(comment.id);
-      setComments((prev) =>
-        prev.map((c) => (c.id === comment.id ? { ...c, status: "spam" } : c))
-      );
-    });
-  };
+  const handleApprove = () => runAction(approveComment, "approved");
+  const handleReject = () => runAction(rejectComment, "rejected");
+  const handleMarkAsSpam = () => runAction(markAsSpam, "spam");
 
   return (
     <div className="comment-actions">

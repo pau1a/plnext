@@ -12,7 +12,7 @@ import {
   type ModerationCommentUpdate,
 } from "@/lib/supabase/service";
 
-export type ModerationAction = "approve" | "reject";
+export type ModerationAction = "approve" | "reject" | "spam";
 
 export interface ModerationQueueFilters {
   status?: CommentStatus | "all";
@@ -148,16 +148,33 @@ export async function fetchModerationQueue(filters: ModerationQueueFilters): Pro
 }
 
 function resolveStatusForAction(action: ModerationAction): CommentStatus {
-  return action === "approve" ? "approved" : "rejected";
+  switch (action) {
+    case "approve":
+      return "approved";
+    case "spam":
+      return "spam";
+    default:
+      return "rejected";
+  }
 }
 
 function buildUpdate(action: ModerationAction, now: string): ModerationCommentUpdate {
-  return {
-    status: resolveStatusForAction(action),
+  const status = resolveStatusForAction(action);
+  const update: ModerationCommentUpdate = {
+    status,
     moderated_at: now,
     updated_at: now,
-    ...(action === "reject" ? { is_spam: false } : {}),
   };
+
+  if (action === "reject") {
+    update.is_spam = false;
+  }
+
+  if (action === "spam") {
+    update.is_spam = true;
+  }
+
+  return update;
 }
 
 function buildAuditEntry(

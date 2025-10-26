@@ -1,19 +1,24 @@
-
 "use server";
 
 import { revalidatePath } from "next/cache";
 
-export async function approveComment(id: string) {
-  console.log(`Approving comment ${id}`);
+import { requirePermission } from "@/lib/auth/server";
+import { moderateComment, type ModerationAction } from "@/lib/moderation/comments";
+
+async function runModerationAction(commentId: string, action: ModerationAction) {
+  const actor = await requirePermission("comments:moderate");
+  await moderateComment({ commentId, action, actor });
   revalidatePath("/admin/comments");
+}
+
+export async function approveComment(id: string) {
+  await runModerationAction(id, "approve");
 }
 
 export async function rejectComment(id: string) {
-  console.log(`Rejecting comment ${id}`);
-  revalidatePath("/admin/comments");
+  await runModerationAction(id, "reject");
 }
 
 export async function markAsSpam(id: string) {
-  console.log(`Marking comment ${id} as spam`);
-  revalidatePath("/admin/comments");
+  await runModerationAction(id, "spam");
 }

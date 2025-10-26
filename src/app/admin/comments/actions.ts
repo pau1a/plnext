@@ -6,7 +6,7 @@ import { requirePermission } from "@/lib/auth/server";
 import type { ModerationAction } from "@/lib/moderation/comments";
 import { moderateComment } from "@/lib/moderation/comments";
 
-const ACTIONS = ["approve", "reject"] as const satisfies ModerationAction[];
+const ACTIONS = ["approve", "reject", "spam"] as const satisfies ModerationAction[];
 
 const actionSchema = z.object({
   commentId: z.string().uuid("Comment identifier is invalid"),

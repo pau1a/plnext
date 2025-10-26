@@ -1,9 +1,10 @@
 
 export interface Comment {
   id: string;
+  slug: string;
   author: {
     name: string;
-    email: string;
+    email: string | null;
   };
   body: string;
   createdAt: string;

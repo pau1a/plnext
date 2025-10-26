@@ -34,6 +34,25 @@
   flex-grow: 1;
 }
 
+.authorBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  flex-grow: 1;
+}
+
+.email {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.slug {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
 .date {
   font-size: var(--font-size-xs);
   color: var(--text-muted);

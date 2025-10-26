@@ -46,7 +46,11 @@ export function CommentItem({ comment, isSelected, isFocused, onSelect, onShowHi
             onSelect(comment.id);
           }}
         />
-        <div className={styles.author}>{comment.author.name}</div>
+        <div className={styles.authorBlock}>
+          <div className={styles.author}>{comment.author.name}</div>
+          <div className={styles.email}>{comment.author.email ?? "No email provided"}</div>
+          <div className={styles.slug}>{comment.slug}</div>
+        </div>
         <div className={styles.date}>
           {new Date(comment.createdAt).toLocaleDateString()}
         </div>
