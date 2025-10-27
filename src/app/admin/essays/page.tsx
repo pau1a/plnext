@@ -20,6 +20,14 @@ export default async function AdminEssaysPage() {
   return (
     <PageShell as="main" className="u-pad-block-3xl">
       <AdminShell actor={actor} title="Essay management">
+        <div className="u-flex u-justify-between u-items-center u-gap-sm u-flex-wrap" style={{ marginBottom: "1rem" }}>
+          <p className="u-text-muted u-text-sm">
+            Manage your essay entries. Add `.mdx` files under <code>content/writing</code> or create new essays below.
+          </p>
+          <Link className="button button--sm" href="/admin/essays/new">
+            + New Essay
+          </Link>
+        </div>
         <section aria-label="Essay inventory" className={styles.grid}>
           {essays.length === 0 ? (
             <p className="u-text-muted">No essays found. Add `.mdx` files under `content/writing` to populate this list.</p>

@@ -27,7 +27,7 @@ export async function updateStreamAction(
   const existingMap = new Map(existingRecords.map((record) => [record.id, record]));
   const entryIds = formData.getAll("entryId").map((value) => String(value));
 
-  const nextRecords: StreamSourceRecord[] = [];
+  let nextRecords: StreamSourceRecord[] = [];
 
   for (let index = 0; index < entryIds.length; index += 1) {
     const id = entryIds[index];
@@ -62,6 +62,17 @@ export async function updateStreamAction(
 
   for (const record of existingMap.values()) {
     nextRecords.push(record);
+  }
+
+  // Ensure only one entry is marked as Now
+  const nowEntries = nextRecords.filter((r) => r.isNow);
+  if (nowEntries.length > 1) {
+    // Keep the most recent one as Now, clear the rest
+    const sorted = [...nowEntries].sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+    const mostRecentNow = sorted[0];
+    nextRecords = nextRecords.map((r) =>
+      r.isNow && r.id !== mostRecentNow?.id ? { ...r, isNow: false } : r
+    );
   }
 
   nextRecords.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
@@ -135,4 +146,112 @@ function normaliseVisibility(value: string | null | undefined): "PUBLIC" | "LIMI
     return value;
   }
   return "PRIVATE";
+}
+
+export async function saveStreamEntryAction(
+  _prevState: StreamActionState,
+  formData: FormData,
+): Promise<StreamActionState> {
+  await requirePermission("audit:read");
+
+  const originalId = formData.get("originalId");
+  const id = formData.get("id");
+  const timestamp = formData.get("timestamp");
+  const visibility = formData.get("visibility");
+  const isNow = formData.get("isNow");
+  const body = formData.get("body");
+  const tags = formData.get("tags");
+
+  const resolved = normaliseEntry({
+    id: typeof id === "string" ? id : "",
+    timestamp: typeof timestamp === "string" ? timestamp : "",
+    body: typeof body === "string" ? body : "",
+    visibility: typeof visibility === "string" ? visibility : "",
+    tags: typeof tags === "string" ? tags : "",
+    isNow: isNow === "on",
+  });
+
+  if (!resolved.ok) {
+    return { status: "error", message: resolved.error };
+  }
+
+  const existingRecords = await parseJSONL(STREAM_FILE);
+  const isNew = !originalId || originalId === "";
+
+  let nextRecords: StreamSourceRecord[];
+
+  if (isNew) {
+    // Check if ID already exists
+    if (existingRecords.some((r) => r.id === resolved.entry.id)) {
+      return { status: "error", message: `Entry with ID ${resolved.entry.id} already exists.` };
+    }
+    nextRecords = [...existingRecords, resolved.entry];
+  } else {
+    // Update existing entry
+    const index = existingRecords.findIndex((r) => r.id === originalId);
+    if (index === -1) {
+      return { status: "error", message: `Entry with ID ${originalId} not found.` };
+    }
+    nextRecords = [...existingRecords];
+    nextRecords[index] = { ...resolved.entry, media: existingRecords[index]?.media };
+  }
+
+  // If this entry is marked as Now, clear the isNow flag from all other entries
+  if (resolved.entry.isNow) {
+    nextRecords = nextRecords.map((r) =>
+      r.id === resolved.entry.id ? r : { ...r, isNow: false }
+    );
+  }
+
+  nextRecords.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+
+  try {
+    await fs.mkdir(path.dirname(STREAM_FILE), { recursive: true });
+    const serialized = nextRecords.map((entry) => JSON.stringify(entry)).join("\n");
+    await fs.writeFile(STREAM_FILE, serialized ? `${serialized}\n` : "", "utf8");
+  } catch {
+    return { status: "error", message: "Failed to write stream file." };
+  }
+
+  revalidatePath("/admin/stream");
+  revalidatePath("/stream");
+  revalidatePath("/now");
+  revalidatePath("/");
+
+  return { status: "success", message: isNew ? "Entry created successfully." : "Entry saved successfully." };
+}
+
+export async function deleteStreamEntryAction(
+  _prevState: StreamActionState,
+  formData: FormData,
+): Promise<StreamActionState> {
+  await requirePermission("audit:read");
+
+  const id = formData.get("id");
+
+  if (typeof id !== "string" || !id) {
+    return { status: "error", message: "Entry ID is required." };
+  }
+
+  const existingRecords = await parseJSONL(STREAM_FILE);
+  const nextRecords = existingRecords.filter((r) => r.id !== id);
+
+  if (nextRecords.length === existingRecords.length) {
+    return { status: "error", message: `Entry with ID ${id} not found.` };
+  }
+
+  try {
+    await fs.mkdir(path.dirname(STREAM_FILE), { recursive: true });
+    const serialized = nextRecords.map((entry) => JSON.stringify(entry)).join("\n");
+    await fs.writeFile(STREAM_FILE, serialized ? `${serialized}\n` : "", "utf8");
+  } catch {
+    return { status: "error", message: "Failed to write stream file." };
+  }
+
+  revalidatePath("/admin/stream");
+  revalidatePath("/stream");
+  revalidatePath("/now");
+  revalidatePath("/");
+
+  return { status: "success", message: "Entry deleted successfully." };
 }

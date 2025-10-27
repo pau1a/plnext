@@ -158,6 +158,112 @@ export async function updateNoteAction(
   return { status: "success", message: "Note updated successfully." };
 }
 
+export async function createNoteAction(
+  _prevState: NoteActionState,
+  formData: FormData,
+): Promise<NoteActionState> {
+  await requirePermission("audit:read");
+
+  const title = formData.get("title");
+  const date = formData.get("date");
+  const summary = formData.get("summary");
+  const tags = formData.get("tags");
+  const draft = formData.get("draft");
+  const body = formData.get("body");
+  const slug = formData.get("slug");
+
+  if (typeof title !== "string" || title.trim() === "") {
+    return { status: "error", message: "Title cannot be empty." };
+  }
+
+  if (typeof date !== "string" || date.trim() === "") {
+    return { status: "error", message: "Publish date cannot be empty." };
+  }
+
+  if (typeof body !== "string" || body.trim() === "") {
+    return { status: "error", message: "Note body cannot be empty." };
+  }
+
+  const derivedSlug = typeof slug === "string" && slug.trim() !== ""
+    ? slug
+    : ensureSlug(title, "");
+
+  if (!SLUG_PATTERN.test(derivedSlug)) {
+    return { status: "error", message: "Generated slug contains invalid characters." };
+  }
+
+  const filePath = path.join(NOTES_DIR, `${derivedSlug}.mdx`);
+
+  // Check if file already exists
+  try {
+    await fs.access(filePath);
+    return { status: "error", message: `A note with slug "${derivedSlug}" already exists.` };
+  } catch {
+    // File doesn't exist, which is what we want
+  }
+
+  const frontmatter: Record<string, string | boolean | string[]> = {
+    slug: derivedSlug,
+    title: title.trim(),
+    date: date.trim(),
+  };
+
+  if (typeof summary === "string" && summary.trim() !== "") {
+    frontmatter.summary = summary.trim();
+  }
+
+  if (typeof tags === "string" && tags.trim() !== "") {
+    const tagValues = tags
+      .split(/[\n,]+/)
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    const { tags: resolvedTags, invalid } = resolveTagSlugs(tagValues);
+
+    if (invalid.length > 0) {
+      return {
+        status: "error",
+        message: `Unknown tags: ${invalid.join(", ")}. Update the tag registry before using new tags.`,
+      };
+    }
+
+    frontmatter.tags = resolvedTags;
+  }
+
+  if (draft === "on") {
+    frontmatter.draft = true;
+  }
+
+  const frontmatterKeys = ["slug", "title", "date"];
+  if (frontmatter.summary) frontmatterKeys.push("summary");
+  if (frontmatter.tags) frontmatterKeys.push("tags");
+  if (frontmatter.draft) frontmatterKeys.push("draft");
+
+  const newline = "\n";
+  let normalizedBody = body.replace(/\r?\n/g, newline).trim();
+
+  if (!normalizedBody.endsWith(newline)) {
+    normalizedBody += newline;
+  }
+
+  const serializedFrontmatter = serializeFrontmatter(frontmatter, frontmatterKeys, newline);
+  const fileContent = `${serializedFrontmatter}${newline}${newline}${normalizedBody}`;
+
+  try {
+    await fs.mkdir(NOTES_DIR, { recursive: true });
+    await fs.writeFile(filePath, fileContent, "utf8");
+  } catch {
+    return { status: "error", message: "Failed to write note file to disk." };
+  }
+
+  revalidatePath("/admin/notes");
+  revalidatePath("/notes");
+  revalidatePath("/");
+  revalidatePath(`/notes/${derivedSlug}`);
+
+  return { status: "success", message: "Note created successfully!" };
+}
+
 function serializeFrontmatter(
   frontmatter: Record<string, string | boolean | string[]>,
   order: string[],

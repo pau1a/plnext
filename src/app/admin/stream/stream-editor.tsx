@@ -32,70 +32,119 @@ export function StreamEditor({ entries }: StreamEditorProps) {
             </div>
           </div>
         </div>
-        <Link className="button button--ghost button--sm" href="/stream">
-          View live stream
-        </Link>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <Link className="button button--sm" href="/admin/stream/new">
+            + New Entry
+          </Link>
+          <Link className="button button--ghost button--sm" href="/stream">
+            View live stream
+          </Link>
+        </div>
       </div>
 
       <p className="u-text-muted u-text-sm">
         Update entries below. Tags accept known slugs from the shared tag registry and will merge with inline hashtags.
       </p>
 
-      <div className="u-stack u-gap-lg">
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {entries.map((entry, index) => {
           const timestampLocal = formatLocalTimestamp(entry.timestamp);
+          const visibilityColor = entry.visibility === "PUBLIC" ? "var(--color-teal-400)" : entry.visibility === "LIMITED" ? "var(--color-amber-400)" : "var(--color-slate-400)";
 
           return (
-            <div key={entry.id} className="u-stack u-gap-sm u-pad-md">
+            <div
+              key={entry.id}
+              style={{
+                border: "2px solid crimson",
+                borderLeftWidth: "4px",
+                borderLeftColor: visibilityColor,
+                borderRadius: "var(--radius-md)",
+                padding: "0.5rem",
+                backgroundColor: "var(--surface-secondary)",
+              }}
+            >
               <input type="hidden" name="entryId" value={entry.id} />
-              <h3 className="u-text-sm u-text-muted u-letter-wide">Entry {entry.id}</h3>
-              <div className="admin-essay-editor__primary-fields">
-                <label className="admin-essay-editor__field admin-essay-editor__field--inline">
-                  <span className="admin-essay-editor__field-label">Timestamp</span>
-                  <input
-                    className="input"
-                    name={`timestamp-${index}`}
-                    defaultValue={timestampLocal}
-                    type="datetime-local"
-                  />
-                </label>
-                <label className="admin-essay-editor__field admin-essay-editor__field--inline">
-                  <span className="admin-essay-editor__field-label">Visibility</span>
-                  <select className="input" name={`visibility-${index}`} defaultValue={entry.visibility}>
-                    <option value="PUBLIC">Public</option>
-                    <option value="LIMITED">Limited</option>
-                    <option value="PRIVATE">Private</option>
-                  </select>
-                </label>
-                <label className="admin-essay-editor__field admin-essay-editor__field--inline u-flex u-items-center u-gap-sm">
+
+              {/* Compact header row with all metadata */}
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.4rem", flexWrap: "wrap" }}>
+                <Link
+                  href={`/admin/stream/edit/${entry.id}`}
+                  className="button button--ghost button--sm"
+                  style={{ fontSize: "0.7rem", padding: "0.15rem 0.4rem" }}
+                >
+                  Edit
+                </Link>
+                <input
+                  style={{
+                    fontSize: "0.75rem",
+                    padding: "0.15rem 0.4rem",
+                    border: "1px solid var(--border-default)",
+                    borderRadius: "3px",
+                    flex: "0 0 auto"
+                  }}
+                  name={`timestamp-${index}`}
+                  defaultValue={timestampLocal}
+                  type="datetime-local"
+                />
+
+                <select
+                  style={{
+                    fontSize: "0.75rem",
+                    padding: "0.15rem 0.4rem",
+                    border: "1px solid var(--border-default)",
+                    borderRadius: "3px",
+                    flex: "0 0 auto"
+                  }}
+                  name={`visibility-${index}`}
+                  defaultValue={entry.visibility}
+                >
+                  <option value="PUBLIC">🌐 Pub</option>
+                  <option value="LIMITED">🔒 Ltd</option>
+                  <option value="PRIVATE">🚫 Prv</option>
+                </select>
+
+                <label style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.75rem", cursor: "pointer" }}>
                   <input
                     type="checkbox"
                     name={`isNow-${index}`}
                     defaultChecked={entry.isNow}
+                    style={{ margin: 0 }}
                   />
-                  <span className="admin-essay-editor__field-label">Set as Now</span>
+                  <span>Now</span>
                 </label>
-              </div>
-              <label className="admin-essay-editor__field">
-                <span className="admin-essay-editor__field-label">Body</span>
-                <textarea
-                  className="input"
-                  name={`body-${index}`}
-                  rows={6}
-                  defaultValue={entry.body}
-                  spellCheck="false"
-                />
-              </label>
-              <label className="admin-essay-editor__field">
-                <span className="admin-essay-editor__field-label">Tags</span>
-                <textarea
-                  className="input"
+
+                <input
+                  style={{
+                    fontSize: "0.7rem",
+                    padding: "0.15rem 0.4rem",
+                    border: "1px solid var(--border-default)",
+                    borderRadius: "3px",
+                    flex: "1 1 150px",
+                    minWidth: "120px"
+                  }}
                   name={`tags-${index}`}
-                  rows={2}
                   defaultValue={entry.tags.join(", ")}
-                  placeholder="Comma or newline separated"
+                  placeholder="tags..."
                 />
-              </label>
+              </div>
+
+              {/* Body textarea - super compact */}
+              <textarea
+                style={{
+                  width: "100%",
+                  fontSize: "0.85rem",
+                  padding: "0.4rem",
+                  border: "1px solid var(--border-default)",
+                  borderRadius: "3px",
+                  fontFamily: "inherit",
+                  lineHeight: "1.3",
+                  resize: "vertical"
+                }}
+                name={`body-${index}`}
+                rows={2}
+                defaultValue={entry.body}
+                spellCheck="false"
+              />
             </div>
           );
         })}

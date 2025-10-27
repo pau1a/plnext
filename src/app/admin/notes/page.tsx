@@ -21,6 +21,14 @@ export default async function AdminNotesPage() {
   return (
     <PageShell as="main" className="u-pad-block-3xl">
       <AdminShell actor={actor} title="Notes">
+        <div className="u-flex u-justify-between u-items-center u-gap-sm u-flex-wrap" style={{ marginBottom: "1rem" }}>
+          <p className="u-text-muted u-text-sm">
+            Manage your note entries. Add `.mdx` files under <code>content/notes</code> or create new notes below.
+          </p>
+          <Link className="button button--sm" href="/admin/notes/new">
+            + New Note
+          </Link>
+        </div>
         <section aria-label="Notes inventory" className={styles.grid}>
           {notes.length === 0 ? (
             <p className="u-text-muted">
