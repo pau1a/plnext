@@ -8,9 +8,9 @@ import type { PostgrestError } from "@supabase/supabase-js";
 import { enforceCommentRateLimits } from "@/lib/rate-limit";
 import {
   getSupabase,
-  type CommentsTableInsert,
   type CommentsTableRow,
 } from "@/lib/supabase/server";
+import { getServiceSupabase } from "@/lib/supabase/service";
 
 export const runtime = "nodejs";
 
@@ -347,14 +347,20 @@ export async function POST(request: Request) {
   }
 
   try {
-    const supabase = getSupabase();
-    const payload: CommentsTableInsert = {
+    const supabase = getServiceSupabase();
+    const userAgent = request.headers.get("user-agent");
+
+    const payload = {
       slug: parsedBody.slug,
-      author: parsedBody.author,
+      author_name: parsedBody.author,
+      author_email: parsedBody.email,
       content: sanitizedBody,
+      ip_hash: ipHash,
+      user_agent: userAgent,
+      status: "pending" as const,
     };
 
-    const { error } = await supabase.from(COMMENTS_TABLE).insert<CommentsTableInsert>(payload);
+    const { error } = await supabase.schema("pl_site").from(COMMENTS_TABLE).insert(payload);
     if (error) {
       throw error;
     }

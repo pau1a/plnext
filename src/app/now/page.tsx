@@ -2,18 +2,20 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 
 import { formatDate } from "@/lib/date";
 import { getNow } from "@/lib/now";
+import { renderMarkdown } from "@/lib/stream";
 
 import styles from "./now.module.scss";
 
 export const metadata = {
   title: "Now | Paula Livingstone",
-  description: "Paula Livingstone’s current professional and learning focus.",
+  description: "Paula Livingstone's current professional and learning focus.",
 };
 
 export const dynamic = "force-static";
 
 export default async function NowPage() {
-  const { meta, content } = await getNow();
+  const nowData = await getNow();
+  const { meta, content } = nowData;
 
   return (
     <article className={styles.nowPage}>
@@ -26,7 +28,11 @@ export default async function NowPage() {
         ) : null}
       </header>
       <div className={`${styles.content} prose`}>
-        <MDXRemote source={content} />
+        {nowData.type === "stream" ? (
+          await renderMarkdown(content)
+        ) : (
+          <MDXRemote source={content} />
+        )}
       </div>
     </article>
   );

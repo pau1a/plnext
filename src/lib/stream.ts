@@ -20,6 +20,7 @@ export type StreamSourceRecord = {
   visibility?: Visibility;
   tags?: string[];
   media?: string[];
+  isNow?: boolean;
 };
 
 export type StreamEntry = {

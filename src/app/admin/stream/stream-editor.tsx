@@ -13,6 +13,7 @@ interface StreamEditorProps {
     body: string;
     visibility: "PUBLIC" | "LIMITED" | "PRIVATE";
     tags: string[];
+    isNow?: boolean;
   }>;
 }
 
@@ -65,6 +66,14 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                     <option value="LIMITED">Limited</option>
                     <option value="PRIVATE">Private</option>
                   </select>
+                </label>
+                <label className="admin-essay-editor__field admin-essay-editor__field--inline u-flex u-items-center u-gap-sm">
+                  <input
+                    type="checkbox"
+                    name={`isNow-${index}`}
+                    defaultChecked={entry.isNow}
+                  />
+                  <span className="admin-essay-editor__field-label">Set as Now</span>
                 </label>
               </div>
               <label className="admin-essay-editor__field">

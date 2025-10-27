@@ -35,6 +35,7 @@ export async function updateStreamAction(
     const bodyField = formData.get(`body-${index}`);
     const visibilityField = formData.get(`visibility-${index}`);
     const tagsField = formData.get(`tags-${index}`);
+    const isNowField = formData.get(`isNow-${index}`);
 
     const resolved = normaliseEntry({
       id,
@@ -42,6 +43,7 @@ export async function updateStreamAction(
       body: typeof bodyField === "string" ? bodyField : "",
       visibility: typeof visibilityField === "string" ? visibilityField : "",
       tags: typeof tagsField === "string" ? tagsField : "",
+      isNow: isNowField === "on",
     });
 
     if (!resolved.ok) {
@@ -74,18 +76,20 @@ export async function updateStreamAction(
 
   revalidatePath("/admin/stream");
   revalidatePath("/stream");
+  revalidatePath("/now");
   revalidatePath("/");
 
   return { status: "success", message: "Stream updated successfully." };
 }
 
-function normaliseEntry(entry: { id: string; timestamp: string; body: string; visibility: string; tags: string }):
+function normaliseEntry(entry: { id: string; timestamp: string; body: string; visibility: string; tags: string; isNow: boolean }):
   | { ok: true; entry: StreamSourceRecord }
   | { ok: false; error: string } {
   const id = entry.id.trim();
   const timestampRaw = entry.timestamp.trim();
   const body = entry.body;
   const visibility = normaliseVisibility(entry.visibility);
+  const isNow = entry.isNow;
 
   if (!id) {
     return { ok: false, error: "Stream entry ID is required." };
@@ -121,6 +125,7 @@ function normaliseEntry(entry: { id: string; timestamp: string; body: string; vi
       body,
       visibility,
       tags,
+      isNow,
     },
   };
 }
