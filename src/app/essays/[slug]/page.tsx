@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
 
+import { CommentForm } from "@/components/comment-form";
+import { CommentList } from "@/components/comment-list";
+import { CommentProvider } from "@/components/comment-context";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import { formatDate } from "@/lib/date";
@@ -53,6 +57,21 @@ export default async function EssayPage({ params }: EssayPageProps) {
           </header>
 
           <div className="prose prose-invert essay-article__content">{essay.content}</div>
+
+          <section
+            className="u-stack u-gap-md"
+            aria-labelledby="comments-heading"
+          >
+            <h2 id="comments-heading" className="heading-subtitle">
+              Join the discussion
+            </h2>
+            <CommentProvider slug={essay.slug}>
+              <CommentForm slug={essay.slug} />
+              <Suspense fallback={null}>
+                <CommentList slug={essay.slug} />
+              </Suspense>
+            </CommentProvider>
+          </section>
         </article>
       </MotionFade>
     </PageShell>

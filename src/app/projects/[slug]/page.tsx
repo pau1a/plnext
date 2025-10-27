@@ -1,5 +1,9 @@
 import clsx from "clsx";
+import { Suspense } from "react";
 
+import { CommentForm } from "@/components/comment-form";
+import { CommentList } from "@/components/comment-list";
+import { CommentProvider } from "@/components/comment-context";
 import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
@@ -122,8 +126,25 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <div className="prose">{project.content}</div>
 
+        <MotionFade delay={0.05}>
+          <section
+            className="u-stack u-gap-md"
+            aria-labelledby="comments-heading"
+          >
+            <h2 id="comments-heading" className="heading-subtitle">
+              Join the discussion
+            </h2>
+            <CommentProvider slug={project.slug}>
+              <CommentForm slug={project.slug} />
+              <Suspense fallback={null}>
+                <CommentList slug={project.slug} />
+              </Suspense>
+            </CommentProvider>
+          </section>
+        </MotionFade>
+
         {otherProjects.length > 0 ? (
-          <MotionFade delay={0.05}>
+          <MotionFade delay={0.1}>
             <aside
               className={clsx(
                 elevatedSurfaceStyles.elevatedSurface,

@@ -11,10 +11,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
+import { useState, useRef } from "react";
 
 export default function AppShell({ children }: PropsWithChildren) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin") ?? false;
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = (menu: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setOpenSubmenu(menu);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpenSubmenu(null);
+    }, 300);
+  };
 
   return (
     <body className="app-shell">
@@ -39,7 +55,11 @@ export default function AppShell({ children }: PropsWithChildren) {
                       Home
                     </Link>
                   </li>
-                  <li className="app-nav__item app-nav__item--has-submenu">
+                  <li
+                    className={`app-nav__item app-nav__item--has-submenu ${openSubmenu === 'writing' ? 'app-nav__item--open' : ''}`}
+                    onMouseEnter={() => handleMouseEnter('writing')}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     <Link
                       aria-haspopup="true"
                       className="app-nav__link"
@@ -70,7 +90,11 @@ export default function AppShell({ children }: PropsWithChildren) {
                       Projects
                     </Link>
                   </li>
-                  <li className="app-nav__item app-nav__item--has-submenu">
+                  <li
+                    className={`app-nav__item app-nav__item--has-submenu ${openSubmenu === 'about' ? 'app-nav__item--open' : ''}`}
+                    onMouseEnter={() => handleMouseEnter('about')}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     <Link
                       aria-haspopup="true"
                       className="app-nav__link"

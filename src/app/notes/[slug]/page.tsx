@@ -1,3 +1,8 @@
+import { Suspense } from "react";
+
+import { CommentForm } from "@/components/comment-form";
+import { CommentList } from "@/components/comment-list";
+import { CommentProvider } from "@/components/comment-context";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import { NoteLayout } from "@/components/notes/NoteLayout";
@@ -118,6 +123,21 @@ export default async function NoteDetailPage({ params }: NotePageProps) {
         >
           {resolvedNote.content}
         </NoteLayout>
+
+        <section
+          className="u-stack u-gap-md u-margin-block-start-2xl"
+          aria-labelledby="comments-heading"
+        >
+          <h2 id="comments-heading" className="heading-subtitle">
+            Join the discussion
+          </h2>
+          <CommentProvider slug={resolvedNote.slug}>
+            <CommentForm slug={resolvedNote.slug} />
+            <Suspense fallback={null}>
+              <CommentList slug={resolvedNote.slug} />
+            </Suspense>
+          </CommentProvider>
+        </section>
       </MotionFade>
     </PageShell>
   );

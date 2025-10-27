@@ -359,6 +359,7 @@ dd {
   top: 0;
   z-index: 10;
   width: 100%;
+  isolation: isolate;
 }
 
 .app-shell__header {
@@ -366,6 +367,8 @@ dd {
   color: var(--text-on-inverse);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 10;
 }
 
 body.dark .app-shell__header {
@@ -519,7 +522,7 @@ body.dark .app-shell__header {
   pointer-events: none;
   opacity: 0;
   transition: opacity 120ms ease;
-  z-index: 10;
+  z-index: 9999;
 }
 
 .app-nav__item--has-submenu:hover > .app-nav__link,
@@ -528,7 +531,8 @@ body.dark .app-shell__header {
 }
 
 .app-nav__item--has-submenu:hover .app-nav__submenu,
-.app-nav__item--has-submenu:focus-within .app-nav__submenu {
+.app-nav__item--has-submenu:focus-within .app-nav__submenu,
+.app-nav__item--open .app-nav__submenu {
   display: block;
   opacity: 1;
   pointer-events: auto;
@@ -947,6 +951,8 @@ body.dark .app-shell__header {
   justify-content: center;
   padding-block: 0.1rem;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 1;
 }
 
 .app-subnav__container {
