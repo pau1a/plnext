@@ -135,6 +135,7 @@ export async function fetchModerationQueue(filters: ModerationQueueFilters): Pro
   const { data, count, error } = await query.range(rangeStart, rangeEnd);
 
   if (error) {
+    console.error("Supabase query error:", JSON.stringify(error, null, 2));
     throw error;
   }
 
