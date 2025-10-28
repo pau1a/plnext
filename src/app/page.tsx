@@ -44,9 +44,11 @@ export default function Home() {
             <AboutCapsule />
           </MotionFade>
           <SignalLayer />
+          <MotionFade>
+            <ContinuityLayer />
+          </MotionFade>
           <KnowledgeLayer />
           <ExecutionLayer />
-          <ContinuityLayer />
         </div>
       </PageShell>
     </div>
