@@ -202,6 +202,7 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
       .from("posts")
       .select(columns)
       .or(filter)
+      .is("draft", false)
       .order("inserted_at", { ascending: true })
       .order("slug", { ascending: true })
       .limit(limit);
@@ -247,6 +248,7 @@ async function fetchFromSupabase(options: BlogIndexPageOptions): Promise<BlogInd
   let query = supabase
     .from("posts")
     .select(columns)
+    .is("draft", false)
     .order("inserted_at", { ascending: false })
     .order("slug", { ascending: false });
 

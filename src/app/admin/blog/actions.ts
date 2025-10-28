@@ -196,3 +196,99 @@ function formatScalarValue(value: string | boolean | undefined): string {
   const escaped = String(raw).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
   return `"${escaped}"`;
 }
+
+export async function createBlogPostAction(
+  _prevState: BlogActionState,
+  formData: FormData,
+): Promise<BlogActionState> {
+  await requirePermission("audit:read");
+
+  const title = formData.get("title");
+  const date = formData.get("date");
+  const description = formData.get("description");
+  const tagsRaw = formData.get("tags");
+  const draftRaw = formData.get("draft");
+  const body = formData.get("body");
+  const slug = formData.get("slug");
+
+  if (typeof title !== "string" || title.trim() === "") {
+    return { status: "error", message: "Title cannot be empty." };
+  }
+
+  if (typeof date !== "string" || date.trim() === "") {
+    return { status: "error", message: "Publish date cannot be empty." };
+  }
+
+  if (typeof description !== "string" || description.trim() === "") {
+    return { status: "error", message: "Description cannot be empty." };
+  }
+
+  if (typeof body !== "string" || body.trim() === "") {
+    return { status: "error", message: "Blog body cannot be empty." };
+  }
+
+  if (typeof slug !== "string" || !SLUG_PATTERN.test(slug)) {
+    return { status: "error", message: "Invalid blog post identifier." };
+  }
+
+  const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
+
+  try {
+    await fs.access(filePath);
+    return { status: "error", message: "A blog post with this title already exists." };
+  } catch {
+    // File doesn't exist, good to proceed
+  }
+
+  const tags = typeof tagsRaw === "string"
+    ? tagsRaw
+        .split(/[,\n]+/)
+        .map((tag) => tag.trim())
+        .filter(Boolean)
+    : [];
+
+  const { tags: resolvedTags, invalid: invalidTags } = resolveTagSlugs(tags);
+
+  if (invalidTags.length > 0) {
+    return {
+      status: "error",
+      message: `Unknown tags: ${invalidTags.join(", ")}. Update the shared tag registry before using new tags.`,
+    };
+  }
+
+  const draft = draftRaw === "on" || draftRaw === "true";
+
+  const frontmatter: Record<string, string | boolean | string[]> = {
+    slug,
+    title: title.trim(),
+    date: date.trim(),
+    description: description.trim(),
+    draft,
+    tags: resolvedTags,
+  };
+
+  const frontmatterKeys = ["slug", "title", "date", "description", "draft", "tags"];
+  const newline = "\n";
+
+  let normalizedBody = body.replace(/\r?\n/g, newline).replace(/^\n+/, "");
+
+  if (!normalizedBody.endsWith(newline)) {
+    normalizedBody += newline;
+  }
+
+  const serializedFrontmatter = serializeFrontmatter(frontmatter, frontmatterKeys, newline);
+  const fileContent = `${serializedFrontmatter}${newline}${newline}${normalizedBody}`;
+
+  try {
+    await fs.writeFile(filePath, fileContent, "utf8");
+  } catch {
+    return { status: "error", message: "Failed to write blog post to disk." };
+  }
+
+  revalidatePath("/admin/blog");
+  revalidatePath("/writing");
+  revalidatePath("/");
+  revalidatePath(`/writing/${slug}`);
+
+  return { status: "success", message: "Blog post created successfully." };
+}

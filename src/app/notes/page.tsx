@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export default async function NotesIndexPage() {
-  const notes = await getNotes();
+  const notes = await getNotes({ includeDrafts: false });
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">

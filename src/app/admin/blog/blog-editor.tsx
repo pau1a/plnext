@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { useRouter } from "next/navigation";
 
 import { updateBlogPostAction } from "./actions";
 import { ensureSlug } from "@/lib/slugify";
@@ -82,7 +83,7 @@ function formatFallbackLabel(key: string): string {
 export function BlogEditor({ slug, title, initialBody, initialFrontmatter, frontmatterOrder }: BlogEditorProps) {
   const orderedKeys = useMemo(() => {
     const base = (frontmatterOrder.length > 0 ? frontmatterOrder : Object.keys(initialFrontmatter)).slice();
-    const required = ["title", "date", "description", "tags"];
+    const required = ["title", "date", "description", "tags", "draft"];
     for (const key of required) {
       if (!base.includes(key)) {
         base.push(key);
@@ -108,7 +109,18 @@ export function BlogEditor({ slug, title, initialBody, initialFrontmatter, front
   });
 
   const [body, setBody] = useState(initialBody);
+  const [closeAfterSave, setCloseAfterSave] = useState(false);
   const [actionState, formAction] = useActionState(updateBlogPostAction, initialBlogActionState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (actionState.status === "success" && closeAfterSave) {
+      const timer = setTimeout(() => {
+        router.push("/admin/blog");
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [actionState.status, closeAfterSave, router]);
 
   const derivedSlug = useMemo(() => {
     const titleValue = typeof frontmatter.title === "string" ? frontmatter.title : title;
@@ -193,6 +205,28 @@ export function BlogEditor({ slug, title, initialBody, initialFrontmatter, front
               }
 
               if (key === "tags") {
+                const AVAILABLE_TAGS = [
+                  { slug: "application-security", name: "Application Security" },
+                  { slug: "devsecops", name: "DevSecOps" },
+                  { slug: "operations", name: "Operations" },
+                  { slug: "security-operations", name: "Security Operations" },
+                  { slug: "ai", name: "AI" },
+                  { slug: "writing", name: "Writing" },
+                  { slug: "stream", name: "Stream" },
+                  { slug: "process", name: "Process" },
+                  { slug: "experiments", name: "Experiments" },
+                ];
+
+                const tagsValue = typeof frontmatter.tags === "string" ? frontmatter.tags : "";
+                const currentTags = tagsValue.split(",").map((t) => t.trim()).filter(Boolean);
+
+                const addTag = (tagSlug: string) => {
+                  if (!currentTags.includes(tagSlug)) {
+                    const newValue = currentTags.length > 0 ? `${tagsValue}, ${tagSlug}` : tagSlug;
+                    handleStringFieldChange("tags", newValue);
+                  }
+                };
+
                 return (
                   <label key={key} className="admin-essay-editor__field admin-essay-editor__field--summary" htmlFor="blog-tags">
                     <span className="admin-essay-editor__field-label">Tags</span>
@@ -202,12 +236,31 @@ export function BlogEditor({ slug, title, initialBody, initialFrontmatter, front
                       className="input admin-essay-editor__summary-input"
                       rows={FIELD_CONFIG.tags.rows ?? 3}
                       placeholder="comma or newline separated"
-                      value={typeof frontmatter.tags === "string" ? frontmatter.tags : ""}
+                      value={tagsValue}
                       onChange={(event) => handleStringFieldChange("tags", event.target.value)}
                     />
+                    <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                      {AVAILABLE_TAGS.map((tag) => {
+                        const isSelected = currentTags.includes(tag.slug);
+                        return (
+                          <button
+                            key={tag.slug}
+                            type="button"
+                            onClick={() => addTag(tag.slug)}
+                            className="button button--xs"
+                            style={{
+                              backgroundColor: isSelected ? "var(--color-teal-400)" : "var(--surface-secondary)",
+                              color: isSelected ? "white" : "inherit",
+                            }}
+                          >
+                            {tag.name}
+                          </button>
+                        );
+                      })}
+                    </div>
                     <input type="hidden" name="__type__tags" value="array" />
                     <p className="admin-essay-editor__field-help u-text-muted u-text-xs">
-                      Separate tags with commas or new lines (optional).
+                      Click tags above to add them, or type custom tags separated by commas.
                     </p>
                   </label>
                 );
@@ -362,10 +415,11 @@ export function BlogEditor({ slug, title, initialBody, initialFrontmatter, front
       </section>
 
       <div className="u-flex u-gap-sm u-items-center u-flex-wrap">
-        <SubmitButton />
+        <SaveButton onSaveAndClose={() => setCloseAfterSave(true)} />
         {actionState.status === "success" ? (
           <span role="status" className="u-text-sm u-text-accent">
             {actionState.message}
+            {closeAfterSave ? " Redirecting..." : ""}
           </span>
         ) : null}
         {actionState.status === "error" ? (
@@ -378,12 +432,26 @@ export function BlogEditor({ slug, title, initialBody, initialFrontmatter, front
   );
 }
 
-function SubmitButton() {
+interface SaveButtonProps {
+  onSaveAndClose: () => void;
+}
+
+function SaveButton({ onSaveAndClose }: SaveButtonProps) {
   const { pending } = useFormStatus();
 
   return (
-    <button className="button" type="submit" disabled={pending}>
-      {pending ? "Saving…" : "Save changes"}
-    </button>
+    <>
+      <button className="button" type="submit" disabled={pending}>
+        {pending ? "Saving…" : "Save changes"}
+      </button>
+      <button
+        className="button button--ghost"
+        type="submit"
+        disabled={pending}
+        onClick={onSaveAndClose}
+      >
+        Save and close
+      </button>
+    </>
   );
 }

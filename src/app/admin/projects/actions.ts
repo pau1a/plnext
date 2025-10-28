@@ -145,6 +145,117 @@ export async function updateProjectAction(
   return { status: "success", message: "Project updated successfully." };
 }
 
+export async function createProjectAction(
+  _prevState: ProjectActionState,
+  formData: FormData,
+): Promise<ProjectActionState> {
+  await requirePermission("audit:read");
+
+  const title = formData.get("title");
+  const date = formData.get("date");
+  const summary = formData.get("summary");
+  const role = formData.get("role");
+  const status = formData.get("status");
+  const stack = formData.get("stack");
+  const draft = formData.get("draft");
+  const body = formData.get("body");
+  const slug = formData.get("slug");
+
+  if (typeof title !== "string" || title.trim() === "") {
+    return { status: "error", message: "Title cannot be empty." };
+  }
+
+  if (typeof date !== "string" || date.trim() === "") {
+    return { status: "error", message: "Delivery date cannot be empty." };
+  }
+
+  if (typeof summary !== "string" || summary.trim() === "") {
+    return { status: "error", message: "Summary cannot be empty." };
+  }
+
+  if (typeof body !== "string" || body.trim() === "") {
+    return { status: "error", message: "Project body cannot be empty." };
+  }
+
+  const derivedSlug = typeof slug === "string" && slug.trim() !== ""
+    ? slug
+    : ensureSlug(title, "");
+
+  if (!SLUG_PATTERN.test(derivedSlug)) {
+    return { status: "error", message: "Generated slug contains invalid characters." };
+  }
+
+  const filePath = path.join(PROJECTS_DIR, `${derivedSlug}.mdx`);
+
+  // Check if file already exists
+  try {
+    await fs.access(filePath);
+    return { status: "error", message: `A project with slug "${derivedSlug}" already exists.` };
+  } catch {
+    // File doesn't exist, which is what we want
+  }
+
+  const frontmatter: Record<string, string | boolean | string[]> = {
+    slug: derivedSlug,
+    title: title.trim(),
+    date: date.trim(),
+    summary: summary.trim(),
+  };
+
+  if (typeof role === "string" && role.trim() !== "") {
+    frontmatter.role = role.trim();
+  }
+
+  if (typeof status === "string" && status.trim() !== "") {
+    frontmatter.status = status.trim();
+  }
+
+  if (typeof stack === "string" && stack.trim() !== "") {
+    const stackItems = stack
+      .split(/[\n,]+/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    if (stackItems.length > 0) {
+      frontmatter.stack = stackItems;
+    }
+  }
+
+  if (draft === "on") {
+    frontmatter.draft = true;
+  }
+
+  const frontmatterKeys = ["slug", "title", "date", "summary"];
+  if (frontmatter.role) frontmatterKeys.push("role");
+  if (frontmatter.status) frontmatterKeys.push("status");
+  if (frontmatter.stack) frontmatterKeys.push("stack");
+  if (frontmatter.draft) frontmatterKeys.push("draft");
+
+  const newline = "\n";
+  let normalizedBody = body.replace(/\r?\n/g, newline).trim();
+
+  if (!normalizedBody.endsWith(newline)) {
+    normalizedBody += newline;
+  }
+
+  const serializedFrontmatter = serializeFrontmatter(frontmatter, frontmatterKeys, newline);
+  const fileContent = `${serializedFrontmatter}${newline}${newline}${normalizedBody}`;
+
+  try {
+    await fs.mkdir(PROJECTS_DIR, { recursive: true });
+    await fs.writeFile(filePath, fileContent, "utf8");
+  } catch {
+    return { status: "error", message: "Failed to write project file to disk." };
+  }
+
+  revalidatePath("/admin/projects");
+  revalidatePath("/projects");
+  revalidatePath("/");
+  revalidatePath(`/projects/${derivedSlug}`);
+
+  return { status: "success", message: "Project created successfully!" };
+}
+
 function serializeFrontmatter(
   frontmatter: Record<string, string | boolean | string[]>,
   order: string[],

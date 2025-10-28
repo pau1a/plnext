@@ -8,7 +8,11 @@
       "Bash(git checkout:*)",
       "Bash(pkill:*)",
       "Bash(awk:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(if [ -f .env.local ])",
+      "Bash(then echo \"Found .env.local\")",
+      "Bash(else echo \"No .env.local file found\")",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []

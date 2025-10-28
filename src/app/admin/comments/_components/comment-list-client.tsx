@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import type { Comment } from "@/lib/comments/comment";
 import { useHotkeys } from "@/hooks/use-hotkeys";
 
-import { approveComment, rejectComment, markAsSpam } from "./actions";
+import { approveComment, rejectComment, markAsSpam, returnToPending } from "./actions";
 import { CommentHistoryModal } from "./comment-history-modal";
 import { CommentItem } from "./comment-item";
 import styles from "./comment-list.module.scss";
@@ -80,7 +80,7 @@ export function CommentListClient({ initialComments, error }: CommentListClientP
     handleModerationAction([focusedComment], "spam");
   });
 
-  async function handleModerationAction(ids: string[], action: "approve" | "reject" | "spam") {
+  async function handleModerationAction(ids: string[], action: "approve" | "reject" | "spam" | "pending") {
     if (ids.length === 0) {
       return;
     }
@@ -91,7 +91,9 @@ export function CommentListClient({ initialComments, error }: CommentListClientP
           ? approveComment
           : action === "reject"
           ? rejectComment
-          : markAsSpam;
+          : action === "spam"
+          ? markAsSpam
+          : returnToPending;
 
       Promise.all(ids.map((id) => operation(id)))
         .then(() => {
@@ -105,7 +107,9 @@ export function CommentListClient({ initialComments, error }: CommentListClientP
                         ? "approved"
                         : action === "reject"
                         ? "rejected"
-                        : "spam",
+                        : action === "spam"
+                        ? "spam"
+                        : "pending",
                   }
                 : comment,
             ),
@@ -135,6 +139,10 @@ export function CommentListClient({ initialComments, error }: CommentListClientP
 
   const handleBulkMarkAsSpam = () => {
     handleModerationAction(selectedComments, "spam");
+  };
+
+  const handleBulkReturnToPending = () => {
+    handleModerationAction(selectedComments, "pending");
   };
 
   const handleShowHistory = (id: string) => {
@@ -170,6 +178,12 @@ export function CommentListClient({ initialComments, error }: CommentListClientP
           disabled={isPending || selectedComments.length === 0}
         >
           Mark as Spam
+        </button>
+        <button
+          onClick={handleBulkReturnToPending}
+          disabled={isPending || selectedComments.length === 0}
+        >
+          Return to Pending
         </button>
       </div>
       {comments.length === 0 ? (

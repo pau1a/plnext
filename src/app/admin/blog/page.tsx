@@ -16,11 +16,19 @@ export const metadata: Metadata = {
 
 export default async function AdminBlogPage() {
   const actor = await requirePermission("audit:read");
-  const posts = await getBlogPostSummaries();
+  const posts = await getBlogPostSummaries({ includeDrafts: true });
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">
       <AdminShell actor={actor} title="Blog management">
+        <div className="u-flex u-justify-between u-items-center u-gap-sm u-flex-wrap" style={{ marginBottom: "1rem" }}>
+          <p className="u-text-muted u-text-sm">
+            Manage your blog posts. Add `.mdx` files under <code>content/blog</code> or create new posts below.
+          </p>
+          <Link className="button button--sm" href="/admin/blog/new">
+            + New Blog Post
+          </Link>
+        </div>
         <section aria-label="Blog post inventory" className={styles.grid}>
           {posts.length === 0 ? (
             <p className="u-text-muted">No blog posts found. Add `.mdx` files under `content/blog` to populate this list.</p>
@@ -32,6 +40,9 @@ export default async function AdminBlogPage() {
                     <span className={styles.date}>{formatDate(post.date)}</span>
                     <span aria-hidden="true">•</span>
                     <span className={styles.slug}>/{post.slug}</span>
+                    {post.draft ? (
+                      <span className={styles.commentBadge} style={{ backgroundColor: "var(--color-amber-500)" }}>Draft</span>
+                    ) : null}
                     {post.comments?.length ? (
                       <span className={styles.commentBadge}>{post.comments.length} curated comments</span>
                     ) : null}

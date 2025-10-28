@@ -40,16 +40,25 @@ export function CommentActions({ comment, setComments }: CommentActionsProps) {
   const handleMarkAsSpam = () => runAction(markAsSpam, "spam");
 
   return (
-    <div className="comment-actions">
-      <button onClick={handleApprove} disabled={isPending || comment.status === "approved"}>
+    <>
+      <button
+        onClick={handleApprove}
+        disabled={isPending || comment.status === "approved"}
+      >
         Approve
       </button>
-      <button onClick={handleReject} disabled={isPending || comment.status === "rejected"}>
+      <button
+        onClick={handleReject}
+        disabled={isPending || comment.status === "rejected"}
+      >
         Reject
       </button>
-      <button onClick={handleMarkAsSpam} disabled={isPending || comment.status === "spam"}>
+      <button
+        onClick={handleMarkAsSpam}
+        disabled={isPending || comment.status === "spam"}
+      >
         Spam
       </button>
-    </div>
+    </>
   );
 }

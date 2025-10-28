@@ -22,3 +22,7 @@ export async function rejectComment(id: string) {
 export async function markAsSpam(id: string) {
   await runModerationAction(id, "spam");
 }
+
+export async function returnToPending(id: string) {
+  await runModerationAction(id, "pending");
+}

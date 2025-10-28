@@ -11,6 +11,8 @@ const AVAILABLE_TAGS = [
   { slug: "application-security", name: "Application Security" },
   { slug: "devsecops", name: "DevSecOps" },
   { slug: "operations", name: "Operations" },
+  { slug: "security-operations", name: "Security Operations" },
+  { slug: "ai", name: "AI" },
   { slug: "writing", name: "Writing" },
   { slug: "stream", name: "Stream" },
   { slug: "process", name: "Process" },

@@ -112,8 +112,8 @@ export default async function KnowledgeLayer({
   style,
 }: HomeSectionProps) {
   const [essays, notes, stream] = await Promise.all([
-    getEssays(),
-    getNotes(),
+    getEssays({ includeDrafts: false }),
+    getNotes({ includeDrafts: false }),
     loadStream(),
   ]);
 

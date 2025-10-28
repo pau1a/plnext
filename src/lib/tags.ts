@@ -25,6 +25,16 @@ const TAG_DEFINITIONS: TagDefinition[] = [
     aliases: ["ops"],
   },
   {
+    slug: "security-operations",
+    name: "Security Operations",
+    description: "SOC workflows, incident response, and threat detection.",
+  },
+  {
+    slug: "ai",
+    name: "AI",
+    description: "Artificial intelligence and machine learning applications.",
+  },
+  {
     slug: "writing",
     name: "Writing",
     description: "Meta updates about the writing process and publishing pipeline.",

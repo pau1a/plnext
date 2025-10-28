@@ -3,30 +3,17 @@ import MotionFade from "@/components/motion/MotionFade";
 import { PostCard } from "@/components/post-card";
 import cardStyles from "@/components/card.module.scss";
 import paginationStyles from "@/components/pagination.module.scss";
-import {
-  BLOG_AFTER_PARAM,
-  BLOG_BEFORE_PARAM,
-  BLOG_INDEX_REVALIDATE_SECONDS,
-  BlogCursorError,
-  createCursorHref,
-  getBlogIndexPage,
-  parseCursorParam,
-} from "@/lib/supabase/blog";
+import { getBlogPostSummaries } from "@/lib/mdx";
+import { getSupabase } from "@/lib/supabase/server";
 import type { SearchParamRecord } from "@/lib/pagination";
 import Link from "next/link";
-import { notFound, type ReadonlyURLSearchParams } from "next/navigation";
+import { type ReadonlyURLSearchParams } from "next/navigation";
 import type { Metadata } from "next";
 
 const BASE_PATH = "/writing";
+const PAGE_SIZE = 6;
 
-export const revalidate = BLOG_INDEX_REVALIDATE_SECONDS;
-
-function resolvePageSize() {
-  const raw =
-    process.env.BLOG_PAGE_SIZE ?? process.env.NEXT_PUBLIC_BLOG_PAGE_SIZE;
-  const parsed = Number.parseInt(raw ?? "", 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 6;
-}
+export const revalidate = 60;
 
 const BASE_METADATA: Metadata = {
   title: "Writing",
@@ -122,115 +109,94 @@ async function resolveSearchParams(
   return params;
 }
 
-async function getSearchParamValue(
-  searchParams: SearchParamsInput,
-  key: string,
-): Promise<string | string[] | undefined> {
+async function getPageNumber(searchParams: SearchParamsInput): Promise<number> {
   const params = await resolveSearchParams(searchParams);
-  const values = params.getAll(key);
+  const page = params.get("page");
+  const parsed = page ? parseInt(page, 10) : 1;
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+}
 
-  if (values.length === 0) {
-    return undefined;
+async function loadCommentCounts(slugs: string[]): Promise<Record<string, number>> {
+  if (slugs.length === 0) return {};
+
+  try {
+    const supabase = getSupabase();
+    // public.comments is a view that only shows approved comments, no status filter needed
+    const { data, error } = await supabase
+      .from("comments")
+      .select("slug")
+      .in("slug", slugs);
+
+    if (error) {
+      console.error("Supabase query error:", error.message);
+      throw new Error(`Supabase error: ${error.message}`);
+    }
+
+    const counts: Record<string, number> = {};
+    for (const slug of slugs) {
+      counts[slug] = 0;
+    }
+
+    for (const row of (data ?? []) as Array<{ slug: string }>) {
+      if (counts[row.slug] !== undefined) {
+        counts[row.slug] += 1;
+      }
+    }
+
+    return counts;
+  } catch (error) {
+    console.error("Failed to load comment counts:", error instanceof Error ? error.message : String(error));
+    // Return empty counts on error to prevent UI issues
+    const counts: Record<string, number> = {};
+    for (const slug of slugs) {
+      counts[slug] = 0;
+    }
+    return counts;
   }
-
-  return values.length === 1 ? values[0] : values;
 }
 
 export async function generateMetadata({
   searchParams,
 }: BlogPageProps): Promise<Metadata> {
-  const PAGE_SIZE = resolvePageSize();
-  const after = parseCursorParam(
-    await getSearchParamValue(searchParams, BLOG_AFTER_PARAM),
-  );
-  const before = parseCursorParam(
-    await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM),
-  );
-  const canonicalPath = before
-    ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, before)
-    : after
-      ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, after)
-      : BASE_PATH;
+  const page = await getPageNumber(searchParams);
+  const canonicalPath = page > 1 ? `${BASE_PATH}?page=${page}` : BASE_PATH;
 
-  try {
-    const page = await getBlogIndexPage({ pageSize: PAGE_SIZE, after, before });
-    const previous = page.prevCursor
-      ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, page.prevCursor)
-      : undefined;
-    const next = page.nextCursor
-      ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor)
-      : undefined;
-
-    return {
-      ...BASE_METADATA,
-      alternates: {
-        canonical: canonicalPath,
-      },
-      openGraph: {
-        ...BASE_METADATA.openGraph,
-        url: canonicalPath,
-      },
-      twitter: {
-        ...BASE_METADATA.twitter,
-      },
-      ...(previous || next ? { pagination: { previous, next } } : {}),
-    };
-  } catch (error) {
-    if (error instanceof BlogCursorError) {
-      return {
-        ...BASE_METADATA,
-        alternates: {
-          canonical: canonicalPath,
-        },
-        openGraph: {
-          ...BASE_METADATA.openGraph,
-          url: canonicalPath,
-        },
-      };
-    }
-
-    console.error("Failed to resolve writing metadata:", error);
-    return {
-      ...BASE_METADATA,
-      alternates: {
-        canonical: canonicalPath,
-      },
-      openGraph: {
-        ...BASE_METADATA.openGraph,
-        url: canonicalPath,
-      },
-    };
-  }
+  return {
+    ...BASE_METADATA,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      ...BASE_METADATA.openGraph,
+      url: canonicalPath,
+    },
+    twitter: {
+      ...BASE_METADATA.twitter,
+    },
+  };
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const PAGE_SIZE = resolvePageSize();
-  const after = parseCursorParam(
-    await getSearchParamValue(searchParams, BLOG_AFTER_PARAM),
-  );
-  const before = parseCursorParam(
-    await getSearchParamValue(searchParams, BLOG_BEFORE_PARAM),
-  );
+  const page = await getPageNumber(searchParams);
 
-  let page;
-  try {
-    page = await getBlogIndexPage({ pageSize: PAGE_SIZE, after, before });
-  } catch (error) {
-    if (error instanceof BlogCursorError) {
-      notFound();
-    }
+  // Get all posts, excluding drafts
+  const allPosts = await getBlogPostSummaries({ includeDrafts: false });
 
-    throw error;
-  }
+  // Calculate pagination
+  const totalPosts = allPosts.length;
+  const totalPages = Math.ceil(totalPosts / PAGE_SIZE);
+  const startIndex = (page - 1) * PAGE_SIZE;
+  const endIndex = startIndex + PAGE_SIZE;
+  const posts = allPosts.slice(startIndex, endIndex);
 
-  const hasPosts = page.items.length > 0;
-  const commentCounts = page.commentCounts;
-  const previousHref = page.prevCursor
-    ? createCursorHref(BASE_PATH, BLOG_BEFORE_PARAM, page.prevCursor)
-    : null;
-  const nextHref = page.nextCursor
-    ? createCursorHref(BASE_PATH, BLOG_AFTER_PARAM, page.nextCursor)
-    : null;
+  // Load comment counts
+  const commentCounts = await loadCommentCounts(posts.map(p => p.slug));
+
+  const hasPosts = posts.length > 0;
+  const hasPreviousPage = page > 1;
+  const hasNextPage = page < totalPages;
+  const previousHref = hasPreviousPage ? (page === 2 ? BASE_PATH : `${BASE_PATH}?page=${page - 1}`) : null;
+  const nextHref = hasNextPage ? `${BASE_PATH}?page=${page + 1}` : null;
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">
@@ -247,13 +213,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
         {hasPosts ? (
           <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
-            {page.items.map((post) => (
+            {posts.map((post) => (
               <PostCard
                 key={post.slug}
                 summary={post}
-                commentCount={
-                  commentCounts ? (commentCounts[post.slug] ?? 0) : undefined
-                }
+                commentCount={commentCounts[post.slug] ?? 0}
               />
             ))}
           </div>
@@ -265,7 +229,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           </MotionFade>
         )}
 
-        {hasPosts ? (
+        {hasPosts && totalPages > 1 ? (
           <MotionFade delay={0.05}>
             <nav
               aria-label="Pagination"

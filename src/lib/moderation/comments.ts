@@ -12,7 +12,7 @@ import {
   type ModerationCommentUpdate,
 } from "@/lib/supabase/service";
 
-export type ModerationAction = "approve" | "reject" | "spam";
+export type ModerationAction = "approve" | "reject" | "spam" | "pending";
 
 export interface ModerationQueueFilters {
   status?: CommentStatus | "all";
@@ -154,6 +154,8 @@ function resolveStatusForAction(action: ModerationAction): CommentStatus {
       return "approved";
     case "spam":
       return "spam";
+    case "pending":
+      return "pending";
     default:
       return "rejected";
   }
@@ -163,11 +165,11 @@ function buildUpdate(action: ModerationAction, now: string): ModerationCommentUp
   const status = resolveStatusForAction(action);
   const update: ModerationCommentUpdate = {
     status,
-    moderated_at: now,
+    moderated_at: action === "pending" ? null : now,
     updated_at: now,
   };
 
-  if (action === "reject") {
+  if (action === "reject" || action === "pending") {
     update.is_spam = false;
   }
 

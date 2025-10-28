@@ -109,7 +109,7 @@ export default async function NoteDetailPage({ params }: NotePageProps) {
   }
 
   const resolvedNote = note;
-  const allNotes = await getNotes();
+  const allNotes = await getNotes({ includeDrafts: false });
   const relatedNotes = selectRelatedNotes(resolvedNote, allNotes);
 
   return (

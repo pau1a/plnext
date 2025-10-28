@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 export default async function EssaysIndexPage() {
-  const essays = await getEssays();
+  const essays = await getEssays({ includeDrafts: false });
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">

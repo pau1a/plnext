@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { useRouter } from "next/navigation";
 
 import { updateEssayAction } from "./actions";
 import { ensureSlug } from "@/lib/slugify";
@@ -49,6 +50,11 @@ const FIELD_CONFIG: Record<
     type: "checkbox",
     helpText: "Show this essay in featured slots around the site.",
   },
+  draft: {
+    label: "Draft",
+    type: "checkbox",
+    helpText: "Draft essays stay off the public stream.",
+  },
 };
 
 function normaliseFrontmatterValue(value: unknown): FrontmatterValue {
@@ -76,6 +82,12 @@ export function EssayEditor({
 }: EssayEditorProps) {
   const orderedKeys = useMemo(() => {
     const base = (frontmatterOrder.length > 0 ? frontmatterOrder : Object.keys(initialFrontmatter)).slice();
+    const required = ["title", "date", "summary", "draft"];
+    for (const key of required) {
+      if (!base.includes(key)) {
+        base.push(key);
+      }
+    }
     return base.includes("slug") ? base : ["slug", ...base];
   }, [frontmatterOrder, initialFrontmatter]);
 
@@ -106,7 +118,18 @@ export function EssayEditor({
   });
 
   const [body, setBody] = useState(initialBody);
+  const [closeAfterSave, setCloseAfterSave] = useState(false);
   const [actionState, formAction] = useActionState(updateEssayAction, initialEssayActionState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (actionState.status === "success" && closeAfterSave) {
+      const timer = setTimeout(() => {
+        router.push("/admin/essays");
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [actionState.status, closeAfterSave, router]);
 
   const derivedSlug = useMemo(() => {
     const titleValue = typeof frontmatter.title === "string" ? frontmatter.title : title;
@@ -336,10 +359,11 @@ export function EssayEditor({
       </section>
 
       <div className="u-flex u-gap-sm u-items-center u-flex-wrap">
-        <SubmitButton />
+        <SaveButton onSaveAndClose={() => setCloseAfterSave(true)} />
         {actionState.status === "success" ? (
           <span role="status" className="u-text-sm u-text-accent">
             {actionState.message}
+            {closeAfterSave ? " Redirecting..." : ""}
           </span>
         ) : null}
         {actionState.status === "error" ? (
@@ -352,12 +376,26 @@ export function EssayEditor({
   );
 }
 
-function SubmitButton() {
+interface SaveButtonProps {
+  onSaveAndClose: () => void;
+}
+
+function SaveButton({ onSaveAndClose }: SaveButtonProps) {
   const { pending } = useFormStatus();
 
   return (
-    <button className="button" type="submit" disabled={pending}>
-      {pending ? "Saving…" : "Save changes"}
-    </button>
+    <>
+      <button className="button" type="submit" disabled={pending}>
+        {pending ? "Saving…" : "Save changes"}
+      </button>
+      <button
+        className="button button--ghost"
+        type="submit"
+        disabled={pending}
+        onClick={onSaveAndClose}
+      >
+        Save and close
+      </button>
+    </>
   );
 }

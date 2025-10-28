@@ -5,21 +5,33 @@ import { useActionState, useEffect, useMemo, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 
-import { createEssayAction } from "../../actions";
+import { createBlogPostAction } from "../../actions";
 import { ensureSlug } from "@/lib/slugify";
 
-const initialEssayActionState = { status: "idle" as const };
+const AVAILABLE_TAGS = [
+  { slug: "application-security", name: "Application Security" },
+  { slug: "devsecops", name: "DevSecOps" },
+  { slug: "operations", name: "Operations" },
+  { slug: "security-operations", name: "Security Operations" },
+  { slug: "ai", name: "AI" },
+  { slug: "writing", name: "Writing" },
+  { slug: "stream", name: "Stream" },
+  { slug: "process", name: "Process" },
+  { slug: "experiments", name: "Experiments" },
+];
 
-export function NewEssayEditor() {
+const initialBlogActionState = { status: "idle" as const };
+
+export function NewBlogPostEditor() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
-  const [summary, setSummary] = useState("");
-  const [featured, setFeatured] = useState(false);
+  const [description, setDescription] = useState("");
+  const [tags, setTags] = useState("");
   const [draft, setDraft] = useState(true);
   const [body, setBody] = useState("");
 
-  const [actionState, formAction] = useActionState(createEssayAction, initialEssayActionState);
+  const [actionState, formAction] = useActionState(createBlogPostAction, initialBlogActionState);
 
   const derivedSlug = useMemo(() => {
     return ensureSlug(title, "");
@@ -28,11 +40,21 @@ export function NewEssayEditor() {
   useEffect(() => {
     if (actionState.status === "success") {
       const timer = setTimeout(() => {
-        router.push("/admin/essays");
+        router.push("/admin/blog");
       }, 1500);
       return () => clearTimeout(timer);
     }
   }, [actionState.status, router]);
+
+  const addTag = (tagSlug: string) => {
+    const currentTags = tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+    if (!currentTags.includes(tagSlug)) {
+      setTags(currentTags.length > 0 ? `${tags}, ${tagSlug}` : tagSlug);
+    }
+  };
 
   return (
     <form className="u-stack u-gap-xl" action={formAction}>
@@ -42,20 +64,20 @@ export function NewEssayEditor() {
             <div className="admin-essay-editor__statbar">
               <div className="admin-essay-editor__statrow">
                 <span className="admin-essay-editor__stat">
-                  Creating new essay
+                  Creating new blog post
                 </span>
                 <span className="admin-essay-editor__stat">
-                  Permalink <code>/essays/{derivedSlug || "(auto-generated)"}</code>
+                  Permalink <code>/writing/{derivedSlug || "(auto-generated)"}</code>
                 </span>
               </div>
             </div>
           </div>
-          <Link className="button button--ghost button--sm" href="/admin/essays">
+          <Link className="button button--ghost button--sm" href="/admin/blog">
             Back to list
           </Link>
         </div>
         <p className="u-text-muted u-text-sm">
-          Fill in the details below to create a new essay. The file will be saved as an MDX file in <code>content/writing</code>.
+          Fill in the details below to create a new blog post. The file will be saved as an MDX file in <code>content/blog</code>.
         </p>
       </div>
 
@@ -65,24 +87,24 @@ export function NewEssayEditor() {
         <h3 className="u-font-semibold u-text-sm u-letter-spaced">Front matter</h3>
 
         <div className="admin-essay-editor__primary-fields">
-          <label className="admin-essay-editor__field admin-essay-editor__field--inline" htmlFor="essay-title">
+          <label className="admin-essay-editor__field admin-essay-editor__field--inline" htmlFor="blog-title">
             <span className="admin-essay-editor__field-label">Title</span>
             <input
-              id="essay-title"
+              id="blog-title"
               type="text"
               name="title"
               className="input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Precision in the Loop"
+              placeholder="Securing the Modern Web"
               required
             />
           </label>
 
-          <label className="admin-essay-editor__field admin-essay-editor__field--inline" htmlFor="essay-date">
+          <label className="admin-essay-editor__field admin-essay-editor__field--inline" htmlFor="blog-date">
             <span className="admin-essay-editor__field-label">Publish date</span>
             <input
-              id="essay-date"
+              id="blog-date"
               type="date"
               name="date"
               className="input"
@@ -92,36 +114,58 @@ export function NewEssayEditor() {
             />
           </label>
 
-          <label className="admin-essay-editor__field admin-essay-editor__field--summary" htmlFor="essay-summary">
-            <span className="admin-essay-editor__field-label">Summary</span>
+          <label className="admin-essay-editor__field admin-essay-editor__field--summary" htmlFor="blog-description">
+            <span className="admin-essay-editor__field-label">Description</span>
             <textarea
-              id="essay-summary"
-              name="summary"
+              id="blog-description"
+              name="description"
               className="input admin-essay-editor__summary-input"
-              rows={4}
-              placeholder="Single sentence used in listings and previews."
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
+              rows={3}
+              placeholder="Practical steps to harden your full-stack applications without slowing down delivery."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
             />
+          </label>
+
+          <label className="admin-essay-editor__field admin-essay-editor__field--summary" htmlFor="blog-tags">
+            <span className="admin-essay-editor__field-label">Tags</span>
+            <textarea
+              id="blog-tags"
+              name="tags"
+              className="input admin-essay-editor__summary-input"
+              rows={3}
+              placeholder="comma or newline separated"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+            />
+            <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+              {AVAILABLE_TAGS.map((tag) => {
+                const currentTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
+                const isSelected = currentTags.includes(tag.slug);
+                return (
+                  <button
+                    key={tag.slug}
+                    type="button"
+                    onClick={() => addTag(tag.slug)}
+                    className="button button--xs"
+                    style={{
+                      backgroundColor: isSelected ? "var(--color-teal-400)" : "var(--surface-secondary)",
+                      color: isSelected ? "white" : "inherit",
+                    }}
+                  >
+                    {tag.name}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="admin-essay-editor__field-help u-text-muted u-text-xs">
+              Click tags above to add them, or type custom tags separated by commas.
+            </p>
           </label>
         </div>
 
         <div className="admin-essay-editor__frontmatter-grid">
-          <label className="admin-essay-editor__field admin-essay-editor__field--checkbox">
-            <div className="admin-essay-editor__checkbox-row">
-              <input
-                type="checkbox"
-                name="featured"
-                checked={featured}
-                onChange={(e) => setFeatured(e.target.checked)}
-              />
-              <span className="admin-essay-editor__field-label">Featured</span>
-            </div>
-            <p className="admin-essay-editor__field-help u-text-muted u-text-xs">
-              Show this essay in featured slots around the site.
-            </p>
-          </label>
-
           <label className="admin-essay-editor__field admin-essay-editor__field--checkbox">
             <div className="admin-essay-editor__checkbox-row">
               <input
@@ -133,14 +177,14 @@ export function NewEssayEditor() {
               <span className="admin-essay-editor__field-label">Draft</span>
             </div>
             <p className="admin-essay-editor__field-help u-text-muted u-text-xs">
-              Draft essays stay off the public stream.
+              Draft posts stay off the public writing feed.
             </p>
           </label>
         </div>
       </section>
 
       <section className="u-stack u-gap-sm">
-        <h3 className="u-font-semibold u-text-sm u-letter-spaced">Essay body</h3>
+        <h3 className="u-font-semibold u-text-sm u-letter-spaced">Article body</h3>
         <textarea
           name="body"
           className="input admin-essay-editor__textarea"
@@ -148,7 +192,7 @@ export function NewEssayEditor() {
           onChange={(e) => setBody(e.target.value)}
           rows={28}
           spellCheck="false"
-          placeholder="Write your essay content here in Markdown..."
+          placeholder="Write your blog post content here in Markdown..."
           required
         />
       </section>
@@ -175,7 +219,7 @@ function SubmitButton() {
 
   return (
     <button className="button" type="submit" disabled={pending}>
-      {pending ? "Creating…" : "Create essay"}
+      {pending ? "Creating…" : "Create blog post"}
     </button>
   );
 }

@@ -88,7 +88,12 @@ async function readFrontMatter<T extends { draft?: boolean }>(dir: string, file:
   return data as T;
 }
 
-export async function getBlogPostSummaries(): Promise<BlogPostSummary[]> {
+interface GetBlogPostSummariesOptions {
+  includeDrafts?: boolean;
+}
+
+export async function getBlogPostSummaries(options: GetBlogPostSummariesOptions = {}): Promise<BlogPostSummary[]> {
+  const includeDrafts = options.includeDrafts ?? false;
   const files = await readDirectory(BLOG_DIR);
 
   const posts = await Promise.all(
@@ -103,7 +108,7 @@ export async function getBlogPostSummaries(): Promise<BlogPostSummary[]> {
   );
 
   return posts
-    .filter((post) => !post.draft)
+    .filter((post) => includeDrafts || !post.draft)
     .sort(sortByDateDesc);
 }
 

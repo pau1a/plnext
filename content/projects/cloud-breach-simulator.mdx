@@ -1,14 +1,16 @@
 ---
+slug: "cloud-breach-simulator"
 title: "Cloud Breach Simulator"
 date: "2024-03-18"
 summary: "Automated attack simulations that validate detection pipelines across AWS and Azure tenants."
 role: "Technical Lead"
 status: "In production"
 stack:
-  - AWS
-  - Azure
-  - Terraform
-  - Python
+  - "AWS"
+  - "Azure"
+  - "Terraform"
+  - "Python"
+draft: true
 ---
 
 I built a repeatable framework that spins up adversary scenarios in isolated cloud sandboxes. Each run provisions ephemeral infrastructure, executes scripted attack paths, and tears everything down once telemetry lands in the SIEM.

@@ -20,8 +20,11 @@ interface AdminShellProps {
 export function AdminShell({ actor, title, subtitle, children, className }: AdminShellProps) {
   const [navSlot, setNavSlot] = useState<HTMLElement | null>(null);
   const [isContentMenuOpen, setContentMenuOpen] = useState(false);
+  const [isOrgMenuOpen, setOrgMenuOpen] = useState(false);
   const closeMenuTimeoutRef = useRef<number | null>(null);
+  const closeOrgMenuTimeoutRef = useRef<number | null>(null);
   const groupRef = useRef<HTMLDivElement | null>(null);
+  const orgGroupRef = useRef<HTMLDivElement | null>(null);
 
   const clearScheduledMenuClose = useCallback(() => {
     if (closeMenuTimeoutRef.current !== null) {
@@ -38,6 +41,21 @@ export function AdminShell({ actor, title, subtitle, children, className }: Admi
     }, 120);
   }, [clearScheduledMenuClose]);
 
+  const clearScheduledOrgMenuClose = useCallback(() => {
+    if (closeOrgMenuTimeoutRef.current !== null) {
+      window.clearTimeout(closeOrgMenuTimeoutRef.current);
+      closeOrgMenuTimeoutRef.current = null;
+    }
+  }, []);
+
+  const scheduleOrgMenuClose = useCallback(() => {
+    clearScheduledOrgMenuClose();
+    closeOrgMenuTimeoutRef.current = window.setTimeout(() => {
+      setOrgMenuOpen(false);
+      closeOrgMenuTimeoutRef.current = null;
+    }, 120);
+  }, [clearScheduledOrgMenuClose]);
+
   useEffect(() => {
     setNavSlot(document.getElementById("app-admin-nav-slot"));
   }, []);
@@ -48,11 +66,17 @@ export function AdminShell({ actor, title, subtitle, children, className }: Admi
         clearScheduledMenuClose();
         setContentMenuOpen(false);
       }
+      if (!orgGroupRef.current?.contains(event.target as Node)) {
+        clearScheduledOrgMenuClose();
+        setOrgMenuOpen(false);
+      }
     };
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         clearScheduledMenuClose();
         setContentMenuOpen(false);
+        clearScheduledOrgMenuClose();
+        setOrgMenuOpen(false);
       }
     };
 
@@ -63,13 +87,14 @@ export function AdminShell({ actor, title, subtitle, children, className }: Admi
       document.removeEventListener("click", handleDocumentClick);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [clearScheduledMenuClose]);
+  }, [clearScheduledMenuClose, clearScheduledOrgMenuClose]);
 
   useEffect(() => {
     return () => {
       clearScheduledMenuClose();
+      clearScheduledOrgMenuClose();
     };
-  }, [clearScheduledMenuClose]);
+  }, [clearScheduledMenuClose, clearScheduledOrgMenuClose]);
 
   const showContentMenu = actorHasPermission(actor, "audit:read");
   const showComments = actorHasPermission(actor, "comments:moderate");
@@ -174,6 +199,68 @@ export function AdminShell({ actor, title, subtitle, children, className }: Admi
                       }}
                     >
                       Stream
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            ) : null}
+
+            {showContentMenu ? (
+              <div
+                className="admin-nav__group"
+                data-admin-nav-group
+                data-open={isOrgMenuOpen ? "true" : "false"}
+                ref={orgGroupRef}
+                onMouseEnter={() => {
+                  clearScheduledOrgMenuClose();
+                  setOrgMenuOpen(true);
+                }}
+                onMouseLeave={scheduleOrgMenuClose}
+              >
+                <button
+                  type="button"
+                  className="admin-nav__link admin-nav__link--with-carat"
+                  data-admin-nav-trigger
+                  aria-haspopup="true"
+                  aria-expanded={isOrgMenuOpen}
+                  onClick={() => {
+                    clearScheduledOrgMenuClose();
+                    setOrgMenuOpen((prev) => !prev);
+                  }}
+                  onFocus={() => {
+                    clearScheduledOrgMenuClose();
+                    setOrgMenuOpen(true);
+                  }}
+                >
+                  Organisation
+                </button>
+                <ul
+                  className="admin-nav__submenu"
+                  data-admin-nav-menu
+                  data-open={isOrgMenuOpen ? "true" : "false"}
+                >
+                  <li>
+                    <Link
+                      className="admin-nav__sublink"
+                      href="/admin/organisation/categories"
+                      onClick={() => {
+                        clearScheduledOrgMenuClose();
+                        setOrgMenuOpen(false);
+                      }}
+                    >
+                      Categories
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="admin-nav__sublink"
+                      href="/admin/organisation/tags"
+                      onClick={() => {
+                        clearScheduledOrgMenuClose();
+                        setOrgMenuOpen(false);
+                      }}
+                    >
+                      Tags
                     </Link>
                   </li>
                 </ul>

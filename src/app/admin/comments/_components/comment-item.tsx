@@ -1,4 +1,6 @@
+"use client";
 
+import { useEffect, useRef, useState } from "react";
 import type { Comment } from "@/lib/comments/comment";
 
 import { CommentActions } from "./comment-actions";
@@ -15,6 +17,16 @@ interface CommentItemProps {
 }
 
 export function CommentItem({ comment, isSelected, isFocused, onSelect, onShowHistory, onFocus, setComments }: CommentItemProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = bodyRef.current;
+    if (element) {
+      setIsTruncated(element.scrollHeight > element.clientHeight);
+    }
+  }, [comment.body]);
   let statusBarColor = "";
   switch (comment.status) {
     case "pending":
@@ -37,25 +49,44 @@ export function CommentItem({ comment, isSelected, isFocused, onSelect, onShowHi
       onClick={() => onFocus(comment.id)}
     >
       <div className={styles.statusBar} style={{ backgroundColor: statusBarColor }} />
-      <div className={styles.header}>
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={(e) => {
-            e.stopPropagation();
-            onSelect(comment.id);
-          }}
-        />
-        <div className={styles.authorBlock}>
-          <div className={styles.author}>{comment.author.name}</div>
-          <div className={styles.email}>{comment.author.email ?? "No email provided"}</div>
-          <div className={styles.slug}>{comment.slug}</div>
+      <input
+        type="checkbox"
+        className={styles.checkbox}
+        checked={isSelected}
+        onChange={(e) => {
+          e.stopPropagation();
+          onSelect(comment.id);
+        }}
+      />
+      <div className={styles.content}>
+        <div className={styles.meta}>
+          <span className={styles.author}>{comment.author.name}</span>
+          <span className={styles.email}>{comment.author.email ?? "No email"}</span>
+          <span className={styles.slug}>{comment.slug}</span>
+          <span className={styles.date}>{new Date(comment.createdAt).toLocaleDateString()}</span>
+          <span className={`${styles.status} ${styles[comment.status]}`}>{comment.status.toUpperCase()}</span>
         </div>
-        <div className={styles.date}>
-          {new Date(comment.createdAt).toLocaleDateString()}
+        <div
+          ref={bodyRef}
+          className={`${styles.body} ${!isExpanded ? styles.truncated : ""}`}
+        >
+          {comment.body}
         </div>
-        <div className={styles.status}>{comment.status}</div>
+      </div>
+      <div className={styles.actions}>
+        {isTruncated && (
+          <button
+            className={styles.expandBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
+          >
+            {isExpanded ? "Collapse" : "Expand"}
+          </button>
+        )}
         <button
+          className={styles.historyBtn}
           onClick={(e) => {
             e.stopPropagation();
             onShowHistory(comment.id);
@@ -63,9 +94,6 @@ export function CommentItem({ comment, isSelected, isFocused, onSelect, onShowHi
         >
           History
         </button>
-      </div>
-      <div className={styles.body}>{comment.body}</div>
-      <div className={styles.actions}>
         <CommentActions comment={comment} setComments={setComments} />
       </div>
     </div>

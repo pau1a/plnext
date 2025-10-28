@@ -20,6 +20,14 @@ export default async function AdminProjectsPage() {
   return (
     <PageShell as="main" className="u-pad-block-3xl">
       <AdminShell actor={actor} title="Projects">
+        <div className="u-flex u-justify-between u-items-center u-gap-sm u-flex-wrap" style={{ marginBottom: "1rem" }}>
+          <p className="u-text-muted u-text-sm">
+            Manage your project entries. Add `.mdx` files under <code>content/projects</code> or create new projects below.
+          </p>
+          <Link className="button button--sm" href="/admin/projects/new">
+            + New Project
+          </Link>
+        </div>
         <section aria-label="Projects inventory" className={styles.grid}>
           {projects.length === 0 ? (
             <p className="u-text-muted">
