@@ -9,7 +9,7 @@ import styles from "./ExecutionLayer.module.scss";
 
 import type { HomeSectionProps } from "./types";
 
-const PROJECT_LIMIT = 3;
+const PROJECT_LIMIT = 9;
 
 function formatYear(value: string) {
   const date = new Date(value);

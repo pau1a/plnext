@@ -1,0 +1,21 @@
+---
+slug: "spectral-digital-twin"
+title: "Spectral Digital Twin"
+date: "2024-04-15"
+summary: "A cyber-range that mirrors production energy grids for purple-team exercises."
+role: "Program Manager"
+status: "Prototype"
+stack:
+  - "Kubernetes"
+  - "Helm"
+  - "Go"
+  - "TimescaleDB"
+---
+
+Energy operators needed to stress-test control rooms without touching live substations. Spectral Digital Twin clones their SCADA stack, emulates telemetry noise, and lets defenders rehearse drills against real adversary tradecraft.
+
+- Go services replay months of historian data with adjustable fault injection so teams can practise black-start scenarios safely.
+- Kubernetes blueprints spin up entire substations in minutes, including simulated PLCs and network taps for OT sensors.
+- TimescaleDB stores every injected anomaly and analyst response so audit teams can replay the exercise with second-by-second context.
+
+The prototype already uncovered firmware edge cases that would have been catastrophic in the field.

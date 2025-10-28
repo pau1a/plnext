@@ -1,0 +1,21 @@
+---
+slug: "edge-signal-orchestrator"
+title: "Edge Signal Orchestrator"
+date: "2024-06-11"
+summary: "Coordinated control plane for shipping zero-trust policies to thousands of industrial gateways."
+role: "Security Architect"
+status: "In pilot"
+stack:
+  - "Rust"
+  - "WebAssembly"
+  - "Nomad"
+  - "Grafana"
+---
+
+Factories kept bolting new sensors onto legacy networks without a consistent way to deliver policy updates. I built a control plane that treats every gateway like a miniature service mesh while keeping engineers inside a simple dashboard.
+
+- A Rust/WASM agent runs on constrained hardware, translating high-level intents into iptables, WireGuard, and MQTT rules.
+- Nomad allocates update waves, ensuring only a slice of the fleet rolls forward at a time so operators can watch telemetry trends.
+- Grafana boards surface posture drift alongside energy consumption so plant managers see the security tradeoffs in real time.
+
+The orchestrator shrinks rollout cycles from weeks to hours, and pilots are already showing fewer midnight callouts.
