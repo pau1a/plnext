@@ -16,7 +16,8 @@
       "Bash(ps:*)",
       "Bash(kill:*)",
       "Bash(npm run dev:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Read(//tmp/**)"
     ],
     "deny": [],
     "ask": []
