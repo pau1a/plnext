@@ -26,6 +26,7 @@ export interface EssayFrontMatter {
 export interface EssaySummary extends EssayFrontMatter {
   slug: string;
   fileSlug: string;
+  body: string;
 }
 
 export interface EssayDocument extends EssaySummary {
@@ -36,6 +37,7 @@ interface EssaySource {
   file: string;
   slug: string;
   frontMatter: EssaySummary;
+  body: string;
 }
 
 function shouldIncludeDrafts() {
@@ -63,17 +65,18 @@ function normaliseSlug(candidate: unknown, fallback: string) {
 async function readEssaySource(file: string): Promise<EssaySource> {
   const fullPath = path.join(WRITING_DIR, file);
   const raw = await fs.readFile(fullPath, "utf8");
-  const { data } = matter(raw);
+  const { data, content: body } = matter(raw);
 
   const { slug: providedSlug, ...rest } = data as EssayFrontMatter;
   const slug = normaliseSlug(providedSlug, file);
   const fileSlug = file.replace(/\.mdx$/, "");
-  const frontMatter = { slug, fileSlug, ...rest } as EssaySummary;
+  const frontMatter = { slug, fileSlug, body, ...rest } as EssaySummary;
 
   return {
     file,
     slug,
     frontMatter,
+    body,
   };
 }
 

@@ -1,0 +1,223 @@
+.signalLayer {
+  background: transparent;
+}
+
+.inner {
+  padding-block: clamp(3.5rem, 7vw, 5.25rem);
+}
+
+.panel {
+  position: relative;
+  background: var(--surface-elevated);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: clamp(2rem, 3vw, 3.25rem);
+  display: grid;
+  gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset-inline: clamp(1.5rem, 4vw, 3rem);
+  inset-block-start: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-crimson-500) 70%, transparent) 0%,
+    color-mix(in srgb, var(--color-crimson-300) 70%, transparent) 100%
+  );
+  border-radius: 999px;
+}
+
+.header {
+  display: grid;
+  gap: var(--space-xs);
+  max-width: 42ch;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-muted) 70%, transparent);
+  font-weight: 600;
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(2.1rem, 1.8rem + 1.2vw, 2.75rem);
+  font-weight: 600;
+  line-height: var(--line-height-tight);
+}
+
+.subheading {
+  margin: 0;
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.15rem);
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--text-muted) 85%, transparent);
+}
+
+.signalList {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: clamp(0.75rem, 1.8vw, 1.25rem);
+}
+
+.signalItem {
+  position: relative;
+}
+
+.signalCard {
+  --signal-card-padding: clamp(0.65rem, 1.5vw, 1rem);
+  --signal-card-column-gap: clamp(0.6rem, 1.4vw, 0.9rem);
+  --signal-marker-size: 0.75rem;
+  --signal-image-height: 80px;
+  background: color-mix(in srgb, var(--surface-base) 85%, white 15%);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 75%, transparent);
+  border-radius: var(--radius-md);
+  padding: var(--signal-card-padding);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--signal-card-column-gap);
+  row-gap: clamp(0.25rem, 0.6vw, 0.35rem);
+  align-items: start;
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.signalCardWithImage {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  max-height: calc(var(--signal-image-height) + 2 * var(--signal-card-padding));
+  overflow: hidden;
+}
+
+.signalMeta {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.signalMarker {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: flex-start;
+  flex-shrink: 0;
+  width: var(--signal-marker-size);
+  height: var(--signal-marker-size);
+  border-radius: 999px;
+  background: var(--color-crimson-500);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--color-crimson-400) 25%, transparent),
+    0 0 12px color-mix(in srgb, var(--color-crimson-300) 40%, transparent);
+  margin-top: 0.1rem;
+}
+
+.signalImageContainer {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: flex-start;
+  justify-self: end;
+  width: 120px;
+  height: var(--signal-image-height);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface-border) 30%, transparent);
+}
+
+.signalImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.signalType {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 3px;
+  line-height: 1.4;
+}
+
+.signalTypeStream {
+  background: color-mix(in srgb, var(--color-crimson-500) 15%, transparent);
+  color: var(--color-crimson-600);
+  border: 1px solid color-mix(in srgb, var(--color-crimson-500) 30%, transparent);
+}
+
+.signalTypeNote {
+  background: color-mix(in srgb, var(--color-teal-500) 15%, transparent);
+  color: var(--color-teal-600);
+  border: 1px solid color-mix(in srgb, var(--color-teal-500) 30%, transparent);
+}
+
+.signalDate {
+  white-space: nowrap;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-muted) 75%, transparent);
+}
+
+.signalLink {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+  align-self: flex-start;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.signalCardWithImage .signalLink {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.signalLink:hover,
+.signalLink:focus-visible {
+  color: var(--link-hover);
+}
+
+.signalCard:hover,
+.signalCard:focus-within {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-crimson-400) 55%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.moreLink {
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+.moreLink:hover,
+.moreLink:focus-visible {
+  color: var(--link-hover);
+}
+
+@media (max-width: 47.9375rem) {
+  .panel {
+    padding: clamp(1.5rem, 6vw, 2rem);
+  }
+}

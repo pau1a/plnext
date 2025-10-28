@@ -154,6 +154,9 @@ export async function getNoteBySlug(slug: string): Promise<Note | null> {
 
 export function stripMarkdown(value: string) {
   return value
+    // Remove JSX/HTML components (including multiline)
+    .replace(/<\w+[\s\S]*?\/>/g, "") // Remove self-closing JSX tags (multiline)
+    .replace(/<\w+[\s\S]*?<\/\w+>/g, "") // Remove opening/closing JSX tags (multiline)
     .replace(/```[\s\S]*?```/g, "")
     .replace(/`([^`]+)`/g, "$1")
     .replace(/\[(.*?)\]\((.*?)\)/g, "$1")
@@ -163,4 +166,30 @@ export function stripMarkdown(value: string) {
     .replace(/\!\[(.*?)\]\((.*?)\)/g, "$1")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function extractFirstImage(value: string | undefined | null): string | null {
+  if (!value || typeof value !== "string") {
+    return null;
+  }
+
+  // Try to match JSX ContentImage component (multiline)
+  const jsxMatch = value.match(/<ContentImage[\s\S]*?src=["']([^"']+)["'][\s\S]*?\/>/);
+  if (jsxMatch?.[1]) {
+    return jsxMatch[1];
+  }
+
+  // Try to match markdown image
+  const mdMatch = value.match(/!\[[^\]]*\]\(([^)]+)\)/);
+  if (mdMatch?.[1]) {
+    return mdMatch[1];
+  }
+
+  // Try to match regular img tag
+  const imgMatch = value.match(/<img[\s\S]*?src=["']([^"']+)["'][\s\S]*?\/?>/);
+  if (imgMatch?.[1]) {
+    return imgMatch[1];
+  }
+
+  return null;
 }

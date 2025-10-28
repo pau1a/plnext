@@ -1,6 +1,7 @@
 import Hero from "@/components/home/Hero";
 import PageShell from "@/components/layout/PageShell";
 import AboutCapsule from "@/components/home/AboutCapsule";
+import SignalLayer from "@/components/home/SignalLayer";
 import KnowledgeLayer from "@/components/home/KnowledgeLayer";
 import ExecutionLayer from "@/components/home/ExecutionLayer";
 import ContinuityLayer from "@/components/home/ContinuityLayer";
@@ -42,6 +43,7 @@ export default function Home() {
           <MotionFade>
             <AboutCapsule />
           </MotionFade>
+          <SignalLayer />
           <KnowledgeLayer />
           <ExecutionLayer />
           <ContinuityLayer />
