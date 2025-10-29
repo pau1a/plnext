@@ -1,8 +1,12 @@
+import PageShell from "@/components/layout/PageShell";
+import MotionFade from "@/components/motion/MotionFade";
+import MediaBioCard from "./MediaBioCard";
+import MediaAssetCard from "./MediaAssetCard";
 import { getMediaBios, getMediaAssets, formatBytes } from "@/lib/media";
 
 export const metadata = {
-  title: "Media | Paula Livingstone",
-  description: "Press bios, headshots, and logos.",
+  title: "Media",
+  description: "Press bios, headshots, and logos for publication.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/media" },
 };
@@ -11,50 +15,103 @@ export default async function MediaPage() {
   const bios = await getMediaBios();
   const assets = await getMediaAssets();
 
+  // Group assets by type
+  const headshots = assets.filter(a => a.label.toLowerCase().includes('headshot'));
+  const logos = assets.filter(a => a.label.toLowerCase().includes('logo'));
+  const bioAssets = assets.filter(a => a.label.toLowerCase().includes('bio'));
+
   return (
-    <section className="mx-auto max-w-3xl space-y-10 px-6 py-16">
-      <header>
-        <h1 className="text-3xl font-semibold">Media</h1>
-        <p className="text-muted mt-2">Press bios, headshots, and logos for publication.</p>
-      </header>
+    <PageShell as="main" className="u-pad-block-3xl">
+      <MotionFade>
+        <div className="u-stack u-gap-3xl">
+          <header className="u-stack u-gap-sm u-text-center">
+            <h1 className="u-heading-lg u-font-semibold">Media Kit</h1>
+            <p className="u-text-muted u-text-lg u-max-w-prose u-mx-auto">
+              Press bios, headshots, and logos for publication.
+            </p>
+          </header>
 
-      <div className="space-y-4">
-        <h2 className="text-lg font-medium">Bios</h2>
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-sm text-muted">One-liner</h3>
-            <p>{bios.oneLiner}</p>
-          </div>
-          <div>
-            <h3 className="text-sm text-muted">Short</h3>
-            <p>{bios.short}</p>
-          </div>
-          <div>
-            <h3 className="text-sm text-muted">Long</h3>
-            <p>{bios.long}</p>
-          </div>
+          <section className="u-stack u-gap-xl">
+            <div className="u-stack u-gap-md">
+              <h2 className="u-heading-md u-font-semibold">Biography</h2>
+              <p className="u-text-muted u-text-sm">
+                Click any bio to copy to clipboard
+              </p>
+            </div>
+
+            <div className="media-bio-grid">
+              <MediaBioCard
+                title="One-liner"
+                content={bios.oneLiner}
+                icon="fa-comment-dots"
+              />
+              <MediaBioCard
+                title="Short"
+                content={bios.short}
+                icon="fa-align-left"
+              />
+              <MediaBioCard
+                title="Long"
+                content={bios.long}
+                icon="fa-align-justify"
+              />
+            </div>
+          </section>
+
+          <section className="u-stack u-gap-xl">
+            <div className="u-stack u-gap-md">
+              <h2 className="u-heading-md u-font-semibold">Downloads</h2>
+              <p className="u-text-muted u-text-sm">
+                High-resolution assets for press and media use
+              </p>
+            </div>
+
+            <div className="u-stack u-gap-lg">
+              {/* Headshots row */}
+              {headshots.length > 0 && (
+                <div className="media-asset-row">
+                  {headshots.map((asset) => (
+                    <MediaAssetCard
+                      key={asset.path}
+                      path={asset.path}
+                      label={asset.label}
+                      bytes={formatBytes(asset.bytes)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Logos row */}
+              {logos.length > 0 && (
+                <div className="media-asset-row">
+                  {logos.map((asset) => (
+                    <MediaAssetCard
+                      key={asset.path}
+                      path={asset.path}
+                      label={asset.label}
+                      bytes={formatBytes(asset.bytes)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Bio assets row */}
+              {bioAssets.length > 0 && (
+                <div className="media-asset-row">
+                  {bioAssets.map((asset) => (
+                    <MediaAssetCard
+                      key={asset.path}
+                      path={asset.path}
+                      label={asset.label}
+                      bytes={formatBytes(asset.bytes)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
         </div>
-      </div>
-
-      <div className="space-y-4">
-        <h2 className="text-lg font-medium">Assets</h2>
-        <ul className="grid gap-3">
-          {assets.map((asset) => (
-            <li
-              key={asset.path}
-              className="flex items-center justify-between rounded-xl border border-graphite/40 p-3"
-            >
-              <a
-                href={asset.path}
-                className="text-teal hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal focus-visible:ring-offset-neutral-950"
-              >
-                {asset.label}
-              </a>
-              <span className="text-xs text-muted">{formatBytes(asset.bytes)}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+      </MotionFade>
+    </PageShell>
   );
 }
