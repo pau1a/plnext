@@ -1,12 +1,7 @@
 import { getEssays } from "./writing";
-import type { EssaySummary } from "./writing";
-import { getBlogPostSummaries } from "./mdx";
 import type { BlogPostSummary, BlogPostFrontMatter, ProjectSummary, ProjectFrontMatter } from "./mdx";
-import { getProjectSummaries } from "./mdx";
 import { getNotes } from "./notes";
-import type { NoteSummary } from "./notes";
 import { loadStream } from "./stream";
-import type { StreamEntry } from "./stream";
 import { stripMarkdown } from "./notes";
 import { ensureSlug } from "./slugify";
 import path from "path";
@@ -39,10 +34,6 @@ export interface SearchResult {
   excerpt: string;
   date: string;
   tags?: string[];
-}
-
-function escapeRegex(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function createExcerpt(text: string, query: string, maxLength = 200): string {

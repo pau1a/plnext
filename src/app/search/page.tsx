@@ -74,7 +74,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </div>
           ) : results.length === 0 ? (
             <div className="u-text-center u-text-muted">
-              <p>No results found for "{query}".</p>
+              <p>
+                No results found for &ldquo;{query}&rdquo;.
+              </p>
               <p className="u-mt-sm">Try different keywords or check your spelling.</p>
             </div>
           ) : (

@@ -1,0 +1,358 @@
+.page {
+  background: color-mix(in srgb, var(--surface-base) 94%, white 6%);
+  color: var(--text-primary);
+}
+
+.inner {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: clamp(3.25rem, 6vw, 5rem) clamp(1.75rem, 4vw, 3.5rem);
+  display: grid;
+  gap: clamp(3rem, 6vw, 4.5rem);
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(2rem, 4vw, 3rem);
+  border-radius: calc(var(--radius-3xl, 3rem));
+  padding: clamp(3rem, 5.4vw, 4.4rem);
+  background:
+    radial-gradient(circle at -10% -10%, rgba(34, 197, 94, 0.22), transparent 62%),
+    radial-gradient(circle at 110% 0%, rgba(239, 68, 68, 0.26), transparent 70%),
+    linear-gradient(150deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.88));
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  box-shadow:
+    0 44px 110px rgba(13, 148, 136, 0.24),
+    inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+  overflow: hidden;
+}
+
+.heroCopy,
+.intentGridWrapper {
+  flex: 1 1 420px;
+  min-width: 320px;
+}
+
+.heroCopy {
+  display: grid;
+  gap: clamp(1.25rem, 2vw, 1.8rem);
+  max-width: 520px;
+  color: white;
+}
+
+.heroEyebrow {
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(165, 243, 252, 0.78);
+}
+
+.heroTitle {
+  margin: 0;
+  font-size: clamp(3rem, 3.7vw, 4.2rem);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.heroSummary {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.2vw, 1.3rem);
+  line-height: 1.6;
+  color: rgba(226, 232, 240, 0.8);
+}
+
+.intentGridWrapper {
+  display: grid;
+  align-content: center;
+}
+
+.intentGrid {
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 1.4rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.intentCard {
+  position: relative;
+  border-radius: 1.6rem;
+  padding: clamp(1.4rem, 3vw, 1.9rem);
+  background:
+    linear-gradient(160deg, rgba(56, 189, 248, 0.18), rgba(34, 197, 94, 0.12) 55%, rgba(239, 68, 68, 0.14));
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  text-decoration: none;
+  display: grid;
+  gap: 0.85rem;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+  color: inherit;
+}
+
+.intentCard::after {
+  content: "";
+  position: absolute;
+  inset: -30% 10% 25% -28%;
+  background: radial-gradient(circle at 85% 20%, rgba(239, 68, 68, 0.35), transparent 70%);
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+.intentCard:hover,
+.intentCard:focus-visible {
+  transform: translateY(-6px);
+  border-color: rgba(239, 68, 68, 0.45);
+  box-shadow:
+    0 30px 60px rgba(14, 165, 233, 0.22),
+    0 24px 44px rgba(239, 68, 68, 0.16);
+}
+
+.intentCard:hover::after,
+.intentCard:focus-visible::after {
+  opacity: 0.65;
+}
+
+.intentCardLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(165, 243, 252, 0.82);
+}
+
+.intentCardBody {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: rgba(226, 232, 240, 0.86);
+}
+
+.intentCardHint {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: rgba(186, 230, 253, 0.7);
+}
+
+.content {
+  display: grid;
+  gap: clamp(3rem, 4.6vw, 4rem);
+  grid-template-columns: 280px minmax(0, 1fr);
+  align-items: start;
+}
+
+.navColumn {
+  position: sticky;
+  top: clamp(2rem, 3vw, 2.5rem);
+  display: grid;
+  gap: clamp(1.35rem, 2vw, 1.9rem);
+}
+
+.navHeader {
+  text-transform: uppercase;
+  letter-spacing: 0.34em;
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--text-muted) 58%, transparent);
+}
+
+.navList {
+  display: grid;
+  gap: clamp(0.75rem, 1.4vw, 1.05rem);
+}
+
+.navItem {
+  display: block;
+  border-radius: 1.1rem;
+  padding: clamp(1rem, 1.7vw, 1.2rem);
+  background: color-mix(in srgb, var(--surface-base) 96%, white 4%);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.navItem:hover,
+.navItem:focus-visible {
+  transform: translateX(6px);
+  border-color: rgba(56, 189, 248, 0.42);
+  box-shadow: 0 16px 32px rgba(56, 189, 248, 0.2);
+}
+
+.navItemLabel {
+  display: block;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--color-teal-700) 55%, var(--text-primary) 45%);
+}
+
+.navItemBody {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  line-height: 1.48;
+  color: color-mix(in srgb, var(--text-muted) 68%, transparent);
+}
+
+.promiseCard {
+  border-radius: 1.3rem;
+  padding: clamp(1.35rem, 2.2vw, 1.7rem);
+  background:
+    linear-gradient(155deg, rgba(14, 165, 233, 0.14), rgba(239, 68, 68, 0.14));
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: color-mix(in srgb, var(--text-primary) 92%, transparent);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+}
+
+.promiseLabel {
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: rgba(203, 213, 225, 0.85);
+}
+
+.promiseBody {
+  margin-top: 0.7rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--text-primary) 92%, transparent);
+}
+
+.proseWrapper {
+  background: color-mix(in srgb, var(--surface-base) 98%, white 2%);
+  border-radius: 1.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  padding: clamp(2rem, 3vw, 2.5rem);
+  box-shadow: 0 26px 60px rgba(15, 23, 42, 0.16);
+}
+
+.prose {
+  color: inherit;
+}
+
+.prose h2 {
+  color: var(--text-primary);
+  margin-top: clamp(2.4rem, 4vw, 2.8rem);
+}
+
+.prose h3 {
+  color: color-mix(in srgb, var(--text-primary) 90%, transparent);
+  margin-top: clamp(1.8rem, 3vw, 2.2rem);
+}
+
+.prose p {
+  color: color-mix(in srgb, var(--text-primary) 86%, transparent);
+  line-height: 1.7;
+}
+
+.prose a {
+  color: color-mix(in srgb, var(--color-teal-600) 70%, var(--color-crimson-600) 30%);
+  text-decoration: none;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+  padding: clamp(1.6rem, 2.8vw, 2rem) clamp(1.3rem, 2.4vw, 1.7rem);
+  border-radius: 1.6rem;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  background:
+    linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(239, 68, 68, 0.12));
+}
+
+.footerLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--color-teal-600) 60%, var(--text-primary) 40%);
+  margin-right: 0.75rem;
+}
+
+.footerLinkTeal,
+.footerLinkCrimson,
+.footerLinkSlate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.footerLinkTeal {
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  background: rgba(45, 212, 191, 0.16);
+  color: rgba(13, 148, 136, 0.9);
+}
+
+.footerLinkCrimson {
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.14);
+  color: rgba(190, 18, 60, 0.9);
+}
+
+.footerLinkSlate {
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(30, 41, 59, 0.18);
+  color: rgba(71, 85, 105, 0.9);
+}
+
+.footerLinkTeal:hover,
+.footerLinkCrimson:hover,
+.footerLinkSlate:hover,
+.footerLinkTeal:focus-visible,
+.footerLinkCrimson:focus-visible,
+.footerLinkSlate:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
+}
+
+@media (max-width: 63.9375rem) {
+  .hero {
+    flex-direction: column;
+  }
+
+  .heroCopy,
+  .intentGridWrapper {
+    flex: 1 1 auto;
+  }
+
+  .content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .navColumn {
+    order: 2;
+  }
+}
+
+@media (max-width: 47.9375rem) {
+  .intentGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footerLabel {
+    margin-right: 0;
+  }
+}
