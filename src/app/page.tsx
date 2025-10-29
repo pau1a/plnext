@@ -5,7 +5,6 @@ import SignalLayer from "@/components/home/SignalLayer";
 import KnowledgeLayer from "@/components/home/KnowledgeLayer";
 import ExecutionLayer from "@/components/home/ExecutionLayer";
 import ContinuityLayer from "@/components/home/ContinuityLayer";
-import MotionFade from "@/components/motion/MotionFade";
 
 import styles from "@/styles/home.module.scss";
 export default function Home() {
@@ -40,13 +39,9 @@ export default function Home() {
 
       <PageShell as="main" className={styles.main} fullWidth>
         <div className={styles.strata}>
-          <MotionFade>
-            <AboutCapsule />
-          </MotionFade>
+          <AboutCapsule />
           <SignalLayer />
-          <MotionFade>
-            <ContinuityLayer />
-          </MotionFade>
+          <ContinuityLayer />
           <KnowledgeLayer />
           <ExecutionLayer />
         </div>

@@ -51,8 +51,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">
-      <section className="u-stack u-gap-2xl">
-        <MotionFade>
+      <MotionFade>
+        <div className="u-stack u-gap-2xl">
           <header className="u-stack u-gap-sm u-text-center u-mb-2xl">
             <h1 className="u-heading-display">
               {query ? `Search results for "${query}"` : "Search"}
@@ -67,31 +67,25 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               </p>
             )}
           </header>
-        </MotionFade>
 
-        {!query ? (
-          <MotionFade delay={0.1}>
+          {!query ? (
             <div className="u-text-center u-text-muted">
               <p>Use the search box above to search across all content.</p>
             </div>
-          </MotionFade>
-        ) : results.length === 0 ? (
-          <MotionFade delay={0.1}>
+          ) : results.length === 0 ? (
             <div className="u-text-center u-text-muted">
               <p>No results found for "{query}".</p>
               <p className="u-mt-sm">Try different keywords or check your spelling.</p>
             </div>
-          </MotionFade>
-        ) : (
-          <div className="u-stack u-gap-lg">
-            {results.map((result, index) => (
-              <MotionFade key={`${result.type}-${result.slug}`} delay={0.05 * Math.min(index, 10)}>
-                <SearchResultItem result={result} />
-              </MotionFade>
-            ))}
-          </div>
-        )}
-      </section>
+          ) : (
+            <section className="u-stack u-gap-lg" aria-label="Search results">
+              {results.map((result) => (
+                <SearchResultItem key={`${result.type}-${result.slug}`} result={result} />
+              ))}
+            </section>
+          )}
+        </div>
+      </MotionFade>
     </PageShell>
   );
 }
