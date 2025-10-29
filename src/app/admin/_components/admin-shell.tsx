@@ -192,6 +192,18 @@ export function AdminShell({ actor, title, subtitle, children, className }: Admi
                   <li>
                     <Link
                       className="admin-nav__sublink"
+                      href="/admin/library"
+                      onClick={() => {
+                        clearScheduledMenuClose();
+                        setContentMenuOpen(false);
+                      }}
+                    >
+                      Library
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="admin-nav__sublink"
                       href="/admin/stream"
                       onClick={() => {
                         clearScheduledMenuClose();
