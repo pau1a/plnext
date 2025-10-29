@@ -169,3 +169,77 @@ export async function getEssaySlugs(options: GetEssaysOptions = {}): Promise<str
     .filter((essay) => includeDrafts || !essay.draft)
     .map((essay) => essay.slug);
 }
+
+/**
+ * Get essay content for RSS feeds with plain HTML components
+ */
+export async function getEssayForRSS(slug: string): Promise<EssayDocument | null> {
+  const React = await import("react");
+
+  const safeSlug = normaliseSlug(slug, slug);
+  const sources = await loadEssaySources();
+
+  const matchByFrontmatter = sources.find((source) => source.frontMatter.slug === safeSlug);
+  const matchByFile = sources.find((source) => source.file.replace(/\.mdx$/, "") === safeSlug);
+  const target = matchByFrontmatter ?? matchByFile;
+
+  if (!target || target.frontMatter.draft) {
+    return null;
+  }
+
+  const fullPath = path.join(WRITING_DIR, target.file);
+  const raw = await fs.readFile(fullPath, "utf8");
+
+  // RSS-safe components
+  const rssComponents = {
+    img: (props: any) => {
+      const { title, alt = "", ...rest } = props;
+      return React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { alt, ...rest }),
+        title && React.createElement("figcaption", null, title)
+      );
+    },
+    ContentImage: (props: any) => {
+      const { caption, alt = "", title, ...rest } = props;
+      const captionText = caption || title;
+      return React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { alt, ...rest }),
+        captionText && React.createElement("figcaption", null, captionText)
+      );
+    },
+  };
+
+  const { content, frontmatter } = await compileMDX<EssayFrontMatter>({
+    source: raw,
+    components: rssComponents,
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+      },
+    },
+  });
+
+  if (frontmatter.draft) {
+    return null;
+  }
+
+  const canonicalSlug = normaliseSlug(frontmatter.slug, target.frontMatter.slug ?? target.frontMatter.fileSlug ?? safeSlug);
+
+  return {
+    slug: canonicalSlug,
+    fileSlug: target.frontMatter.fileSlug ?? target.file.replace(/\.mdx$/, ""),
+    title: frontmatter.title ?? target.frontMatter.title ?? canonicalSlug,
+    date: frontmatter.date ?? target.frontMatter.date ?? new Date().toISOString(),
+    summary: frontmatter.summary ?? target.frontMatter.summary,
+    featured: frontmatter.featured ?? target.frontMatter.featured,
+    draft: frontmatter.draft ?? target.frontMatter.draft,
+    body: target.body,
+    content,
+  };
+}

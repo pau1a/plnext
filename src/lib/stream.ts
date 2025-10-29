@@ -162,3 +162,79 @@ export async function loadStream(): Promise<StreamEntry[]> {
     .filter((entry): entry is StreamEntry => entry !== null)
     .sort(compareByTimestampDesc);
 }
+
+/**
+ * Render markdown for RSS feeds with plain HTML components
+ */
+export async function renderMarkdownForRSS(source: string): Promise<ReactElement> {
+  const React = await import("react");
+
+  // RSS-safe components
+  const rssComponents = {
+    img: (props: any) => {
+      const { title, alt = "", ...rest } = props;
+      return React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { alt, ...rest }),
+        title && React.createElement("figcaption", null, title)
+      );
+    },
+    ContentImage: (props: any) => {
+      const { caption, alt = "", title, ...rest } = props;
+      const captionText = caption || title;
+      return React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { alt, ...rest }),
+        captionText && React.createElement("figcaption", null, captionText)
+      );
+    },
+  };
+
+  const { content } = await compileMDX({
+    source,
+    components: rssComponents,
+    options: {
+      parseFrontmatter: false,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+      },
+    },
+  });
+
+  return content as ReactElement;
+}
+
+/**
+ * Load stream entries for RSS feeds with plain HTML components
+ */
+export async function loadStreamForRSS(): Promise<StreamEntry[]> {
+  const sources = await parseJSONL(STREAM_FILE);
+
+  const entries = await Promise.all(
+    sources.map(async (record): Promise<StreamEntry | null> => {
+      const visibility = normaliseVisibility(record.visibility);
+
+      if (visibility !== "PUBLIC") {
+        return null;
+      }
+
+      const hashtags = extractHashtags(record.body);
+      const { tags: resolvedTags } = resolveTagSlugs([...(record.tags ?? []), ...hashtags]);
+      const content = await renderMarkdownForRSS(record.body);
+
+      return {
+        ...record,
+        visibility,
+        tags: resolvedTags,
+        anchor: `#${record.id}`,
+        content,
+      } satisfies StreamEntry;
+    }),
+  );
+
+  return entries
+    .filter((entry): entry is StreamEntry => entry !== null)
+    .sort(compareByTimestampDesc);
+}

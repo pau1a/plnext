@@ -243,3 +243,111 @@ export function extractH2H3(src: string) {
 
   return items;
 }
+
+/**
+ * RSS-safe components factory - use plain HTML instead of Next.js components
+ */
+async function createRSSComponents() {
+  const React = await import("react");
+
+  return {
+    img: (props: any) => {
+      const { title, alt = "", ...rest } = props;
+      return React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { alt, ...rest }),
+        title && React.createElement("figcaption", null, title)
+      );
+    },
+    ContentImage: (props: any) => {
+      const { caption, alt = "", title, ...rest } = props;
+      const captionText = caption || title;
+      return React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { alt, ...rest }),
+        captionText && React.createElement("figcaption", null, captionText)
+      );
+    },
+  };
+}
+
+/**
+ * Get blog post content for RSS feeds with plain HTML components
+ * This version uses simple img tags instead of Next.js Image components
+ */
+export async function getBlogPostForRSS(slug: string): Promise<{ content: ReactNode; frontmatter: BlogPostFrontMatter } | null> {
+  const summaries = await getBlogPostSummaries();
+  const match = summaries.find((post) => post.slug === slug || post.fileSlug === slug);
+  const fileSlug = match?.fileSlug ?? slug;
+
+  const fullPath = path.join(BLOG_DIR, `${fileSlug}.mdx`);
+
+  try {
+    const source = await fs.readFile(fullPath, "utf8");
+    const rssComponents = await createRSSComponents();
+
+    const { content, frontmatter } = await compileMDX<BlogPostFrontMatter>({
+      source,
+      components: rssComponents,
+      options: {
+        parseFrontmatter: true,
+        mdxOptions: {
+          remarkPlugins: [remarkGfm],
+          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+        },
+      },
+    });
+
+    if (frontmatter.draft) {
+      return null;
+    }
+
+    return { content, frontmatter };
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Get project content for RSS feeds with plain HTML components
+ */
+export async function getProjectForRSS(slug: string): Promise<{ content: ReactNode; frontmatter: ProjectFrontMatter } | null> {
+  const summaries = await getProjectSummaries({ includeDrafts: false });
+  const match = summaries.find((project) => project.slug === slug || project.fileSlug === slug);
+  const fileSlug = match?.fileSlug ?? slug;
+
+  const fullPath = path.join(PROJECTS_DIR, `${fileSlug}.mdx`);
+
+  try {
+    const source = await fs.readFile(fullPath, "utf8");
+    const rssComponents = await createRSSComponents();
+
+    const { content, frontmatter } = await compileMDX<ProjectFrontMatter>({
+      source,
+      components: rssComponents,
+      options: {
+        parseFrontmatter: true,
+        mdxOptions: {
+          remarkPlugins: [remarkGfm],
+          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+        },
+      },
+    });
+
+    if (frontmatter.draft) {
+      return null;
+    }
+
+    return { content, frontmatter };
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return null;
+    }
+    throw error;
+  }
+}

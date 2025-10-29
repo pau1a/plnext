@@ -13,6 +13,11 @@
   --moor-fade-color: color-mix(in srgb, var(--color-graphite-900) 94%, black 6%);
 }
 
+.pageShellOverride {
+  background: transparent;
+  padding-bottom: 0;
+}
+
 .contactRoot {
   position: relative;
   min-height: 100vh;
@@ -102,7 +107,7 @@
   box-sizing: border-box;
   max-width: var(--max-content-md);
   margin-inline: auto;
-  min-block-size: min(100vh, 60rem);
+  flex: 1;
   padding-block: clamp(6rem, 10vh, 8rem);
   padding-inline: clamp(var(--space-xl), 6vw, var(--space-3xl));
   width: 100%;
@@ -111,7 +116,7 @@
 .belowBlend {
   position: relative;
   z-index: 0;
-  min-height: clamp(6rem, 12vh, 10rem);
+  min-height: clamp(2rem, 4vh, 3.5rem);
   background: linear-gradient(
     to bottom,
     var(--moor-fade-color) 0%,

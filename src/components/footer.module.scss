@@ -7,6 +7,11 @@
   box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.05), 0 -25px 60px rgba(6, 16, 24, 0.45);
 }
 
+/* Contact page override */
+:global(body:has([class*="contact-module"])) .footer {
+  margin-top: 0;
+}
+
 .inner {
   width: min(55rem, 100%);
   margin-inline: auto;

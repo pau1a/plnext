@@ -193,3 +193,59 @@ export function extractFirstImage(value: string | undefined | null): string | nu
 
   return null;
 }
+
+/**
+ * Get note content for RSS feeds with plain HTML components
+ */
+export async function getNoteForRSS(slug: string): Promise<Note | null> {
+  const React = await import("react");
+
+  const sources = await loadNoteSources();
+  const match = sources.find((source) => source.slug === slug || source.frontMatter.fileSlug === slug);
+
+  if (!match || match.frontMatter.draft) {
+    return null;
+  }
+
+  // RSS-safe components
+  const rssComponents = {
+    img: (props: any) => {
+      const { title, alt = "", ...rest } = props;
+      return React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { alt, ...rest }),
+        title && React.createElement("figcaption", null, title)
+      );
+    },
+    ContentImage: (props: any) => {
+      const { caption, alt = "", title, ...rest } = props;
+      const captionText = caption || title;
+      return React.createElement(
+        "figure",
+        null,
+        React.createElement("img", { alt, ...rest }),
+        captionText && React.createElement("figcaption", null, captionText)
+      );
+    },
+  };
+
+  const { content } = await compileMDX<{ title: string }>({
+    source: match.body,
+    components: rssComponents,
+    options: {
+      parseFrontmatter: false,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+      },
+    },
+  });
+
+  return {
+    ...match.frontMatter,
+    tags: resolveTagSlugs(match.frontMatter.tags ?? []).tags,
+    content,
+    body: match.body,
+  };
+}

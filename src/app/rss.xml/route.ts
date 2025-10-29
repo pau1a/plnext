@@ -1,119 +1,165 @@
-import { getBlogPost } from "@/lib/mdx";
-import {
-  BLOG_AFTER_PARAM,
-  BLOG_BEFORE_PARAM,
-  BLOG_INDEX_REVALIDATE_SECONDS,
-  BlogCursorError,
-  createCursorHref,
-  getBlogIndexPage,
-  parseCursorParam,
-} from "@/lib/supabase/blog";
+import { getBlogPostForRSS, getProjectForRSS } from "@/lib/mdx";
+import { getEssayForRSS } from "@/lib/writing";
+import { getNoteForRSS } from "@/lib/notes";
+import { loadStreamForRSS } from "@/lib/stream";
+import { getBlogIndexPage } from "@/lib/supabase/blog";
+import { getProjectSummaries } from "@/lib/mdx";
+import { getEssays } from "@/lib/writing";
+import { getNotes } from "@/lib/notes";
 import type { ReactElement } from "react";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://paulalivingstone.com";
 
-const RSS_PAGE_SIZE = 12;
+export const revalidate = 1800;
 
-export const revalidate = BLOG_INDEX_REVALIDATE_SECONDS;
+type RSSItem = {
+  type: "blog" | "project" | "essay" | "note" | "stream";
+  slug: string;
+  title: string;
+  link: string;
+  date: string;
+  description: string;
+};
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const after = parseCursorParam(url.searchParams.get(BLOG_AFTER_PARAM) ?? undefined);
-  const before = parseCursorParam(url.searchParams.get(BLOG_BEFORE_PARAM) ?? undefined);
-
-  let page;
+export async function GET() {
   try {
-    page = await getBlogIndexPage({ pageSize: RSS_PAGE_SIZE, after, before });
-  } catch (error) {
-    if (error instanceof BlogCursorError) {
-      return new Response("Invalid cursor", { status: 400 });
-    }
+    // Fetch all content types
+    const [blogPage, projects, essays, notes, stream] = await Promise.all([
+      getBlogIndexPage({ pageSize: 50 }),
+      getProjectSummaries({ includeDrafts: false }),
+      getEssays({ includeDrafts: false }),
+      getNotes({ includeDrafts: false }),
+      loadStreamForRSS(),
+    ]);
 
-    console.error("Failed to render RSS feed:", error);
-    return new Response("Internal Server Error", { status: 500 });
-  }
+    // Convert all content to unified RSS items
+    const allItems: RSSItem[] = [
+      // Blog posts
+      ...blogPage.items.map((post) => ({
+        type: "blog" as const,
+        slug: post.slug,
+        title: post.title,
+        link: `${siteUrl}/writing/${post.slug}`,
+        date: post.date,
+        description: post.description,
+      })),
+      // Projects
+      ...projects.map((project) => ({
+        type: "project" as const,
+        slug: project.slug,
+        title: project.title,
+        link: `${siteUrl}/projects/${project.slug}`,
+        date: project.date,
+        description: project.summary,
+      })),
+      // Essays
+      ...essays.map((essay) => ({
+        type: "essay" as const,
+        slug: essay.slug,
+        title: essay.title,
+        link: `${siteUrl}/essays/${essay.slug}`,
+        date: essay.date,
+        description: essay.summary ?? "",
+      })),
+      // Notes
+      ...notes.map((note) => ({
+        type: "note" as const,
+        slug: note.slug,
+        title: note.title,
+        link: `${siteUrl}/notes/${note.slug}`,
+        date: note.date,
+        description: note.summary ?? "",
+      })),
+      // Stream
+      ...stream.map((entry) => ({
+        type: "stream" as const,
+        slug: entry.id,
+        title: `Stream update: ${entry.timestamp}`,
+        link: `${siteUrl}/stream#${entry.id}`,
+        date: entry.timestamp,
+        description: entry.body.substring(0, 200),
+      })),
+    ];
 
-  const posts = page.items;
+    // Sort by date descending
+    allItems.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const { renderToStaticMarkup } = await import("react-dom/server");
+    const { renderToStaticMarkup } = await import("react-dom/server");
 
-  const items = await Promise.all(
-    posts.map(async (post) => {
-      const fullPost = await getBlogPost(post.slug);
-      const content = fullPost
-        ? renderToStaticMarkup(fullPost.content as ReactElement)
-        : "";
+    // Render each item with full content
+    const items = await Promise.all(
+      allItems.map(async (item) => {
+        let content = "";
 
-      return `
+        try {
+          if (item.type === "blog") {
+            const fullPost = await getBlogPostForRSS(item.slug);
+            if (fullPost?.content) {
+              content = renderToStaticMarkup(fullPost.content as ReactElement);
+            }
+          } else if (item.type === "project") {
+            const fullProject = await getProjectForRSS(item.slug);
+            if (fullProject?.content) {
+              content = renderToStaticMarkup(fullProject.content as ReactElement);
+            }
+          } else if (item.type === "essay") {
+            const fullEssay = await getEssayForRSS(item.slug);
+            if (fullEssay?.content) {
+              content = renderToStaticMarkup(fullEssay.content as ReactElement);
+            }
+          } else if (item.type === "note") {
+            const fullNote = await getNoteForRSS(item.slug);
+            if (fullNote?.content) {
+              content = renderToStaticMarkup(fullNote.content as ReactElement);
+            }
+          } else if (item.type === "stream") {
+            const streamEntry = stream.find((s) => s.id === item.slug);
+            if (streamEntry?.content) {
+              content = renderToStaticMarkup(streamEntry.content as ReactElement);
+            }
+          }
+        } catch (error) {
+          console.error(`Failed to render content for ${item.type} ${item.slug}:`, error);
+          // Fall back to using the description
+          content = "";
+        }
+
+        return `
         <item>
-          <title><![CDATA[${post.title}]]></title>
-          <link>${siteUrl}/writing/${post.slug}</link>
-          <guid isPermaLink="true">${siteUrl}/writing/${post.slug}</guid>
-          <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-          <description><![CDATA[${post.description}]]></description>
+          <title><![CDATA[${item.title}]]></title>
+          <link>${item.link}</link>
+          <guid isPermaLink="true">${item.link}</guid>
+          <pubDate>${new Date(item.date).toUTCString()}</pubDate>
+          <description><![CDATA[${item.description}]]></description>
           <content:encoded><![CDATA[${content}]]></content:encoded>
         </item>
       `;
-    }),
-  );
+      }),
+    );
 
-  const latestPostDate = posts.length > 0 ? new Date(posts[0].date) : new Date();
-  const navLinks = [
-    page.prevCursor
-      ? `<atom:link rel="prev" href="${createCursorHref(`${siteUrl}/rss.xml`, BLOG_BEFORE_PARAM, page.prevCursor)}" type="application/rss+xml" />`
-      : null,
-    page.nextCursor
-      ? `<atom:link rel="next" href="${createCursorHref(`${siteUrl}/rss.xml`, BLOG_AFTER_PARAM, page.nextCursor)}" type="application/rss+xml" />`
-      : null,
-  ]
-    .filter(Boolean)
-    .join("\n        ");
+    const latestDate = allItems.length > 0 ? new Date(allItems[0].date) : new Date();
 
-  const currentParams = new URLSearchParams();
-  if (after) {
-    currentParams.set(BLOG_AFTER_PARAM, after);
-  }
-  if (before) {
-    currentParams.set(BLOG_BEFORE_PARAM, before);
-  }
-  const currentFeedUrl = currentParams.size
-    ? `${siteUrl}/rss.xml?${currentParams.toString()}`
-    : `${siteUrl}/rss.xml`;
-
-  const rss = `<?xml version="1.0" encoding="UTF-8"?>
+    const rss = `<?xml version="1.0" encoding="UTF-8"?>
     <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
       <channel>
         <title>Paula Livingstone</title>
         <link>${siteUrl}</link>
-        <atom:link rel="self" href="${currentFeedUrl}" type="application/rss+xml" />
-        ${navLinks}
+        <atom:link rel="self" href="${siteUrl}/rss.xml" type="application/rss+xml" />
         <description>Cybersecurity, AI, and engineering notes from Paula Livingstone.</description>
         <language>en-gb</language>
-        <lastBuildDate>${latestPostDate.toUTCString()}</lastBuildDate>
+        <lastBuildDate>${latestDate.toUTCString()}</lastBuildDate>
         ${items.join("\n")}
       </channel>
     </rss>`;
 
-  const cacheControl = `s-maxage=${BLOG_INDEX_REVALIDATE_SECONDS}, stale-while-revalidate=${BLOG_INDEX_REVALIDATE_SECONDS}`;
-
-  try {
-    console.info(
-      JSON.stringify({
-        event: "rss-cache-hint",
-        revalidate: BLOG_INDEX_REVALIDATE_SECONDS,
-        cacheControl,
-        cursor: { after, before },
-        itemCount: posts.length,
-      }),
-    );
+    return new Response(rss, {
+      headers: {
+        "Content-Type": "application/rss+xml; charset=utf-8",
+        "Cache-Control": `s-maxage=${revalidate}, stale-while-revalidate=${revalidate}`,
+      },
+    });
   } catch (error) {
-    console.error("Failed to emit RSS cache hint:", error);
+    console.error("Failed to generate RSS feed:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
-
-  return new Response(rss, {
-    headers: {
-      "Content-Type": "application/rss+xml; charset=utf-8",
-      "Cache-Control": cacheControl,
-    },
-  });
 }
