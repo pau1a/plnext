@@ -21,6 +21,7 @@ import {
 import elevatedSurfaceStyles from "@/components/elevated-surface.module.scss";
 
 import styles from "./about.module.scss";
+import AuroraCanvas from "./aurora-canvas";
 
 const photoUrl =
   "https://cdn.networklayer.co.uk/paulalivingstone/images/plprof.jpeg";
@@ -148,6 +149,9 @@ export default function AboutPageContent({
   const shouldAnimate = !prefersReducedMotion;
 
   const [heroReady, setHeroReady] = useState(!shouldAnimate);
+  const [showIntroOverlay, setShowIntroOverlay] = useState(shouldAnimate);
+  const portraitParallaxRef = useRef<HTMLDivElement | null>(null);
+  const portraitFrameRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!shouldAnimate) {
@@ -157,11 +161,115 @@ export default function AboutPageContent({
 
     setHeroReady(false);
 
-    const frame = requestAnimationFrame(() => {
+    const timer = window.setTimeout(() => {
       setHeroReady(true);
-    });
+    }, 1700);
 
-    return () => cancelAnimationFrame(frame);
+    return () => window.clearTimeout(timer);
+  }, [shouldAnimate]);
+
+  useEffect(() => {
+    if (!shouldAnimate) {
+      setShowIntroOverlay(false);
+      return;
+    }
+
+    setShowIntroOverlay(true);
+    const timer = window.setTimeout(() => {
+      setShowIntroOverlay(false);
+    }, 2400);
+
+    return () => window.clearTimeout(timer);
+  }, [shouldAnimate]);
+
+  useEffect(() => {
+    const container = heroSectionRef.current;
+    const parallaxArea = portraitParallaxRef.current;
+    const frameEl = portraitFrameRef.current;
+
+    if (!container || !frameEl) {
+      return;
+    }
+
+    const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
+
+    if (!shouldAnimate) {
+      frameEl.style.setProperty("--portrait-tilt-x", "0deg");
+      frameEl.style.setProperty("--portrait-tilt-y", "0deg");
+      frameEl.style.setProperty("--portrait-depth", "24");
+      frameEl.style.setProperty("--portrait-light", "0.55");
+      frameEl.style.setProperty("--portrait-glow", "0.45");
+      return;
+    }
+
+    const state = {
+      pointerX: 0.5,
+      pointerY: 0.35,
+      targetX: 0.5,
+      targetY: 0.35,
+      scroll: 0,
+      raf: 0 as number,
+    };
+
+    const updateScrollProgress = () => {
+      const rect = container.getBoundingClientRect();
+      const viewport = window.innerHeight || 1;
+      const progress =
+        rect.height + viewport === 0
+          ? 0
+          : clamp((viewport - rect.top) / (rect.height + viewport), 0, 1);
+      state.scroll = progress;
+    };
+
+    const updatePointer = (event: PointerEvent) => {
+      const hostRect =
+        parallaxArea?.getBoundingClientRect() ?? container.getBoundingClientRect();
+      const width = hostRect.width || 1;
+      const height = hostRect.height || 1;
+
+      state.targetX = clamp((event.clientX - hostRect.left) / width, 0, 1);
+      state.targetY = clamp((event.clientY - hostRect.top) / height, 0, 1);
+    };
+
+    const resetPointer = () => {
+      state.targetX = 0.5;
+      state.targetY = 0.35;
+    };
+
+    const tick = () => {
+      state.pointerX += (state.targetX - state.pointerX) * 0.08;
+      state.pointerY += (state.targetY - state.pointerY) * 0.08;
+
+      const tiltX = (state.pointerX - 0.5) * 14;
+      const tiltY = (0.48 - state.pointerY) * 10;
+      const depth = 24 + state.scroll * 18;
+      const light = clamp(0.42 + state.scroll * 0.4 + Math.abs(tiltX) * 0.025, 0.42, 1);
+      const glow = clamp(0.35 + state.scroll * 0.45, 0.25, 0.95);
+
+      frameEl.style.setProperty("--portrait-tilt-x", `${tiltX.toFixed(3)}deg`);
+      frameEl.style.setProperty("--portrait-tilt-y", `${tiltY.toFixed(3)}deg`);
+      frameEl.style.setProperty("--portrait-depth", `${depth.toFixed(3)}`);
+      frameEl.style.setProperty("--portrait-light", light.toFixed(3));
+      frameEl.style.setProperty("--portrait-glow", glow.toFixed(3));
+
+      state.raf = requestAnimationFrame(tick);
+    };
+
+    updateScrollProgress();
+    state.raf = requestAnimationFrame(tick);
+
+    window.addEventListener("pointermove", updatePointer, { passive: true });
+    window.addEventListener("pointerleave", resetPointer);
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress);
+
+    return () => {
+      cancelAnimationFrame(state.raf);
+      window.removeEventListener("pointermove", updatePointer);
+      window.removeEventListener("pointerleave", resetPointer);
+      window.removeEventListener("scroll", updateScrollProgress);
+      window.removeEventListener("resize", updateScrollProgress);
+    };
   }, [shouldAnimate]);
 
   const observerOptions = useMemo<IntersectionObserverInit>(
@@ -198,6 +306,7 @@ export default function AboutPageContent({
   const topClusterRef = useRef<HTMLDivElement | null>(null);
   const bottomClusterRef = useRef<HTMLDivElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const heroSectionRef = useRef<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
     function clampValue(min: number, pref: number, max: number) {
@@ -253,8 +362,21 @@ export default function AboutPageContent({
           shouldAnimate && "motionFade",
           shouldAnimate && heroReady && "motionFadeReady",
         )}
+        ref={heroSectionRef}
         style={createMotionVars(shouldAnimate, 0, 0, 0.6)}
       >
+        <AuroraCanvas className={styles.heroAurora} containerRef={heroSectionRef} />
+        <div
+          className={clsx(
+            styles.heroIntroStoryboard,
+            showIntroOverlay && styles.heroIntroStoryboardActive,
+          )}
+          aria-hidden="true"
+        >
+          <span className={clsx(styles.heroIntroLayer, styles.heroIntroLayerPrimary)} />
+          <span className={clsx(styles.heroIntroLayer, styles.heroIntroLayerSecondary)} />
+          <span className={styles.heroIntroSpark} />
+        </div>
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
             <p
@@ -313,10 +435,14 @@ export default function AboutPageContent({
             )}
             style={createMotionVars(shouldAnimate, 0.45, 12, 0.5)}
           >
-            <div className={styles.portraitFrame}>
-              <div className={styles.portraitMedia}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
+            <div className={styles.portraitParallax} ref={portraitParallaxRef}>
+              <div className={styles.portraitFrame} ref={portraitFrameRef}>
+                <div className={styles.portraitBackdrop} aria-hidden />
+                <div className={styles.portraitMedia}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photoUrl} alt="Paula Livingstone" loading="lazy" />
+                </div>
+                <div className={styles.portraitGlow} aria-hidden />
               </div>
             </div>
 
