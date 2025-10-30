@@ -87,7 +87,9 @@ export default async function ExecutionLayer({
                       </Link>
                     </h3>
 
-                    <p className={styles.cardSummary}>{project.summary}</p>
+                    <p className={clsx(styles.cardSummary, "u-max-w-prose")}>
+                      {project.summary}
+                    </p>
                   </header>
 
                   {project.stack && project.stack.length > 0 ? (

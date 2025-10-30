@@ -106,7 +106,9 @@ export default async function ContinuityLayer({
               <div className={styles.headerText}>
                 <h2 className={styles.heading}>Now</h2>
                 {meta.summary ? (
-                  <p className={styles.summary}>{meta.summary}</p>
+                  <p className={clsx(styles.summary, "u-max-w-prose")}>
+                    {meta.summary}
+                  </p>
                 ) : null}
               </div>
             </header>

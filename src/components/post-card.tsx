@@ -79,7 +79,9 @@ export function PostCard({
   ) : null;
 
   const defaultDescription = summary.description ? (
-    <p className={styles.description}>{summary.description}</p>
+    <p className={clsx(styles.description, "u-max-w-prose")}>
+      {summary.description}
+    </p>
   ) : null;
 
   const defaultCta = (

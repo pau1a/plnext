@@ -23,7 +23,9 @@ export function NoteItem({ note, className }: NoteItemProps) {
       <time className={styles.date} dateTime={note.date}>
         {formatDate(note.date)}
       </time>
-      {note.summary ? <p className={styles.summary}>{note.summary}</p> : null}
+      {note.summary ? (
+        <p className={clsx(styles.summary, "u-max-w-prose")}>{note.summary}</p>
+      ) : null}
       <TagList
         tags={note.tags}
         ariaLabel={`Tags for ${note.title}`}
