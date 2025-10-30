@@ -10,14 +10,14 @@
   gap: var(--space-md);
   padding: var(--space-sm) var(--space-lg);
   border-radius: var(--radius-md);
-  border: 1px solid color-mix(in srgb, var(--color-teal-500) 18%, transparent);
-  background: color-mix(in srgb, var(--color-graphite-50) 45%, transparent);
+  border: 1px solid var(--admin-border-strong);
+  background: color-mix(in srgb, var(--surface-base) 45%, transparent);
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
   transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
 }
 
 .row:hover {
-  border-color: color-mix(in srgb, var(--color-teal-400) 55%, transparent);
+  border-color: var(--admin-border-strong-hover);
   box-shadow: 0 16px 36px rgba(15, 23, 42, 0.09);
   transform: translateY(-1px);
 }
@@ -33,7 +33,7 @@
   gap: var(--space-xs);
   flex-wrap: wrap;
   font-size: var(--font-size-2xs);
-  color: color-mix(in srgb, var(--color-graphite-500) 75%, var(--color-teal-700) 25%);
+  color: color-mix(in srgb, var(--text-muted) 75%, var(--admin-accent-strong) 25%);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -50,8 +50,8 @@
   padding-inline: var(--space-sm);
   padding-block: 0.125rem;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-teal-100) 55%, transparent);
-  color: color-mix(in srgb, var(--color-teal-700) 65%, var(--color-graphite-900) 35%);
+  background: color-mix(in srgb, var(--admin-accent) 45%, transparent);
+  color: color-mix(in srgb, var(--admin-accent-strong) 65%, var(--text-primary) 35%);
   font-weight: 600;
 }
 
@@ -66,7 +66,7 @@
   margin: 0;
   font-size: clamp(0.95rem, 1vw + 0.85rem, 1.25rem);
   font-weight: 600;
-  color: var(--color-graphite-900);
+  color: var(--text-primary);
   line-height: 1.2;
 }
 
@@ -96,8 +96,8 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  background: color-mix(in srgb, var(--color-teal-100) 60%, transparent);
-  color: color-mix(in srgb, var(--color-teal-700) 65%, var(--color-graphite-900) 35%);
+  background: color-mix(in srgb, var(--admin-accent) 50%, transparent);
+  color: color-mix(in srgb, var(--admin-accent-strong) 65%, var(--text-primary) 35%);
 }
 
 .actions {

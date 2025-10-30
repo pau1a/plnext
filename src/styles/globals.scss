@@ -236,6 +236,7 @@ $transition-base: 180ms ease;
   // Surface and motion tokens (light baseline)
   --surface-base: var(--color-graphite-50);
   --surface-elevated: #fff;
+  --surface-secondary: color-mix(in srgb, var(--surface-base) 85%, white 15%);
   --surface-inverse: var(--color-graphite-900);
   --surface-border: rgba(15, 23, 42, 0.08);
   --text-primary: var(--color-graphite-800);
@@ -253,11 +254,32 @@ $transition-base: 180ms ease;
   --max-content-md: 48rem;
   --max-content-lg: 64rem;
   --max-prose-width: 65ch;
+
+  // Admin semantic tokens
+  --admin-accent: var(--color-teal-500);
+  --admin-accent-strong: var(--color-teal-600);
+  --admin-accent-soft: color-mix(in srgb, var(--admin-accent) 16%, transparent);
+  --admin-border-subtle: color-mix(in srgb, var(--surface-border) 55%, transparent);
+  --admin-border-strong: color-mix(in srgb, var(--admin-accent) 18%, transparent);
+  --admin-border-strong-hover: color-mix(in srgb, var(--admin-accent) 55%, transparent);
+  --admin-row-hover: color-mix(in srgb, var(--surface-border) 42%, transparent);
+  --admin-status-warning: var(--color-amber-500);
+  --admin-status-warning-strong: var(--color-amber-600);
+  --admin-status-success: var(--admin-accent);
+  --admin-status-success-strong: var(--admin-accent-strong);
+  --admin-status-danger: var(--color-crimson-500);
+  --admin-status-danger-strong: var(--color-crimson-600);
+  --admin-status-danger-intense: var(--color-crimson-700);
+  --admin-status-contrast: var(--color-graphite-50);
+  --admin-status-strong-contrast: var(--color-graphite-900);
+  --admin-skeleton-strong: color-mix(in srgb, var(--surface-border) 80%, transparent);
+  --admin-skeleton-soft: color-mix(in srgb, var(--surface-border) 55%, transparent);
 }
 
 body.dark {
   --surface-base: var(--color-graphite-900);
   --surface-elevated: var(--color-graphite-800);
+  --surface-secondary: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
   --surface-inverse: var(--color-graphite-800);
   --surface-border: rgba(148, 163, 184, 0.16);
   --text-primary: var(--color-graphite-100);
@@ -269,6 +291,15 @@ body.dark {
   --accent-border: color-mix(in srgb, var(--color-crimson-400) 55%, transparent);
   --shadow-sm: 0 4px 16px rgba(15, 23, 42, 0.4);
   --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.5);
+
+  --admin-accent-soft: color-mix(in srgb, var(--admin-accent) 22%, transparent);
+  --admin-border-subtle: color-mix(in srgb, var(--surface-border) 70%, transparent);
+  --admin-border-strong: color-mix(in srgb, var(--admin-accent) 24%, transparent);
+  --admin-border-strong-hover: color-mix(in srgb, var(--admin-accent) 60%, transparent);
+  --admin-row-hover: color-mix(in srgb, var(--surface-border) 65%, transparent);
+  --admin-status-strong-contrast: var(--color-graphite-50);
+  --admin-skeleton-strong: color-mix(in srgb, var(--surface-border) 65%, transparent);
+  --admin-skeleton-soft: color-mix(in srgb, var(--surface-border) 45%, transparent);
 }
 
 @import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -1493,6 +1524,17 @@ body.dark .button--primary {
   --button-bg-hover: color-mix(in srgb, var(--color-teal-800) 40%, var(--color-teal-600) 60%);
   --button-border: color-mix(in srgb, var(--color-teal-300) 32%, transparent);
   --button-color: var(--color-graphite-50);
+}
+
+.button--danger {
+  --button-bg: var(--admin-status-danger);
+  --button-bg-hover: var(--admin-status-danger-strong);
+  --button-border: color-mix(in srgb, var(--admin-status-danger) 45%, transparent);
+  --button-color: var(--admin-status-contrast);
+}
+
+body.dark .button--danger {
+  --button-border: color-mix(in srgb, var(--admin-status-danger) 55%, transparent);
 }
 
 .button--ghost {
