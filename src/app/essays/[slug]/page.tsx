@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 
 import { CommentForm } from "@/components/comment-form";
 import { CommentList } from "@/components/comment-list";
@@ -32,6 +32,22 @@ export async function generateMetadata({ params }: EssayPageProps): Promise<Meta
   } satisfies Metadata;
 }
 
+async function EssayBody({
+  content,
+  source,
+}: {
+  content: ReactNode | null | undefined;
+  source: string;
+}) {
+  if (content) {
+    return <>{content}</>;
+  }
+
+  const fallback = await renderEssayBody(source);
+
+  return <>{fallback}</>;
+}
+
 export default async function EssayPage({ params }: EssayPageProps) {
   const { slug } = await params;
   const essay = await getEssay(slug);
@@ -43,8 +59,6 @@ export default async function EssayPage({ params }: EssayPageProps) {
   if (essay.slug !== slug) {
     redirect(`/essays/${essay.slug}`);
   }
-
-  const bodyContent = essay.content ?? (await renderEssayBody(essay.body));
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">
@@ -61,7 +75,9 @@ export default async function EssayPage({ params }: EssayPageProps) {
           </header>
         </MotionFade>
 
-        <div className="prose prose-invert essay-article__content">{bodyContent}</div>
+        <div className="prose prose-invert essay-article__content">
+          <EssayBody content={essay.content} source={essay.body} />
+        </div>
 
         <MotionFade delay={0.05}>
           <section
