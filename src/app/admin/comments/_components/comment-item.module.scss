@@ -48,6 +48,7 @@
   flex-wrap: wrap;
   font-size: 0.6875rem;
   line-height: 1.2;
+  color: var(--text-primary);
 }
 
 .author {
@@ -63,10 +64,7 @@
   max-width: 200px;
 }
 
-.slug {
-  color: var(--text-muted);
-}
-
+.slug,
 .date {
   color: var(--text-muted);
 }
