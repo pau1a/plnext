@@ -61,32 +61,46 @@ export default async function EssayPage({ params }: EssayPageProps) {
   }
 
   return (
-    <PageShell as="main" className="u-pad-block-3xl">
-      <article className="essay-article u-stack u-gap-2xl">
+    <PageShell as="main" className="essay-page u-pad-block-4xl">
+      <article className="essay-article u-stack u-gap-3xl">
         <MotionFade>
-          <header className="u-stack u-gap-sm">
-            <p className="essay-article__meta">
-              <span>{formatDate(essay.date)}</span>
-              <span aria-hidden="true">•</span>
-              <span>/{essay.slug}</span>
-            </p>
-            <h1 className="u-heading-xl u-font-semibold">{essay.title}</h1>
-            {essay.summary ? <p className="u-text-muted u-text-lg u-max-w-prose">{essay.summary}</p> : null}
+          <header className="essay-hero">
+            <div className="essay-hero__background" aria-hidden="true" />
+            <div className="essay-hero__content">
+              <p className="essay-hero__meta">
+                <span className="essay-hero__pill">Essay</span>
+                <span>{formatDate(essay.date)}</span>
+                <span aria-hidden="true">•</span>
+                <span>/{essay.slug}</span>
+              </p>
+              <h1 className="essay-hero__title">{essay.title}</h1>
+              {essay.summary ? <p className="essay-hero__summary">{essay.summary}</p> : null}
+            </div>
           </header>
         </MotionFade>
 
-        <div className="prose essay-article__content">
-          <EssayBody content={essay.content} source={essay.body} />
-        </div>
+        <MotionFade delay={0.03}>
+          <div className="essay-layout">
+            <div className="essay-layout__accent" aria-hidden="true" />
+            <div className="essay-layout__content prose essay-article__content">
+              <EssayBody content={essay.content} source={essay.body} />
+            </div>
+          </div>
+        </MotionFade>
 
-        <MotionFade delay={0.05}>
+        <MotionFade delay={0.08}>
           <section
-            className="u-stack u-gap-md"
+            className="essay-discussion u-stack u-gap-lg"
             aria-labelledby="comments-heading"
           >
-            <h2 id="comments-heading" className="heading-subtitle">
-              Join the discussion
-            </h2>
+            <div className="essay-discussion__header">
+              <h2 id="comments-heading" className="heading-subtitle">
+                Join the discussion
+              </h2>
+              <p className="essay-discussion__summary">
+                Share reflections, questions, or favourite lines. Thoughtful conversation keeps these ideas alive.
+              </p>
+            </div>
             <CommentProvider slug={essay.slug}>
               <CommentForm slug={essay.slug} />
               <Suspense fallback={null}>

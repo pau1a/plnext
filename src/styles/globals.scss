@@ -907,17 +907,128 @@ body:has([class*="contact-module"]) .app-shell__main {
   color: var(--color-teal-400);
 }
 
-.essay-article__meta {
-  display: flex;
+.essay-page {
+  position: relative;
+  background:
+    radial-gradient(120% 150% at 0% 0%, color-mix(in srgb, var(--color-teal-200) 22%, transparent) 0%, transparent 45%),
+    radial-gradient(140% 160% at 100% 10%, color-mix(in srgb, var(--color-crimson-200) 18%, transparent) 0%, transparent 55%),
+    var(--surface-base);
+}
+
+.essay-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 3.75rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 45%, transparent);
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-md);
+}
+
+.essay-hero__background {
+  position: absolute;
+  inset: -20% -10% -30%;
+  background:
+    radial-gradient(60% 75% at 15% 15%, color-mix(in srgb, var(--color-teal-400) 28%, transparent) 0%, transparent 65%),
+    radial-gradient(65% 70% at 85% 25%, color-mix(in srgb, var(--color-crimson-400) 22%, transparent) 0%, transparent 70%),
+    linear-gradient(135deg, color-mix(in srgb, var(--color-teal-100) 45%, transparent), transparent 70%);
+  opacity: 0.85;
+  filter: blur(60px);
+}
+
+.essay-hero__content {
+  position: relative;
+  display: grid;
+  gap: var(--space-lg);
+  max-width: min(58ch, 100%);
+}
+
+.essay-hero__meta {
+  display: inline-flex;
+  align-items: center;
   gap: var(--space-sm);
   flex-wrap: wrap;
   font-size: var(--font-size-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-muted);
 }
 
-.essay-article__content {
+.essay-hero__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-inline: 0.75rem;
+  padding-block: 0.3rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-teal-400) 22%, transparent);
+  color: color-mix(in srgb, var(--color-teal-800) 80%, var(--color-graphite-900) 20%);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+}
+
+.essay-hero__title {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 3.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.essay-hero__summary {
+  margin: 0;
+  font-size: var(--type-body-lg);
+  color: var(--text-muted);
+}
+
+.essay-layout {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 50%, transparent);
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-sm);
+}
+
+.essay-layout__accent {
+  position: absolute;
+  inset: -40% -20% -50%;
+  background:
+    radial-gradient(65% 85% at 12% 20%, color-mix(in srgb, var(--color-teal-300) 25%, transparent) 0%, transparent 60%),
+    radial-gradient(60% 80% at 82% 25%, color-mix(in srgb, var(--color-crimson-300) 20%, transparent) 0%, transparent 70%);
+  opacity: 0.75;
+  filter: blur(80px);
+}
+
+.essay-layout__content {
+  position: relative;
   display: grid;
   gap: var(--space-lg);
+}
+
+.essay-discussion {
+  padding: clamp(2rem, 4.5vw, 3rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 55%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-teal-400) 14%, transparent), transparent 65%),
+    var(--surface-elevated);
+  box-shadow: var(--shadow-sm);
+}
+
+.essay-discussion__header {
+  display: grid;
+  gap: var(--space-sm);
+  max-width: var(--max-content-sm);
+}
+
+.essay-discussion__summary {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--type-body-md);
+}
+
+.essay-article__content {
   color: var(--text-primary);
   font-size: var(--font-size-lg);
   line-height: var(--line-height-base);
@@ -930,6 +1041,35 @@ body:has([class*="contact-module"]) .app-shell__main {
   --tw-prose-bullets: var(--text-muted);
   --tw-prose-quotes: var(--text-primary);
   --tw-prose-code: var(--color-teal-500);
+}
+
+.essay-article__meta {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+@media (min-width: 62rem) {
+  .essay-hero__content {
+    max-width: 60ch;
+  }
+
+  .essay-layout {
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(3rem, 8vw, 4.5rem);
+  }
+}
+
+body.dark .essay-hero__pill {
+  background: color-mix(in srgb, var(--color-teal-300) 38%, transparent);
+  color: color-mix(in srgb, var(--color-teal-50) 85%, var(--color-graphite-50) 15%);
+}
+
+body.dark .essay-discussion {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-teal-500) 18%, transparent), transparent 70%),
+    var(--surface-elevated);
 }
 
 .app-nav__actions {
