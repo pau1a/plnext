@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/date";
 import { getEssay, getEssaySlugs } from "@/lib/writing";
 
 interface EssayPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }> | { slug: string };
 }
 
 export async function generateStaticParams() {
@@ -20,7 +20,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: EssayPageProps): Promise<Metadata> {
-  const essay = await getEssay(params.slug);
+  const { slug } = await params;
+  const essay = await getEssay(slug);
   if (!essay) {
     return { title: "Essay not found" };
   }
@@ -32,13 +33,14 @@ export async function generateMetadata({ params }: EssayPageProps): Promise<Meta
 }
 
 export default async function EssayPage({ params }: EssayPageProps) {
-  const essay = await getEssay(params.slug);
+  const { slug } = await params;
+  const essay = await getEssay(slug);
 
   if (!essay) {
     notFound();
   }
 
-  if (essay.slug !== params.slug) {
+  if (essay.slug !== slug) {
     redirect(`/essays/${essay.slug}`);
   }
 
