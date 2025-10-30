@@ -55,7 +55,9 @@ export default async function PhilosophyPage() {
             <p className={styles.heroEyebrow}>Operating code</p>
             <h1 className={styles.heroTitle}>Engineering philosophy</h1>
             {updatedLabel ? <p className={styles.heroMeta}>Updated {updatedLabel}</p> : null}
-            {meta?.summary ? <p className={styles.heroSummary}>{meta.summary}</p> : null}
+            {meta?.summary ? (
+              <p className={`${styles.heroSummary} u-max-w-prose`}>{meta.summary}</p>
+            ) : null}
           </div>
 
           <div className={styles.intentGridWrapper}>

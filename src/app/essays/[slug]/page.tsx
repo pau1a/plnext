@@ -74,7 +74,9 @@ export default async function EssayPage({ params }: EssayPageProps) {
                 <span>/{essay.slug}</span>
               </p>
               <h1 className="essay-hero__title">{essay.title}</h1>
-              {essay.summary ? <p className="essay-hero__summary">{essay.summary}</p> : null}
+              {essay.summary ? (
+                <p className="essay-hero__summary u-max-w-prose">{essay.summary}</p>
+              ) : null}
             </div>
           </header>
         </MotionFade>
@@ -97,7 +99,7 @@ export default async function EssayPage({ params }: EssayPageProps) {
               <h2 id="comments-heading" className="heading-subtitle">
                 Join the discussion
               </h2>
-              <p className="essay-discussion__summary">
+              <p className="essay-discussion__summary u-max-w-prose">
                 Share reflections, questions, or favourite lines. Thoughtful conversation keeps these ideas alive.
               </p>
             </div>

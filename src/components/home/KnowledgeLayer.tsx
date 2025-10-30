@@ -277,7 +277,9 @@ export default async function KnowledgeLayer({
                           </h4>
 
                           {summary ? (
-                            <p className={styles.essaySummary}>{summary}</p>
+                            <p className={clsx(styles.essaySummary, "u-max-w-prose")}>
+                              {summary}
+                            </p>
                           ) : null}
                         </li>
                       );

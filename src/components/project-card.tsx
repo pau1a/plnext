@@ -76,7 +76,7 @@ export function ProjectCard({
   ) : null;
 
   const defaultDescription = summary.summary ? (
-    <p className={styles.description}>{summary.summary}</p>
+    <p className={clsx(styles.description, "u-max-w-prose")}>{summary.summary}</p>
   ) : null;
 
   const defaultDetails = summary.role || summary.stack?.length ? (

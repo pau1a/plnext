@@ -251,6 +251,7 @@ $transition-base: 180ms ease;
   --max-content-sm: 36rem;
   --max-content-md: 48rem;
   --max-content-lg: 64rem;
+  --max-prose-width: 65ch;
 }
 
 body.dark {
@@ -890,7 +891,7 @@ body:has([class*="contact-module"]) .app-shell__main {
   margin: 0;
   font-size: var(--font-size-md);
   color: var(--text-muted);
-  max-width: 60ch;
+  max-width: min(var(--max-prose-width), 100%);
 }
 
 .essay-card__cta {
@@ -978,6 +979,7 @@ body:has([class*="contact-module"]) .app-shell__main {
   margin: 0;
   font-size: var(--type-body-lg);
   color: var(--text-muted);
+  max-width: min(var(--max-prose-width), 100%);
 }
 
 .essay-layout {
@@ -1026,6 +1028,7 @@ body:has([class*="contact-module"]) .app-shell__main {
   margin: 0;
   color: var(--text-muted);
   font-size: var(--type-body-md);
+  max-width: min(var(--max-prose-width), 100%);
 }
 
 .essay-article__content {
@@ -1879,6 +1882,10 @@ $spaces: (
 
 .u-max-w-lg {
   max-width: var(--max-content-lg);
+}
+
+.u-max-w-prose {
+  max-width: min(var(--max-prose-width), 100%);
 }
 
 .u-text-balance {

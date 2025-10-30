@@ -32,7 +32,7 @@ export default async function EssaysIndexPage() {
               <span className={styles.headerCount}>{essays.length} essays</span>
             </div>
             <h1 className={styles.headerTitle}>Field notes from engineered calm</h1>
-            <p className={styles.headerSummary}>
+            <p className={`${styles.headerSummary} u-max-w-prose`}>
               Dispatches on resilience, safety, and the guardrails that keep ambitious systems from flying apart.
             </p>
             <div className={styles.headerDivider} aria-hidden="true" />
@@ -53,7 +53,7 @@ export default async function EssaysIndexPage() {
                     <Link href={`/essays/${essay.slug}`}>{essay.title}</Link>
                   </h2>
                 </header>
-                <p className={styles.cardSummary}>
+                <p className={`${styles.cardSummary} u-max-w-prose`}>
                   {essay.summary ?? "Add a summary in the front matter to give readers a preview."}
                 </p>
                 <div className={styles.cardFooter}>
