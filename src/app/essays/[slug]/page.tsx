@@ -8,7 +8,7 @@ import { CommentProvider } from "@/components/comment-context";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import { formatDate } from "@/lib/date";
-import { getEssay, getEssaySlugs } from "@/lib/writing";
+import { getEssay, getEssaySlugs, renderEssayBody } from "@/lib/writing";
 
 interface EssayPageProps {
   params: Promise<{ slug: string }> | { slug: string };
@@ -44,6 +44,8 @@ export default async function EssayPage({ params }: EssayPageProps) {
     redirect(`/essays/${essay.slug}`);
   }
 
+  const bodyContent = essay.content ?? (await renderEssayBody(essay.body));
+
   return (
     <PageShell as="main" className="u-pad-block-3xl">
       <article className="essay-article u-stack u-gap-2xl">
@@ -59,7 +61,7 @@ export default async function EssayPage({ params }: EssayPageProps) {
           </header>
         </MotionFade>
 
-        <div className="prose prose-invert essay-article__content">{essay.content}</div>
+        <div className="prose prose-invert essay-article__content">{bodyContent}</div>
 
         <MotionFade delay={0.05}>
           <section

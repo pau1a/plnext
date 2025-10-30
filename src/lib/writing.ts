@@ -2,6 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { ImgHTMLAttributes, ReactNode } from "react";
 import { compileMDX } from "next-mdx-remote/rsc";
+import type { MDXRemoteProps } from "next-mdx-remote/rsc";
+import type { SerializeOptions } from "next-mdx-remote/dist/types";
 import matter from "gray-matter";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
@@ -13,6 +15,35 @@ import { ensureSlug } from "./slugify";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const WRITING_DIR = path.join(CONTENT_DIR, "writing");
+
+const essayMdxOptions: NonNullable<SerializeOptions["mdxOptions"]> = {
+  remarkPlugins: [remarkGfm],
+  rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+};
+
+interface CompileEssayOptions {
+  components?: MDXRemoteProps["components"];
+  parseFrontmatter?: boolean;
+}
+
+async function compileEssayMdx<TFrontmatter = EssayFrontMatter>(
+  source: string,
+  { components = mdxComponents, parseFrontmatter = false }: CompileEssayOptions = {},
+) {
+  return compileMDX<TFrontmatter>({
+    source,
+    components,
+    options: {
+      parseFrontmatter,
+      mdxOptions: essayMdxOptions,
+    },
+  });
+}
+
+export async function renderEssayBody(source: string) {
+  const { content } = await compileEssayMdx(source);
+  return content;
+}
 
 export interface EssayFrontMatter {
   title: string;
@@ -127,16 +158,8 @@ export async function getEssay(slug: string, options: GetEssayOptions = {}): Pro
   const fullPath = path.join(WRITING_DIR, target.file);
   const raw = await fs.readFile(fullPath, "utf8");
 
-  const { content, frontmatter } = await compileMDX<EssayFrontMatter>({
-    source: raw,
-    components: mdxComponents,
-    options: {
-      parseFrontmatter: true,
-      mdxOptions: {
-        remarkPlugins: [remarkGfm],
-        rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
-      },
-    },
+  const { content, frontmatter } = await compileEssayMdx<EssayFrontMatter>(raw, {
+    parseFrontmatter: true,
   });
 
   if (frontmatter.draft && !includeDrafts) {
@@ -148,6 +171,7 @@ export async function getEssay(slug: string, options: GetEssayOptions = {}): Pro
   const summary: EssaySummary = {
     slug: canonicalSlug,
     fileSlug: target.frontMatter.fileSlug ?? target.file.replace(/\.mdx$/, ""),
+    body: target.body,
     title: frontmatter.title ?? target.frontMatter.title ?? canonicalSlug,
     date: frontmatter.date ?? target.frontMatter.date ?? new Date().toISOString(),
     summary: frontmatter.summary ?? target.frontMatter.summary,
@@ -213,16 +237,9 @@ export async function getEssayForRSS(slug: string): Promise<EssayDocument | null
     },
   };
 
-  const { content, frontmatter } = await compileMDX<EssayFrontMatter>({
-    source: raw,
+  const { content, frontmatter } = await compileEssayMdx<EssayFrontMatter>(raw, {
     components: rssComponents,
-    options: {
-      parseFrontmatter: true,
-      mdxOptions: {
-        remarkPlugins: [remarkGfm],
-        rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
-      },
-    },
+    parseFrontmatter: true,
   });
 
   if (frontmatter.draft) {
