@@ -921,6 +921,15 @@ body:has([class*="contact-module"]) .app-shell__main {
   color: var(--text-primary);
   font-size: var(--font-size-lg);
   line-height: var(--line-height-base);
+  --tw-prose-body: var(--text-primary);
+  --tw-prose-headings: var(--text-primary);
+  --tw-prose-bold: var(--text-primary);
+  --tw-prose-links: var(--color-teal-500);
+  --tw-prose-links-hover: var(--color-teal-400);
+  --tw-prose-counters: var(--text-muted);
+  --tw-prose-bullets: var(--text-muted);
+  --tw-prose-quotes: var(--text-primary);
+  --tw-prose-code: var(--color-teal-500);
 }
 
 .app-nav__actions {

@@ -75,7 +75,7 @@ export default async function EssayPage({ params }: EssayPageProps) {
           </header>
         </MotionFade>
 
-        <div className="prose prose-invert essay-article__content">
+        <div className="prose essay-article__content">
           <EssayBody content={essay.content} source={essay.body} />
         </div>
 
