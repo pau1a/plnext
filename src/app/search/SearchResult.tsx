@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { SearchResult } from "@/lib/search";
 import { formatDate } from "@/lib/date";
+import { usePrefersReducedMotion } from "@/lib/motion";
 
 interface SearchResultProps {
   result: SearchResult;
@@ -39,24 +40,49 @@ function getResultTypeColor(type: SearchResult["type"]): string {
 }
 
 export default function SearchResultItem({ result }: SearchResultProps) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
   const [isTitleHovered, setIsTitleHovered] = useState(false);
+
+  const isInteracting = isHovered || isPressed;
 
   return (
     <article
       style={{
         background: "color-mix(in srgb, var(--surface-base) 85%, white 15%)",
-        border: isHovered
+        border: isInteracting
           ? "1px solid color-mix(in srgb, var(--surface-border) 100%, transparent)"
           : "1px solid color-mix(in srgb, var(--surface-border) 75%, transparent)",
         borderRadius: "var(--radius-md)",
         padding: "clamp(1.25rem, 2.5vw, 1.75rem)",
-        transition: "border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease",
-        transform: isHovered ? "translateY(-2px)" : "translateY(0)",
-        boxShadow: isHovered ? "0 8px 24px color-mix(in srgb, var(--shadow-color) 12%, transparent)" : "none",
+        transition: prefersReducedMotion
+          ? "border-color 160ms ease, box-shadow 160ms ease"
+          : "border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease",
+        transform: prefersReducedMotion
+          ? undefined
+          : isInteracting
+            ? "translateY(-2px)"
+            : "translateY(0)",
+        boxShadow: isInteracting ? "var(--shadow-md)" : "var(--shadow-sm)",
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => {
+        setIsHovered(false);
+        setIsPressed(false);
+      }}
+      onPointerDown={() => setIsPressed(true)}
+      onPointerUp={(event) => {
+        setIsPressed(false);
+
+        if (event.pointerType !== "mouse") {
+          setIsHovered(false);
+        }
+      }}
+      onPointerCancel={() => {
+        setIsPressed(false);
+        setIsHovered(false);
+      }}
     >
       <div style={{ display: "flex", gap: "var(--space-sm)", alignItems: "center", marginBottom: "var(--space-sm)" }}>
         <span
@@ -83,8 +109,11 @@ export default function SearchResultItem({ result }: SearchResultProps) {
             color: isTitleHovered ? "var(--link-hover)" : "inherit",
             transition: "color 160ms ease",
           }}
-          onMouseEnter={() => setIsTitleHovered(true)}
-          onMouseLeave={() => setIsTitleHovered(false)}
+          onPointerEnter={() => setIsTitleHovered(true)}
+          onPointerLeave={() => setIsTitleHovered(false)}
+          onPointerCancel={() => setIsTitleHovered(false)}
+          onFocus={() => setIsTitleHovered(true)}
+          onBlur={() => setIsTitleHovered(false)}
         >
           {result.title}
         </Link>
