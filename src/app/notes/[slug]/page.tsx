@@ -125,8 +125,8 @@ export default async function NoteDetailPage({ params }: NotePageProps) {
         </NoteLayout>
 
         <section
-          className="u-stack u-gap-md u-margin-block-start-2xl"
           aria-labelledby="comments-heading"
+          className="u-stack u-gap-md u-margin-block-start-2xl"
         >
           <h2 id="comments-heading" className="heading-subtitle">
             Join the discussion

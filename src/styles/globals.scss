@@ -1743,6 +1743,10 @@ $spaces: (
     margin-top: #{$value};
   }
 
+  .u-margin-block-start-#{$token} {
+    margin-block-start: #{$value};
+  }
+
   .u-mb-#{$token} {
     margin-bottom: #{$value};
   }
