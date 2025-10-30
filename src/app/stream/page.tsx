@@ -1,9 +1,10 @@
-import Link from "next/link";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import { StreamItem } from "@/components/stream/StreamItem";
+import { formatDate } from "@/lib/date";
 import { loadStream } from "@/lib/stream";
 
 import styles from "./page.module.scss";
@@ -29,32 +30,74 @@ export const metadata: Metadata = {
 
 export default async function StreamPage() {
   const entries = await loadStream();
+  const totalEntries = entries.length;
+
+  const latestTimestamp = entries[0]?.timestamp ?? null;
+  const oldestTimestamp = entries[entries.length - 1]?.timestamp ?? null;
+  const uniqueTagCount = new Set(entries.flatMap((entry) => entry.tags)).size;
+
+  const spanLabel =
+    totalEntries > 1 && oldestTimestamp && latestTimestamp
+      ? `${formatDate(oldestTimestamp, "MMM yyyy")} — ${formatDate(latestTimestamp, "MMM yyyy")}`
+      : latestTimestamp
+        ? formatDate(latestTimestamp, "MMM yyyy")
+        : null;
+
+  const heroSummary =
+    totalEntries > 0
+      ? `Telemetry from the engineering desk—shipping notes, incident learnings, and experiments in play. ${totalEntries} signal${totalEntries === 1 ? "" : "s"} logged so far${
+          spanLabel ? ` (${spanLabel})` : ""
+        }.`
+      : "Telemetry from the engineering desk—shipping notes, incident learnings, and experiments in play. Public updates land here once they clear the log.";
+
+  const stats = [
+    { label: "Signals logged", value: totalEntries.toString() },
+    uniqueTagCount > 0 ? { label: "Topics touched", value: uniqueTagCount.toString() } : null,
+    latestTimestamp ? { label: "Last update", value: formatDate(latestTimestamp) } : null,
+  ].filter(Boolean) as Array<{ label: string; value: string }>;
 
   return (
     <PageShell as="main" className="u-pad-block-3xl" outerClassName={styles.main}>
       <div className={styles.inner}>
         <MotionFade>
-          <div className={styles.header}>
-            <Link href="/about" className={styles.backLink}>
-              <i aria-hidden className="fa-solid fa-arrow-left" />
-              <span>Back to About</span>
-            </Link>
-            <h1 className={styles.title}>Stream</h1>
-            <p className={styles.description}>
-              Short, timestamped notes. Public subset. The rest stay private.
-            </p>
-          </div>
+          <section className={styles.hero}>
+            <div className={styles.heroTop}>
+              <span className={styles.heroEyebrow}>
+                <Link href="/about" className={styles.backLink}>
+                  <span className={styles.backLinkIcon} aria-hidden>
+                    ←
+                  </span>
+                  Back to About
+                </Link>
+                Telemetry log
+              </span>
+              <h1 className={styles.heroTitle}>Stream</h1>
+              <p className={styles.heroSummary}>{heroSummary}</p>
+            </div>
+            <div className={styles.heroStats}>
+              {stats.map((stat) => (
+                <article key={stat.label} className={styles.statCard}>
+                  <p className={styles.statValue}>{stat.value}</p>
+                  <p className={styles.statLabel}>{stat.label}</p>
+                </article>
+              ))}
+            </div>
+          </section>
         </MotionFade>
 
-        <MotionFade delay={0.05}>
-          {entries.length > 0 ? (
-            <section className={styles.list} aria-label="Stream entries">
-              {entries.map((entry) => (
-                <StreamItem key={entry.id} entry={entry} />
-              ))}
+        <MotionFade delay={0.08}>
+          {totalEntries > 0 ? (
+            <section className={styles.timeline} aria-label="Stream entries">
+              <ol className={styles.entries}>
+                {entries.map((entry) => (
+                  <li key={entry.id}>
+                    <StreamItem entry={entry} />
+                  </li>
+                ))}
+              </ol>
             </section>
           ) : (
-            <p className="u-text-muted">No public entries yet.</p>
+            <p className={styles.empty}>No public entries yet. The stream wakes soon.</p>
           )}
         </MotionFade>
       </div>

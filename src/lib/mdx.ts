@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { ReactNode } from "react";
+import type { ImgHTMLAttributes, ReactNode } from "react";
 import { compileMDX } from "next-mdx-remote/rsc";
 import matter from "gray-matter";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -251,22 +251,22 @@ async function createRSSComponents() {
   const React = await import("react");
 
   return {
-    img: (props: any) => {
+    img: (props: RSSMediaProps) => {
       const { title, alt = "", ...rest } = props;
       return React.createElement(
         "figure",
         null,
-        React.createElement("img", { alt, ...rest }),
+        React.createElement("img", { alt, ...(rest as ImgHTMLAttributes<HTMLImageElement>) }),
         title && React.createElement("figcaption", null, title)
       );
     },
-    ContentImage: (props: any) => {
+    ContentImage: (props: RSSMediaProps) => {
       const { caption, alt = "", title, ...rest } = props;
       const captionText = caption || title;
       return React.createElement(
         "figure",
         null,
-        React.createElement("img", { alt, ...rest }),
+        React.createElement("img", { alt, ...(rest as ImgHTMLAttributes<HTMLImageElement>) }),
         captionText && React.createElement("figcaption", null, captionText)
       );
     },
@@ -351,3 +351,8 @@ export async function getProjectForRSS(slug: string): Promise<{ content: ReactNo
     throw error;
   }
 }
+type RSSMediaProps = Record<string, unknown> & {
+  alt?: string;
+  title?: string;
+  caption?: string;
+};

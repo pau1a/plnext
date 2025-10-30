@@ -12,33 +12,33 @@ type StreamItemProps = {
 export function StreamItem({ entry }: StreamItemProps) {
   return (
     <article id={entry.id} className={styles.item}>
-      <div className={styles.itemInner}>
-        <time className={styles.timestamp} dateTime={entry.timestamp}>
-          {formatDateTime(entry.timestamp)}
-        </time>
+      <span className={styles.marker} aria-hidden="true" />
+      <div className={styles.card}>
+        <header className={styles.cardHeader}>
+          <time className={styles.timestamp} dateTime={entry.timestamp}>
+            {formatDateTime(entry.timestamp)}
+          </time>
+          <Link
+            href={entry.anchor}
+            aria-label={`Permalink to entry ${entry.id}`}
+            className={styles.permalink}
+            prefetch={false}
+          >
+            Permalink ↗
+          </Link>
+        </header>
 
-        <div className="u-stack u-gap-sm">
-          <Prose className={styles.body}>{entry.content}</Prose>
+        <Prose className={styles.body}>{entry.content}</Prose>
 
-          {entry.tags.length > 0 ? (
-            <ul className={styles.tags} aria-label="Tags">
-              {entry.tags.map((tag) => (
-                <li key={tag} className={styles.tag}>
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
-
-        <Link
-          href={entry.anchor}
-          aria-label={`Permalink to entry ${entry.id}`}
-          className={styles.anchor}
-          prefetch={false}
-        >
-          #
-        </Link>
+        {entry.tags.length > 0 ? (
+          <ul className={styles.tags} aria-label="Tags">
+            {entry.tags.map((tag) => (
+              <li key={tag} className={styles.tag}>
+                {tag}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </article>
   );

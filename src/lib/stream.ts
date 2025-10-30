@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { ReactElement } from "react";
+import type { ImgHTMLAttributes, ReactElement } from "react";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { format, parseISO } from "date-fns";
 import remarkGfm from "remark-gfm";
@@ -171,22 +171,22 @@ export async function renderMarkdownForRSS(source: string): Promise<ReactElement
 
   // RSS-safe components
   const rssComponents = {
-    img: (props: any) => {
+    img: (props: RSSMediaProps) => {
       const { title, alt = "", ...rest } = props;
       return React.createElement(
         "figure",
         null,
-        React.createElement("img", { alt, ...rest }),
+        React.createElement("img", { alt, ...(rest as ImgHTMLAttributes<HTMLImageElement>) }),
         title && React.createElement("figcaption", null, title)
       );
     },
-    ContentImage: (props: any) => {
+    ContentImage: (props: RSSMediaProps) => {
       const { caption, alt = "", title, ...rest } = props;
       const captionText = caption || title;
       return React.createElement(
         "figure",
         null,
-        React.createElement("img", { alt, ...rest }),
+        React.createElement("img", { alt, ...(rest as ImgHTMLAttributes<HTMLImageElement>) }),
         captionText && React.createElement("figcaption", null, captionText)
       );
     },
@@ -238,3 +238,8 @@ export async function loadStreamForRSS(): Promise<StreamEntry[]> {
     .filter((entry): entry is StreamEntry => entry !== null)
     .sort(compareByTimestampDesc);
 }
+type RSSMediaProps = Record<string, unknown> & {
+  alt?: string;
+  title?: string;
+  caption?: string;
+};
