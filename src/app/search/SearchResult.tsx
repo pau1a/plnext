@@ -27,20 +27,15 @@ function getResultTypeLabel(type: SearchResult["type"]): string {
 }
 
 function getResultTypeColor(type: SearchResult["type"]): string {
-  switch (type) {
-    case "essay":
-      return "var(--color-purple-600)";
-    case "blog":
-      return "var(--color-blue-600)";
-    case "project":
-      return "var(--color-green-600)";
-    case "note":
-      return "var(--color-teal-600)";
-    case "stream":
-      return "var(--color-crimson-600)";
-    default:
-      return "var(--text-muted)";
-  }
+  const colorByType: Record<SearchResult["type"], string> = {
+    essay: "var(--color-purple-600)",
+    blog: "var(--color-blue-600)",
+    project: "var(--color-green-600)",
+    note: "var(--color-teal-600)",
+    stream: "var(--color-crimson-600)",
+  };
+
+  return colorByType[type] ?? "var(--text-muted)";
 }
 
 export default function SearchResultItem({ result }: SearchResultProps) {
