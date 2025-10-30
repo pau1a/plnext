@@ -393,6 +393,7 @@ export default function AboutPageContent({
             <h1
               className={clsx(
                 styles.heroTitle,
+                "u-heading-xl",
                 shouldAnimate && "motionFade",
                 shouldAnimate && heroReady && "motionFadeReady",
               )}

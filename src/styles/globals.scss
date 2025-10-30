@@ -214,6 +214,7 @@ $transition-base: 180ms ease;
   --line-height-snug: #{$line-height-snug};
   --line-height-base: #{$line-height-base};
   --type-display-xl: clamp(2.75rem, 5vw, 4rem);
+  --type-heading-xl: clamp(2.5rem, 2.4rem + 2.2vw, 4.25rem);
   --type-heading-lg: clamp(1.5rem, 3vw, 2rem);
   --type-heading-md: clamp(1.25rem, 2.5vw, 2rem);
   --type-heading-sm: clamp(1.2rem, 3vw, 1.6rem);
@@ -970,9 +971,7 @@ body:has([class*="contact-module"]) .app-shell__main {
 
 .essay-hero__title {
   margin: 0;
-  font-size: clamp(2.5rem, 6vw, 3.8rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
 }
 
 .essay-hero__summary {
@@ -1915,6 +1914,13 @@ $spaces: (
   font-size: var(--type-display-xl);
   line-height: 1.05;
   letter-spacing: -0.02em;
+}
+
+.u-heading-xl {
+  font-size: var(--type-heading-xl);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .heading-display-lg,

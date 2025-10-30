@@ -73,7 +73,7 @@ export default async function EssayPage({ params }: EssayPageProps) {
                 <span aria-hidden="true">•</span>
                 <span>/{essay.slug}</span>
               </p>
-              <h1 className="essay-hero__title">{essay.title}</h1>
+              <h1 className="essay-hero__title u-heading-xl">{essay.title}</h1>
               {essay.summary ? (
                 <p className="essay-hero__summary u-max-w-prose">{essay.summary}</p>
               ) : null}
