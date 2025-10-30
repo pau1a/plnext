@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 
 import { CommentForm } from "@/components/comment-form";
 import { CommentList } from "@/components/comment-list";
@@ -8,10 +8,10 @@ import { CommentProvider } from "@/components/comment-context";
 import PageShell from "@/components/layout/PageShell";
 import MotionFade from "@/components/motion/MotionFade";
 import { formatDate } from "@/lib/date";
-import { getEssay, getEssaySlugs } from "@/lib/writing";
+import { getEssay, getEssaySlugs, renderEssayBody } from "@/lib/writing";
 
 interface EssayPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }> | { slug: string };
 }
 
 export async function generateStaticParams() {
@@ -20,7 +20,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: EssayPageProps): Promise<Metadata> {
-  const essay = await getEssay(params.slug);
+  const { slug } = await params;
+  const essay = await getEssay(slug);
   if (!essay) {
     return { title: "Essay not found" };
   }
@@ -31,21 +32,38 @@ export async function generateMetadata({ params }: EssayPageProps): Promise<Meta
   } satisfies Metadata;
 }
 
+async function EssayBody({
+  content,
+  source,
+}: {
+  content: ReactNode | null | undefined;
+  source: string;
+}) {
+  if (content) {
+    return <>{content}</>;
+  }
+
+  const fallback = await renderEssayBody(source);
+
+  return <>{fallback}</>;
+}
+
 export default async function EssayPage({ params }: EssayPageProps) {
-  const essay = await getEssay(params.slug);
+  const { slug } = await params;
+  const essay = await getEssay(slug);
 
   if (!essay) {
     notFound();
   }
 
-  if (essay.slug !== params.slug) {
+  if (essay.slug !== slug) {
     redirect(`/essays/${essay.slug}`);
   }
 
   return (
     <PageShell as="main" className="u-pad-block-3xl">
-      <MotionFade>
-        <article className="essay-article u-stack u-gap-2xl">
+      <article className="essay-article u-stack u-gap-2xl">
+        <MotionFade>
           <header className="u-stack u-gap-sm">
             <p className="essay-article__meta">
               <span>{formatDate(essay.date)}</span>
@@ -55,9 +73,13 @@ export default async function EssayPage({ params }: EssayPageProps) {
             <h1 className="u-heading-xl u-font-semibold">{essay.title}</h1>
             {essay.summary ? <p className="u-text-muted u-text-lg u-max-w-prose">{essay.summary}</p> : null}
           </header>
+        </MotionFade>
 
-          <div className="prose prose-invert essay-article__content">{essay.content}</div>
+        <div className="prose essay-article__content">
+          <EssayBody content={essay.content} source={essay.body} />
+        </div>
 
+        <MotionFade delay={0.05}>
           <section
             className="u-stack u-gap-md"
             aria-labelledby="comments-heading"
@@ -72,8 +94,8 @@ export default async function EssayPage({ params }: EssayPageProps) {
               </Suspense>
             </CommentProvider>
           </section>
-        </article>
-      </MotionFade>
+        </MotionFade>
+      </article>
     </PageShell>
   );
 }
