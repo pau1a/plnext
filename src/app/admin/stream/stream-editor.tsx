@@ -59,13 +59,9 @@ export function StreamEditor({ entries }: StreamEditorProps) {
           return (
             <div
               key={entry.id}
+              className="stream-editor__entry"
               style={{
-                border: "2px solid var(--admin-border-subtle)",
-                borderLeftWidth: "4px",
                 borderLeftColor: visibilityColor,
-                borderRadius: "var(--radius-md)",
-                padding: "0.5rem",
-                backgroundColor: "var(--surface-secondary)",
               }}
             >
               <input type="hidden" name="entryId" value={entry.id} />
@@ -83,7 +79,8 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                   style={{
                     fontSize: "0.75rem",
                     padding: "0.15rem 0.4rem",
-                    border: "1px solid var(--admin-border-subtle)",
+                    border: "1px solid var(--surface-border)",
+                    backgroundColor: "var(--surface-base)",
                     borderRadius: "3px",
                     flex: "0 0 auto"
                   }}
@@ -96,7 +93,8 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                   style={{
                     fontSize: "0.75rem",
                     padding: "0.15rem 0.4rem",
-                    border: "1px solid var(--admin-border-subtle)",
+                    border: "1px solid var(--surface-border)",
+                    backgroundColor: "var(--surface-base)",
                     borderRadius: "3px",
                     flex: "0 0 auto"
                   }}
@@ -122,7 +120,8 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                   style={{
                     fontSize: "0.7rem",
                     padding: "0.15rem 0.4rem",
-                    border: "1px solid var(--admin-border-subtle)",
+                    border: "1px solid var(--surface-border)",
+                    backgroundColor: "var(--surface-base)",
                     borderRadius: "3px",
                     flex: "1 1 150px",
                     minWidth: "120px"
@@ -139,7 +138,8 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                   width: "100%",
                   fontSize: "0.85rem",
                   padding: "0.4rem",
-                  border: "1px solid var(--admin-border-subtle)",
+                  border: "1px solid var(--surface-border)",
+                  backgroundColor: "var(--surface-base)",
                   borderRadius: "3px",
                   fontFamily: "inherit",
                   lineHeight: "1.3",
@@ -168,6 +168,21 @@ export function StreamEditor({ entries }: StreamEditorProps) {
           </span>
         ) : null}
       </div>
+      <style jsx>{`
+        .stream-editor__entry {
+          border: 1px solid var(--surface-border);
+          border-left-width: 4px;
+          border-radius: var(--radius-md);
+          padding: 0.5rem;
+          background-color: var(--surface-elevated);
+          transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stream-editor__entry:hover {
+          background-color: var(--surface-base);
+          border-color: var(--surface-border);
+        }
+      `}</style>
     </form>
   );
 }

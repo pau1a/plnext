@@ -136,24 +136,19 @@ export function StreamEntryForm({ entry }: StreamEntryFormProps) {
           />
           <div style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
             <span className="u-text-xs u-text-muted">Available tags:</span>
-            {AVAILABLE_TAGS.map((tag) => (
-              <button
-                key={tag.slug}
-                type="button"
-                className="u-text-xs"
-                onClick={() => addTag(tag.slug)}
-              style={{
-                padding: "0.25rem 0.5rem",
-                border: "1px solid var(--admin-border-subtle)",
-                borderRadius: "3px",
-                background: tagsValue.includes(tag.slug) ? "var(--admin-accent)" : "var(--surface-secondary)",
-                color: tagsValue.includes(tag.slug) ? "var(--admin-status-contrast)" : "inherit",
-                cursor: "pointer",
-              }}
-            >
-                + {tag.name}
-              </button>
-            ))}
+            {AVAILABLE_TAGS.map((tag) => {
+              const isSelected = tagsValue.includes(tag.slug);
+              return (
+                <button
+                  key={tag.slug}
+                  type="button"
+                  className={`u-text-xs stream-entry-form__tag${isSelected ? " stream-entry-form__tag--selected" : ""}`}
+                  onClick={() => addTag(tag.slug)}
+                >
+                  + {tag.name}
+                </button>
+              );
+            })}
           </div>
           <span className="u-text-xs u-text-muted" style={{ display: "block", marginTop: "0.5rem" }}>
             To add a new tag, edit <code>src/lib/tags.ts</code> and add it to TAG_DEFINITIONS
@@ -200,6 +195,33 @@ export function StreamEntryForm({ entry }: StreamEntryFormProps) {
           </div>
         </form>
       )}
+
+      <style jsx>{`
+        .stream-entry-form__tag {
+          padding: 0.25rem 0.5rem;
+          border: 1px solid var(--surface-border);
+          border-radius: 3px;
+          background-color: var(--surface-base);
+          color: inherit;
+          cursor: pointer;
+          transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .stream-entry-form__tag:hover {
+          background-color: var(--surface-elevated);
+        }
+
+        .stream-entry-form__tag--selected {
+          background-color: var(--admin-accent);
+          border-color: var(--admin-border-strong);
+          color: var(--admin-status-contrast);
+        }
+
+        .stream-entry-form__tag--selected:hover {
+          background-color: var(--admin-accent-strong);
+          border-color: var(--admin-border-strong-hover);
+        }
+      `}</style>
     </div>
   );
 }
