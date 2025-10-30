@@ -70,9 +70,6 @@
 
 .heading {
   margin: 0;
-  font-size: clamp(2.5rem, 2.4rem + 2.2vw, 4.25rem);
-  line-height: var(--line-height-tight);
-  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 

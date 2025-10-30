@@ -81,7 +81,7 @@ export function Hero({
         {...motionProps}
       >
         {copy.eyebrow ? <span className={styles.eyebrow}>{copy.eyebrow}</span> : null}
-        <h1 className={styles.heading}>{copy.title}</h1>
+        <h1 className={clsx(styles.heading, "u-heading-xl")}>{copy.title}</h1>
         {copy.subheading ? (
           <p className={styles.subheading}>{copy.subheading}</p>
         ) : null}
