@@ -1,0 +1,248 @@
+@use "../../styles/utilities.scss" as utils;
+
+.page {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  padding-block-start: clamp(3.5rem, 6vw, 6rem);
+  padding-block-end: clamp(4rem, 7vw, 6.5rem);
+  background:
+    radial-gradient(
+      120% 130% at 50% -30%,
+      color-mix(in srgb, #f9fffe 86%, var(--color-teal-100) 14%) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      120% 90% at 18% 32%,
+      color-mix(in srgb, var(--color-teal-200) 22%, transparent) 0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      120% 90% at 82% 30%,
+      color-mix(in srgb, var(--color-crimson-200) 16%, transparent) 0%,
+      transparent 64%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #f6fcff 70%, var(--color-teal-200) 30%) 0%,
+      color-mix(in srgb, #fbfffe 94%, var(--color-teal-50) 6%) 42%,
+      #ffffff 78%
+    ),
+    #ffffff;
+  background-repeat: no-repeat;
+}
+
+.page::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: clamp(9rem, 16vw, 14rem);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 62%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+:global(body.dark) .page {
+  background:
+    radial-gradient(
+      120% 120% at 50% -28%,
+      color-mix(in srgb, #132940 62%, var(--color-teal-200) 38%) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      120% 90% at 18% 34%,
+      color-mix(in srgb, var(--color-teal-400) 32%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      120% 90% at 82% 32%,
+      color-mix(in srgb, var(--color-crimson-300) 22%, transparent) 0%,
+      transparent 72%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #02101d 70%, var(--color-graphite-900) 30%) 0%,
+      color-mix(in srgb, #031422 52%, var(--color-graphite-900) 48%) 42%,
+      color-mix(in srgb, #01070f 85%, var(--color-graphite-900) 15%) 100%
+    );
+}
+
+.hero {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.heroVeil {
+  position: absolute;
+  inset: -32% -36% 12% -36%;
+  background: radial-gradient(
+    circle at 48% 14%,
+    color-mix(in srgb, var(--color-teal-200) 58%, transparent) 0%,
+    color-mix(in srgb, var(--color-teal-700) 22%, transparent) 44%,
+    transparent 68%
+  );
+  filter: blur(140px);
+  opacity: 0.65;
+  animation: hero-pulse 18s ease-in-out infinite;
+}
+
+:global(body.dark) .heroVeil {
+  background: radial-gradient(
+    circle at 52% 16%,
+    color-mix(in srgb, var(--color-teal-200) 68%, transparent) 0%,
+    color-mix(in srgb, var(--color-teal-900) 30%, transparent) 50%,
+    transparent 74%
+  );
+  opacity: 0.78;
+}
+
+.heroOrb {
+  position: absolute;
+  width: clamp(11rem, 24vw, 16rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  animation: hero-drift 20s linear infinite;
+}
+
+.heroOrbNorth {
+  top: 24%;
+  left: 12%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-teal-200) 66%, transparent) 0%, transparent 58%);
+  animation-delay: -6s;
+}
+
+.heroOrbSouth {
+  top: 36%;
+  right: 16%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-amber-200) 58%, transparent) 0%, transparent 58%);
+  animation-delay: -12s;
+}
+
+:global(body.dark) .heroOrbNorth {
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-teal-200) 78%, transparent) 0%, transparent 70%);
+}
+
+:global(body.dark) .heroOrbSouth {
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-amber-200) 72%, transparent) 0%, transparent 70%);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-inline: clamp(1.5rem, 5vw, 3.25rem);
+  box-sizing: border-box;
+}
+
+.section {
+  @include utils.section-shell($padding-block: 0);
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+}
+
+.header {
+  max-width: min(42rem, 100%);
+  margin-inline: auto;
+  text-align: center;
+  display: grid;
+  gap: clamp(0.85rem, 2vw, 1.35rem);
+  padding: clamp(2.1rem, 4vw, 2.8rem);
+  border-radius: clamp(1.5rem, 3vw, 2.2rem);
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(94, 234, 212, 0.22);
+  box-shadow:
+    0 32px 96px rgba(2, 8, 18, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+}
+
+:global(body.dark) .header {
+  background: rgba(2, 12, 20, 0.78);
+  border-color: rgba(94, 234, 212, 0.24);
+}
+
+.headerEyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(165, 243, 252, 0.78);
+  font-weight: 600;
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: clamp(2.4rem, 4.6vw, 3.4rem);
+  line-height: 1.05;
+  font-weight: 700;
+  color: rgba(14, 36, 45, 0.92);
+}
+
+:global(body.dark) .headerTitle {
+  color: rgba(240, 253, 250, 0.96);
+}
+
+.headerSummary {
+  margin: 0;
+  font-size: clamp(1.02rem, 2.3vw, 1.25rem);
+  line-height: 1.7;
+  color: rgba(15, 52, 63, 0.78);
+}
+
+:global(body.dark) .headerSummary {
+  color: rgba(209, 250, 229, 0.84);
+}
+
+.headerDivider {
+  width: min(10rem, 70%);
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, rgba(94, 234, 212, 0), rgba(94, 234, 212, 0.8), rgba(94, 234, 212, 0));
+}
+
+.list {
+  position: relative;
+  z-index: 1;
+}
+
+.list::before {
+  content: "";
+  position: absolute;
+  inset: -12% -8% 45% -8%;
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.2), rgba(94, 234, 212, 0));
+  opacity: 0.68;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.list:hover::before {
+  opacity: 0.82;
+}
+
+@keyframes hero-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes hero-drift {
+  0% {
+    transform: translate3d(-6%, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(8%, -10%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-10%, 6%, 0) scale(1);
+  }
+}

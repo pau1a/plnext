@@ -4,6 +4,8 @@ import { NoteList } from "@/components/notes/NoteList";
 import { getNotes } from "@/lib/notes";
 import type { Metadata } from "next";
 
+import styles from "./notes.module.scss";
+
 const BASE_PATH = "/notes";
 
 export const metadata: Metadata = {
@@ -36,22 +38,31 @@ export default async function NotesIndexPage() {
   const notes = await getNotes({ includeDrafts: false });
 
   return (
-    <PageShell as="main" className="u-pad-block-3xl">
-      <section className="u-stack u-gap-2xl">
-        <MotionFade>
-          <header className="u-stack u-gap-sm u-max-w-md">
-            <h1 className="u-heading-display">Notes</h1>
-            <p className="u-text-lead">
-              Short, self-contained updates from the workbench&mdash;less formal
-              than essays, still public by default.
-            </p>
-          </header>
-        </MotionFade>
+    <PageShell as="main" outerClassName={styles.page} fullWidth>
+      <div className={styles.hero} aria-hidden="true">
+        <div className={styles.heroVeil} />
+        <div className={`${styles.heroOrb} ${styles.heroOrbNorth}`} />
+        <div className={`${styles.heroOrb} ${styles.heroOrbSouth}`} />
+      </div>
 
-        <MotionFade delay={0.05}>
-          <NoteList notes={notes} />
-        </MotionFade>
-      </section>
+      <div className={styles.inner}>
+        <section className={styles.section}>
+          <MotionFade>
+            <header className={styles.header}>
+              <span className={styles.headerEyebrow}>Signal snippets</span>
+              <h1 className={styles.headerTitle}>Notes</h1>
+              <p className={styles.headerSummary}>
+                Short, self-contained updates from the workbench&mdash;less formal than essays, still public by default.
+              </p>
+              <div className={styles.headerDivider} aria-hidden="true" />
+            </header>
+          </MotionFade>
+
+          <MotionFade delay={0.05}>
+            <NoteList notes={notes} className={styles.list} />
+          </MotionFade>
+        </section>
+      </div>
     </PageShell>
   );
 }

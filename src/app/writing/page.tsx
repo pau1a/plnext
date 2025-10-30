@@ -10,6 +10,8 @@ import Link from "next/link";
 import { type ReadonlyURLSearchParams } from "next/navigation";
 import type { Metadata } from "next";
 
+import styles from "./writing.module.scss";
+
 const BASE_PATH = "/writing";
 const PAGE_SIZE = 6;
 
@@ -199,86 +201,86 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const nextHref = hasNextPage ? `${BASE_PATH}?page=${page + 1}` : null;
 
   return (
-    <PageShell as="main" className="u-pad-block-3xl">
-      <section className="u-stack u-gap-2xl">
-        <MotionFade>
-          <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
-            <h1 className="u-heading-display">Insights &amp; Updates</h1>
-            <p className="u-text-lead u-center u-max-w-md">
-              Notes from the field on cybersecurity, AI, and practical
-              engineering.
-            </p>
-          </header>
-        </MotionFade>
+    <PageShell as="main" outerClassName={styles.page} fullWidth>
+      <div className={styles.hero} aria-hidden="true">
+        <div className={styles.heroVeil} />
+        <div className={`${styles.heroOrb} ${styles.heroOrbLeft}`} />
+        <div className={`${styles.heroOrb} ${styles.heroOrbRight}`} />
+      </div>
 
-        {hasPosts ? (
-          <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
-            {posts.map((post) => (
-              <PostCard
-                key={post.slug}
-                summary={post}
-                commentCount={commentCounts[post.slug] ?? 0}
-              />
-            ))}
-          </div>
-        ) : (
+      <div className={styles.inner}>
+        <section className={styles.section}>
           <MotionFade>
-            <p className="u-text-center u-text-muted">
-              New writing is on the way.
-            </p>
+            <header className={styles.header}>
+              <span className={styles.headerEyebrow}>Dispatch log</span>
+              <h1 className={styles.headerTitle}>Insights &amp; Updates</h1>
+              <p className={styles.headerSummary}>
+                Notes from the field on cybersecurity, AI, and practical engineering.
+              </p>
+              <div className={styles.headerDivider} aria-hidden="true" />
+            </header>
           </MotionFade>
-        )}
 
-        {hasPosts && totalPages > 1 ? (
-          <MotionFade delay={0.05}>
-            <nav
-              aria-label="Pagination"
-              className={paginationStyles.pagination}
-            >
-              <ul className={paginationStyles.list}>
-                <li className={paginationStyles.item}>
-                  {previousHref ? (
-                    <Link
-                      className={paginationStyles.button}
-                      href={previousHref}
-                      aria-label="View newer posts"
-                      prefetch={false}
-                    >
-                      Newer posts
-                    </Link>
-                  ) : (
-                    <span
-                      className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`}
-                      aria-disabled="true"
-                    >
-                      Newer posts
-                    </span>
-                  )}
-                </li>
-                <li className={paginationStyles.item}>
-                  {nextHref ? (
-                    <Link
-                      className={paginationStyles.button}
-                      href={nextHref}
-                      aria-label="View older posts"
-                      prefetch={false}
-                    >
-                      Older posts
-                    </Link>
-                  ) : (
-                    <span
-                      className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`}
-                      aria-disabled="true"
-                    >
-                      Older posts
-                    </span>
-                  )}
-                </li>
-              </ul>
-            </nav>
-          </MotionFade>
-        ) : null}
-      </section>
+          {hasPosts ? (
+            <div className={`${styles.grid} ${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
+              {posts.map((post) => (
+                <PostCard key={post.slug} summary={post} commentCount={commentCounts[post.slug] ?? 0} />
+              ))}
+            </div>
+          ) : (
+            <MotionFade>
+              <p className={styles.empty}>New writing is on the way.</p>
+            </MotionFade>
+          )}
+
+          {hasPosts && totalPages > 1 ? (
+            <MotionFade delay={0.05}>
+              <nav aria-label="Pagination" className={styles.pagination}>
+                <ul className={paginationStyles.list}>
+                  <li className={paginationStyles.item}>
+                    {previousHref ? (
+                      <Link
+                        className={paginationStyles.button}
+                        href={previousHref}
+                        aria-label="View newer posts"
+                        prefetch={false}
+                      >
+                        Newer posts
+                      </Link>
+                    ) : (
+                      <span
+                        className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`}
+                        aria-disabled="true"
+                      >
+                        Newer posts
+                      </span>
+                    )}
+                  </li>
+                  <li className={paginationStyles.item}>
+                    {nextHref ? (
+                      <Link
+                        className={paginationStyles.button}
+                        href={nextHref}
+                        aria-label="View older posts"
+                        prefetch={false}
+                      >
+                        Older posts
+                      </Link>
+                    ) : (
+                      <span
+                        className={`${paginationStyles.button} ${paginationStyles.buttonDisabled}`}
+                        aria-disabled="true"
+                      >
+                        Older posts
+                      </span>
+                    )}
+                  </li>
+                </ul>
+              </nav>
+            </MotionFade>
+          ) : null}
+        </section>
+      </div>
     </PageShell>
   );
 }

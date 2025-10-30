@@ -16,7 +16,7 @@ export default async function EssaysIndexPage() {
   const essays = await getEssays({ includeDrafts: false });
 
   return (
-    <PageShell as="main" className={styles.page}>
+    <PageShell as="main" outerClassName={styles.page} fullWidth>
       <div className={styles.hero} aria-hidden="true">
         <div className={styles.heroVeil} />
         <div className={`${styles.heroParticle} ${styles.heroParticleOne}`} />
@@ -24,50 +24,52 @@ export default async function EssaysIndexPage() {
         <div className={`${styles.heroParticle} ${styles.heroParticleThree}`} />
       </div>
 
-      <MotionFade>
-        <header className={styles.header}>
-          <div className={styles.headerMeta}>
-            <span className={styles.headerEyebrow}>Knowledge stream</span>
-            <span className={styles.headerCount}>{essays.length} essays</span>
-          </div>
-          <h1 className={styles.headerTitle}>Field notes from engineered calm</h1>
-          <p className={styles.headerSummary}>
-            Dispatches on resilience, safety, and the guardrails that keep ambitious systems from flying apart.
-          </p>
-          <div className={styles.headerDivider} aria-hidden="true" />
-        </header>
-      </MotionFade>
+      <div className={styles.inner}>
+        <MotionFade>
+          <header className={styles.header}>
+            <div className={styles.headerMeta}>
+              <span className={styles.headerEyebrow}>Knowledge stream</span>
+              <span className={styles.headerCount}>{essays.length} essays</span>
+            </div>
+            <h1 className={styles.headerTitle}>Field notes from engineered calm</h1>
+            <p className={styles.headerSummary}>
+              Dispatches on resilience, safety, and the guardrails that keep ambitious systems from flying apart.
+            </p>
+            <div className={styles.headerDivider} aria-hidden="true" />
+          </header>
+        </MotionFade>
 
-      <section className={styles.grid} aria-label="Latest essays">
-        {essays.map((essay, index) => (
-          <MotionFade key={essay.slug} delay={index * 0.05}>
-            <article className={styles.card} data-featured={essay.featured ? "true" : undefined}>
-              <header className={styles.cardHeader}>
-                <div className={styles.cardMeta}>
-                  <span className={styles.cardDate}>{formatDate(essay.date)}</span>
-                  <span className={styles.cardSlug}>/{essay.slug}</span>
-                  {essay.featured ? <span className={styles.cardBadge}>Featured</span> : null}
+        <section className={styles.grid} aria-label="Latest essays">
+          {essays.map((essay, index) => (
+            <MotionFade key={essay.slug} delay={index * 0.05}>
+              <article className={styles.card} data-featured={essay.featured ? "true" : undefined}>
+                <header className={styles.cardHeader}>
+                  <div className={styles.cardMeta}>
+                    <span className={styles.cardDate}>{formatDate(essay.date)}</span>
+                    <span className={styles.cardSlug}>/{essay.slug}</span>
+                    {essay.featured ? <span className={styles.cardBadge}>Featured</span> : null}
+                  </div>
+                  <h2 className={styles.cardTitle}>
+                    <Link href={`/essays/${essay.slug}`}>{essay.title}</Link>
+                  </h2>
+                </header>
+                <p className={styles.cardSummary}>
+                  {essay.summary ?? "Add a summary in the front matter to give readers a preview."}
+                </p>
+                <div className={styles.cardFooter}>
+                  <Link className={styles.cardCta} href={`/essays/${essay.slug}`}>
+                    Read essay
+                  </Link>
                 </div>
-                <h2 className={styles.cardTitle}>
-                  <Link href={`/essays/${essay.slug}`}>{essay.title}</Link>
-                </h2>
-              </header>
-              <p className={styles.cardSummary}>
-                {essay.summary ?? "Add a summary in the front matter to give readers a preview."}
-              </p>
-              <div className={styles.cardFooter}>
-                <Link className={styles.cardCta} href={`/essays/${essay.slug}`}>
-                  Read essay
-                </Link>
-              </div>
-              <div className={styles.cardGlow} aria-hidden="true" />
-            </article>
-          </MotionFade>
-        ))}
-        {essays.length === 0 ? (
-          <p className={styles.empty}>No essays published yet. Add `.mdx` files under `content/writing`.</p>
-        ) : null}
-      </section>
+                <div className={styles.cardGlow} aria-hidden="true" />
+              </article>
+            </MotionFade>
+          ))}
+          {essays.length === 0 ? (
+            <p className={styles.empty}>No essays published yet. Add `.mdx` files under `content/writing`.</p>
+          ) : null}
+        </section>
+      </div>
     </PageShell>
   );
 }
