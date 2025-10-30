@@ -90,7 +90,7 @@ export default function SearchResultItem({ result }: SearchResultProps) {
         </Link>
       </h2>
 
-      <p style={{ color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: "var(--space-sm)" }}>
+      <p style={{ color: "var(--text-muted)", lineHeight: 1.6, marginBottom: "var(--space-sm)" }}>
         {result.excerpt}
       </p>
 
