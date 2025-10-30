@@ -141,9 +141,9 @@ export function StreamEntryForm({ entry }: StreamEntryFormProps) {
               <button
                 key={tag.slug}
                 type="button"
+                className="u-text-xs"
                 onClick={() => addTag(tag.slug)}
                 style={{
-                  fontSize: "0.75rem",
                   padding: "0.25rem 0.5rem",
                   border: "1px solid var(--border-default)",
                   borderRadius: "3px",
