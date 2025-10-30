@@ -39,9 +39,9 @@ export function CategoryList({ categories }: CategoryListProps) {
         <div
           style={{
             padding: "0.75rem",
-            border: "1px solid var(--color-border)",
+            border: "1px solid var(--admin-border-subtle)",
             borderRadius: "var(--radius-md)",
-            backgroundColor: "var(--color-surface)",
+            backgroundColor: "var(--surface-elevated)",
           }}
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr auto", gap: "0.5rem", alignItems: "end" }}>
@@ -89,7 +89,7 @@ export function CategoryList({ categories }: CategoryListProps) {
 
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
         <thead>
-          <tr style={{ borderBottom: "1px solid var(--color-border)", textAlign: "left" }}>
+          <tr style={{ borderBottom: "1px solid var(--admin-border-subtle)", textAlign: "left" }}>
             <th style={{ padding: "0.5rem", fontWeight: 600 }}>Slug</th>
             <th style={{ padding: "0.5rem", fontWeight: 600 }}>Name</th>
             <th style={{ padding: "0.5rem", fontWeight: 600 }}>Description</th>
@@ -98,18 +98,18 @@ export function CategoryList({ categories }: CategoryListProps) {
         </thead>
         <tbody>
           {categories.map((category) => (
-            <tr key={category.slug} style={{ borderBottom: "1px solid var(--color-border)" }}>
+            <tr key={category.slug} style={{ borderBottom: "1px solid var(--admin-border-subtle)" }}>
               <td style={{ padding: "0.5rem" }}>
-                <code className="u-text-xs" style={{ color: "var(--color-text-muted)" }}>{category.slug}</code>
+                <code className="u-text-xs" style={{ color: "var(--text-muted)" }}>{category.slug}</code>
               </td>
               <td style={{ padding: "0.5rem", fontWeight: 500 }}>{category.name}</td>
-              <td style={{ padding: "0.5rem", color: "var(--color-text-muted)" }}>
+              <td style={{ padding: "0.5rem", color: "var(--text-muted)" }}>
                 {category.description || "—"}
               </td>
               <td style={{ padding: "0.5rem", textAlign: "right" }}>
                 <div className="u-flex u-gap-xs u-justify-end">
                   <button className="button button--xs button--ghost">Edit</button>
-                  <button className="button button--xs button--ghost" style={{ color: "var(--color-red-500)" }}>
+                  <button className="button button--xs button--ghost" style={{ color: "var(--admin-status-danger)" }}>
                     Delete
                   </button>
                 </div>

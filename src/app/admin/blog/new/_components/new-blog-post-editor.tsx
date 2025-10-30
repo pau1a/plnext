@@ -148,12 +148,12 @@ export function NewBlogPostEditor() {
                     key={tag.slug}
                     type="button"
                     onClick={() => addTag(tag.slug)}
-                    className="button button--xs"
-                    style={{
-                      backgroundColor: isSelected ? "var(--color-teal-400)" : "var(--surface-secondary)",
-                      color: isSelected ? "white" : "inherit",
-                    }}
-                  >
+                className="button button--xs"
+                style={{
+                  backgroundColor: isSelected ? "var(--admin-accent)" : "var(--surface-secondary)",
+                  color: isSelected ? "var(--admin-status-contrast)" : "inherit",
+                }}
+              >
                     {tag.name}
                   </button>
                 );

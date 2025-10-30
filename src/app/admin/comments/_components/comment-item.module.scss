@@ -5,7 +5,7 @@
   gap: 0.375rem;
   align-items: center;
   padding: 0.375rem 0.5rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--admin-border-subtle);
   position: relative;
   font-size: 0.8125rem;
   cursor: pointer;
@@ -13,7 +13,7 @@
 }
 
 .item:hover {
-  background-color: var(--color-graphite-100);
+  background-color: var(--admin-row-hover);
 }
 
 .statusBar {
@@ -25,8 +25,8 @@
 }
 
 .focused {
-  background-color: var(--color-graphite-100);
-  border-left: 2px solid var(--color-teal-500);
+  background-color: var(--admin-row-hover);
+  border-left: 2px solid var(--admin-accent);
 }
 
 .checkbox {
@@ -52,7 +52,7 @@
 
 .author {
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .email {
@@ -81,28 +81,28 @@
 }
 
 .status.pending {
-  background-color: var(--color-amber-500);
-  color: var(--color-graphite-900);
+  background-color: var(--admin-status-warning);
+  color: var(--admin-status-strong-contrast);
 }
 
 .status.approved {
-  background-color: var(--color-teal-500);
-  color: white;
+  background-color: var(--admin-status-success);
+  color: var(--admin-status-contrast);
 }
 
 .status.rejected {
-  background-color: var(--color-crimson-500);
-  color: white;
+  background-color: var(--admin-status-danger);
+  color: var(--admin-status-contrast);
 }
 
 .status.spam {
-  background-color: var(--color-crimson-700);
-  color: white;
+  background-color: var(--admin-status-danger-intense);
+  color: var(--admin-status-contrast);
 }
 
 .body {
   line-height: 1.4;
-  color: var(--color-text);
+  color: var(--text-primary);
   font-size: 0.8125rem;
 }
 
@@ -117,16 +117,16 @@
 .expandBtn {
   font-size: 0.6875rem;
   padding: 0.125rem 0.375rem;
-  color: white;
-  background-color: var(--color-crimson-500);
-  border: 1px solid var(--color-crimson-600);
+  color: var(--admin-status-contrast);
+  background-color: var(--admin-status-danger);
+  border: 1px solid var(--admin-status-danger-strong);
   border-radius: 3px;
   cursor: pointer;
   white-space: nowrap;
 }
 
 .expandBtn:hover {
-  background-color: var(--color-crimson-600);
+  background-color: var(--admin-status-danger-strong);
 }
 
 .actions {

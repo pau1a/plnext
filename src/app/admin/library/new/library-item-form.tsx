@@ -29,8 +29,8 @@ export function LibraryItemForm() {
       "aria-describedby": message ? `${field}-error` : undefined,
       style: message
         ? {
-            borderColor: "color-mix(in srgb, var(--color-crimson-400) 75%, transparent)",
-            boxShadow: "0 0 0 1px color-mix(in srgb, var(--color-crimson-400) 55%, transparent)",
+            borderColor: "color-mix(in srgb, var(--admin-status-danger) 75%, transparent)",
+            boxShadow: "0 0 0 1px color-mix(in srgb, var(--admin-status-danger) 55%, transparent)",
           }
         : undefined,
     };

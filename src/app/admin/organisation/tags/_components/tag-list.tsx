@@ -40,9 +40,9 @@ export function TagList({ tags }: TagListProps) {
         <div
           style={{
             padding: "0.75rem",
-            border: "1px solid var(--color-border)",
+            border: "1px solid var(--admin-border-subtle)",
             borderRadius: "var(--radius-md)",
-            backgroundColor: "var(--color-surface)",
+            backgroundColor: "var(--surface-elevated)",
           }}
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr 1fr auto", gap: "0.5rem", alignItems: "end" }}>
@@ -98,7 +98,7 @@ export function TagList({ tags }: TagListProps) {
 
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
         <thead>
-          <tr style={{ borderBottom: "1px solid var(--color-border)", textAlign: "left" }}>
+          <tr style={{ borderBottom: "1px solid var(--admin-border-subtle)", textAlign: "left" }}>
             <th style={{ padding: "0.5rem", fontWeight: 600 }}>Slug</th>
             <th style={{ padding: "0.5rem", fontWeight: 600 }}>Name</th>
             <th style={{ padding: "0.5rem", fontWeight: 600 }}>Description</th>
@@ -108,21 +108,21 @@ export function TagList({ tags }: TagListProps) {
         </thead>
         <tbody>
           {tags.map((tag) => (
-            <tr key={tag.slug} style={{ borderBottom: "1px solid var(--color-border)" }}>
+            <tr key={tag.slug} style={{ borderBottom: "1px solid var(--admin-border-subtle)" }}>
               <td style={{ padding: "0.5rem" }}>
-                <code className="u-text-xs" style={{ color: "var(--color-text-muted)" }}>{tag.slug}</code>
+                <code className="u-text-xs" style={{ color: "var(--text-muted)" }}>{tag.slug}</code>
               </td>
               <td style={{ padding: "0.5rem", fontWeight: 500 }}>{tag.name}</td>
-              <td style={{ padding: "0.5rem", color: "var(--color-text-muted)" }}>
+              <td style={{ padding: "0.5rem", color: "var(--text-muted)" }}>
                 {tag.description || "—"}
               </td>
-              <td style={{ padding: "0.5rem", color: "var(--color-text-muted)", fontSize: "0.75rem" }}>
+              <td style={{ padding: "0.5rem", color: "var(--text-muted)", fontSize: "0.75rem" }}>
                 {tag.aliases && tag.aliases.length > 0 ? tag.aliases.join(", ") : "—"}
               </td>
               <td style={{ padding: "0.5rem", textAlign: "right" }}>
                 <div className="u-flex u-gap-xs u-justify-end">
                   <button className="button button--xs button--ghost">Edit</button>
-                  <button className="button button--xs button--ghost" style={{ color: "var(--color-red-500)" }}>
+                  <button className="button button--xs button--ghost" style={{ color: "var(--admin-status-danger)" }}>
                     Delete
                   </button>
                 </div>

@@ -249,8 +249,8 @@ export function BlogEditor({ slug, title, initialBody, initialFrontmatter, front
                             onClick={() => addTag(tag.slug)}
                             className="button button--xs"
                             style={{
-                              backgroundColor: isSelected ? "var(--color-teal-400)" : "var(--surface-secondary)",
-                              color: isSelected ? "white" : "inherit",
+                              backgroundColor: isSelected ? "var(--admin-accent)" : "var(--surface-secondary)",
+                              color: isSelected ? "var(--admin-status-contrast)" : "inherit",
                             }}
                           >
                             {tag.name}

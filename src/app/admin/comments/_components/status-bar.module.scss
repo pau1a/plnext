@@ -7,17 +7,17 @@
 }
 
 .pending {
-  background-color: var(--color-amber-600);
+  background-color: var(--admin-status-warning-strong);
 }
 
 .approved {
-  background-color: var(--color-teal-600);
+  background-color: var(--admin-status-success-strong);
 }
 
 .rejected {
-  background-color: var(--color-crimson-600);
+  background-color: var(--admin-status-danger-strong);
 }
 
 .spam {
-  background-color: var(--color-crimson-700);
+  background-color: var(--admin-status-danger-intense);
 }

@@ -49,13 +49,18 @@ export function StreamEditor({ entries }: StreamEditorProps) {
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {entries.map((entry, index) => {
           const timestampLocal = formatLocalTimestamp(entry.timestamp);
-          const visibilityColor = entry.visibility === "PUBLIC" ? "var(--color-teal-400)" : entry.visibility === "LIMITED" ? "var(--color-amber-400)" : "var(--color-slate-400)";
+          const visibilityColor =
+            entry.visibility === "PUBLIC"
+              ? "var(--admin-accent)"
+              : entry.visibility === "LIMITED"
+                ? "var(--admin-status-warning)"
+                : "var(--text-muted)";
 
           return (
             <div
               key={entry.id}
               style={{
-                border: "2px solid crimson",
+                border: "2px solid var(--admin-border-subtle)",
                 borderLeftWidth: "4px",
                 borderLeftColor: visibilityColor,
                 borderRadius: "var(--radius-md)",
@@ -78,7 +83,7 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                   style={{
                     fontSize: "0.75rem",
                     padding: "0.15rem 0.4rem",
-                    border: "1px solid var(--border-default)",
+                    border: "1px solid var(--admin-border-subtle)",
                     borderRadius: "3px",
                     flex: "0 0 auto"
                   }}
@@ -91,7 +96,7 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                   style={{
                     fontSize: "0.75rem",
                     padding: "0.15rem 0.4rem",
-                    border: "1px solid var(--border-default)",
+                    border: "1px solid var(--admin-border-subtle)",
                     borderRadius: "3px",
                     flex: "0 0 auto"
                   }}
@@ -117,7 +122,7 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                   style={{
                     fontSize: "0.7rem",
                     padding: "0.15rem 0.4rem",
-                    border: "1px solid var(--border-default)",
+                    border: "1px solid var(--admin-border-subtle)",
                     borderRadius: "3px",
                     flex: "1 1 150px",
                     minWidth: "120px"
@@ -134,7 +139,7 @@ export function StreamEditor({ entries }: StreamEditorProps) {
                   width: "100%",
                   fontSize: "0.85rem",
                   padding: "0.4rem",
-                  border: "1px solid var(--border-default)",
+                  border: "1px solid var(--admin-border-subtle)",
                   borderRadius: "3px",
                   fontFamily: "inherit",
                   lineHeight: "1.3",

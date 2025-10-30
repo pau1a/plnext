@@ -30,16 +30,16 @@ export function CommentItem({ comment, isSelected, isFocused, onSelect, onShowHi
   let statusBarColor = "";
   switch (comment.status) {
     case "pending":
-      statusBarColor = "var(--color-amber-600)";
+      statusBarColor = "var(--admin-status-warning-strong)";
       break;
     case "approved":
-      statusBarColor = "var(--color-teal-600)";
+      statusBarColor = "var(--admin-status-success-strong)";
       break;
     case "rejected":
-      statusBarColor = "var(--color-crimson-600)";
+      statusBarColor = "var(--admin-status-danger-strong)";
       break;
     case "spam":
-      statusBarColor = "var(--color-crimson-700)";
+      statusBarColor = "var(--admin-status-danger-intense)";
       break;
   }
 

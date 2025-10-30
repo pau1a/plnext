@@ -41,7 +41,7 @@ export default async function AdminBlogPage() {
                     <span aria-hidden="true">•</span>
                     <span className={styles.slug}>/{post.slug}</span>
                     {post.draft ? (
-                      <span className={styles.commentBadge} style={{ backgroundColor: "var(--color-amber-500)" }}>Draft</span>
+                      <span className={styles.commentBadge} style={{ backgroundColor: "var(--admin-status-warning)" }}>Draft</span>
                     ) : null}
                     {post.comments?.length ? (
                       <span className={styles.commentBadge}>{post.comments.length} curated comments</span>

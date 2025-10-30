@@ -3,7 +3,6 @@
 import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import type { StreamSourceRecord } from "@/lib/stream";
 import { saveStreamEntryAction, deleteStreamEntryAction } from "../actions";
 
@@ -143,15 +142,15 @@ export function StreamEntryForm({ entry }: StreamEntryFormProps) {
                 type="button"
                 className="u-text-xs"
                 onClick={() => addTag(tag.slug)}
-                style={{
-                  padding: "0.25rem 0.5rem",
-                  border: "1px solid var(--border-default)",
-                  borderRadius: "3px",
-                  background: tagsValue.includes(tag.slug) ? "var(--color-teal-400)" : "var(--surface-secondary)",
-                  color: tagsValue.includes(tag.slug) ? "white" : "inherit",
-                  cursor: "pointer",
-                }}
-              >
+              style={{
+                padding: "0.25rem 0.5rem",
+                border: "1px solid var(--admin-border-subtle)",
+                borderRadius: "3px",
+                background: tagsValue.includes(tag.slug) ? "var(--admin-accent)" : "var(--surface-secondary)",
+                color: tagsValue.includes(tag.slug) ? "var(--admin-status-contrast)" : "inherit",
+                cursor: "pointer",
+              }}
+            >
                 + {tag.name}
               </button>
             ))}
@@ -185,7 +184,7 @@ export function StreamEntryForm({ entry }: StreamEntryFormProps) {
       </form>
 
       {!isNew && (
-        <form action={deleteAction} className="u-pad-md" style={{ borderTop: "1px solid var(--border-muted)" }}>
+        <form action={deleteAction} className="u-pad-md" style={{ borderTop: "1px solid var(--admin-border-subtle)" }}>
           <input type="hidden" name="id" value={entry.id} />
           <div className="u-stack u-gap-sm">
             <h3 className="u-text-lg u-font-semibold u-text-error">Danger Zone</h3>
