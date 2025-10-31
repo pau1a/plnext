@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <PageShell as="main" fullWidth outerClassName={styles.pageShell}>
+    <PageShell as="main" fullWidth surface="transparent">
       <section className={styles.contactRoot}>
         <ContactColorCalibrator
           imgSrc="https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png"
