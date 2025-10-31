@@ -31,7 +31,7 @@
   box-shadow:
     0 52px 120px rgba(15, 23, 42, 0.3),
     inset 0 0 0 1px rgba(148, 163, 184, 0.12);
-  color: white;
+  color: var(--text-on-inverse);
   overflow: hidden;
 }
 
@@ -113,7 +113,7 @@
   margin: 0;
   font-size: clamp(2rem, 2.6vw, 2.7rem);
   font-weight: 600;
-  color: white;
+  color: var(--text-on-inverse);
 }
 
 .statLabel {
