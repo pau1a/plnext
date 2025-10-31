@@ -104,7 +104,7 @@
   display: grid;
   place-items: center;
   box-sizing: border-box;
-  max-width: var(--max-content-md);
+  max-width: min(var(--max-content-lg), 100%);
   margin-inline: auto;
   flex: 1;
   padding-block: clamp(6rem, 10vh, 8rem);
@@ -134,7 +134,7 @@
 .card {
   position: relative;
   z-index: 3;
-  max-width: var(--max-content-md);
+  max-width: min(var(--max-content-lg), 100%);
   width: 100%;
   backdrop-filter: blur(8px);
   padding: clamp(1.35rem, 2.5vw, 2.1rem);
