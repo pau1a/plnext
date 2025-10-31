@@ -21,5 +21,9 @@ This folder houses the four foundational design references for the Paula Livings
 | Body Font | "Plus Jakarta Sans" | 16px base, 1.6 line-height |
 | Mono Font | "JetBrains Mono" | Code, inline technical snippets |
 | Motion Ceiling | 180ms ease-out | Maximum for subtle transitions |
+| Radius Small | `--radius-sm = 0.5rem` | Pills, compact tags |
+| Radius Medium | `--radius-md = 0.75rem` | Buttons, card corners |
+| Radius Large | `--radius-lg = 1rem` | Feature cards, modals |
+| Radius 3XL | `--radius-3xl = 3rem` | Hero surfaces and immersive shells |
 
 Refer to the individual documents for expanded context, component specs, and accessibility rationale.
