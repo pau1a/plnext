@@ -13,11 +13,6 @@
   --moor-fade-color: color-mix(in srgb, var(--color-graphite-900) 94%, black 6%);
 }
 
-.pageShellOverride {
-  background: transparent;
-  padding-bottom: 0;
-}
-
 .contactRoot {
   position: relative;
   min-height: 100vh;
