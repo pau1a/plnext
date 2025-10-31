@@ -48,8 +48,16 @@
   inset: -12% -18%;
   z-index: 0;
   background:
-    radial-gradient(circle at 32% 18%, rgba(34, 164, 187, 0.55), transparent 70%),
-    radial-gradient(circle at 78% 24%, rgba(230, 99, 100, 0.4), transparent 70%),
+    radial-gradient(
+      circle at 32% 18%,
+      color-mix(in srgb, var(--color-teal-400) 55%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 78% 24%,
+      color-mix(in srgb, var(--color-crimson-400) 40%, transparent) 0%,
+      transparent 70%
+    ),
     linear-gradient(180deg, rgba(4, 14, 24, 0.95), rgba(5, 18, 28, 0.88));
 }
 
@@ -66,19 +74,31 @@
 .heroGradientPrimary {
   top: 20%;
   left: 10%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.9), transparent 58%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-teal-300) 90%, transparent) 0%,
+    transparent 58%
+  );
 }
 
 .heroGradientSecondary {
   top: 48%;
   right: 8%;
-  background: radial-gradient(circle, rgba(103, 232, 249, 0.82), transparent 60%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-teal-200) 82%, transparent) 0%,
+    transparent 60%
+  );
 }
 
 .heroGradientTertiary {
   bottom: 12%;
   left: 38%;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.65), transparent 64%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-amber-400) 65%, transparent) 0%,
+    transparent 64%
+  );
 }
 
 :global(body.dark) .heroWrapper {
@@ -90,8 +110,16 @@
 
 :global(body.dark) .heroBackdrop {
   background:
-    radial-gradient(circle at 30% 16%, rgba(45, 212, 191, 0.5), transparent 68%),
-    radial-gradient(circle at 72% 24%, rgba(248, 113, 113, 0.35), transparent 72%),
+    radial-gradient(
+      circle at 30% 16%,
+      color-mix(in srgb, var(--color-teal-400) 50%, transparent) 0%,
+      transparent 68%
+    ),
+    radial-gradient(
+      circle at 72% 24%,
+      color-mix(in srgb, var(--color-crimson-400) 35%, transparent) 0%,
+      transparent 72%
+    ),
     linear-gradient(180deg, rgba(2, 12, 20, 0.96), rgba(3, 15, 24, 0.88));
 }
 
@@ -154,7 +182,11 @@
   content: "";
   position: absolute;
   inset: -40% -20% 55% -20%;
-  background: radial-gradient(circle, rgba(94, 234, 212, 0.28), rgba(94, 234, 212, 0));
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-teal-300) 28%, transparent) 0%,
+    transparent 100%
+  );
   opacity: 0.65;
   mix-blend-mode: screen;
   pointer-events: none;

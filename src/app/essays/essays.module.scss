@@ -330,14 +330,22 @@
 .cardGlow {
   position: absolute;
   inset: -40% -30% 60% 30%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.28), rgba(56, 189, 248, 0));
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-teal-400) 28%, transparent) 0%,
+    transparent 100%
+  );
   opacity: 0.75;
   mix-blend-mode: screen;
   pointer-events: none;
 }
 
 .card[data-featured="true"] .cardGlow {
-  background: radial-gradient(circle, rgba(250, 204, 21, 0.35), rgba(250, 204, 21, 0));
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-amber-400) 35%, transparent) 0%,
+    transparent 100%
+  );
 }
 
 .empty {

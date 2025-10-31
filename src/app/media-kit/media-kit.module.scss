@@ -120,7 +120,11 @@
   content: "";
   position: absolute;
   inset: 12% -25% 40% 55%;
-  background: radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.2), transparent 70%);
+  background: radial-gradient(
+    circle at 20% 30%,
+    color-mix(in srgb, var(--color-crimson-500) 20%, transparent) 0%,
+    transparent 70%
+  );
   opacity: 0;
   pointer-events: none;
   transition: opacity 160ms ease;
