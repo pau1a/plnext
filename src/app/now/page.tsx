@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
+import PageShell from "@/components/layout/PageShell";
 import { formatDate } from "@/lib/date";
 import { getBlogPostSummaries } from "@/lib/mdx";
 import { getNow } from "@/lib/now";
@@ -77,60 +78,56 @@ export default async function NowPage() {
   }>;
 
   return (
-    <article className={styles.page}>
-      <div className={styles.inner}>
-        <section className={styles.hero}>
-          <div className={styles.heroHeading}>
-            <p className={styles.heroEyebrow}>Status report</p>
-            <h1 className={`u-heading-xl ${styles.heroTitle}`}>Now</h1>
-            {meta.updated ? (
-              <span className={styles.heroMeta}>Updated {formatDate(String(meta.updated))}</span>
-            ) : null}
-            <p className={styles.heroSummary}>{summaryText}</p>
-            {pulses.length > 0 ? (
-              <div className={styles.pulseRow}>
-                {pulses.map((pulse) => (
-                  <span key={`${pulse.label}-${pulse.value}`} className={styles.pulse} data-variant={pulse.variant}>
-                    <span className={styles.pulseLabel}>{pulse.label}</span>
-                    <span className={styles.pulseValue}>{pulse.value}</span>
-                  </span>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        </section>
-
-        <section className={styles.layout}>
-          <div className={`${styles.nowContent} prose`}>{nowContent}</div>
-
-          <aside className={styles.signals} aria-label="Recent signals">
-            <div className={styles.signalsHeader}>
-              <span className={styles.signalsLabel}>Signal boosts</span>
-              <p className={styles.signalsSummary}>
-                Fresh drops from the writing desk and field notes worth following while the Now page evolves.
-              </p>
+    <PageShell as="main" outerClassName={styles.page} className={styles.inner}>
+      <section className={styles.hero}>
+        <div className={styles.heroHeading}>
+          <p className={styles.heroEyebrow}>Status report</p>
+          <h1 className={`u-heading-xl ${styles.heroTitle}`}>Now</h1>
+          {meta.updated ? <span className={styles.heroMeta}>Updated {formatDate(String(meta.updated))}</span> : null}
+          <p className={styles.heroSummary}>{summaryText}</p>
+          {pulses.length > 0 ? (
+            <div className={styles.pulseRow}>
+              {pulses.map((pulse) => (
+                <span key={`${pulse.label}-${pulse.value}`} className={styles.pulse} data-variant={pulse.variant}>
+                  <span className={styles.pulseLabel}>{pulse.label}</span>
+                  <span className={styles.pulseValue}>{pulse.value}</span>
+                </span>
+              ))}
             </div>
+          ) : null}
+        </div>
+      </section>
 
-            {signals.length === 0 ? (
-              <p className={styles.signalsSummary}>New essays and blog posts will surface here as they publish.</p>
-            ) : (
-              signals.map((signal) => (
-                <article key={signal.href} className={styles.signalCard}>
-                  <span className={styles.signalEyebrow}>{signal.type === "essay" ? "Essay" : "Blog"}</span>
-                  <h2 className={styles.signalTitle}>
-                    <Link href={signal.href}>{signal.title}</Link>
-                  </h2>
-                  <span className={styles.signalMeta}>{signal.date}</span>
-                  <p className={styles.signalSummary}>{signal.summary}</p>
-                  <Link href={signal.href} className={styles.signalAction}>
-                    Read the {signal.type}
-                  </Link>
-                </article>
-              ))
-            )}
-          </aside>
-        </section>
-      </div>
-    </article>
+      <section className={styles.layout}>
+        <div className={`${styles.nowContent} prose`}>{nowContent}</div>
+
+        <aside className={styles.signals} aria-label="Recent signals">
+          <div className={styles.signalsHeader}>
+            <span className={styles.signalsLabel}>Signal boosts</span>
+            <p className={styles.signalsSummary}>
+              Fresh drops from the writing desk and field notes worth following while the Now page evolves.
+            </p>
+          </div>
+
+          {signals.length === 0 ? (
+            <p className={styles.signalsSummary}>New essays and blog posts will surface here as they publish.</p>
+          ) : (
+            signals.map((signal) => (
+              <article key={signal.href} className={styles.signalCard}>
+                <span className={styles.signalEyebrow}>{signal.type === "essay" ? "Essay" : "Blog"}</span>
+                <h2 className={styles.signalTitle}>
+                  <Link href={signal.href}>{signal.title}</Link>
+                </h2>
+                <span className={styles.signalMeta}>{signal.date}</span>
+                <p className={styles.signalSummary}>{signal.summary}</p>
+                <Link href={signal.href} className={styles.signalAction}>
+                  Read the {signal.type}
+                </Link>
+              </article>
+            ))
+          )}
+        </aside>
+      </section>
+    </PageShell>
   );
 }
