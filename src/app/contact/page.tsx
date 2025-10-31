@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <PageShell as="main" fullWidth>
+    <PageShell as="main" fullWidth outerClassName={styles.pageShell}>
       <section className={styles.contactRoot}>
         <ContactColorCalibrator
           imgSrc="https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png"
@@ -72,6 +72,7 @@ export default function ContactPage() {
           </MotionFade>
         </div>
       </section>
+      <div aria-hidden="true" className={styles.belowBlend} />
     </PageShell>
   );
 }
