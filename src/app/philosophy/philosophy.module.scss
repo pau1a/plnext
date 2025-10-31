@@ -1,6 +1,13 @@
 .page {
-  background: color-mix(in srgb, var(--surface-base) 94%, white 6%);
+  background: color-mix(in srgb, var(--surface-base) 94%, var(--surface-elevated) 6%);
   color: var(--text-primary);
+  --philosophy-accent-teal: color-mix(in srgb, var(--color-teal-400) 32%, var(--surface-elevated) 68%);
+  --philosophy-accent-crimson: color-mix(in srgb, var(--color-crimson-400) 30%, var(--surface-elevated) 70%);
+}
+
+:global(body.dark) .page {
+  --philosophy-accent-teal: color-mix(in srgb, var(--color-teal-300) 38%, var(--surface-inverse) 62%);
+  --philosophy-accent-crimson: color-mix(in srgb, var(--color-crimson-300) 34%, var(--surface-inverse) 66%);
 }
 
 .inner {
@@ -19,15 +26,30 @@
   gap: clamp(2rem, 4vw, 3rem);
   border-radius: calc(var(--radius-3xl, 3rem));
   padding: clamp(3rem, 5.4vw, 4.4rem);
+  --hero-gradient-start: color-mix(in srgb, var(--surface-elevated) 94%, var(--philosophy-accent-teal) 6%);
+  --hero-gradient-end: color-mix(in srgb, var(--surface-elevated) 90%, var(--philosophy-accent-crimson) 10%);
+  --hero-accent-teal: color-mix(in srgb, var(--philosophy-accent-teal) 72%, var(--surface-elevated) 28%);
+  --hero-accent-crimson: color-mix(in srgb, var(--philosophy-accent-crimson) 70%, var(--surface-elevated) 30%);
   background:
-    radial-gradient(circle at -10% -10%, rgba(34, 197, 94, 0.22), transparent 62%),
-    radial-gradient(circle at 110% 0%, rgba(239, 68, 68, 0.26), transparent 70%),
-    linear-gradient(150deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.88));
-  border: 1px solid rgba(148, 163, 184, 0.24);
+    radial-gradient(circle at -10% -10%, color-mix(in srgb, var(--hero-accent-teal) 30%, transparent) 0%, transparent 58%),
+    radial-gradient(circle at 110% 0%, color-mix(in srgb, var(--hero-accent-crimson) 34%, transparent) 0%, transparent 66%),
+    linear-gradient(150deg, var(--hero-gradient-start), var(--hero-gradient-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 80%, transparent);
   box-shadow:
-    0 44px 110px rgba(13, 148, 136, 0.24),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    0 44px 110px color-mix(in srgb, var(--surface-border) 48%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 34%, transparent);
   overflow: hidden;
+}
+
+:global(body.dark) .hero {
+  --hero-gradient-start: color-mix(in srgb, var(--surface-inverse) 70%, var(--surface-base) 30%);
+  --hero-gradient-end: color-mix(in srgb, var(--surface-base) 65%, var(--surface-inverse) 35%);
+  --hero-accent-teal: color-mix(in srgb, var(--philosophy-accent-teal) 88%, var(--surface-inverse) 12%);
+  --hero-accent-crimson: color-mix(in srgb, var(--philosophy-accent-crimson) 85%, var(--surface-inverse) 15%);
+  border-color: color-mix(in srgb, var(--surface-border) 88%, transparent);
+  box-shadow:
+    0 44px 110px color-mix(in srgb, var(--surface-border) 58%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 45%, transparent);
 }
 
 .heroCopy,
@@ -40,7 +62,7 @@
   display: grid;
   gap: clamp(1.25rem, 2vw, 1.8rem);
   max-width: 520px;
-  color: white;
+  color: color-mix(in srgb, var(--text-primary) 94%, transparent);
 }
 
 .heroEyebrow {
@@ -48,7 +70,7 @@
   text-transform: uppercase;
   font-size: 0.68rem;
   font-weight: 600;
-  color: rgba(165, 243, 252, 0.78);
+  color: color-mix(in srgb, var(--hero-accent-teal) 55%, var(--text-primary) 45%);
 }
 
 .heroTitle {
@@ -64,13 +86,13 @@
   font-size: 0.76rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(148, 163, 184, 0.7);
+  color: color-mix(in srgb, var(--text-muted) 72%, transparent);
 }
 .heroSummary {
   margin: 0;
   font-size: clamp(1.05rem, 1.2vw, 1.3rem);
   line-height: 1.6;
-  color: rgba(226, 232, 240, 0.8);
+  color: color-mix(in srgb, var(--text-primary) 86%, transparent);
 }
 
 .intentGridWrapper {
@@ -88,21 +110,28 @@
   position: relative;
   border-radius: 1.6rem;
   padding: clamp(1.4rem, 3vw, 1.9rem);
-  background:
-    linear-gradient(160deg, rgba(56, 189, 248, 0.18), rgba(34, 197, 94, 0.12) 55%, rgba(239, 68, 68, 0.14));
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  --intent-card-start: color-mix(in srgb, var(--surface-elevated) 92%, var(--hero-accent-teal) 8%);
+  --intent-card-mid: color-mix(in srgb, var(--surface-elevated) 88%, var(--surface-secondary) 12%);
+  --intent-card-end: color-mix(in srgb, var(--surface-elevated) 86%, var(--hero-accent-crimson) 14%);
+  background: linear-gradient(160deg, var(--intent-card-start), var(--intent-card-mid) 55%, var(--intent-card-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 78%, transparent);
   text-decoration: none;
   display: grid;
   gap: 0.85rem;
   transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
   color: inherit;
+  box-shadow: 0 24px 48px color-mix(in srgb, var(--surface-border) 32%, transparent);
 }
 
 .intentCard::after {
   content: "";
   position: absolute;
   inset: -30% 10% 25% -28%;
-  background: radial-gradient(circle at 85% 20%, rgba(239, 68, 68, 0.35), transparent 70%);
+  background: radial-gradient(
+    circle at 85% 20%,
+    color-mix(in srgb, var(--hero-accent-crimson) 58%, transparent) 0%,
+    transparent 70%
+  );
   opacity: 0;
   transition: opacity 200ms ease;
   pointer-events: none;
@@ -111,10 +140,10 @@
 .intentCard:hover,
 .intentCard:focus-visible {
   transform: translateY(-6px);
-  border-color: rgba(239, 68, 68, 0.45);
+  border-color: color-mix(in srgb, var(--hero-accent-crimson) 45%, transparent);
   box-shadow:
-    0 30px 60px rgba(14, 165, 233, 0.22),
-    0 24px 44px rgba(239, 68, 68, 0.16);
+    0 30px 60px color-mix(in srgb, var(--surface-border) 42%, transparent),
+    0 24px 44px color-mix(in srgb, var(--hero-accent-crimson) 24%, transparent);
 }
 
 .intentCard:hover::after,
@@ -127,21 +156,29 @@
   letter-spacing: 0.3em;
   font-size: 0.68rem;
   font-weight: 600;
-  color: rgba(165, 243, 252, 0.82);
+  color: color-mix(in srgb, var(--hero-accent-teal) 72%, transparent);
 }
 
 .intentCardBody {
   margin: 0;
   font-size: 0.94rem;
   line-height: 1.55;
-  color: rgba(226, 232, 240, 0.86);
+  color: color-mix(in srgb, var(--text-primary) 88%, transparent);
 }
 
 .intentCardHint {
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.28em;
-  color: rgba(186, 230, 253, 0.7);
+  color: color-mix(in srgb, var(--hero-accent-teal) 55%, var(--text-muted) 45%);
+}
+
+:global(body.dark) .intentCard {
+  --intent-card-start: color-mix(in srgb, var(--surface-elevated) 80%, var(--hero-accent-teal) 20%);
+  --intent-card-mid: color-mix(in srgb, var(--surface-elevated) 78%, var(--surface-secondary) 22%);
+  --intent-card-end: color-mix(in srgb, var(--surface-elevated) 76%, var(--hero-accent-crimson) 24%);
+  border-color: color-mix(in srgb, var(--surface-border) 86%, transparent);
+  box-shadow: 0 30px 60px color-mix(in srgb, var(--surface-border) 48%, transparent);
 }
 
 .content {
@@ -175,8 +212,8 @@
   display: block;
   border-radius: 1.1rem;
   padding: clamp(1rem, 1.7vw, 1.2rem);
-  background: color-mix(in srgb, var(--surface-base) 96%, white 4%);
-  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: color-mix(in srgb, var(--surface-base) 96%, var(--surface-elevated) 4%);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 76%, transparent);
   text-decoration: none;
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
@@ -184,8 +221,8 @@
 .navItem:hover,
 .navItem:focus-visible {
   transform: translateX(6px);
-  border-color: rgba(56, 189, 248, 0.42);
-  box-shadow: 0 16px 32px rgba(56, 189, 248, 0.2);
+  border-color: color-mix(in srgb, var(--philosophy-accent-teal) 48%, var(--surface-border) 52%);
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--surface-border) 40%, transparent);
 }
 
 .navItemLabel {
@@ -194,7 +231,7 @@
   text-transform: uppercase;
   letter-spacing: 0.28em;
   font-weight: 600;
-  color: color-mix(in srgb, var(--color-teal-700) 55%, var(--text-primary) 45%);
+  color: color-mix(in srgb, var(--philosophy-accent-teal) 58%, var(--text-primary) 42%);
 }
 
 .navItemBody {
@@ -205,14 +242,20 @@
   color: color-mix(in srgb, var(--text-muted) 68%, transparent);
 }
 
+:global(body.dark) .navItem {
+  background: color-mix(in srgb, var(--surface-base) 82%, var(--surface-elevated) 18%);
+  border-color: color-mix(in srgb, var(--surface-border) 84%, transparent);
+}
+
 .promiseCard {
   border-radius: 1.3rem;
   padding: clamp(1.35rem, 2.2vw, 1.7rem);
-  background:
-    linear-gradient(155deg, rgba(14, 165, 233, 0.14), rgba(239, 68, 68, 0.14));
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  --promise-surface-start: color-mix(in srgb, var(--surface-elevated) 92%, var(--philosophy-accent-teal) 8%);
+  --promise-surface-end: color-mix(in srgb, var(--surface-elevated) 88%, var(--philosophy-accent-crimson) 12%);
+  background: linear-gradient(155deg, var(--promise-surface-start), var(--promise-surface-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 80%, transparent);
   color: color-mix(in srgb, var(--text-primary) 92%, transparent);
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--surface-border) 36%, transparent);
 }
 
 .promiseLabel {
@@ -220,7 +263,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.24em;
-  color: rgba(203, 213, 225, 0.85);
+  color: color-mix(in srgb, var(--philosophy-accent-teal) 58%, var(--text-muted) 42%);
 }
 
 .promiseBody {
@@ -230,12 +273,25 @@
   color: color-mix(in srgb, var(--text-primary) 92%, transparent);
 }
 
+:global(body.dark) .promiseCard {
+  --promise-surface-start: color-mix(in srgb, var(--surface-elevated) 78%, var(--philosophy-accent-teal) 22%);
+  --promise-surface-end: color-mix(in srgb, var(--surface-elevated) 76%, var(--philosophy-accent-crimson) 24%);
+  border-color: color-mix(in srgb, var(--surface-border) 88%, transparent);
+  box-shadow: 0 22px 48px color-mix(in srgb, var(--surface-border) 44%, transparent);
+}
+
 .proseWrapper {
-  background: color-mix(in srgb, var(--surface-base) 98%, white 2%);
+  background: color-mix(in srgb, var(--surface-base) 98%, var(--surface-elevated) 2%);
   border-radius: 1.6rem;
-  border: 1px solid rgba(148, 163, 184, 0.24);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 78%, transparent);
   padding: clamp(2rem, 3vw, 2.5rem);
-  box-shadow: 0 26px 60px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 26px 60px color-mix(in srgb, var(--surface-border) 42%, transparent);
+}
+
+:global(body.dark) .proseWrapper {
+  background: color-mix(in srgb, var(--surface-base) 86%, var(--surface-elevated) 14%);
+  border-color: color-mix(in srgb, var(--surface-border) 86%, transparent);
+  box-shadow: 0 26px 60px color-mix(in srgb, var(--surface-border) 52%, transparent);
 }
 
 .prose {
@@ -273,9 +329,11 @@
   align-items: center;
   padding: clamp(1.6rem, 2.8vw, 2rem) clamp(1.3rem, 2.4vw, 1.7rem);
   border-radius: 1.6rem;
-  border: 1px solid rgba(56, 189, 248, 0.28);
-  background:
-    linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(239, 68, 68, 0.12));
+  --footer-surface-start: color-mix(in srgb, var(--surface-elevated) 90%, var(--philosophy-accent-teal) 10%);
+  --footer-surface-end: color-mix(in srgb, var(--surface-elevated) 86%, var(--philosophy-accent-crimson) 14%);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 78%, transparent);
+  background: linear-gradient(135deg, var(--footer-surface-start), var(--footer-surface-end));
+  box-shadow: 0 18px 44px color-mix(in srgb, var(--surface-border) 36%, transparent);
 }
 
 .footerLabel {
@@ -283,7 +341,7 @@
   letter-spacing: 0.28em;
   font-size: 0.68rem;
   font-weight: 600;
-  color: color-mix(in srgb, var(--color-teal-600) 60%, var(--text-primary) 40%);
+  color: color-mix(in srgb, var(--philosophy-accent-teal) 56%, var(--text-primary) 44%);
   margin-right: 0.75rem;
 }
 
@@ -303,22 +361,23 @@
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+
 .footerLinkTeal {
-  border: 1px solid rgba(45, 212, 191, 0.4);
-  background: rgba(45, 212, 191, 0.16);
-  color: rgba(13, 148, 136, 0.9);
+  border: 1px solid color-mix(in srgb, var(--philosophy-accent-teal) 55%, var(--surface-border) 45%);
+  background: color-mix(in srgb, var(--surface-elevated) 92%, var(--philosophy-accent-teal) 8%);
+  color: color-mix(in srgb, var(--philosophy-accent-teal) 68%, var(--text-primary) 32%);
 }
 
 .footerLinkCrimson {
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  background: rgba(239, 68, 68, 0.14);
-  color: rgba(190, 18, 60, 0.9);
+  border: 1px solid color-mix(in srgb, var(--philosophy-accent-crimson) 55%, var(--surface-border) 45%);
+  background: color-mix(in srgb, var(--surface-elevated) 90%, var(--philosophy-accent-crimson) 10%);
+  color: color-mix(in srgb, var(--philosophy-accent-crimson) 66%, var(--text-primary) 34%);
 }
 
 .footerLinkSlate {
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  background: rgba(30, 41, 59, 0.18);
-  color: rgba(71, 85, 105, 0.9);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 82%, transparent);
+  background: color-mix(in srgb, var(--surface-elevated) 84%, var(--surface-inverse) 16%);
+  color: color-mix(in srgb, var(--text-primary) 72%, var(--text-muted) 28%);
 }
 
 .footerLinkTeal:hover,
@@ -328,7 +387,29 @@
 .footerLinkCrimson:focus-visible,
 .footerLinkSlate:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--surface-border) 44%, transparent);
+}
+
+:global(body.dark) .footer {
+  --footer-surface-start: color-mix(in srgb, var(--surface-elevated) 76%, var(--philosophy-accent-teal) 24%);
+  --footer-surface-end: color-mix(in srgb, var(--surface-elevated) 72%, var(--philosophy-accent-crimson) 28%);
+  border-color: color-mix(in srgb, var(--surface-border) 88%, transparent);
+  box-shadow: 0 18px 44px color-mix(in srgb, var(--surface-border) 46%, transparent);
+}
+
+:global(body.dark) .footerLinkTeal {
+  background: color-mix(in srgb, var(--surface-elevated) 72%, var(--philosophy-accent-teal) 28%);
+  color: color-mix(in srgb, var(--philosophy-accent-teal) 62%, var(--text-primary) 38%);
+}
+
+:global(body.dark) .footerLinkCrimson {
+  background: color-mix(in srgb, var(--surface-elevated) 70%, var(--philosophy-accent-crimson) 30%);
+  color: color-mix(in srgb, var(--philosophy-accent-crimson) 60%, var(--text-primary) 40%);
+}
+
+:global(body.dark) .footerLinkSlate {
+  background: color-mix(in srgb, var(--surface-elevated) 68%, var(--surface-inverse) 32%);
+  color: color-mix(in srgb, var(--text-primary) 78%, var(--text-muted) 22%);
 }
 
 @media (max-width: 63.9375rem) {
