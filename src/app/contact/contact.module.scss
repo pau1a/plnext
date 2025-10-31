@@ -214,12 +214,12 @@
 }
 
 .formLabel {
-  color: color-mix(in srgb, var(--text-muted) 75%, #ffffff 25%);
+  color: var(--text-muted);
   font-weight: 600;
 }
 
 :global(body.dark) :local(.formLabel) {
-  color: color-mix(in srgb, #ffffff 68%, var(--text-muted) 32%);
+  color: color-mix(in srgb, var(--text-on-inverse) 80%, var(--text-muted) 20%);
 }
 
 .formControl {
