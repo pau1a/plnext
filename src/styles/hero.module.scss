@@ -10,6 +10,10 @@
   color: var(--text-on-inverse);
   overflow: hidden;
   isolation: isolate;
+  --hero-radial-teal-position: 30% 20%;
+  --hero-radial-crimson-position: 72% 26%;
+  --hero-radial-teal-fade: 56%;
+  --hero-radial-crimson-fade: 68%;
   --hero-overlay-shadow-current: var(--shadow-inverse-lg);
   --hero-overlay-top-start-current: var(--hero-overlay-top-start);
   --hero-overlay-top-mid-current: var(--hero-overlay-top-mid);
@@ -27,12 +31,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(
-      circle at 30% 20%,
-      var(--hero-media-ambient),
-      transparent 55%
-    ),
-    linear-gradient(180deg, #040d16 0%, #091b2c 65%, #030a12 100%);
+  background: var(--hero-layered-backdrop);
 }
 
 .heroOverlay {
