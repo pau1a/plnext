@@ -46,18 +46,19 @@ export default async function NotesIndexPage() {
       </div>
 
       <div className={styles.inner}>
-        <section className={styles.section}>
+        <section className={styles.heroSection}>
           <MotionFade>
-            <header className={styles.header}>
-              <span className={styles.headerEyebrow}>Signal snippets</span>
-              <h1 className={styles.headerTitle}>Notes</h1>
-              <p className={styles.headerSummary}>
+            <div className={styles.heroContent}>
+              <span className={styles.heroEyebrow}>Signal snippets</span>
+              <h1 className={styles.heroTitle}>Notes</h1>
+              <p className={styles.heroSummary}>
                 Short, self-contained updates from the workbench&mdash;less formal than essays, still public by default.
               </p>
-              <div className={styles.headerDivider} aria-hidden="true" />
-            </header>
+            </div>
           </MotionFade>
+        </section>
 
+        <section className={styles.section}>
           <MotionFade delay={0.05}>
             <NoteList notes={notes} className={styles.list} />
           </MotionFade>
