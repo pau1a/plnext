@@ -32,6 +32,39 @@
     background-color var(--transition-base);
 }
 
+.elevatedSurfaceFrosted {
+  --elevated-surface-bg-light: color-mix(in srgb, #ffffff 88%, rgba(20, 184, 166, 0.12) 12%);
+  --elevated-surface-border-light: color-mix(
+    in srgb,
+    rgba(255, 255, 255, 0.34) 65%,
+    rgba(13, 148, 136, 0.22) 35%
+  );
+  --elevated-surface-glaze-light: linear-gradient(
+    155deg,
+    color-mix(in srgb, rgba(20, 184, 166, 0.28) 40%, transparent) 0%,
+    transparent 58%
+  );
+  --elevated-surface-glaze-opacity: 1;
+}
+
+:global(body.dark) :local(.elevatedSurfaceFrosted) {
+  --elevated-surface-bg-dark: color-mix(
+    in srgb,
+    rgba(12, 14, 16, 0.86) 82%,
+    rgba(13, 148, 136, 0.16) 18%
+  );
+  --elevated-surface-border-dark: color-mix(
+    in srgb,
+    rgba(255, 255, 255, 0.08) 70%,
+    rgba(45, 212, 191, 0.22) 30%
+  );
+  --elevated-surface-glaze-dark: linear-gradient(
+    155deg,
+    color-mix(in srgb, rgba(45, 212, 191, 0.3) 45%, transparent) 0%,
+    transparent 58%
+  );
+}
+
 :global(body.dark) :local(.elevatedSurface) {
   background: var(--elevated-surface-bg-dark);
   border-color: var(--elevated-surface-border-dark);

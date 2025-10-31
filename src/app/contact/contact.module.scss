@@ -132,15 +132,6 @@
   z-index: 3;
   max-width: var(--max-content-md);
   width: 100%;
-  --elevated-surface-bg: color-mix(in srgb, #ffffff 88%, rgba(20, 184, 166, 0.12) 12%);
-  --elevated-surface-border: color-mix(in srgb, rgba(255, 255, 255, 0.34) 65%, rgba(13, 148, 136, 0.22) 35%);
-  --elevated-surface-shadow: 0 16px 48px
-    color-mix(in srgb, rgba(15, 23, 42, 0.32) 70%, rgba(20, 184, 166, 0.18) 30%);
-  --elevated-surface-glaze: linear-gradient(
-    155deg,
-    color-mix(in srgb, rgba(20, 184, 166, 0.28) 40%, transparent) 0%,
-    transparent 58%
-  );
   backdrop-filter: blur(8px);
   padding: clamp(1.35rem, 2.5vw, 2.1rem);
   opacity: 0;
@@ -159,26 +150,6 @@
     padding-block: 0;
     padding-inline: clamp(var(--space-md), 3vw, var(--space-lg));
   }
-}
-
-:global(body.dark) :local(.card) {
-  --elevated-surface-bg-dark: color-mix(
-    in srgb,
-    rgba(12, 14, 16, 0.86) 82%,
-    rgba(13, 148, 136, 0.16) 18%
-  );
-  --elevated-surface-border-dark: color-mix(
-    in srgb,
-    rgba(255, 255, 255, 0.08) 70%,
-    rgba(45, 212, 191, 0.22) 30%
-  );
-  --elevated-surface-shadow-dark: 0 18px 54px
-    color-mix(in srgb, rgba(0, 0, 0, 0.48) 80%, rgba(20, 184, 166, 0.2) 20%);
-  --elevated-surface-glaze-dark: linear-gradient(
-    155deg,
-    color-mix(in srgb, rgba(45, 212, 191, 0.3) 45%, transparent) 0%,
-    transparent 58%
-  );
 }
 
 .card::after {
