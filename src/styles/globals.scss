@@ -239,6 +239,9 @@ $transition-base: 180ms ease;
   --surface-secondary: color-mix(in srgb, var(--surface-base) 85%, white 15%);
   --surface-inverse: var(--color-graphite-900);
   --surface-border: rgba(15, 23, 42, 0.08);
+  --surface-border-strong: rgba(15, 23, 42, 0.18);
+  --surface-field: rgba(255, 255, 255, 0.92);
+  --surface-field-inverse: rgba(10, 12, 14, 0.9);
   --text-primary: var(--color-graphite-800);
   --text-muted: var(--color-graphite-500);
   --text-on-inverse: var(--color-graphite-50);
@@ -283,6 +286,9 @@ body.dark {
   --surface-secondary: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
   --surface-inverse: var(--color-graphite-800);
   --surface-border: rgba(148, 163, 184, 0.16);
+  --surface-border-strong: rgba(148, 163, 184, 0.32);
+  --surface-field: rgba(10, 12, 14, 0.9);
+  --surface-field-inverse: rgba(255, 255, 255, 0.92);
   --text-primary: var(--color-graphite-100);
   --text-muted: var(--color-graphite-400);
   --text-on-inverse: var(--color-graphite-50);
@@ -1722,7 +1728,7 @@ select {
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
   border: 1px solid var(--surface-border);
-  background: var(--surface-elevated);
+  background: var(--surface-field);
   color: inherit;
   transition: border-color var(--transition-base), box-shadow var(--transition-base), background-color var(--transition-base);
   outline: none;
@@ -1733,15 +1739,17 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 .form-field__control:focus-visible {
-  border-color: rgba(20, 184, 166, 0.45);
-  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.18);
+  border-color: var(--surface-border-strong);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--surface-border-strong) 72%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--surface-border-strong) 24%, transparent);
 }
 
 body.dark input,
 body.dark textarea,
 body.dark select,
 body.dark .form-field__control {
-  background: var(--color-graphite-800);
+  background: var(--surface-field);
 }
 
 textarea {
