@@ -1,6 +1,49 @@
 .page {
-  background: color-mix(in srgb, var(--surface-base) 92%, white 8%);
+  --library-page-background: color-mix(in srgb, var(--surface-base) 96%, var(--surface-elevated) 4%);
+  --library-hero-surface-start: color-mix(in srgb, var(--surface-inverse) 86%, var(--surface-elevated) 14%);
+  --library-hero-surface-end: color-mix(in srgb, var(--surface-inverse) 72%, var(--surface-base) 28%);
+  --library-hero-accent-teal: color-mix(in srgb, var(--color-teal-500) 28%, var(--surface-inverse) 72%);
+  --library-hero-accent-crimson: color-mix(in srgb, var(--color-crimson-500) 24%, var(--surface-inverse) 76%);
+  --library-hero-border: color-mix(in srgb, var(--surface-border) 70%, transparent);
+  --library-hero-shadow: 0 48px 120px color-mix(in srgb, var(--surface-border) 45%, transparent);
+  --library-hero-shadow-inset: inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 55%, transparent);
+  --library-stat-surface-start: color-mix(in srgb, var(--surface-elevated) 94%, var(--surface-secondary) 6%);
+  --library-stat-surface-mid: color-mix(in srgb, var(--color-teal-500) 18%, var(--surface-elevated) 82%);
+  --library-stat-surface-end: color-mix(in srgb, var(--color-crimson-500) 16%, var(--surface-elevated) 84%);
+  --library-stat-shadow: 0 26px 50px color-mix(in srgb, var(--surface-border) 28%, transparent);
+  --library-card-surface-start: color-mix(in srgb, var(--surface-elevated) 98%, var(--surface-secondary) 2%);
+  --library-card-surface-end: color-mix(in srgb, var(--surface-elevated) 94%, var(--surface-secondary) 6%);
+  --library-card-border: color-mix(in srgb, var(--surface-border) 48%, transparent);
+  --library-card-shadow-primary: 0 24px 48px color-mix(in srgb, var(--surface-border) 24%, transparent);
+  --library-card-shadow-secondary: 0 12px 24px color-mix(in srgb, var(--surface-border) 16%, transparent);
+  --library-card-hover-border: color-mix(in srgb, var(--link-color) 45%, var(--library-card-border) 55%);
+  --library-card-hover-shadow-primary: 0 36px 72px color-mix(in srgb, var(--surface-border) 36%, transparent);
+  --library-card-hover-shadow-secondary: 0 18px 40px color-mix(in srgb, var(--surface-border) 28%, transparent);
+  background: var(--library-page-background);
   color: var(--text-primary);
+}
+
+:global(body.dark) .page {
+  --library-page-background: color-mix(in srgb, var(--surface-base) 92%, var(--surface-inverse) 8%);
+  --library-hero-surface-start: color-mix(in srgb, var(--surface-inverse) 88%, var(--surface-base) 12%);
+  --library-hero-surface-end: color-mix(in srgb, var(--surface-inverse) 78%, var(--surface-base) 22%);
+  --library-hero-accent-teal: color-mix(in srgb, var(--color-teal-400) 36%, var(--surface-inverse) 64%);
+  --library-hero-accent-crimson: color-mix(in srgb, var(--color-crimson-400) 32%, var(--surface-inverse) 68%);
+  --library-hero-border: color-mix(in srgb, var(--surface-border) 82%, transparent);
+  --library-hero-shadow: 0 48px 120px color-mix(in srgb, var(--surface-border) 55%, transparent);
+  --library-hero-shadow-inset: inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 48%, transparent);
+  --library-stat-surface-start: color-mix(in srgb, var(--surface-elevated) 82%, var(--surface-secondary) 18%);
+  --library-stat-surface-mid: color-mix(in srgb, var(--color-teal-400) 24%, var(--surface-elevated) 76%);
+  --library-stat-surface-end: color-mix(in srgb, var(--color-crimson-400) 22%, var(--surface-elevated) 78%);
+  --library-stat-shadow: 0 26px 50px color-mix(in srgb, var(--surface-border) 42%, transparent);
+  --library-card-surface-start: color-mix(in srgb, var(--surface-elevated) 76%, var(--surface-secondary) 24%);
+  --library-card-surface-end: color-mix(in srgb, var(--surface-secondary) 78%, var(--surface-elevated) 22%);
+  --library-card-border: color-mix(in srgb, var(--surface-border) 76%, transparent);
+  --library-card-shadow-primary: 0 24px 48px color-mix(in srgb, var(--surface-border) 42%, transparent);
+  --library-card-shadow-secondary: 0 12px 24px color-mix(in srgb, var(--surface-border) 34%, transparent);
+  --library-card-hover-border: color-mix(in srgb, var(--link-color) 55%, var(--library-card-border) 45%);
+  --library-card-hover-shadow-primary: 0 36px 72px color-mix(in srgb, var(--surface-border) 54%, transparent);
+  --library-card-hover-shadow-secondary: 0 18px 40px color-mix(in srgb, var(--surface-border) 44%, transparent);
 }
 
 .inner {
@@ -18,15 +61,13 @@
   border-radius: clamp(2.5rem, 5vw, 3.5rem);
   padding: clamp(3.2rem, 5.4vw, 4.5rem);
   background:
-    radial-gradient(circle at -18% -24%, rgba(13, 148, 136, 0.35), transparent 65%),
-    radial-gradient(circle at 120% -12%, rgba(220, 38, 38, 0.35), transparent 62%),
-    linear-gradient(160deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.86));
-  border: 1px solid rgba(148, 163, 184, 0.24);
-  box-shadow:
-    0 48px 120px rgba(13, 148, 136, 0.25),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+    radial-gradient(circle at -18% -24%, color-mix(in srgb, var(--library-hero-accent-teal) 35%, transparent), transparent 65%),
+    radial-gradient(circle at 120% -12%, color-mix(in srgb, var(--library-hero-accent-crimson) 35%, transparent), transparent 62%),
+    linear-gradient(160deg, var(--library-hero-surface-start), var(--library-hero-surface-end));
+  border: 1px solid var(--library-hero-border);
+  box-shadow: var(--library-hero-shadow), var(--library-hero-shadow-inset);
   overflow: hidden;
-  color: white;
+  color: var(--text-on-inverse);
 }
 
 .heroCopy {
@@ -40,7 +81,7 @@
   text-transform: uppercase;
   font-size: 0.68rem;
   font-weight: 600;
-  color: rgba(186, 230, 253, 0.75);
+  color: color-mix(in srgb, var(--text-on-inverse) 70%, var(--link-color) 30%);
 }
 
 .heroTitle {
@@ -54,7 +95,7 @@
   margin: 0;
   font-size: clamp(1.08rem, 1.3vw, 1.35rem);
   line-height: 1.65;
-  color: rgba(226, 232, 240, 0.82);
+  color: color-mix(in srgb, var(--text-on-inverse) 82%, transparent);
 }
 
 .heroBadgeRow {
@@ -72,9 +113,9 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-weight: 600;
-  background: rgba(226, 232, 240, 0.12);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  color: rgba(226, 232, 240, 0.88);
+  background: color-mix(in srgb, var(--text-on-inverse) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 75%, transparent);
+  color: color-mix(in srgb, var(--text-on-inverse) 88%, transparent);
 }
 
 .stats {
@@ -87,20 +128,19 @@
   position: relative;
   border-radius: 1.4rem;
   padding: clamp(1.2rem, 2.3vw, 1.8rem);
-  background:
-    linear-gradient(150deg, rgba(56, 189, 248, 0.12), rgba(13, 148, 136, 0.14) 55%, rgba(220, 38, 38, 0.18));
-  border: 1px solid rgba(148, 163, 184, 0.24);
-  box-shadow: 0 26px 50px rgba(15, 23, 42, 0.28);
+  background: linear-gradient(150deg, var(--library-stat-surface-start), var(--library-stat-surface-mid) 55%, var(--library-stat-surface-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 75%, transparent);
+  box-shadow: var(--library-stat-shadow);
   display: grid;
   gap: 0.5rem;
-  color: rgba(226, 232, 240, 0.92);
+  color: color-mix(in srgb, var(--text-primary) 88%, transparent);
 }
 
 .statValue {
   margin: 0;
   font-size: clamp(2rem, 2.4vw, 2.6rem);
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
 }
 
 .statLabel {
@@ -108,6 +148,7 @@
   font-size: 0.8rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-muted) 68%, transparent);
 }
 
 .catalog {
@@ -149,17 +190,17 @@
   font-size: 0.82rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid color-mix(in srgb, var(--color-teal-500) 35%, transparent);
-  color: color-mix(in srgb, var(--color-teal-600) 70%, var(--text-primary) 30%);
+  border: 1px solid color-mix(in srgb, var(--link-color) 35%, transparent);
+  color: color-mix(in srgb, var(--link-color) 70%, var(--text-primary) 30%);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
 .yearLink:hover,
 .yearLink:focus-visible {
   transform: translateX(6px);
-  border-color: color-mix(in srgb, var(--color-crimson-400) 60%, transparent);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
-  color: color-mix(in srgb, var(--color-crimson-500) 72%, white 28%);
+  border-color: color-mix(in srgb, var(--link-hover) 55%, transparent);
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--surface-border) 32%, transparent);
+  color: color-mix(in srgb, var(--link-hover) 72%, var(--text-on-inverse) 28%);
 }
 
 .catalogContent {
@@ -183,7 +224,7 @@
   margin: 0;
   font-size: clamp(1.8rem, 2.2vw, 2.3rem);
   font-weight: 600;
-  color: var(--color-graphite-900);
+  color: var(--text-primary);
 }
 
 .shelfMeta {
@@ -205,12 +246,9 @@
   gap: var(--space-sm);
   border-radius: 1.4rem;
   padding: clamp(1.4rem, 2.6vw, 2rem);
-  background:
-    linear-gradient(140deg, rgba(226, 232, 240, 0.85), rgba(248, 250, 252, 0.93));
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow:
-    0 24px 48px rgba(15, 23, 42, 0.12),
-    0 12px 24px rgba(13, 148, 136, 0.12);
+  background: linear-gradient(140deg, var(--library-card-surface-start), var(--library-card-surface-end));
+  border: 1px solid var(--library-card-border);
+  box-shadow: var(--library-card-shadow-primary), var(--library-card-shadow-secondary);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
@@ -218,7 +256,7 @@
   content: "";
   position: absolute;
   inset: 12% -25% 40% 55%;
-  background: radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.2), transparent 70%);
+  background: radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--color-crimson-500) 28%, var(--surface-secondary) 72%), transparent 70%);
   opacity: 0;
   pointer-events: none;
   transition: opacity 160ms ease;
@@ -227,10 +265,8 @@
 .card:hover,
 .card:focus-within {
   transform: translateY(-6px);
-  border-color: rgba(13, 148, 136, 0.35);
-  box-shadow:
-    0 36px 72px rgba(15, 23, 42, 0.18),
-    0 18px 40px rgba(220, 38, 38, 0.14);
+  border-color: var(--library-card-hover-border);
+  box-shadow: var(--library-card-hover-shadow-primary), var(--library-card-hover-shadow-secondary);
 }
 
 .card:hover::after,
@@ -242,7 +278,7 @@
   margin: 0;
   font-size: clamp(1.05rem, 1.3vw, 1.35rem);
   font-weight: 600;
-  color: var(--color-graphite-900);
+  color: var(--text-primary);
 }
 
 .cardTitle a {
@@ -254,7 +290,7 @@
 
 .cardTitle a:hover,
 .cardTitle a:focus-visible {
-  color: color-mix(in srgb, var(--color-crimson-600) 70%, var(--color-teal-600) 30%);
+  color: color-mix(in srgb, var(--link-hover) 70%, var(--link-color) 30%);
   border-color: currentColor;
 }
 
@@ -266,7 +302,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   font-weight: 600;
-  color: color-mix(in srgb, var(--color-teal-700) 65%, var(--text-primary) 35%);
+  color: color-mix(in srgb, var(--link-color) 60%, var(--text-primary) 40%);
 }
 
 .cardNote {
@@ -291,16 +327,17 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
-  border: 1px solid rgba(13, 148, 136, 0.55);
-  color: rgba(13, 148, 136, 0.85);
+  border: 1px solid color-mix(in srgb, var(--link-color) 65%, transparent);
+  color: color-mix(in srgb, var(--link-color) 85%, var(--text-primary) 15%);
+  background: color-mix(in srgb, var(--link-color) 8%, transparent);
   transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
 }
 
 .cardActions a:hover,
 .cardActions a:focus-visible {
-  background: rgba(13, 148, 136, 0.12);
-  border-color: color-mix(in srgb, var(--color-crimson-500) 65%, var(--color-teal-500) 35%);
-  color: color-mix(in srgb, var(--color-crimson-600) 70%, var(--color-teal-200) 30%);
+  background: color-mix(in srgb, var(--link-color) 18%, transparent);
+  border-color: color-mix(in srgb, var(--link-hover) 75%, transparent);
+  color: color-mix(in srgb, var(--link-hover) 70%, var(--text-on-inverse) 30%);
 }
 
 .empty {
@@ -314,7 +351,7 @@
   margin: 0;
   font-size: clamp(2.2rem, 3vw, 3rem);
   font-weight: 600;
-  color: var(--color-graphite-900);
+  color: var(--text-primary);
 }
 
 .emptySummary {
@@ -334,7 +371,7 @@
     position: static;
     border-radius: 1.4rem;
     padding: 1.5rem;
-    background: rgba(148, 163, 184, 0.12);
+    background: color-mix(in srgb, var(--surface-border) 24%, transparent);
   }
 
   .yearLink {
