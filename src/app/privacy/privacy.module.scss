@@ -17,16 +17,36 @@
   gap: clamp(2rem, 4vw, 3rem);
   border-radius: clamp(2.5rem, 5vw, 3.5rem);
   padding: clamp(3.2rem, 5.4vw, 4.5rem);
+  --privacy-hero-gradient-start: color-mix(
+    in srgb,
+    var(--surface-inverse) 82%,
+    var(--surface-elevated) 18%
+  );
+  --privacy-hero-gradient-end: color-mix(
+    in srgb,
+    var(--surface-elevated) 88%,
+    var(--surface-base) 12%
+  );
+  --privacy-hero-accent-teal: color-mix(
+    in srgb,
+    var(--color-teal-500) 32%,
+    var(--surface-inverse) 68%
+  );
+  --privacy-hero-accent-crimson: color-mix(
+    in srgb,
+    var(--color-crimson-500) 28%,
+    var(--surface-inverse) 72%
+  );
   background:
-    radial-gradient(circle at -18% -24%, rgba(13, 148, 136, 0.35), transparent 65%),
-    radial-gradient(circle at 120% -12%, rgba(220, 38, 38, 0.35), transparent 62%),
-    linear-gradient(160deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.86));
-  border: 1px solid rgba(148, 163, 184, 0.24);
+    radial-gradient(circle at -18% -24%, var(--privacy-hero-accent-teal), transparent 65%),
+    radial-gradient(circle at 120% -12%, var(--privacy-hero-accent-crimson), transparent 62%),
+    linear-gradient(160deg, var(--privacy-hero-gradient-start), var(--privacy-hero-gradient-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 70%, transparent);
   box-shadow:
-    0 48px 120px rgba(13, 148, 136, 0.25),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+    0 48px 120px color-mix(in srgb, var(--surface-border) 55%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 42%, transparent);
   overflow: hidden;
-  color: white;
+  color: var(--text-on-inverse);
 }
 
 .heroCopy {
@@ -40,7 +60,7 @@
   text-transform: uppercase;
   font-size: 0.68rem;
   font-weight: 600;
-  color: rgba(186, 230, 253, 0.75);
+  color: color-mix(in srgb, var(--text-on-inverse) 70%, transparent);
 }
 
 .heroTitle {
@@ -57,14 +77,14 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-weight: 500;
-  color: rgba(186, 230, 253, 0.65);
+  color: color-mix(in srgb, var(--text-on-inverse) 60%, transparent);
 }
 
 .heroSummary {
   margin: 0;
   font-size: clamp(1.08rem, 1.3vw, 1.35rem);
   line-height: 1.65;
-  color: rgba(226, 232, 240, 0.82);
+  color: color-mix(in srgb, var(--text-on-inverse) 82%, transparent);
 }
 
 .content {
@@ -79,12 +99,21 @@
   gap: clamp(1rem, 1.8vw, 1.4rem);
   border-radius: 1.6rem;
   padding: clamp(2rem, 3.5vw, 2.8rem);
-  background:
-    linear-gradient(135deg, rgba(226, 232, 240, 0.88), rgba(248, 250, 252, 0.95));
-  border: 1px solid rgba(148, 163, 184, 0.32);
+  --privacy-section-bg-start: color-mix(
+    in srgb,
+    var(--surface-elevated) 90%,
+    transparent
+  );
+  --privacy-section-bg-end: color-mix(
+    in srgb,
+    var(--surface-base) 96%,
+    transparent
+  );
+  background: linear-gradient(135deg, var(--privacy-section-bg-start), var(--privacy-section-bg-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 70%, transparent);
   box-shadow:
-    0 28px 56px rgba(15, 23, 42, 0.14),
-    0 14px 28px rgba(13, 148, 136, 0.1);
+    0 28px 56px color-mix(in srgb, var(--surface-border) 45%, transparent),
+    0 14px 28px color-mix(in srgb, var(--surface-border) 32%, transparent);
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
@@ -92,7 +121,11 @@
   content: "";
   position: absolute;
   inset: -8% 45% 55% -22%;
-  background: radial-gradient(circle at 65% 35%, rgba(220, 38, 38, 0.18), transparent 68%);
+  background: radial-gradient(
+    circle at 65% 35%,
+    color-mix(in srgb, var(--color-crimson-500) 20%, var(--surface-border) 80%),
+    transparent 68%
+  );
   opacity: 0;
   pointer-events: none;
   transition: opacity 180ms ease;
@@ -100,10 +133,10 @@
 
 .section:hover {
   transform: translateY(-4px);
-  border-color: rgba(13, 148, 136, 0.38);
+  border-color: color-mix(in srgb, var(--color-teal-500) 36%, var(--surface-border) 64%);
   box-shadow:
-    0 40px 80px rgba(15, 23, 42, 0.2),
-    0 20px 44px rgba(220, 38, 38, 0.12);
+    0 40px 80px color-mix(in srgb, var(--surface-border) 55%, transparent),
+    0 20px 44px color-mix(in srgb, var(--color-crimson-500) 18%, var(--surface-border) 82%);
 }
 
 .section:hover::after {
@@ -115,7 +148,7 @@
   font-size: clamp(1.2rem, 1.6vw, 1.5rem);
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: color-mix(in srgb, var(--color-graphite-900) 92%, var(--color-teal-700) 8%);
+  color: color-mix(in srgb, var(--text-primary) 90%, var(--color-teal-600) 10%);
   position: relative;
   z-index: 1;
 }
