@@ -112,10 +112,8 @@
 }
 
 .heroTitle {
-  font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-family: var(--font-display, var(--font-family-sans));
   font-weight: 650;
-  line-height: 1.05;
   color: var(--text-primary);
   max-width: 24ch;
 }
