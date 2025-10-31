@@ -12,20 +12,34 @@
 }
 
 .hero {
+  --hero-gradient-start: color-mix(in srgb, var(--surface-inverse) 92%, var(--surface-elevated) 8%);
+  --hero-gradient-end: color-mix(in srgb, var(--surface-inverse) 82%, var(--surface-base) 18%);
+  --hero-accent-teal: color-mix(in srgb, var(--color-teal-500) 34%, var(--surface-elevated) 66%);
+  --hero-accent-crimson: color-mix(in srgb, var(--color-crimson-500) 30%, var(--surface-elevated) 70%);
   display: grid;
   gap: clamp(1.8rem, 3vw, 2.6rem);
   border-radius: clamp(2.5rem, 5vw, 3.5rem);
   padding: clamp(3rem, 5.2vw, 4.2rem);
   background:
-    radial-gradient(circle at -18% -24%, rgba(13, 148, 136, 0.34), transparent 63%),
-    radial-gradient(circle at 120% -12%, rgba(220, 38, 38, 0.34), transparent 62%),
-    linear-gradient(150deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.87));
-  border: 1px solid rgba(148, 163, 184, 0.26);
+    radial-gradient(circle at -18% -24%, var(--hero-accent-teal), transparent 63%),
+    radial-gradient(circle at 120% -12%, var(--hero-accent-crimson), transparent 62%),
+    linear-gradient(150deg, var(--hero-gradient-start), var(--hero-gradient-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 82%, transparent);
   box-shadow:
-    0 48px 120px rgba(13, 148, 136, 0.24),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.15);
-  color: white;
+    0 48px 120px color-mix(in srgb, var(--surface-border) 42%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 55%, transparent);
+  color: var(--text-on-inverse);
   overflow: hidden;
+}
+
+:global(body.dark) .hero {
+  --hero-gradient-start: color-mix(in srgb, var(--surface-inverse) 78%, var(--surface-elevated) 22%);
+  --hero-gradient-end: color-mix(in srgb, var(--surface-base) 68%, var(--surface-inverse) 32%);
+  --hero-accent-teal: color-mix(in srgb, var(--color-teal-400) 38%, var(--surface-inverse) 62%);
+  --hero-accent-crimson: color-mix(in srgb, var(--color-crimson-400) 32%, var(--surface-inverse) 68%);
+  box-shadow:
+    0 48px 120px color-mix(in srgb, var(--surface-border) 58%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 62%, transparent);
 }
 
 .heroHeading {
@@ -41,7 +55,7 @@
   text-transform: uppercase;
   font-size: 0.66rem;
   font-weight: 600;
-  color: rgba(186, 230, 253, 0.78);
+  color: color-mix(in srgb, var(--text-on-inverse) 78%, transparent);
 }
 
 .heroTitle {
@@ -55,14 +69,14 @@
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.28em;
-  color: rgba(148, 163, 184, 0.72);
+  color: color-mix(in srgb, var(--text-on-inverse) 62%, transparent);
 }
 
 .heroSummary {
   margin: 0;
   font-size: clamp(1.08rem, 1.3vw, 1.34rem);
   line-height: 1.65;
-  color: rgba(226, 232, 240, 0.84);
+  color: color-mix(in srgb, var(--text-on-inverse) 86%, transparent);
 }
 
 .pulseRow {
@@ -73,6 +87,7 @@
 }
 
 .pulse {
+  --pulse-background: color-mix(in srgb, var(--surface-elevated) 72%, var(--surface-inverse) 28%);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -82,16 +97,16 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  background: rgba(30, 64, 175, 0.18);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  color: rgba(226, 232, 240, 0.92);
+  background: var(--pulse-background);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 70%, transparent);
+  color: color-mix(in srgb, var(--text-on-inverse) 88%, transparent);
 }
 
 .pulseLabel {
   font-size: 0.66rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(191, 219, 254, 0.8);
+  color: color-mix(in srgb, var(--text-on-inverse) 68%, transparent);
 }
 
 .pulseValue {
@@ -101,11 +116,11 @@
 }
 
 .pulse[data-variant="focus"] {
-  background: rgba(14, 116, 144, 0.22);
+  --pulse-background: color-mix(in srgb, var(--color-teal-500) 28%, var(--surface-elevated) 72%);
 }
 
 .pulse[data-variant="mood"] {
-  background: rgba(220, 38, 38, 0.22);
+  --pulse-background: color-mix(in srgb, var(--color-crimson-500) 24%, var(--surface-elevated) 76%);
 }
 
 .layout {
@@ -116,16 +131,25 @@
 }
 
 .nowContent {
+  --now-gradient-start: color-mix(in srgb, var(--surface-elevated) 96%, transparent);
+  --now-gradient-end: color-mix(in srgb, var(--surface-base) 94%, transparent);
   position: relative;
   padding: clamp(2rem, 3.6vw, 3rem);
   border-radius: clamp(1.8rem, 3vw, 2.4rem);
-  background:
-    linear-gradient(160deg, rgba(226, 232, 240, 0.9), rgba(248, 250, 252, 0.92));
-  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: linear-gradient(160deg, var(--now-gradient-start), var(--now-gradient-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 78%, transparent);
   box-shadow:
-    0 28px 64px rgba(15, 23, 42, 0.16),
-    0 18px 38px rgba(13, 148, 136, 0.14);
+    0 28px 64px color-mix(in srgb, var(--surface-border) 38%, transparent),
+    0 18px 38px color-mix(in srgb, var(--surface-border) 32%, transparent);
   color: var(--text-primary);
+}
+
+:global(body.dark) .nowContent {
+  --now-gradient-start: color-mix(in srgb, var(--surface-elevated) 88%, transparent);
+  --now-gradient-end: color-mix(in srgb, var(--surface-base) 85%, transparent);
+  box-shadow:
+    0 28px 64px color-mix(in srgb, var(--surface-border) 55%, transparent),
+    0 18px 38px color-mix(in srgb, var(--surface-border) 48%, transparent);
 }
 
 .nowContent :global(p:first-of-type) {
@@ -138,7 +162,7 @@
   width: 100%;
   border-radius: 1.5rem;
   margin-block: clamp(1.5rem, 3vw, 2rem);
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 24px 48px color-mix(in srgb, var(--surface-border) 42%, transparent);
 }
 
 .nowContent :global(figure) {
@@ -191,25 +215,34 @@
 }
 
 .signalCard {
+  --signal-gradient-start: color-mix(in srgb, var(--surface-elevated) 94%, transparent);
+  --signal-gradient-end: color-mix(in srgb, var(--surface-secondary) 92%, transparent);
   position: relative;
   display: grid;
   gap: 0.65rem;
   padding: clamp(1.4rem, 2.4vw, 1.9rem);
   border-radius: 1.4rem;
-  background:
-    linear-gradient(150deg, rgba(248, 250, 252, 0.92), rgba(226, 232, 240, 0.86));
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: linear-gradient(150deg, var(--signal-gradient-start), var(--signal-gradient-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 78%, transparent);
   box-shadow:
-    0 24px 48px rgba(15, 23, 42, 0.15),
-    0 12px 24px rgba(13, 148, 136, 0.12);
+    0 24px 48px color-mix(in srgb, var(--surface-border) 36%, transparent),
+    0 12px 24px color-mix(in srgb, var(--surface-border) 30%, transparent);
   overflow: hidden;
+}
+
+:global(body.dark) .signalCard {
+  --signal-gradient-start: color-mix(in srgb, var(--surface-elevated) 86%, transparent);
+  --signal-gradient-end: color-mix(in srgb, var(--surface-secondary) 82%, transparent);
+  box-shadow:
+    0 24px 48px color-mix(in srgb, var(--surface-border) 52%, transparent),
+    0 12px 24px color-mix(in srgb, var(--surface-border) 46%, transparent);
 }
 
 .signalCard::after {
   content: "";
   position: absolute;
   inset: 18% -35% 45% 40%;
-  background: radial-gradient(circle at 10% 25%, rgba(220, 38, 38, 0.2), transparent 70%);
+  background: radial-gradient(circle at 10% 25%, color-mix(in srgb, var(--color-crimson-500) 26%, transparent), transparent 70%);
   opacity: 0;
   transition: opacity 160ms ease;
   pointer-events: none;
