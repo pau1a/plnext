@@ -7,10 +7,70 @@
     var(--color-graphite-900) 92%,
     var(--color-teal-900) 8%
   );
+  --surface-glow-teal-strong: color-mix(in srgb, var(--color-teal-400) 24%, transparent);
+  --surface-glow-teal-soft: color-mix(in srgb, var(--color-teal-200) 18%, transparent);
+  --surface-glow-crimson-soft: color-mix(in srgb, var(--color-crimson-400) 16%, transparent);
+  --contact-hero-overlay-scrim: color-mix(in srgb, var(--surface-inverse) 44%, transparent);
+  --contact-hero-radial-geometry: 128% 92% at 52% 18%;
+  --contact-hero-radial-core: color-mix(
+    in srgb,
+    var(--surface-inverse) 76%,
+    var(--surface-glow-teal-strong) 24%
+  );
+  --contact-hero-radial-mid: color-mix(
+    in srgb,
+    var(--surface-inverse) 78%,
+    var(--surface-glow-teal-soft) 22%
+  );
+  --contact-hero-radial-accent: color-mix(
+    in srgb,
+    var(--surface-inverse) 72%,
+    var(--surface-glow-crimson-soft) 28%
+  );
+  --contact-hero-fade-mid: color-mix(
+    in srgb,
+    var(--moor-fade-color) 32%,
+    transparent
+  );
+  --contact-hero-fade-strong: color-mix(
+    in srgb,
+    var(--moor-fade-color) 88%,
+    var(--surface-inverse) 12%
+  );
 }
 
 :global(body.dark) {
   --moor-fade-color: color-mix(in srgb, var(--color-graphite-900) 94%, black 6%);
+  --surface-glow-teal-strong: color-mix(in srgb, var(--color-teal-500) 28%, transparent);
+  --surface-glow-teal-soft: color-mix(in srgb, var(--color-teal-300) 22%, transparent);
+  --surface-glow-crimson-soft: color-mix(in srgb, var(--color-crimson-400) 22%, transparent);
+  --contact-hero-overlay-scrim: color-mix(in srgb, var(--surface-inverse) 56%, transparent);
+  --contact-hero-radial-geometry: 134% 98% at 50% 22%;
+  --contact-hero-radial-core: color-mix(
+    in srgb,
+    var(--surface-inverse) 68%,
+    var(--surface-glow-teal-strong) 32%
+  );
+  --contact-hero-radial-mid: color-mix(
+    in srgb,
+    var(--surface-inverse) 70%,
+    var(--surface-glow-teal-soft) 30%
+  );
+  --contact-hero-radial-accent: color-mix(
+    in srgb,
+    var(--surface-inverse) 64%,
+    var(--surface-glow-crimson-soft) 36%
+  );
+  --contact-hero-fade-mid: color-mix(
+    in srgb,
+    var(--moor-fade-color) 36%,
+    transparent
+  );
+  --contact-hero-fade-strong: color-mix(
+    in srgb,
+    var(--moor-fade-color) 82%,
+    var(--surface-inverse) 18%
+  );
 }
 
 .shellContent {
@@ -47,43 +107,23 @@
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(rgba(10, 12, 14, 0.4), rgba(10, 12, 14, 0.4)),
+    linear-gradient(
+      var(--contact-hero-overlay-scrim),
+      var(--contact-hero-overlay-scrim)
+    ),
     radial-gradient(
-      128% 92% at 52% 18%,
-      color-mix(in srgb, var(--color-teal-400) 12%, transparent) 0%,
-      color-mix(in srgb, var(--color-teal-200) 10%, transparent) 26%,
-      color-mix(in srgb, var(--color-crimson-400) 8%, transparent) 58%,
+      var(--contact-hero-radial-geometry),
+      var(--contact-hero-radial-core) 0%,
+      var(--contact-hero-radial-mid) 26%,
+      var(--contact-hero-radial-accent) 58%,
       transparent 82%
     ),
     linear-gradient(
       to bottom,
       transparent 60%,
-      color-mix(in srgb, var(--moor-fade-color) 14%, transparent) 78%,
-      var(--moor-fade-color) 94%,
-      var(--moor-fade-color) 100%
-    );
-}
-
-:global(body.dark) :local(.contactRoot)::after {
-  --contact-stage-overlay-opacity: 0.5;
-  background:
-    linear-gradient(
-      rgb(0 0 0 / var(--contact-stage-overlay-opacity)),
-      rgb(0 0 0 / var(--contact-stage-overlay-opacity))
-    ),
-    radial-gradient(
-      134% 98% at 50% 22%,
-      color-mix(in srgb, var(--color-teal-500) 10%, transparent) 0%,
-      color-mix(in srgb, var(--color-teal-300) 8%, transparent) 30%,
-      color-mix(in srgb, var(--color-crimson-400) 12%, transparent) 64%,
-      transparent 86%
-    ),
-    linear-gradient(
-      to bottom,
-      transparent 60%,
-      color-mix(in srgb, var(--moor-fade-color) 18%, transparent) 80%,
-      var(--moor-fade-color) 94%,
-      var(--moor-fade-color) 100%
+      var(--contact-hero-fade-mid) 78%,
+      var(--contact-hero-fade-strong) 94%,
+      var(--contact-hero-fade-strong) 100%
     );
 }
 
