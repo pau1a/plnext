@@ -12,15 +12,17 @@
 .hero {
   --hero-gradient-start: color-mix(in srgb, var(--surface-inverse) 92%, var(--surface-elevated) 8%);
   --hero-gradient-end: color-mix(in srgb, var(--surface-inverse) 82%, var(--surface-base) 18%);
-  --hero-accent-teal: color-mix(in srgb, var(--color-teal-500) 34%, var(--surface-elevated) 66%);
-  --hero-accent-crimson: color-mix(in srgb, var(--color-crimson-500) 30%, var(--surface-elevated) 70%);
+  --hero-radial-teal-position: -18% -24%;
+  --hero-radial-crimson-position: 120% -12%;
+  --hero-radial-teal-fade: 63%;
+  --hero-radial-crimson-fade: 62%;
   display: grid;
   gap: clamp(1.8rem, 3vw, 2.6rem);
   border-radius: clamp(2.5rem, 5vw, 3.5rem);
   padding: clamp(3rem, 5.2vw, 4.2rem);
   background:
-    radial-gradient(circle at -18% -24%, var(--hero-accent-teal), transparent 63%),
-    radial-gradient(circle at 120% -12%, var(--hero-accent-crimson), transparent 62%),
+    var(--hero-backdrop-radial-teal),
+    var(--hero-backdrop-radial-crimson),
     linear-gradient(150deg, var(--hero-gradient-start), var(--hero-gradient-end));
   border: 1px solid color-mix(in srgb, var(--surface-border) 82%, transparent);
   box-shadow:
@@ -33,8 +35,6 @@
 :global(body.dark) .hero {
   --hero-gradient-start: color-mix(in srgb, var(--surface-inverse) 78%, var(--surface-elevated) 22%);
   --hero-gradient-end: color-mix(in srgb, var(--surface-base) 68%, var(--surface-inverse) 32%);
-  --hero-accent-teal: color-mix(in srgb, var(--color-teal-400) 38%, var(--surface-inverse) 62%);
-  --hero-accent-crimson: color-mix(in srgb, var(--color-crimson-400) 32%, var(--surface-inverse) 68%);
   box-shadow:
     0 48px 120px color-mix(in srgb, var(--surface-border) 58%, transparent),
     inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 62%, transparent);

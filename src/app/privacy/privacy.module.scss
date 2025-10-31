@@ -25,19 +25,13 @@
     var(--surface-elevated) 88%,
     var(--surface-base) 12%
   );
-  --privacy-hero-accent-teal: color-mix(
-    in srgb,
-    var(--color-teal-500) 32%,
-    var(--surface-inverse) 68%
-  );
-  --privacy-hero-accent-crimson: color-mix(
-    in srgb,
-    var(--color-crimson-500) 28%,
-    var(--surface-inverse) 72%
-  );
+  --hero-radial-teal-position: -18% -24%;
+  --hero-radial-crimson-position: 120% -12%;
+  --hero-radial-teal-fade: 65%;
+  --hero-radial-crimson-fade: 62%;
   background:
-    radial-gradient(circle at -18% -24%, var(--privacy-hero-accent-teal), transparent 65%),
-    radial-gradient(circle at 120% -12%, var(--privacy-hero-accent-crimson), transparent 62%),
+    var(--hero-backdrop-radial-teal),
+    var(--hero-backdrop-radial-crimson),
     linear-gradient(160deg, var(--privacy-hero-gradient-start), var(--privacy-hero-gradient-end));
   border: 1px solid color-mix(in srgb, var(--surface-border) 70%, transparent);
   box-shadow:
