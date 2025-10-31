@@ -38,39 +38,39 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <PageShell as="main" fullWidth surface="transparent">
-      <section className={styles.contactRoot}>
-        <ContactColorCalibrator
-          imgSrc="https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png"
-          targetSelector={`.${styles.contactRoot}`}
-          sampleHeightPct={12}
-        />
-        <div className={styles.stage}>
-          <MotionFade delay={0.05}>
-            <div
-              className={clsx(
-                elevatedSurfaceStyles.elevatedSurface,
-                elevatedSurfaceStyles.elevatedSurfaceFrosted,
-                styles.card,
-              )}
-            >
-              <MotionFade delay={0.15}>
-                <div>
-                  <header className={styles.header}>
-                    <h1 className={clsx("u-heading-display", styles.hTitle)}>
-                      Contact
-                    </h1>
-                    <p className={styles.preface}>
-                      If you’ve got something real to say, this lands straight
-                      in my inbox.
-                    </p>
-                  </header>
-                  <ContactForm />
-                </div>
-              </MotionFade>
-            </div>
-          </MotionFade>
-        </div>
+    <PageShell
+      as="main"
+      surface="transparent"
+      outerClassName={styles.contactRoot}
+      className={styles.shellContent}
+    >
+      <ContactColorCalibrator
+        imgSrc="https://cdn.networklayer.co.uk/paulalivingstone/images/mooreaglesham.png"
+        targetSelector={`.${styles.contactRoot}`}
+        sampleHeightPct={12}
+      />
+      <section className={styles.stage}>
+        <MotionFade delay={0.05}>
+          <div
+            className={clsx(
+              elevatedSurfaceStyles.elevatedSurface,
+              elevatedSurfaceStyles.elevatedSurfaceFrosted,
+              styles.card,
+            )}
+          >
+            <MotionFade delay={0.15}>
+              <div>
+                <header className={styles.header}>
+                  <h1 className={clsx("u-heading-display", styles.hTitle)}>Contact</h1>
+                  <p className={styles.preface}>
+                    If you’ve got something real to say, this lands straight in my inbox.
+                  </p>
+                </header>
+                <ContactForm />
+              </div>
+            </MotionFade>
+          </div>
+        </MotionFade>
       </section>
       <div aria-hidden="true" className={styles.belowBlend} />
     </PageShell>
