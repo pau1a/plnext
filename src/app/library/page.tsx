@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import PageShell from "@/components/layout/PageShell";
 import { getLibrary, groupByYear } from "@/lib/library";
 
 import styles from "./library.module.scss";
@@ -15,28 +16,26 @@ export default async function LibraryPage() {
 
   if (!items.length) {
     return (
-      <article className={styles.page}>
-        <div className={styles.inner}>
-          <section className={styles.hero}>
-            <div className={styles.heroCopy}>
-              <p className={styles.heroEyebrow}>Reference shelf</p>
-              <h1 className={`u-heading-xl ${styles.heroTitle}`}>Library</h1>
-              <p className={styles.heroSummary}>
-                A catalogue-in-progress of the books, lectures, and essays that anchor my practice. Check back soon for
-                the first entries.
-              </p>
-            </div>
-          </section>
-
-          <section className={styles.empty}>
-            <h2 className={styles.emptyTitle}>Shelves in flux</h2>
-            <p className={styles.emptySummary}>
-              I&apos;m actively curating the opening selections. Once the first titles are logged, you&apos;ll see the
-              reading trail light up here with notes and context for each pick.
+      <PageShell as="main" outerClassName={styles.page} className={styles.content}>
+        <section className={styles.hero}>
+          <div className={styles.heroCopy}>
+            <p className={styles.heroEyebrow}>Reference shelf</p>
+            <h1 className={`u-heading-xl ${styles.heroTitle}`}>Library</h1>
+            <p className={styles.heroSummary}>
+              A catalogue-in-progress of the books, lectures, and essays that anchor my practice. Check back soon for
+              the first entries.
             </p>
-          </section>
-        </div>
-      </article>
+          </div>
+        </section>
+
+        <section className={styles.empty}>
+          <h2 className={styles.emptyTitle}>Shelves in flux</h2>
+          <p className={styles.emptySummary}>
+            I&apos;m actively curating the opening selections. Once the first titles are logged, you&apos;ll see the reading
+            trail light up here with notes and context for each pick.
+          </p>
+        </section>
+      </PageShell>
     );
   }
 
@@ -59,85 +58,83 @@ export default async function LibraryPage() {
   ];
 
   return (
-    <article className={styles.page}>
-      <div className={styles.inner}>
-        <section className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <p className={styles.heroEyebrow}>Reference shelf</p>
-            <h1 className={`u-heading-xl ${styles.heroTitle}`}>Library</h1>
-            <p className={styles.heroSummary}>
-              A working catalogue of the research, essays, and talks that sharpen judgement. These are the pieces I rely
-              on when designing for resilience, risk, and calm operations.
-            </p>
-            <div className={styles.heroBadgeRow}>
-              <span className={styles.heroBadge}>Latest addition · {latestEntry.year}</span>
-              <span className={styles.heroBadge}>{annotationLabel}</span>
-            </div>
+    <PageShell as="main" outerClassName={styles.page} className={styles.content}>
+      <section className={styles.hero}>
+        <div className={styles.heroCopy}>
+          <p className={styles.heroEyebrow}>Reference shelf</p>
+          <h1 className={`u-heading-xl ${styles.heroTitle}`}>Library</h1>
+          <p className={styles.heroSummary}>
+            A working catalogue of the research, essays, and talks that sharpen judgement. These are the pieces I rely on
+            when designing for resilience, risk, and calm operations.
+          </p>
+          <div className={styles.heroBadgeRow}>
+            <span className={styles.heroBadge}>Latest addition · {latestEntry.year}</span>
+            <span className={styles.heroBadge}>{annotationLabel}</span>
           </div>
+        </div>
 
-          <div className={styles.stats}>
-            {stats.map((stat) => (
-              <article key={stat.label} className={styles.statCard}>
-                <p className={styles.statValue}>{stat.value}</p>
-                <p className={styles.statLabel}>{stat.label}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+        <div className={styles.stats}>
+          {stats.map((stat) => (
+            <article key={stat.label} className={styles.statCard}>
+              <p className={styles.statValue}>{stat.value}</p>
+              <p className={styles.statLabel}>{stat.label}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        <section className={styles.catalog}>
-          <aside className={styles.catalogAside}>
-            <span className={styles.catalogLabel}>Browse by year</span>
-            <nav className={styles.yearNav}>
-              {years.map((year) => (
-                <a key={year} href={`#year-${year}`} className={styles.yearLink}>
-                  {year}
-                  <span aria-hidden>↗</span>
-                </a>
-              ))}
-            </nav>
-          </aside>
-
-          <div className={styles.catalogContent}>
+      <section className={styles.catalog}>
+        <aside className={styles.catalogAside}>
+          <span className={styles.catalogLabel}>Browse by year</span>
+          <nav className={styles.yearNav}>
             {years.map((year) => (
-              <section key={year} id={`year-${year}`} className={styles.shelf} aria-labelledby={`shelf-${year}`}>
-                <header className={styles.shelfHeader}>
-                  <h2 id={`shelf-${year}`} className={styles.shelfTitle}>
-                    {year}
-                  </h2>
-                  <span className={styles.shelfMeta}>
-                    {byYear[year].length} {byYear[year].length === 1 ? "title" : "titles"}
-                  </span>
-                </header>
-                <div className={styles.itemGrid}>
-                  {byYear[year].map((item) => (
-                    <article key={`${year}-${item.title}`} className={styles.card}>
-                      <h3 className={styles.cardTitle}>
-                        {item.link ? (
-                          <Link href={item.link} target="_blank" rel="noreferrer">
-                            {item.title}
-                          </Link>
-                        ) : (
-                          item.title
-                        )}
-                      </h3>
-                      <span className={styles.cardAuthor}>{item.author}</span>
-                      {item.note ? <p className={styles.cardNote}>{item.note}</p> : null}
-                      {item.link ? (
-                        <div className={styles.cardActions}>
-                          <Link href={item.link} target="_blank" rel="noreferrer">
-                            Visit source ↗
-                          </Link>
-                        </div>
-                      ) : null}
-                    </article>
-                  ))}
-                </div>
-              </section>
+              <a key={year} href={`#year-${year}`} className={styles.yearLink}>
+                {year}
+                <span aria-hidden>↗</span>
+              </a>
             ))}
-          </div>
-        </section>
-      </div>
-    </article>
+          </nav>
+        </aside>
+
+        <div className={styles.catalogContent}>
+          {years.map((year) => (
+            <section key={year} id={`year-${year}`} className={styles.shelf} aria-labelledby={`shelf-${year}`}>
+              <header className={styles.shelfHeader}>
+                <h2 id={`shelf-${year}`} className={styles.shelfTitle}>
+                  {year}
+                </h2>
+                <span className={styles.shelfMeta}>
+                  {byYear[year].length} {byYear[year].length === 1 ? "title" : "titles"}
+                </span>
+              </header>
+              <div className={styles.itemGrid}>
+                {byYear[year].map((item) => (
+                  <article key={`${year}-${item.title}`} className={styles.card}>
+                    <h3 className={styles.cardTitle}>
+                      {item.link ? (
+                        <Link href={item.link} target="_blank" rel="noreferrer">
+                          {item.title}
+                        </Link>
+                      ) : (
+                        item.title
+                      )}
+                    </h3>
+                    <span className={styles.cardAuthor}>{item.author}</span>
+                    {item.note ? <p className={styles.cardNote}>{item.note}</p> : null}
+                    {item.link ? (
+                      <div className={styles.cardActions}>
+                        <Link href={item.link} target="_blank" rel="noreferrer">
+                          Visit source ↗
+                        </Link>
+                      </div>
+                    ) : null}
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </section>
+    </PageShell>
   );
 }
