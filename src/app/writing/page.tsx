@@ -202,25 +202,26 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   return (
     <PageShell as="main" outerClassName={styles.page} fullWidth>
-      <div className={styles.hero} aria-hidden="true">
-        <div className={styles.heroVeil} />
-        <div className={`${styles.heroOrb} ${styles.heroOrbLeft}`} />
-        <div className={`${styles.heroOrb} ${styles.heroOrbRight}`} />
-      </div>
+      <section className={styles.heroWrapper}>
+        <div className={styles.heroBackdrop} aria-hidden="true">
+          <span className={`${styles.heroGradient} ${styles.heroGradientPrimary}`} />
+          <span className={`${styles.heroGradient} ${styles.heroGradientSecondary}`} />
+          <span className={`${styles.heroGradient} ${styles.heroGradientTertiary}`} />
+        </div>
+
+        <MotionFade>
+          <div className={styles.heroContent}>
+            <span className={styles.heroEyebrow}>Dispatch log</span>
+            <h1 className={styles.heroTitle}>Insights &amp; Updates</h1>
+            <p className={styles.heroSubheading}>
+              Field notes on cybersecurity, AI operations, and the engineering work that keeps them steady.
+            </p>
+          </div>
+        </MotionFade>
+      </section>
 
       <div className={styles.inner}>
         <section className={styles.section}>
-          <MotionFade>
-            <header className={styles.header}>
-              <span className={styles.headerEyebrow}>Dispatch log</span>
-              <h1 className={styles.headerTitle}>Insights &amp; Updates</h1>
-              <p className={styles.headerSummary}>
-                Notes from the field on cybersecurity, AI, and practical engineering.
-              </p>
-              <div className={styles.headerDivider} aria-hidden="true" />
-            </header>
-          </MotionFade>
-
           {hasPosts ? (
             <div className={`${styles.grid} ${cardStyles.cardGrid} ${cardStyles.cardGridBlog}`}>
               {posts.map((post) => (
