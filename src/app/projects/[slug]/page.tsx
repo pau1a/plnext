@@ -93,7 +93,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <section className={styles.hero}>
             <div className={styles.heroInner}>
               <span className={styles.heroEyebrow}>Client engagement</span>
-              <h1 className={styles.heroTitle}>{project.title}</h1>
+              <h1 className={clsx(styles.heroTitle, "u-heading-xl")}>
+                {project.title}
+              </h1>
               <p className={styles.heroSummary}>{project.summary}</p>
               <dl className={styles.heroStats}>
                 <div className={styles.heroStatCard}>
