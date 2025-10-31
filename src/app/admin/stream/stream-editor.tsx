@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, type CSSProperties } from "react";
 import { useFormStatus } from "react-dom";
 
 import { updateStreamAction } from "./actions";
@@ -56,13 +56,15 @@ export function StreamEditor({ entries }: StreamEditorProps) {
               PRIVATE: "var(--color-crimson-500)",
             }[entry.visibility] ?? "var(--color-graphite-400)";
 
+          const accentStyle: CSSProperties = {
+            "--stream-entry-accent": visibilityColor,
+          };
+
           return (
             <div
               key={entry.id}
               className="stream-editor__entry"
-              style={{
-                borderLeftColor: visibilityColor,
-              }}
+              style={accentStyle}
             >
               <input type="hidden" name="entryId" value={entry.id} />
 
@@ -170,17 +172,29 @@ export function StreamEditor({ entries }: StreamEditorProps) {
       </div>
       <style jsx>{`
         .stream-editor__entry {
-          border: 1px solid var(--surface-border);
-          border-left-width: 4px;
+          --stream-entry-accent: var(--surface-border);
           border-radius: var(--radius-md);
           padding: 0.5rem;
           background-color: var(--surface-elevated);
+          border: 1px solid color-mix(in srgb, var(--surface-border) 65%, transparent);
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 35%, transparent),
+            inset 4px 0 0 color-mix(
+              in srgb,
+              var(--stream-entry-accent) 85%,
+              var(--surface-elevated) 15%
+            );
           transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .stream-editor__entry:hover {
           background-color: var(--surface-base);
-          border-color: var(--surface-border);
+          border-color: color-mix(in srgb, var(--surface-border) 80%, transparent);
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 50%, transparent),
+            inset 4px 0 0 color-mix(
+              in srgb,
+              var(--stream-entry-accent) 92%,
+              var(--surface-base) 8%
+            );
         }
       `}</style>
     </form>
