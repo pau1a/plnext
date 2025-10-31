@@ -1,24 +1,24 @@
 .page {
   --library-page-background: color-mix(in srgb, var(--surface-base) 96%, var(--surface-elevated) 4%);
-  --library-hero-surface-start: color-mix(in srgb, var(--surface-inverse) 94%, var(--surface-elevated) 6%);
-  --library-hero-surface-end: color-mix(in srgb, var(--surface-inverse) 88%, var(--surface-base) 12%);
-  --library-hero-accent-teal: color-mix(in srgb, var(--color-teal-500) 32%, var(--surface-inverse) 68%);
-  --library-hero-accent-crimson: color-mix(in srgb, var(--color-crimson-500) 28%, var(--surface-inverse) 72%);
+  --library-hero-surface-start: color-mix(in srgb, var(--surface-inverse) 86%, var(--surface-elevated) 14%);
+  --library-hero-surface-end: color-mix(in srgb, var(--surface-inverse) 72%, var(--surface-base) 28%);
+  --library-hero-accent-teal: color-mix(in srgb, var(--color-teal-500) 28%, var(--surface-inverse) 72%);
+  --library-hero-accent-crimson: color-mix(in srgb, var(--color-crimson-500) 24%, var(--surface-inverse) 76%);
   --library-hero-border: color-mix(in srgb, var(--surface-border) 70%, transparent);
   --library-hero-shadow: 0 48px 120px color-mix(in srgb, var(--surface-border) 45%, transparent);
   --library-hero-shadow-inset: inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 55%, transparent);
-  --library-stat-surface-start: color-mix(in srgb, var(--surface-elevated) 96%, var(--surface-secondary) 4%);
-  --library-stat-surface-mid: color-mix(in srgb, var(--surface-secondary) 94%, var(--surface-elevated) 6%);
-  --library-stat-surface-end: color-mix(in srgb, var(--surface-inverse) 88%, var(--surface-secondary) 12%);
-  --library-stat-shadow: 0 26px 50px color-mix(in srgb, var(--surface-border) 32%, transparent);
+  --library-stat-surface-start: color-mix(in srgb, var(--surface-elevated) 94%, var(--surface-secondary) 6%);
+  --library-stat-surface-mid: color-mix(in srgb, var(--color-teal-500) 18%, var(--surface-elevated) 82%);
+  --library-stat-surface-end: color-mix(in srgb, var(--color-crimson-500) 16%, var(--surface-elevated) 84%);
+  --library-stat-shadow: 0 26px 50px color-mix(in srgb, var(--surface-border) 28%, transparent);
   --library-card-surface-start: color-mix(in srgb, var(--surface-elevated) 98%, var(--surface-secondary) 2%);
-  --library-card-surface-end: color-mix(in srgb, var(--surface-secondary) 96%, var(--surface-elevated) 4%);
-  --library-card-border: color-mix(in srgb, var(--surface-border) 72%, transparent);
-  --library-card-shadow-primary: 0 24px 48px color-mix(in srgb, var(--surface-border) 30%, transparent);
-  --library-card-shadow-secondary: 0 12px 24px color-mix(in srgb, var(--surface-border) 24%, transparent);
+  --library-card-surface-end: color-mix(in srgb, var(--surface-elevated) 94%, var(--surface-secondary) 6%);
+  --library-card-border: color-mix(in srgb, var(--surface-border) 48%, transparent);
+  --library-card-shadow-primary: 0 24px 48px color-mix(in srgb, var(--surface-border) 24%, transparent);
+  --library-card-shadow-secondary: 0 12px 24px color-mix(in srgb, var(--surface-border) 16%, transparent);
   --library-card-hover-border: color-mix(in srgb, var(--link-color) 45%, var(--library-card-border) 55%);
-  --library-card-hover-shadow-primary: 0 36px 72px color-mix(in srgb, var(--surface-border) 42%, transparent);
-  --library-card-hover-shadow-secondary: 0 18px 40px color-mix(in srgb, var(--surface-border) 34%, transparent);
+  --library-card-hover-shadow-primary: 0 36px 72px color-mix(in srgb, var(--surface-border) 36%, transparent);
+  --library-card-hover-shadow-secondary: 0 18px 40px color-mix(in srgb, var(--surface-border) 28%, transparent);
   background: var(--library-page-background);
   color: var(--text-primary);
 }
@@ -26,24 +26,24 @@
 :global(body.dark) .page {
   --library-page-background: color-mix(in srgb, var(--surface-base) 92%, var(--surface-inverse) 8%);
   --library-hero-surface-start: color-mix(in srgb, var(--surface-inverse) 88%, var(--surface-base) 12%);
-  --library-hero-surface-end: color-mix(in srgb, var(--surface-inverse) 82%, var(--surface-base) 18%);
-  --library-hero-accent-teal: color-mix(in srgb, var(--color-teal-400) 40%, var(--surface-inverse) 60%);
-  --library-hero-accent-crimson: color-mix(in srgb, var(--color-crimson-400) 36%, var(--surface-inverse) 64%);
+  --library-hero-surface-end: color-mix(in srgb, var(--surface-inverse) 78%, var(--surface-base) 22%);
+  --library-hero-accent-teal: color-mix(in srgb, var(--color-teal-400) 36%, var(--surface-inverse) 64%);
+  --library-hero-accent-crimson: color-mix(in srgb, var(--color-crimson-400) 32%, var(--surface-inverse) 68%);
   --library-hero-border: color-mix(in srgb, var(--surface-border) 82%, transparent);
   --library-hero-shadow: 0 48px 120px color-mix(in srgb, var(--surface-border) 55%, transparent);
   --library-hero-shadow-inset: inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 48%, transparent);
   --library-stat-surface-start: color-mix(in srgb, var(--surface-elevated) 82%, var(--surface-secondary) 18%);
-  --library-stat-surface-mid: color-mix(in srgb, var(--surface-secondary) 86%, var(--surface-elevated) 14%);
-  --library-stat-surface-end: color-mix(in srgb, var(--surface-inverse) 92%, var(--surface-secondary) 8%);
-  --library-stat-shadow: 0 26px 50px color-mix(in srgb, var(--surface-border) 46%, transparent);
-  --library-card-surface-start: color-mix(in srgb, var(--surface-elevated) 78%, var(--surface-secondary) 22%);
-  --library-card-surface-end: color-mix(in srgb, var(--surface-secondary) 82%, var(--surface-elevated) 18%);
-  --library-card-border: color-mix(in srgb, var(--surface-border) 85%, transparent);
-  --library-card-shadow-primary: 0 24px 48px color-mix(in srgb, var(--surface-border) 46%, transparent);
-  --library-card-shadow-secondary: 0 12px 24px color-mix(in srgb, var(--surface-border) 38%, transparent);
+  --library-stat-surface-mid: color-mix(in srgb, var(--color-teal-400) 24%, var(--surface-elevated) 76%);
+  --library-stat-surface-end: color-mix(in srgb, var(--color-crimson-400) 22%, var(--surface-elevated) 78%);
+  --library-stat-shadow: 0 26px 50px color-mix(in srgb, var(--surface-border) 42%, transparent);
+  --library-card-surface-start: color-mix(in srgb, var(--surface-elevated) 76%, var(--surface-secondary) 24%);
+  --library-card-surface-end: color-mix(in srgb, var(--surface-secondary) 78%, var(--surface-elevated) 22%);
+  --library-card-border: color-mix(in srgb, var(--surface-border) 76%, transparent);
+  --library-card-shadow-primary: 0 24px 48px color-mix(in srgb, var(--surface-border) 42%, transparent);
+  --library-card-shadow-secondary: 0 12px 24px color-mix(in srgb, var(--surface-border) 34%, transparent);
   --library-card-hover-border: color-mix(in srgb, var(--link-color) 55%, var(--library-card-border) 45%);
-  --library-card-hover-shadow-primary: 0 36px 72px color-mix(in srgb, var(--surface-border) 58%, transparent);
-  --library-card-hover-shadow-secondary: 0 18px 40px color-mix(in srgb, var(--surface-border) 48%, transparent);
+  --library-card-hover-shadow-primary: 0 36px 72px color-mix(in srgb, var(--surface-border) 54%, transparent);
+  --library-card-hover-shadow-secondary: 0 18px 40px color-mix(in srgb, var(--surface-border) 44%, transparent);
 }
 
 .inner {
@@ -133,14 +133,14 @@
   box-shadow: var(--library-stat-shadow);
   display: grid;
   gap: 0.5rem;
-  color: color-mix(in srgb, var(--text-on-inverse) 92%, transparent);
+  color: color-mix(in srgb, var(--text-primary) 88%, transparent);
 }
 
 .statValue {
   margin: 0;
   font-size: clamp(2rem, 2.4vw, 2.6rem);
   font-weight: 600;
-  color: var(--text-on-inverse);
+  color: var(--text-primary);
 }
 
 .statLabel {
@@ -148,7 +148,7 @@
   font-size: 0.8rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--text-on-inverse) 74%, transparent);
+  color: color-mix(in srgb, var(--text-muted) 68%, transparent);
 }
 
 .catalog {
