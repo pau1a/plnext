@@ -140,69 +140,100 @@
   box-sizing: border-box;
 }
 
-.section {
+.heroSection {
   @include utils.section-shell($padding-block: 0);
-  display: grid;
-  gap: clamp(2rem, 5vw, 3.5rem);
+  margin-block-end: clamp(3rem, 6vw, 4.5rem);
 }
 
-.header {
-  max-width: min(42rem, 100%);
-  margin-inline: auto;
+.heroContent {
+  position: relative;
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 1.45rem);
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(2.1rem, 5vw, 3.5rem);
+  border-radius: clamp(1.8rem, 3.4vw, 2.6rem);
+  overflow: hidden;
   text-align: center;
-  display: grid;
-  gap: clamp(0.85rem, 2vw, 1.35rem);
-  padding: clamp(2.1rem, 4vw, 2.8rem);
-  border-radius: clamp(1.5rem, 3vw, 2.2rem);
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(94, 234, 212, 0.22);
+  color: rgba(9, 25, 35, 0.92);
+  background:
+    radial-gradient(
+      120% 100% at 30% 0%,
+      color-mix(in srgb, var(--color-teal-200) 38%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      120% 120% at 80% 20%,
+      color-mix(in srgb, var(--color-amber-200) 28%, transparent) 0%,
+      transparent 75%
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(229, 253, 250, 0.72));
   box-shadow:
-    0 32px 96px rgba(2, 8, 18, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(18px);
+    0 40px 120px rgba(2, 10, 20, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(14px);
 }
 
-:global(body.dark) .header {
-  background: rgba(2, 12, 20, 0.78);
-  border-color: rgba(94, 234, 212, 0.24);
+.heroContent::before {
+  content: "";
+  position: absolute;
+  inset: -20% -30% auto;
+  height: clamp(12rem, 24vw, 16rem);
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.35), rgba(94, 234, 212, 0));
+  filter: blur(36px);
+  opacity: 0.7;
+  pointer-events: none;
 }
 
-.headerEyebrow {
+.heroEyebrow {
+  position: relative;
   font-size: var(--font-size-sm);
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(165, 243, 252, 0.78);
+  color: rgba(20, 78, 92, 0.72);
   font-weight: 600;
 }
 
-.headerTitle {
+.heroTitle {
+  position: relative;
   margin: 0;
-  font-size: clamp(2.4rem, 4.6vw, 3.4rem);
+  font-size: clamp(2.75rem, 5vw, 3.85rem);
   line-height: 1.05;
   font-weight: 700;
-  color: rgba(14, 36, 45, 0.92);
+  color: inherit;
 }
 
-:global(body.dark) .headerTitle {
-  color: rgba(240, 253, 250, 0.96);
-}
-
-.headerSummary {
+.heroSummary {
+  position: relative;
   margin: 0;
-  font-size: clamp(1.02rem, 2.3vw, 1.25rem);
+  font-size: clamp(1.02rem, 2.4vw, 1.28rem);
   line-height: 1.7;
-  color: rgba(15, 52, 63, 0.78);
+  color: rgba(15, 52, 63, 0.76);
 }
 
-:global(body.dark) .headerSummary {
-  color: rgba(209, 250, 229, 0.84);
+.section {
+  @include utils.section-shell($padding-block: clamp(0rem, 1vw, 0.75rem));
 }
 
-.headerDivider {
-  width: min(10rem, 70%);
-  height: 1px;
-  margin: 0 auto;
-  background: linear-gradient(90deg, rgba(94, 234, 212, 0), rgba(94, 234, 212, 0.8), rgba(94, 234, 212, 0));
+:global(body.dark) .heroContent {
+  color: rgba(229, 250, 249, 0.94);
+  background:
+    radial-gradient(
+      120% 100% at 30% 0%,
+      color-mix(in srgb, var(--color-teal-300) 42%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      120% 120% at 80% 20%,
+      color-mix(in srgb, var(--color-amber-300) 32%, transparent) 0%,
+      transparent 76%
+    ),
+    linear-gradient(135deg, rgba(8, 26, 43, 0.86), rgba(3, 12, 24, 0.74));
+  box-shadow:
+    0 50px 140px rgba(2, 8, 18, 0.62),
+    inset 0 0 0 1px rgba(94, 234, 212, 0.22);
+}
+
+:global(body.dark) .heroSummary {
+  color: rgba(196, 248, 237, 0.86);
 }
 
 .list {
