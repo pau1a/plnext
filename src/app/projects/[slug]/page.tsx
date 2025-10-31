@@ -17,6 +17,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+import styles from "./page.module.scss";
+
 interface ProjectPageProps {
   params: { slug: string };
 }
@@ -72,9 +74,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   );
 
   return (
-    <PageShell as="main" className="u-pad-block-3xl">
-      <article className="u-stack u-gap-2xl u-max-w-lg u-center">
-        <nav aria-label="Breadcrumb" className="u-text-sm u-text-muted">
+    <PageShell as="main" className={clsx("u-pad-block-3xl", styles.page)}>
+      <article className={styles.article}>
+        <nav
+          aria-label="Breadcrumb"
+          className={clsx("u-text-sm", styles.breadcrumb)}
+        >
           <Link
             className="u-inline-flex u-items-center u-gap-xs"
             href="/projects"
@@ -85,53 +90,59 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </nav>
 
         <MotionFade>
-          <header className="u-stack u-gap-md">
-            <h1 className="u-heading-display">{project.title}</h1>
-            <p className="u-text-lead">{project.summary}</p>
-            <dl className="u-flex u-flex-wrap u-gap-lg u-text-sm u-text-muted">
-              <div className="u-stack u-gap-2xs">
-                <dt className="u-text-uppercase u-letter-wide u-text-xs">
-                  Delivered
-                </dt>
-                <dd>{format(new Date(project.date), "MMMM d, yyyy")}</dd>
-              </div>
-              {project.role ? (
-                <div className="u-stack u-gap-2xs">
-                  <dt className="u-text-uppercase u-letter-wide u-text-xs">
-                    Role
-                  </dt>
-                  <dd>{project.role}</dd>
+          <section className={styles.hero}>
+            <div className={styles.heroInner}>
+              <span className={styles.heroEyebrow}>Client engagement</span>
+              <h1 className={styles.heroTitle}>{project.title}</h1>
+              <p className={styles.heroSummary}>{project.summary}</p>
+              <dl className={styles.heroStats}>
+                <div className={styles.heroStatCard}>
+                  <dt className={styles.heroStatLabel}>Delivered</dt>
+                  <dd className={styles.heroStatValue}>
+                    {format(new Date(project.date), "MMMM d, yyyy")}
+                  </dd>
                 </div>
+                {project.role ? (
+                  <div className={styles.heroStatCard}>
+                    <dt className={styles.heroStatLabel}>Role</dt>
+                    <dd className={styles.heroStatValue}>{project.role}</dd>
+                  </div>
+                ) : null}
+                {project.status ? (
+                  <div className={styles.heroStatCard}>
+                    <dt className={styles.heroStatLabel}>Status</dt>
+                    <dd className={styles.heroStatValue}>{project.status}</dd>
+                  </div>
+                ) : null}
+              </dl>
+              {project.stack?.length ? (
+                <ul className={styles.heroStack}>
+                  {project.stack.map((tech) => (
+                    <li key={tech} className={styles.heroStackItem}>
+                      {tech}
+                    </li>
+                  ))}
+                </ul>
               ) : null}
-              {project.status ? (
-                <div className="u-stack u-gap-2xs">
-                  <dt className="u-text-uppercase u-letter-wide u-text-xs">
-                    Status
-                  </dt>
-                  <dd>{project.status}</dd>
-                </div>
-              ) : null}
-            </dl>
-            {project.stack?.length ? (
-              <ul className="tag-list">
-                {project.stack.map((tech) => (
-                  <li key={tech} className="tag-list__item">
-                    {tech}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </header>
+            </div>
+          </section>
         </MotionFade>
 
-        <div className="prose">{project.content}</div>
-
         <MotionFade delay={0.05}>
+          <section className={clsx(styles.surface)}>
+            <div className={clsx("prose", styles.bodyProse)}>{project.content}</div>
+          </section>
+        </MotionFade>
+
+        <MotionFade delay={0.1}>
           <section
-            className="u-stack u-gap-md"
+            className={clsx(styles.surface, styles.discussion)}
             aria-labelledby="comments-heading"
           >
-            <h2 id="comments-heading" className="heading-subtitle">
+            <h2
+              id="comments-heading"
+              className={clsx("heading-subtitle", styles.discussionHeading)}
+            >
               Join the discussion
             </h2>
             <CommentProvider slug={project.slug}>
