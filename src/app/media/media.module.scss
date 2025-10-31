@@ -207,7 +207,7 @@
   background: color-mix(in srgb, var(--surface-elevated) 96%, transparent);
   border: 1px solid color-mix(in srgb, var(--surface-border) 75%, transparent);
   text-decoration: none;
-  color: inherit;
+  color: var(--text-primary);
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
@@ -228,7 +228,7 @@
   font-size: 0.76rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--text-muted) 70%, transparent);
+  color: var(--text-muted);
 }
 
 @media (max-width: 640px) {
