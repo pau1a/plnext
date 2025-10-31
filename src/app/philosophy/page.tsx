@@ -53,7 +53,7 @@ export default async function PhilosophyPage() {
         <section className={styles.hero}>
           <div className={styles.heroCopy}>
             <p className={styles.heroEyebrow}>Operating code</p>
-            <h1 className={styles.heroTitle}>Engineering philosophy</h1>
+            <h1 className={`u-heading-xl ${styles.heroTitle}`}>Engineering philosophy</h1>
             {updatedLabel ? <p className={styles.heroMeta}>Updated {updatedLabel}</p> : null}
             {meta?.summary ? (
               <p className={`${styles.heroSummary} u-max-w-prose`}>{meta.summary}</p>

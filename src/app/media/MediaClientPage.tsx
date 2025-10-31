@@ -42,7 +42,7 @@ export default function MediaClientPage({ bios, headshots, logos, bioAssets }: M
         <section className={styles.hero}>
           <div className={styles.heroCopy}>
             <p className={styles.heroEyebrow}>Press resources</p>
-            <h1 className={styles.heroTitle}>Media Kit</h1>
+            <h1 className={`u-heading-xl ${styles.heroTitle}`}>Media Kit</h1>
             <p className={styles.heroSummary}>
               Biography variants, headshots, and logos for editorial use. All materials are cleared for publication with attribution.
             </p>

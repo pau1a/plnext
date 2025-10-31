@@ -50,7 +50,9 @@ export default async function PrivacyPage() {
         <section className={styles.hero}>
           <div className={styles.heroCopy}>
             <p className={styles.heroEyebrow}>Data practices</p>
-            <h1 className={styles.heroTitle}>{meta?.title ?? "Privacy Policy"}</h1>
+            <h1 className={`u-heading-xl ${styles.heroTitle}`}>
+              {meta?.title ?? "Privacy Policy"}
+            </h1>
             {updatedDate ? (
               <p className={styles.heroMeta}>Last updated {updatedDate}</p>
             ) : null}

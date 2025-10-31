@@ -82,7 +82,7 @@ export default async function NowPage() {
         <section className={styles.hero}>
           <div className={styles.heroHeading}>
             <p className={styles.heroEyebrow}>Status report</p>
-            <h1 className={styles.heroTitle}>Now</h1>
+            <h1 className={`u-heading-xl ${styles.heroTitle}`}>Now</h1>
             {meta.updated ? (
               <span className={styles.heroMeta}>Updated {formatDate(String(meta.updated))}</span>
             ) : null}

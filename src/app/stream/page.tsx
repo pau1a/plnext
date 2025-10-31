@@ -71,7 +71,7 @@ export default async function StreamPage() {
                 </Link>
                 Telemetry log
               </span>
-              <h1 className={styles.heroTitle}>Stream</h1>
+              <h1 className={`u-heading-xl ${styles.heroTitle}`}>Stream</h1>
               <p className={styles.heroSummary}>{heroSummary}</p>
             </div>
             <div className={styles.heroStats}>
