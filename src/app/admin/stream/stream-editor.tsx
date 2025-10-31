@@ -50,11 +50,11 @@ export function StreamEditor({ entries }: StreamEditorProps) {
         {entries.map((entry, index) => {
           const timestampLocal = formatLocalTimestamp(entry.timestamp);
           const visibilityColor =
-            entry.visibility === "PUBLIC"
-              ? "var(--admin-accent)"
-              : entry.visibility === "LIMITED"
-                ? "var(--admin-status-warning)"
-                : "var(--text-muted)";
+            {
+              PUBLIC: "var(--color-teal-500)",
+              LIMITED: "var(--color-amber-500)",
+              PRIVATE: "var(--color-crimson-500)",
+            }[entry.visibility] ?? "var(--color-graphite-400)";
 
           return (
             <div
