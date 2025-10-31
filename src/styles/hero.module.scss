@@ -10,6 +10,11 @@
   color: var(--text-on-inverse);
   overflow: hidden;
   isolation: isolate;
+  --hero-overlay-shadow-current: var(--shadow-inverse-lg);
+  --hero-overlay-top-start-current: var(--hero-overlay-top-start);
+  --hero-overlay-top-mid-current: var(--hero-overlay-top-mid);
+  --hero-overlay-top-end-current: var(--hero-overlay-top-end);
+  --hero-overlay-bottom-start-current: var(--hero-overlay-bottom-start);
 }
 
 @supports (min-height: 100dvh) {
@@ -24,7 +29,7 @@
   z-index: 0;
   background: radial-gradient(
       circle at 30% 20%,
-      rgba(35, 73, 96, 0.45),
+      var(--hero-media-ambient),
       transparent 55%
     ),
     linear-gradient(180deg, #040d16 0%, #091b2c 65%, #030a12 100%);
@@ -38,16 +43,16 @@
   background:
     linear-gradient(
       to bottom,
-      rgba(6, 16, 24, 0.78) 0%,
-      rgba(6, 16, 24, 0.72) 45%,
-      rgba(6, 16, 24, 0.9) 100%
+      var(--hero-overlay-top-start-current) 0%,
+      var(--hero-overlay-top-mid-current) 45%,
+      var(--hero-overlay-top-end-current) 100%
     ),
     linear-gradient(
       to top,
-      rgba(6, 16, 24, 0.55) 0%,
+      var(--hero-overlay-bottom-start-current) 0%,
       transparent 65%
     );
-  box-shadow: inset 0 -6rem 12rem rgba(4, 12, 18, 0.55);
+  box-shadow: var(--hero-overlay-shadow-current);
 }
 
 .heroContent {
@@ -110,22 +115,26 @@
 @media (min-width: 48rem) {
   .hero {
     padding-inline: clamp(var(--space-2xl), 10vw, 12rem);
+    --hero-overlay-shadow-current: var(--shadow-inverse-lg-compact);
+    --hero-overlay-top-start-current: var(--hero-overlay-top-start-compact);
+    --hero-overlay-top-mid-current: var(--hero-overlay-top-mid-compact);
+    --hero-overlay-top-end-current: var(--hero-overlay-top-end-compact);
+    --hero-overlay-bottom-start-current: var(--hero-overlay-bottom-soft);
   }
 
   .heroOverlay {
     background:
       linear-gradient(
         to bottom,
-        rgba(6, 16, 24, 0.64) 0%,
-        rgba(6, 16, 24, 0.58) 40%,
-        rgba(6, 16, 24, 0.82) 100%
+        var(--hero-overlay-top-start-current) 0%,
+        var(--hero-overlay-top-mid-current) 40%,
+        var(--hero-overlay-top-end-current) 100%
       ),
       linear-gradient(
         to top,
-        rgba(6, 16, 24, 0.35) 0%,
+        var(--hero-overlay-bottom-start-current) 0%,
         transparent 70%
       );
-    box-shadow: inset 0 -5rem 10rem rgba(4, 12, 18, 0.45);
   }
 
   .heroContent {
