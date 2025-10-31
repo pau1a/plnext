@@ -1,5 +1,5 @@
 .page {
-  background: color-mix(in srgb, var(--surface-base) 92%, white 8%);
+  background: var(--surface-secondary);
   color: var(--text-primary);
 }
 
@@ -17,16 +17,20 @@
   gap: clamp(2rem, 4vw, 3rem);
   border-radius: clamp(2.5rem, 5vw, 3.5rem);
   padding: clamp(3.2rem, 5.4vw, 4.5rem);
+  --media-hero-gradient-start: color-mix(in srgb, var(--surface-inverse) 92%, transparent);
+  --media-hero-gradient-end: color-mix(in srgb, var(--surface-inverse) 80%, transparent);
+  --media-hero-accent-teal: color-mix(in srgb, var(--color-teal-500) 32%, var(--surface-inverse) 68%);
+  --media-hero-accent-crimson: color-mix(in srgb, var(--color-crimson-500) 28%, var(--surface-inverse) 72%);
   background:
-    radial-gradient(circle at -18% -24%, rgba(13, 148, 136, 0.35), transparent 65%),
-    radial-gradient(circle at 120% -12%, rgba(220, 38, 38, 0.35), transparent 62%),
-    linear-gradient(160deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.86));
-  border: 1px solid rgba(148, 163, 184, 0.24);
+    radial-gradient(circle at -18% -24%, var(--media-hero-accent-teal), transparent 65%),
+    radial-gradient(circle at 120% -12%, var(--media-hero-accent-crimson), transparent 62%),
+    linear-gradient(160deg, var(--media-hero-gradient-start), var(--media-hero-gradient-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 80%, transparent);
   box-shadow:
-    0 48px 120px rgba(13, 148, 136, 0.25),
-    inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+    0 48px 120px color-mix(in srgb, var(--surface-border) 45%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 55%, transparent);
   overflow: hidden;
-  color: white;
+  color: var(--text-on-inverse);
 }
 
 .heroCopy {
@@ -40,7 +44,7 @@
   text-transform: uppercase;
   font-size: 0.68rem;
   font-weight: 600;
-  color: rgba(186, 230, 253, 0.75);
+  color: color-mix(in srgb, var(--text-on-inverse) 65%, transparent);
 }
 
 .heroTitle {
@@ -54,7 +58,7 @@
   margin: 0;
   font-size: clamp(1.08rem, 1.3vw, 1.35rem);
   line-height: 1.65;
-  color: rgba(226, 232, 240, 0.82);
+  color: color-mix(in srgb, var(--text-on-inverse) 82%, transparent);
 }
 
 .section {
@@ -71,7 +75,7 @@
   margin: 0;
   font-size: clamp(1.8rem, 2.2vw, 2.3rem);
   font-weight: 600;
-  color: var(--color-graphite-900);
+  color: var(--text-primary);
 }
 
 .sectionSummary {
@@ -106,12 +110,13 @@
   gap: var(--space-md);
   border-radius: 1.4rem;
   padding: clamp(1.6rem, 2.8vw, 2.2rem);
-  background:
-    linear-gradient(140deg, rgba(226, 232, 240, 0.85), rgba(248, 250, 252, 0.93));
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  --bio-card-bg-start: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+  --bio-card-bg-end: color-mix(in srgb, var(--surface-secondary) 96%, transparent);
+  background: linear-gradient(140deg, var(--bio-card-bg-start), var(--bio-card-bg-end));
+  border: 1px solid color-mix(in srgb, var(--surface-border) 75%, transparent);
   box-shadow:
-    0 24px 48px rgba(15, 23, 42, 0.12),
-    0 12px 24px rgba(13, 148, 136, 0.12);
+    0 24px 48px color-mix(in srgb, var(--surface-border) 35%, transparent),
+    0 12px 24px color-mix(in srgb, var(--surface-border) 30%, transparent);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
@@ -128,10 +133,10 @@
 .bioButton:hover .bioCard,
 .bioButton:focus-visible .bioCard {
   transform: translateY(-6px);
-  border-color: rgba(13, 148, 136, 0.35);
+  border-color: color-mix(in srgb, var(--color-teal-500) 45%, transparent);
   box-shadow:
-    0 36px 72px rgba(15, 23, 42, 0.18),
-    0 18px 40px rgba(220, 38, 38, 0.14);
+    0 36px 72px color-mix(in srgb, var(--surface-border) 40%, transparent),
+    0 18px 40px color-mix(in srgb, var(--color-crimson-500) 24%, transparent);
 }
 
 .bioButton:hover .bioCard::after,
@@ -199,8 +204,8 @@
   align-items: center;
   padding: clamp(1rem, 1.8vw, 1.3rem) clamp(1.2rem, 2.2vw, 1.6rem);
   border-radius: 1.1rem;
-  background: color-mix(in srgb, var(--surface-base) 96%, white 4%);
-  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: color-mix(in srgb, var(--surface-elevated) 96%, transparent);
+  border: 1px solid color-mix(in srgb, var(--surface-border) 75%, transparent);
   text-decoration: none;
   color: inherit;
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
@@ -209,14 +214,14 @@
 .assetItem:hover,
 .assetItem:focus-visible {
   transform: translateX(6px);
-  border-color: rgba(56, 189, 248, 0.42);
-  box-shadow: 0 16px 32px rgba(56, 189, 248, 0.2);
+  border-color: color-mix(in srgb, var(--color-sky-400) 55%, transparent);
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--color-sky-400) 26%, transparent);
 }
 
 .assetLabel {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--color-graphite-900);
+  color: var(--text-primary);
 }
 
 .assetMeta {
@@ -233,5 +238,32 @@
 
   .bioCard {
     padding: clamp(1.3rem, 5vw, 1.8rem);
+  }
+}
+
+:global(body.dark) {
+  .hero {
+    --media-hero-gradient-start: color-mix(in srgb, var(--surface-inverse) 78%, transparent);
+    --media-hero-gradient-end: color-mix(in srgb, var(--surface-inverse) 66%, transparent);
+    --media-hero-accent-teal: color-mix(in srgb, var(--color-teal-400) 36%, var(--surface-inverse) 64%);
+    --media-hero-accent-crimson: color-mix(in srgb, var(--color-crimson-400) 30%, var(--surface-inverse) 70%);
+    box-shadow:
+      0 48px 120px color-mix(in srgb, var(--surface-border) 58%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 62%, transparent);
+  }
+
+  .bioCard {
+    --bio-card-bg-start: color-mix(in srgb, var(--surface-elevated) 80%, transparent);
+    --bio-card-bg-end: color-mix(in srgb, var(--surface-secondary) 84%, transparent);
+    border-color: color-mix(in srgb, var(--surface-border) 88%, transparent);
+    box-shadow:
+      0 24px 48px color-mix(in srgb, var(--surface-border) 48%, transparent),
+      0 12px 24px color-mix(in srgb, var(--surface-border) 42%, transparent);
+  }
+
+  .assetItem {
+    background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+    border-color: color-mix(in srgb, var(--surface-border) 85%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--surface-border) 45%, transparent);
   }
 }
