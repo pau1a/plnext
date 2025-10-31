@@ -212,7 +212,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         <MotionFade>
           <div className={styles.heroContent}>
             <span className={styles.heroEyebrow}>Dispatch log</span>
-            <h1 className={styles.heroTitle}>Insights &amp; Updates</h1>
+              <h1 className={`u-heading-xl ${styles.heroTitle}`}>
+                Insights &amp; Updates
+              </h1>
             <p className={styles.heroSubheading}>
               Field notes on cybersecurity, AI operations, and the engineering work that keeps them steady.
             </p>

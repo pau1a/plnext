@@ -20,7 +20,7 @@ export default async function LibraryPage() {
           <section className={styles.hero}>
             <div className={styles.heroCopy}>
               <p className={styles.heroEyebrow}>Reference shelf</p>
-              <h1 className={styles.heroTitle}>Library</h1>
+              <h1 className={`u-heading-xl ${styles.heroTitle}`}>Library</h1>
               <p className={styles.heroSummary}>
                 A catalogue-in-progress of the books, lectures, and essays that anchor my practice. Check back soon for
                 the first entries.
@@ -64,7 +64,7 @@ export default async function LibraryPage() {
         <section className={styles.hero}>
           <div className={styles.heroCopy}>
             <p className={styles.heroEyebrow}>Reference shelf</p>
-            <h1 className={styles.heroTitle}>Library</h1>
+            <h1 className={`u-heading-xl ${styles.heroTitle}`}>Library</h1>
             <p className={styles.heroSummary}>
               A working catalogue of the research, essays, and talks that sharpen judgement. These are the pieces I rely
               on when designing for resilience, risk, and calm operations.

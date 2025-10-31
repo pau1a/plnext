@@ -50,7 +50,7 @@ export default async function NotesIndexPage() {
           <MotionFade>
             <div className={styles.heroContent}>
               <span className={styles.heroEyebrow}>Signal snippets</span>
-              <h1 className={styles.heroTitle}>Notes</h1>
+              <h1 className={`u-heading-xl ${styles.heroTitle}`}>Notes</h1>
               <p className={styles.heroSummary}>
                 Short, self-contained updates from the workbench&mdash;less formal than essays, still public by default.
               </p>

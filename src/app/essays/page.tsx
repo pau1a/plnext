@@ -31,7 +31,9 @@ export default async function EssaysIndexPage() {
               <span className={styles.headerEyebrow}>Knowledge stream</span>
               <span className={styles.headerCount}>{essays.length} essays</span>
             </div>
-            <h1 className={styles.headerTitle}>Field notes from engineered calm</h1>
+            <h1 className={`u-heading-xl ${styles.headerTitle}`}>
+              Field notes from engineered calm
+            </h1>
             <p className={`${styles.headerSummary} u-max-w-prose`}>
               Dispatches on resilience, safety, and the guardrails that keep ambitious systems from flying apart.
             </p>
