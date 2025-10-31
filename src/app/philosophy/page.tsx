@@ -1,6 +1,7 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 
+import PageShell from "@/components/layout/PageShell";
 import { MDXComponents } from "@/components/mdx/MDXComponents";
 import { getPhilosophy } from "@/lib/philosophy";
 
@@ -48,71 +49,69 @@ export default async function PhilosophyPage() {
   ];
 
   return (
-    <article className={styles.page}>
-      <div className={styles.inner}>
-        <section className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <p className={styles.heroEyebrow}>Operating code</p>
-            <h1 className={`u-heading-xl ${styles.heroTitle}`}>Engineering philosophy</h1>
-            {updatedLabel ? <p className={styles.heroMeta}>Updated {updatedLabel}</p> : null}
-            {meta?.summary ? (
-              <p className={`${styles.heroSummary} u-max-w-prose`}>{meta.summary}</p>
-            ) : null}
-          </div>
-
-          <div className={styles.intentGridWrapper}>
-            <div className={styles.intentGrid}>
-              {principles.map((principle) => (
-                <Link key={principle.title} href={principle.href} className={styles.intentCard}>
-                  <span className={styles.intentCardLabel}>{principle.title}</span>
-                  <p className={styles.intentCardBody}>{principle.summary}</p>
-                  <span aria-hidden className={styles.intentCardHint}>Explore ↗</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <div className={styles.content}>
-          <aside className={styles.navColumn}>
-            <div className={styles.navHeader}>Navigate</div>
-            <nav className={styles.navList}>
-              {principles.map((principle) => (
-                <Link key={principle.title} href={principle.href} className={styles.navItem}>
-                  <span className={styles.navItemLabel}>{principle.title}</span>
-                  <span className={styles.navItemBody}>{principle.summary}</span>
-                </Link>
-              ))}
-            </nav>
-
-            <div className={styles.promiseCard}>
-              <p className={styles.promiseLabel}>Promise</p>
-              <p className={styles.promiseBody}>
-                Calm, observable systems that let people sleep. If a decision threatens that goal, it does not ship.
-              </p>
-            </div>
-          </aside>
-
-          <div className={styles.proseWrapper}>
-            <div className={styles.prose}>
-              <MDXRemote source={content} components={MDXComponents} />
-            </div>
-          </div>
+    <PageShell as="main" outerClassName={styles.page} className={styles.inner}>
+      <section className={styles.hero}>
+        <div className={styles.heroCopy}>
+          <p className={styles.heroEyebrow}>Operating code</p>
+          <h1 className={`u-heading-xl ${styles.heroTitle}`}>Engineering philosophy</h1>
+          {updatedLabel ? <p className={styles.heroMeta}>Updated {updatedLabel}</p> : null}
+          {meta?.summary ? (
+            <p className={`${styles.heroSummary} u-max-w-prose`}>{meta.summary}</p>
+          ) : null}
         </div>
 
-        <footer className={styles.footer}>
-          <span className={styles.footerLabel}>Continue exploring</span>
-          <Link className={styles.footerLinkTeal} href="/writing">
-            Writing
-          </Link>
-          <Link className={styles.footerLinkCrimson} href="/notes">
-            Notes
-          </Link>
-          <Link className={styles.footerLinkSlate} href="/projects">
-            Projects
-          </Link>
-        </footer>
+        <div className={styles.intentGridWrapper}>
+          <div className={styles.intentGrid}>
+            {principles.map((principle) => (
+              <Link key={principle.title} href={principle.href} className={styles.intentCard}>
+                <span className={styles.intentCardLabel}>{principle.title}</span>
+                <p className={styles.intentCardBody}>{principle.summary}</p>
+                <span aria-hidden className={styles.intentCardHint}>Explore ↗</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className={styles.content}>
+        <aside className={styles.navColumn}>
+          <div className={styles.navHeader}>Navigate</div>
+          <nav className={styles.navList}>
+            {principles.map((principle) => (
+              <Link key={principle.title} href={principle.href} className={styles.navItem}>
+                <span className={styles.navItemLabel}>{principle.title}</span>
+                <span className={styles.navItemBody}>{principle.summary}</span>
+              </Link>
+            ))}
+          </nav>
+
+          <div className={styles.promiseCard}>
+            <p className={styles.promiseLabel}>Promise</p>
+            <p className={styles.promiseBody}>
+              Calm, observable systems that let people sleep. If a decision threatens that goal, it does not ship.
+            </p>
+          </div>
+        </aside>
+
+        <div className={styles.proseWrapper}>
+          <div className={styles.prose}>
+            <MDXRemote source={content} components={MDXComponents} />
+          </div>
+        </div>
       </div>
-    </article>
+
+      <footer className={styles.footer}>
+        <span className={styles.footerLabel}>Continue exploring</span>
+        <Link className={styles.footerLinkTeal} href="/writing">
+          Writing
+        </Link>
+        <Link className={styles.footerLinkCrimson} href="/notes">
+          Notes
+        </Link>
+        <Link className={styles.footerLinkSlate} href="/projects">
+          Projects
+        </Link>
+      </footer>
+    </PageShell>
   );
 }
