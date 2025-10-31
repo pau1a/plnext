@@ -32,8 +32,8 @@ export default function Footer({ children }: FooterProps) {
           <Link className={styles.link} href="/philosophy">
             Philosophy
           </Link>
-          <Link className={styles.link} href="/media">
-            Media
+          <Link className={styles.link} href="/media-kit">
+            Media kit
           </Link>
           <Link className={styles.link} href="/rss.xml">
             RSS
