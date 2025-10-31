@@ -148,7 +148,7 @@
   font-size: clamp(1.2rem, 1.6vw, 1.5rem);
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: color-mix(in srgb, var(--text-primary) 90%, var(--color-teal-600) 10%);
+  color: var(--text-primary);
   position: relative;
   z-index: 1;
 }
