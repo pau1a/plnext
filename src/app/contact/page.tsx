@@ -47,7 +47,13 @@ export default function ContactPage() {
         />
         <div className={styles.stage}>
           <MotionFade delay={0.05}>
-            <div className={clsx(elevatedSurfaceStyles.elevatedSurface, styles.card)}>
+            <div
+              className={clsx(
+                elevatedSurfaceStyles.elevatedSurface,
+                elevatedSurfaceStyles.elevatedSurfaceFrosted,
+                styles.card,
+              )}
+            >
               <MotionFade delay={0.15}>
                 <div>
                   <header className={styles.header}>
