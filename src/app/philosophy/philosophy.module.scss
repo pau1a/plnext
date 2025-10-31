@@ -22,7 +22,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: clamp(2rem, 4vw, 3rem);
-  border-radius: calc(var(--radius-3xl, 3rem));
+  border-radius: var(--radius-3xl);
   padding: clamp(3rem, 5.4vw, 4.4rem);
   --hero-gradient-start: color-mix(in srgb, var(--surface-elevated) 94%, var(--philosophy-accent-teal) 6%);
   --hero-gradient-end: color-mix(in srgb, var(--surface-elevated) 90%, var(--philosophy-accent-crimson) 10%);
