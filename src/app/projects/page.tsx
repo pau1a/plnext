@@ -1,3 +1,4 @@
+import Hero from "@/components/home/Hero";
 import { Pagination } from "@/components/pagination";
 import { ProjectCard } from "@/components/project-card";
 import cardStyles from "@/components/card.module.scss";
@@ -11,6 +12,8 @@ import {
   type SearchParamRecord,
 } from "@/lib/pagination";
 import type { Metadata } from "next";
+
+import styles from "./projects.module.scss";
 
 const BASE_PATH = "/projects";
 const PAGE_SIZE = 6;
@@ -129,29 +132,37 @@ export default async function ProjectsPage({
     : [];
 
   return (
-    <PageShell as="main" className="u-pad-block-3xl">
-      <section className="u-stack u-gap-2xl">
-        <MotionFade>
-          <header className="u-stack u-gap-sm u-text-center u-mb-3xl">
-            <h1 className="u-heading-display">Projects &amp; Programmes</h1>
-            <p className="u-text-lead u-center u-max-w-md">
-              Selected engagements that blend cyber operations, automation, and
-              measurable business outcomes.
-            </p>
-          </header>
-        </MotionFade>
+    <div className={styles.page}>
+      <Hero
+        className={styles.hero}
+        copy={{
+          eyebrow: "Project dossiers",
+          title: "Projects & Programmes",
+          subheading: "Operational calm, engineered end-to-end.",
+          description:
+            "Selected engagements that blend cyber operations, automation, and measurable business outcomes.",
+        }}
+        ctas={[
+          {
+            label: "Discuss a challenge",
+            href: "/contact",
+            icon: <i className="fa-solid fa-comments" aria-hidden="true" />,
+          },
+        ]}
+      />
 
+      <PageShell as="main" className={styles.main} outerClassName={styles.mainShell}>
         {hasProjects ? (
-          <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridProjects}`}>
-            {visibleProjects.map((project) => (
-              <ProjectCard key={project.slug} summary={project} />
-            ))}
-          </div>
+          <MotionFade>
+            <div className={`${cardStyles.cardGrid} ${cardStyles.cardGridProjects}`}>
+              {visibleProjects.map((project) => (
+                <ProjectCard key={project.slug} summary={project} />
+              ))}
+            </div>
+          </MotionFade>
         ) : (
           <MotionFade>
-            <p className="u-text-center u-text-muted">
-              Project case studies are coming soon.
-            </p>
+            <p className={styles.empty}>Project case studies are coming soon.</p>
           </MotionFade>
         )}
 
@@ -166,7 +177,7 @@ export default async function ProjectsPage({
             />
           </MotionFade>
         ) : null}
-      </section>
-    </PageShell>
+      </PageShell>
+    </div>
   );
 }
