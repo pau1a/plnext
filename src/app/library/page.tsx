@@ -51,6 +51,12 @@ export default async function LibraryPage() {
     annotatedCount === items.length
       ? "Every entry annotated"
       : `${annotatedCount} annotated picks`;
+  const yearSpan = oldestYear === newestYear ? oldestYear : `${oldestYear}–${newestYear}`;
+  const stats = [
+    { label: "Entries catalogued", value: items.length },
+    { label: "Distinct voices", value: uniqueAuthors },
+    { label: "Year span", value: yearSpan },
+  ];
 
   return (
     <article className={styles.page}>
@@ -70,20 +76,12 @@ export default async function LibraryPage() {
           </div>
 
           <div className={styles.stats}>
-            <article className={styles.statCard}>
-              <p className={styles.statValue}>{items.length}</p>
-              <p className={styles.statLabel}>Entries catalogued</p>
-            </article>
-            <article className={styles.statCard}>
-              <p className={styles.statValue}>{uniqueAuthors}</p>
-              <p className={styles.statLabel}>Distinct voices</p>
-            </article>
-            <article className={styles.statCard}>
-              <p className={styles.statValue}>
-                {oldestYear === newestYear ? oldestYear : `${oldestYear}–${newestYear}`}
-              </p>
-              <p className={styles.statLabel}>Year span</p>
-            </article>
+            {stats.map((stat) => (
+              <article key={stat.label} className={styles.statCard}>
+                <p className={styles.statValue}>{stat.value}</p>
+                <p className={styles.statLabel}>{stat.label}</p>
+              </article>
+            ))}
           </div>
         </section>
 
