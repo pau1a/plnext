@@ -88,6 +88,8 @@
 
 .pulse {
   --pulse-background: color-mix(in srgb, var(--surface-elevated) 72%, var(--surface-inverse) 28%);
+  --pulse-foreground: color-mix(in srgb, var(--text-on-inverse) 88%, transparent);
+  --pulse-border: color-mix(in srgb, var(--surface-border) 70%, transparent);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -98,15 +100,15 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   background: var(--pulse-background);
-  border: 1px solid color-mix(in srgb, var(--surface-border) 70%, transparent);
-  color: color-mix(in srgb, var(--text-on-inverse) 88%, transparent);
+  border: 1px solid var(--pulse-border);
+  color: var(--pulse-foreground);
 }
 
 .pulseLabel {
   font-size: 0.66rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--text-on-inverse) 68%, transparent);
+  color: color-mix(in srgb, currentColor 68%, transparent);
 }
 
 .pulseValue {
@@ -116,11 +118,33 @@
 }
 
 .pulse[data-variant="focus"] {
-  --pulse-background: color-mix(in srgb, var(--color-teal-500) 28%, var(--surface-elevated) 72%);
+  --pulse-background: color-mix(in srgb, var(--color-teal-400) 24%, transparent);
+  --pulse-foreground: color-mix(in srgb, var(--color-teal-900) 82%, var(--color-graphite-900) 18%);
+  --pulse-border: color-mix(in srgb, var(--color-teal-400) 48%, transparent);
 }
 
 .pulse[data-variant="mood"] {
-  --pulse-background: color-mix(in srgb, var(--color-crimson-500) 24%, var(--surface-elevated) 76%);
+  --pulse-background: color-mix(in srgb, var(--color-crimson-400) 22%, transparent);
+  --pulse-foreground: color-mix(in srgb, var(--color-crimson-900) 80%, var(--color-graphite-900) 20%);
+  --pulse-border: color-mix(in srgb, var(--color-crimson-400) 50%, transparent);
+}
+
+:global(body.dark) .pulse {
+  --pulse-background: color-mix(in srgb, var(--surface-elevated) 55%, var(--surface-inverse) 45%);
+  --pulse-foreground: color-mix(in srgb, var(--text-on-inverse) 92%, transparent);
+  --pulse-border: color-mix(in srgb, var(--surface-border) 75%, transparent);
+}
+
+:global(body.dark) .pulse[data-variant="focus"] {
+  --pulse-background: color-mix(in srgb, var(--color-teal-300) 32%, transparent);
+  --pulse-foreground: color-mix(in srgb, var(--color-teal-50) 85%, var(--color-graphite-100) 15%);
+  --pulse-border: color-mix(in srgb, var(--color-teal-300) 52%, transparent);
+}
+
+:global(body.dark) .pulse[data-variant="mood"] {
+  --pulse-background: color-mix(in srgb, var(--color-crimson-300) 30%, transparent);
+  --pulse-foreground: color-mix(in srgb, var(--color-crimson-50) 85%, var(--color-graphite-100) 15%);
+  --pulse-border: color-mix(in srgb, var(--color-crimson-300) 52%, transparent);
 }
 
 .layout {
@@ -177,7 +201,7 @@
 }
 
 .nowContent :global(a) {
-  color: color-mix(in srgb, var(--color-teal-600) 75%, var(--color-crimson-500) 25%);
+  color: var(--link-color);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: color var(--transition-base), border-color var(--transition-base);
@@ -185,8 +209,8 @@
 
 .nowContent :global(a:hover),
 .nowContent :global(a:focus-visible) {
-  color: color-mix(in srgb, var(--color-crimson-600) 65%, var(--color-teal-500) 35%);
-  border-color: currentColor;
+  color: var(--link-hover);
+  border-color: color-mix(in srgb, var(--link-hover) 55%, transparent);
 }
 
 .signals {
@@ -272,13 +296,13 @@
   color: inherit;
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: color 160ms ease, border-color 160ms ease;
+  transition: color var(--transition-base), border-color var(--transition-base);
 }
 
 .signalTitle a:hover,
 .signalTitle a:focus-visible {
-  color: color-mix(in srgb, var(--color-crimson-600) 65%, var(--color-teal-500) 35%);
-  border-color: currentColor;
+  color: var(--link-hover);
+  border-color: color-mix(in srgb, var(--link-hover) 55%, transparent);
 }
 
 .signalMeta {
@@ -304,12 +328,13 @@
   text-transform: uppercase;
   text-decoration: none;
   margin-top: 0.25rem;
-  color: color-mix(in srgb, var(--color-teal-600) 75%, var(--color-crimson-500) 25%);
+  color: var(--link-color);
+  transition: color var(--transition-base);
 }
 
 .signalAction:hover,
 .signalAction:focus-visible {
-  color: color-mix(in srgb, var(--color-crimson-600) 70%, var(--color-teal-500) 30%);
+  color: var(--link-hover);
 }
 
 @media (max-width: 960px) {
