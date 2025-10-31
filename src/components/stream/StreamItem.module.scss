@@ -38,7 +38,11 @@
   content: "";
   position: absolute;
   inset: 18% -25% 40% 55%;
-  background: radial-gradient(circle at 18% 28%, rgba(239, 68, 68, 0.18), transparent 70%);
+  background: radial-gradient(
+    circle at 18% 28%,
+    color-mix(in srgb, var(--color-crimson-500) 18%, transparent) 0%,
+    transparent 70%
+  );
   opacity: 0;
   transition: opacity 160ms ease;
   pointer-events: none;
