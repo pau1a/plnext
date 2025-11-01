@@ -12,6 +12,7 @@ import posthogClient, { isPosthogConfigured, hasPosthogStarted } from "../postho
 
 class PostHogVendor implements AnalyticsVendor {
   readonly name = "posthog";
+  readonly requiresConsent = true; // Requires explicit user consent
 
   isConfigured(): boolean {
     return isPosthogConfigured();

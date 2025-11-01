@@ -17,6 +17,9 @@ export interface AnalyticsVendor {
   /** Unique identifier for this vendor */
   readonly name: string;
 
+  /** Whether this vendor requires user consent before tracking */
+  readonly requiresConsent?: boolean;
+
   /** Check if vendor is configured (has required credentials) */
   isConfigured(): boolean;
 

@@ -14,3 +14,4 @@ export { analytics, track, pageView } from "./dispatcher";
 export type { AnalyticsEvent, AnalyticsVendor, PageViewEvent, ConsentState } from "./types";
 export { ga4Vendor } from "./vendors/ga4";
 export { posthogVendor } from "./vendors/posthog";
+export { umamiVendor } from "./vendors/umami";

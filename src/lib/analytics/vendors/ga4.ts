@@ -64,6 +64,7 @@ function loadGAScript(measurementId: string): Promise<void> {
 
 class GA4Vendor implements AnalyticsVendor {
   readonly name = "ga4";
+  readonly requiresConsent = true; // Requires explicit user consent
   private initialized = false;
   private settings: GA4Settings | null = null;
   private currentMeasurementId: string = "";

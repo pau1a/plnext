@@ -8,6 +8,7 @@
 import type { AnalyticsEvent, AnalyticsVendor, PageViewEvent } from "./types";
 import { ga4Vendor } from "./vendors/ga4";
 import { posthogVendor } from "./vendors/posthog";
+import { umamiVendor } from "./vendors/umami";
 
 class AnalyticsDispatcher {
   private vendors: AnalyticsVendor[] = [];
@@ -17,6 +18,7 @@ class AnalyticsDispatcher {
     // Register available vendors
     this.registerVendor(ga4Vendor);
     this.registerVendor(posthogVendor);
+    this.registerVendor(umamiVendor); // Consent-free, privacy-first analytics
   }
 
   /**
@@ -33,6 +35,20 @@ class AnalyticsDispatcher {
    */
   getConfiguredVendors(): AnalyticsVendor[] {
     return this.vendors.filter((v) => v.isConfigured());
+  }
+
+  /**
+   * Get list of consent-free vendors (e.g., Umami)
+   */
+  getConsentFreeVendors(): AnalyticsVendor[] {
+    return this.vendors.filter((v) => v.isConfigured() && v.requiresConsent === false);
+  }
+
+  /**
+   * Get list of consent-required vendors (e.g., GA4, PostHog)
+   */
+  getConsentRequiredVendors(): AnalyticsVendor[] {
+    return this.vendors.filter((v) => v.isConfigured() && v.requiresConsent !== false);
   }
 
   /**
@@ -66,6 +82,74 @@ class AnalyticsDispatcher {
 
         if (process.env.NODE_ENV === "development") {
           console.log(`[Analytics] Initialized ${vendor.name}`);
+        }
+      } catch (error) {
+        console.error(`[Analytics] Failed to initialize ${vendor.name}:`, error);
+      }
+    });
+
+    await Promise.all(promises);
+  }
+
+  /**
+   * Initialize consent-free vendors only (e.g., Umami)
+   * These vendors don't require user consent
+   */
+  async initializeConsentFree(): Promise<void> {
+    const consentFree = this.getConsentFreeVendors();
+
+    if (consentFree.length === 0) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Analytics] No consent-free vendors configured");
+      }
+      return;
+    }
+
+    const promises = consentFree.map(async (vendor) => {
+      if (this.initializedVendors.has(vendor.name)) {
+        return; // Already initialized
+      }
+
+      try {
+        await vendor.init();
+        this.initializedVendors.add(vendor.name);
+
+        if (process.env.NODE_ENV === "development") {
+          console.log(`[Analytics] Initialized consent-free vendor: ${vendor.name}`);
+        }
+      } catch (error) {
+        console.error(`[Analytics] Failed to initialize ${vendor.name}:`, error);
+      }
+    });
+
+    await Promise.all(promises);
+  }
+
+  /**
+   * Initialize consent-required vendors only (e.g., GA4, PostHog)
+   * These vendors require explicit user consent
+   */
+  async initializeConsentRequired(): Promise<void> {
+    const consentRequired = this.getConsentRequiredVendors();
+
+    if (consentRequired.length === 0) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Analytics] No consent-required vendors configured");
+      }
+      return;
+    }
+
+    const promises = consentRequired.map(async (vendor) => {
+      if (this.initializedVendors.has(vendor.name)) {
+        return; // Already initialized
+      }
+
+      try {
+        await vendor.init();
+        this.initializedVendors.add(vendor.name);
+
+        if (process.env.NODE_ENV === "development") {
+          console.log(`[Analytics] Initialized consent-required vendor: ${vendor.name}`);
         }
       } catch (error) {
         console.error(`[Analytics] Failed to initialize ${vendor.name}:`, error);
