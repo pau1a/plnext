@@ -40,9 +40,11 @@ export default async function LibraryPage() {
   }
 
   const byYear = groupByYear(items);
-  const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
-  const newestYear = years[0];
-  const oldestYear = years[years.length - 1];
+  const allYearKeys = Object.keys(byYear);
+  const numericYears = allYearKeys.filter((y) => y !== "Unknown").sort((a, b) => Number(b) - Number(a));
+  const years = [...numericYears, ...(allYearKeys.includes("Unknown") ? ["Unknown"] : [])];
+  const newestYear = numericYears[0];
+  const oldestYear = numericYears[numericYears.length - 1];
   const uniqueAuthors = new Set(items.map((item) => item.author.toLocaleLowerCase())).size;
   const annotatedCount = items.filter((item) => Boolean(item.note?.trim())).length;
   const latestEntry = items[0];
@@ -50,7 +52,12 @@ export default async function LibraryPage() {
     annotatedCount === items.length
       ? "Every entry annotated"
       : `${annotatedCount} annotated picks`;
-  const yearSpan = oldestYear === newestYear ? oldestYear : `${oldestYear}–${newestYear}`;
+  const yearSpan =
+    newestYear && oldestYear
+      ? oldestYear === newestYear
+        ? oldestYear
+        : `${oldestYear}–${newestYear}`
+      : "Various dates";
   const stats = [
     { label: "Entries catalogued", value: items.length },
     { label: "Distinct voices", value: uniqueAuthors },
@@ -68,7 +75,9 @@ export default async function LibraryPage() {
             when designing for resilience, risk, and calm operations.
           </p>
           <div className={styles.heroBadgeRow}>
-            <span className={styles.heroBadge}>Latest addition · {latestEntry.year}</span>
+            <span className={styles.heroBadge}>
+              Latest addition{latestEntry.year ? ` · ${latestEntry.year}` : ""}
+            </span>
             <span className={styles.heroBadge}>{annotationLabel}</span>
           </div>
         </div>

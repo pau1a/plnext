@@ -8,7 +8,8 @@ import { requirePermission } from "@/lib/auth/server";
 import { LibraryItemForm } from "./library-item-form";
 
 export const metadata: Metadata = {
-  title: "Add Library Item",
+  title: "Add Library Item | Admin",
+  description: "Add books, essays, talks, and papers to your curated library.",
 };
 
 export default async function AdminLibraryNewPage() {
@@ -19,7 +20,7 @@ export default async function AdminLibraryNewPage() {
       <AdminShell
         actor={actor}
         title="Add library item"
-        subtitle="Books, essays, talks, and papers that shaped the practice."
+        subtitle="Curate the books, essays, talks, and papers that shaped your thinking."
       >
         <div className="u-flex u-gap-sm u-items-center u-flex-wrap">
           <Link className="button button--ghost button--xs" href="/admin/library">

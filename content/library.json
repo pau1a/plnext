@@ -1,5 +1,12 @@
 [
   {
+    "title": "Bittensor",
+    "author": "Yuma Rao",
+    "year": 2021,
+    "link": "https://cdn.networklayer.co.uk/paulalivingstone/documents/papers/Bittensor.pdf",
+    "note": "The Bittensor paper matters because it reframed AI training as an open, self-incentivising economy, rewarding useful intelligence instead of raw compute. It’s the first serious attempt to turn machine learning itself into a decentralized market protocol."
+  },
+  {
     "title": "Designing Data-Intensive Applications",
     "author": "Martin Kleppmann",
     "year": 2017,

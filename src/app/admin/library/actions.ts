@@ -41,13 +41,14 @@ export async function createLibraryItemAction(
   }
 
   const yearValue = typeof rawYear === "string" ? rawYear.trim() : "";
-  const yearNumber = Number(yearValue);
-  if (!yearValue) {
-    fieldErrors.year = "Year is required.";
-  } else if (!Number.isFinite(yearNumber) || !Number.isInteger(yearNumber)) {
-    fieldErrors.year = "Year must be a whole number.";
-  } else if (yearNumber < 0 || yearNumber > 9999) {
-    fieldErrors.year = "Year must be between 0 and 9999.";
+  let yearNumber: number | undefined;
+  if (yearValue) {
+    yearNumber = Number(yearValue);
+    if (!Number.isFinite(yearNumber) || !Number.isInteger(yearNumber)) {
+      fieldErrors.year = "Year must be a whole number.";
+    } else if (yearNumber < 0 || yearNumber > 9999) {
+      fieldErrors.year = "Year must be between 0 and 9999.";
+    }
   }
 
   const link = typeof rawLink === "string" ? rawLink.trim() : "";
@@ -84,7 +85,8 @@ export async function createLibraryItemAction(
     (item) =>
       item.title.toLocaleLowerCase() === title.toLocaleLowerCase() &&
       item.author.toLocaleLowerCase() === author.toLocaleLowerCase() &&
-      item.year === yearNumber,
+      item.year === yearNumber &&
+      (yearNumber !== undefined || item.year === undefined),
   );
 
   if (duplicate) {
@@ -97,15 +99,20 @@ export async function createLibraryItemAction(
   const newItem: LibraryItem = {
     title,
     author,
-    year: yearNumber,
+    ...(yearNumber !== undefined ? { year: yearNumber } : {}),
     ...(link ? { link } : {}),
     ...(note ? { note } : {}),
   };
 
   const updatedItems = [...items, newItem].sort((a, b) => {
-    if (b.year !== a.year) {
-      return b.year - a.year;
+    // Items with year come before items without year
+    if (typeof a.year === "number" && typeof b.year !== "number") return -1;
+    if (typeof a.year !== "number" && typeof b.year === "number") return 1;
+    // Both have years: sort by year descending, then title ascending
+    if (typeof a.year === "number" && typeof b.year === "number") {
+      return b.year - a.year || a.title.localeCompare(b.title);
     }
+    // Neither has year: sort by title ascending
     return a.title.localeCompare(b.title);
   });
 
@@ -149,19 +156,23 @@ function normalizeLibraryEntry(entry: unknown): LibraryItem | null {
   const candidate = entry as Record<string, unknown>;
   const title = typeof candidate.title === "string" ? candidate.title.trim() : "";
   const author = typeof candidate.author === "string" ? candidate.author.trim() : "";
-  const year = typeof candidate.year === "number" ? candidate.year : Number(candidate.year);
+  const rawYear = typeof candidate.year === "number" ? candidate.year : Number(candidate.year);
+  const year = Number.isFinite(rawYear) ? Math.trunc(rawYear) : undefined;
   const link = typeof candidate.link === "string" ? candidate.link.trim() : undefined;
   const note = typeof candidate.note === "string" ? candidate.note.trim() : undefined;
 
-  if (!title || !author || !Number.isFinite(year)) {
+  if (!title || !author) {
     return null;
   }
 
   const normalized: LibraryItem = {
     title,
     author,
-    year: Math.trunc(year),
   };
+
+  if (year !== undefined) {
+    normalized.year = year;
+  }
 
   if (link) {
     normalized.link = link;

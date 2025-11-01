@@ -1,0 +1,83 @@
+// Library form specific styles
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.fieldGrid {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: 1fr;
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--admin-border-strong);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--admin-accent) 8%, transparent) 0%,
+      transparent 50%
+    ),
+    color-mix(in srgb, var(--surface-base) 35%, transparent);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+@media (min-width: 48rem) {
+  .fieldGrid {
+    grid-template-columns: 2fr 2fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  position: relative;
+}
+
+.fieldLabel {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: color-mix(in srgb, var(--text-primary) 85%, var(--admin-accent-strong) 15%);
+  letter-spacing: 0.01em;
+}
+
+.fieldHelp {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.fieldError {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  color: var(--admin-status-danger);
+  font-weight: 500;
+}
+
+.footer {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--admin-accent-soft) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--admin-border-strong) 60%, transparent);
+}
+
+.statusMessage {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.statusSuccess {
+  color: var(--admin-accent-strong);
+}
+
+.statusError {
+  color: var(--admin-status-danger);
+}

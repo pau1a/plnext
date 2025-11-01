@@ -9,7 +9,8 @@ import { getLibrary } from "@/lib/library";
 import styles from "./library.module.scss";
 
 export const metadata: Metadata = {
-  title: "Library",
+  title: "Library | Admin",
+  description: "Manage your curated library of books, essays, talks, and papers.",
 };
 
 export default async function AdminLibraryPage() {
