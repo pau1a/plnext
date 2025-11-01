@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { AdminShell } from "@/app/admin/_components/admin-shell";
 import PageShell from "@/components/layout/PageShell";
@@ -53,6 +54,19 @@ export default async function AdminDashboardPage() {
               <div className={styles.placeholder}>Widget placeholder</div>
             </article>
           ))}
+        </section>
+
+        <section style={{ marginTop: "var(--space-xl)", paddingTop: "var(--space-lg)", borderTop: "1px solid var(--surface-border)" }}>
+          <h2 className="u-heading-sm u-font-semibold" style={{ marginBottom: "var(--space-sm)" }}>
+            Quick Links
+          </h2>
+          <ul className="u-stack u-gap-2xs">
+            <li>
+              <Link href="/admin/settings/analytics" className="u-link">
+                Analytics Settings → Configure Google Analytics 4
+              </Link>
+            </li>
+          </ul>
         </section>
       </AdminShell>
     </PageShell>

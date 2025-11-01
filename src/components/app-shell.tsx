@@ -2,6 +2,7 @@
 
 import AnalyticsConsentBanner from "@/components/analytics-consent-banner";
 import { AnalyticsConsentProvider } from "@/components/analytics-consent-provider";
+import { AnalyticsLoader } from "@/components/analytics-loader";
 import AnalyticsPreferences from "@/components/analytics-preferences";
 import BodyThemeSync from "@/components/body-theme-sync";
 import Footer from "@/components/Footer";
@@ -38,6 +39,7 @@ export default function AppShell({ children }: PropsWithChildren) {
         Skip to main content
       </a>
       <AnalyticsConsentProvider>
+        <AnalyticsLoader />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <BodyThemeSync />
 
