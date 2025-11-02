@@ -555,6 +555,13 @@ body:has([class*="contact-module"]) .app-shell__main {
   gap: var(--space-md);
 }
 
+.app-nav__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
 .app-nav__brand {
   display: inline-flex;
   align-items: center;
@@ -585,6 +592,52 @@ body:has([class*="contact-module"]) .app-shell__main {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+.app-nav__menu-toggle,
+.app-nav__submenu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4xs);
+  color: var(--text-on-inverse);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3xs);
+  transition: color var(--transition-base), background-color var(--transition-base),
+    border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.app-nav__menu-toggle:hover,
+.app-nav__menu-toggle:focus-visible,
+.app-nav__submenu-toggle:hover,
+.app-nav__submenu-toggle:focus-visible {
+  color: var(--color-teal-200);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.app-nav__menu-toggle {
+  display: none;
+  font-size: 1.5rem;
+}
+
+.app-nav__submenu-toggle {
+  display: none;
+}
+
+.app-nav__menu-toggle-icon,
+.app-nav__submenu-toggle-icon {
+  font-size: 1.1rem;
+  transition: transform var(--transition-base);
+}
+
+.app-nav__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
 }
 
 .app-nav__item {
@@ -630,6 +683,10 @@ body:has([class*="contact-module"]) .app-shell__main {
 .app-nav__item--has-submenu {
   position: relative;
   padding-block: var(--space-xs);
+}
+
+.app-nav__item--open .app-nav__submenu-toggle-icon {
+  transform: rotate(180deg);
 }
 
 .app-nav__item--has-submenu::after {
@@ -2050,48 +2107,94 @@ $spaces: (
   .app-nav {
     flex-direction: column;
     align-items: stretch;
-    gap: var(--space-sm);
+    gap: var(--space-xs);
+  }
+
+  .app-nav__top {
+    gap: var(--space-xs);
+    padding-inline: var(--space-2xs);
+    width: 100%;
+  }
+
+  .app-nav__menu-toggle {
+    display: inline-flex;
+  }
+
+  .app-nav__brand {
+    flex: 1;
+    justify-content: flex-start;
   }
 
   .app-nav__links {
+    display: none;
     width: 100%;
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-xs);
+    padding-inline: var(--space-2xs);
+  }
+
+  .app-nav--open .app-nav__links {
+    display: flex;
   }
 
   .app-nav__actions {
+    display: none;
     width: 100%;
     justify-content: flex-start;
     gap: var(--space-sm);
     flex-wrap: wrap;
+    padding-inline: var(--space-2xs);
   }
 
-  .app-nav__brand {
-    width: 100%;
-    justify-content: space-between;
-    padding-inline: var(--space-2xs);
+  .app-nav--open .app-nav__actions {
+    display: flex;
   }
 
   .app-nav__item {
     width: 100%;
+    padding-block: 0;
   }
 
   .app-nav__link {
+    flex: 1;
+    width: auto;
+    justify-content: flex-start;
+    padding-inline: 0;
+  }
+
+  .app-nav__trigger {
     width: 100%;
     justify-content: space-between;
     padding-inline: var(--space-sm);
+    padding-block: var(--space-xs);
     background: rgba(255, 255, 255, 0.04);
     border-radius: var(--radius-sm);
+  }
+
+  .app-nav__submenu-toggle {
+    display: inline-flex;
   }
 
   .app-nav__submenu {
     position: static;
     inset: auto;
     width: 100%;
-    margin-top: var(--space-2xs);
+    margin: var(--space-3xs) 0 0;
     background: rgba(12, 19, 26, 0.92);
     box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2xs) 0;
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .app-nav--open .app-nav__item--open .app-nav__submenu {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .app-nav__sublink {

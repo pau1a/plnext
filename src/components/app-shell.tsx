@@ -13,16 +13,27 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
-import { useState, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function AppShell({ children }: PropsWithChildren) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin") ?? false;
   const router = useRouter();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const walletDemoEnabled = false;
+
+  const closeMobileNav = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    setIsMobileNavOpen(false);
+    setOpenSubmenu(null);
+  }, []);
 
   const handleMouseEnter = (menu: string) => {
     if (timeoutRef.current) {
@@ -32,12 +43,42 @@ export default function AppShell({ children }: PropsWithChildren) {
   };
 
   const handleMouseLeave = () => {
+    if (isMobileNavOpen) {
+      return;
+    }
+
     timeoutRef.current = setTimeout(() => {
       setOpenSubmenu(null);
     }, 300);
   };
 
+  const toggleSubmenu = (menu: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    setOpenSubmenu((current) => (current === menu ? null : menu));
+  };
+
+  const handleToggleMobileNav = () => {
+    setIsMobileNavOpen((prev) => {
+      const next = !prev;
+
+      if (!next) {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = null;
+        }
+        setOpenSubmenu(null);
+      }
+
+      return next;
+    });
+  };
+
   const handleConnectWallet = () => {
+    closeMobileNav();
+
     if ((process.env.NEXT_PUBLIC_WALLET_MODE ?? "demo") === "demo") {
       router.push("/wallet-demo");
       return;
@@ -45,6 +86,24 @@ export default function AppShell({ children }: PropsWithChildren) {
 
     router.push("/contact?subject=wallet-onboarding");
   };
+
+  useEffect(() => {
+    closeMobileNav();
+  }, [pathname, closeMobileNav]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeMobileNav();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [closeMobileNav]);
 
   return (
     <body className="app-shell">
@@ -59,100 +118,160 @@ export default function AppShell({ children }: PropsWithChildren) {
           <div className="app-shell__affix">
             <header className="app-shell__header">
               <div className="l-container u-pad-block-sm">
-                <nav className="app-nav" aria-label="Primary">
-                <Link className="app-nav__brand" href="/">
-                  <span className="app-nav__brand-text">Paula Livingstone</span>
-                </Link>
-
-                <ul className="app-nav__links">
-                  <li className="app-nav__item">
-                    <Link className="app-nav__link" href="/">
-                      Home
+                <nav
+                  className={`app-nav ${isMobileNavOpen ? "app-nav--open" : ""}`}
+                  aria-label="Primary"
+                >
+                  <div className="app-nav__top">
+                    <Link className="app-nav__brand" href="/" onClick={closeMobileNav}>
+                      <span className="app-nav__brand-text">Paula Livingstone</span>
                     </Link>
-                  </li>
-                  <li
-                    className={`app-nav__item app-nav__item--has-submenu ${openSubmenu === 'writing' ? 'app-nav__item--open' : ''}`}
-                    onMouseEnter={() => handleMouseEnter('writing')}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <Link
-                      aria-haspopup="true"
-                      className="app-nav__link"
-                      href="/essays"
+                    <button
+                      type="button"
+                      className="app-nav__menu-toggle"
+                      aria-expanded={isMobileNavOpen}
+                      aria-controls="app-nav-primary-links"
+                      onClick={handleToggleMobileNav}
                     >
-                      Writing
-                    </Link>
-                    <ul aria-label="Writing sections" className="app-nav__submenu">
-                      <li>
-                        <Link className="app-nav__sublink" href="/essays">
-                          Essays
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="app-nav__sublink" href="/writing">
-                          Blog
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="app-nav__sublink" href="/notes">
-                          Notes
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="app-nav__item">
-                    <Link className="app-nav__link" href="/projects">
-                      Projects
-                    </Link>
-                  </li>
-                  {walletDemoEnabled ? (
+                      <span className="sr-only">
+                        {isMobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
+                      </span>
+                      <i
+                        className={`fa-solid ${isMobileNavOpen ? "fa-xmark" : "fa-bars"} app-nav__menu-toggle-icon`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </div>
+
+                  <ul className="app-nav__links" id="app-nav-primary-links">
                     <li className="app-nav__item">
-                      <Link className="app-nav__link" href="/wallet-demo">
-                        Wallet demo
+                      <Link className="app-nav__link" href="/" onClick={closeMobileNav}>
+                        Home
                       </Link>
                     </li>
-                  ) : null}
-                  <li
-                    className={`app-nav__item app-nav__item--has-submenu ${openSubmenu === 'about' ? 'app-nav__item--open' : ''}`}
-                    onMouseEnter={() => handleMouseEnter('about')}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <Link
-                      aria-haspopup="true"
-                      className="app-nav__link"
-                      href="/about"
+                    <li
+                      className={`app-nav__item app-nav__item--has-submenu ${openSubmenu === 'writing' ? 'app-nav__item--open' : ''}`}
+                      onMouseEnter={() => handleMouseEnter('writing')}
+                      onMouseLeave={handleMouseLeave}
                     >
-                      About
-                    </Link>
-                    <ul aria-label="About sections" className="app-nav__submenu">
-                      <li>
-                        <Link className="app-nav__sublink" href="/about">
-                          Profile
+                      <div className="app-nav__trigger">
+                        <Link
+                          aria-haspopup="true"
+                          className="app-nav__link"
+                          href="/essays"
+                          onClick={closeMobileNav}
+                        >
+                          Writing
+                        </Link>
+                        <button
+                          type="button"
+                          className="app-nav__submenu-toggle"
+                          aria-expanded={openSubmenu === "writing"}
+                          aria-controls="app-nav-submenu-writing"
+                          onClick={() => toggleSubmenu("writing")}
+                        >
+                          <span className="sr-only">Toggle Writing menu</span>
+                          <i className="fa-solid fa-chevron-down app-nav__submenu-toggle-icon" aria-hidden="true" />
+                        </button>
+                      </div>
+                      <ul
+                        aria-label="Writing sections"
+                        className="app-nav__submenu"
+                        id="app-nav-submenu-writing"
+                      >
+                        <li>
+                          <Link className="app-nav__sublink" href="/essays" onClick={closeMobileNav}>
+                            Essays
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="app-nav__sublink" href="/writing" onClick={closeMobileNav}>
+                            Blog
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="app-nav__sublink" href="/notes" onClick={closeMobileNav}>
+                            Notes
+                          </Link>
+                        </li>
+                      </ul>
+                    </li>
+                    <li className="app-nav__item">
+                      <Link className="app-nav__link" href="/projects" onClick={closeMobileNav}>
+                        Projects
+                      </Link>
+                    </li>
+                    {walletDemoEnabled ? (
+                      <li className="app-nav__item">
+                        <Link className="app-nav__link" href="/wallet-demo" onClick={closeMobileNav}>
+                          Wallet demo
                         </Link>
                       </li>
-                      <li>
-                        <Link className="app-nav__sublink" href="/stream">
-                          Stream
+                    ) : null}
+                    <li
+                      className={`app-nav__item app-nav__item--has-submenu ${openSubmenu === 'about' ? 'app-nav__item--open' : ''}`}
+                      onMouseEnter={() => handleMouseEnter('about')}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <div className="app-nav__trigger">
+                        <Link
+                          aria-haspopup="true"
+                          className="app-nav__link"
+                          href="/about"
+                          onClick={closeMobileNav}
+                        >
+                          About
                         </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="app-nav__item">
-                    <Link className="app-nav__link" href="/contact">
-                      Contact
-                    </Link>
-                  </li>
-                </ul>
+                        <button
+                          type="button"
+                          className="app-nav__submenu-toggle"
+                          aria-expanded={openSubmenu === "about"}
+                          aria-controls="app-nav-submenu-about"
+                          onClick={() => toggleSubmenu("about")}
+                        >
+                          <span className="sr-only">Toggle About menu</span>
+                          <i className="fa-solid fa-chevron-down app-nav__submenu-toggle-icon" aria-hidden="true" />
+                        </button>
+                      </div>
+                      <ul
+                        aria-label="About sections"
+                        className="app-nav__submenu"
+                        id="app-nav-submenu-about"
+                      >
+                        <li>
+                          <Link className="app-nav__sublink" href="/about" onClick={closeMobileNav}>
+                            Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="app-nav__sublink" href="/stream" onClick={closeMobileNav}>
+                            Stream
+                          </Link>
+                        </li>
+                      </ul>
+                    </li>
+                    <li className="app-nav__item">
+                      <Link className="app-nav__link" href="/contact" onClick={closeMobileNav}>
+                        Contact
+                      </Link>
+                    </li>
+                  </ul>
 
                 <div className="app-nav__actions">
                   <ThemeToggle />
-                  <a className="app-nav__icon-link" href="https://x.com/palivula" aria-label="Paula on X">
+                  <a
+                    className="app-nav__icon-link"
+                    href="https://x.com/palivula"
+                    aria-label="Paula on X"
+                    onClick={closeMobileNav}
+                  >
                     <i className="fa-brands fa-x-twitter app-nav__icon" aria-hidden="true" />
                   </a>
                   <a
                     className="app-nav__icon-link"
                     href="https://www.linkedin.com/in/plivingstone"
                     aria-label="Paula on LinkedIn"
+                    onClick={closeMobileNav}
                   >
                     <i className="fa-brands fa-linkedin-in app-nav__icon" aria-hidden="true" />
                   </a>
@@ -160,10 +279,16 @@ export default function AppShell({ children }: PropsWithChildren) {
                     className="app-nav__icon-link"
                     href="https://stackoverflow.com/users/4374150/paula-livingstone"
                     aria-label="Paula on Stack Overflow"
+                    onClick={closeMobileNav}
                   >
                     <i className="fa-brands fa-stack-overflow app-nav__icon" aria-hidden="true" />
                   </a>
-                  <a className="app-nav__icon-link" href="https://github.com/pau1a" aria-label="Paula on GitHub">
+                  <a
+                    className="app-nav__icon-link"
+                    href="https://github.com/pau1a"
+                    aria-label="Paula on GitHub"
+                    onClick={closeMobileNav}
+                  >
                     <i className="fa-brands fa-github app-nav__icon" aria-hidden="true" />
                   </a>
                 </div>
