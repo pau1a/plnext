@@ -27,6 +27,7 @@ export default function AppShell({ children }: PropsWithChildren) {
   const lastDirection = useRef<"up" | "down" | null>(null);
   const mainNavRef = useRef<HTMLElement | null>(null);
   const mainRef = useRef<HTMLElement | null>(null);
+  const subnavRef = useRef<HTMLDivElement | null>(null);
 
   const walletDemoEnabled = false;
 
@@ -135,10 +136,12 @@ export default function AppShell({ children }: PropsWithChildren) {
       }
 
       const mainNavBottom = mainNavRef.current?.getBoundingClientRect().bottom ?? 0;
+      const subnavBottom = subnavRef.current?.getBoundingClientRect().bottom ?? mainNavBottom;
+      const navStackBottom = Math.max(mainNavBottom, subnavBottom);
       const mainTop = mainRef.current?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
-      const hasClearedMainNav = mainTop <= mainNavBottom;
+      const hasClearedNavStack = mainTop <= navStackBottom;
 
-      if (!hasClearedMainNav) {
+      if (!hasClearedNavStack) {
         lastDirection.current = "up";
         lastScrollY.current = currentY;
         setIsSubnavHidden(false);
@@ -352,7 +355,10 @@ export default function AppShell({ children }: PropsWithChildren) {
                 </nav>
               </div>
             </header>
-            <div className={`app-subnav-band ${isSubnavHidden ? "subnav--hidden" : ""}`}>
+            <div
+              className={`app-subnav-band ${isSubnavHidden ? "subnav--hidden" : ""}`}
+              ref={subnavRef}
+            >
               <div className="app-subnav__container">
                 <nav className="app-subnav" aria-label="Secondary">
                   <div className="app-subnav__brand">
