@@ -42,6 +42,7 @@ export interface ProjectFrontMatter {
 export interface BlogPostSummary extends BlogPostFrontMatter {
   slug: string;
   fileSlug: string;
+  filePath: string;
 }
 
 export interface ProjectSummary extends ProjectFrontMatter {
@@ -59,6 +60,8 @@ export interface ProjectDocument extends ProjectSummary {
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 const BLOG_DIR = path.join(CONTENT_DIR, "blog");
+const WRITING_DIR = path.join(CONTENT_DIR, "writing");
+const BLOG_SOURCE_DIRS = [BLOG_DIR, WRITING_DIR];
 const PROJECTS_DIR = path.join(CONTENT_DIR, "projects");
 
 function shouldIncludeDrafts() {
@@ -88,22 +91,55 @@ async function readFrontMatter<T extends { draft?: boolean }>(dir: string, file:
   return data as T;
 }
 
+function buildBlogCandidatePaths(match: BlogPostSummary | undefined, slug: string): string[] {
+  const candidateFileSlugs = Array.from(
+    new Set(
+      [match?.fileSlug, match?.slug, slug].filter(
+        (value): value is string => typeof value === "string" && value.length > 0,
+      ),
+    ),
+  );
+
+  const candidatePaths: string[] = [];
+
+  if (match?.filePath) {
+    candidatePaths.push(path.join(CONTENT_DIR, match.filePath));
+  }
+
+  for (const fileSlugCandidate of candidateFileSlugs) {
+    for (const dir of BLOG_SOURCE_DIRS) {
+      const candidate = path.join(dir, `${fileSlugCandidate}.mdx`);
+      if (!candidatePaths.includes(candidate)) {
+        candidatePaths.push(candidate);
+      }
+    }
+  }
+
+  return candidatePaths;
+}
+
 interface GetBlogPostSummariesOptions {
   includeDrafts?: boolean;
 }
 
 export async function getBlogPostSummaries(options: GetBlogPostSummariesOptions = {}): Promise<BlogPostSummary[]> {
   const includeDrafts = options.includeDrafts ?? false;
-  const files = await readDirectory(BLOG_DIR);
+  const filesByDirectory = await Promise.all(
+    BLOG_SOURCE_DIRS.map(async (dir) => {
+      const files = await readDirectory(dir);
+      return files.map((file) => ({ dir, file }));
+    }),
+  );
 
   const posts = await Promise.all(
-    files.map(async (file) => {
+    filesByDirectory.flat().map(async ({ dir, file }) => {
       const fileSlug = file.replace(/\.mdx$/, "");
-      const data = await readFrontMatter<BlogPostFrontMatter>(BLOG_DIR, file);
+      const data = await readFrontMatter<BlogPostFrontMatter>(dir, file);
       const { slug: providedSlug, tags, ...rest } = data;
       const slug = ensureSlug(providedSlug, fileSlug);
       const { tags: resolvedTags } = resolveTagSlugs(Array.isArray(tags) ? tags : []);
-      return { fileSlug, slug, tags: resolvedTags, ...rest } satisfies BlogPostSummary;
+      const filePath = path.relative(CONTENT_DIR, path.join(dir, file));
+      return { fileSlug, slug, filePath, tags: resolvedTags, ...rest } satisfies BlogPostSummary;
     }),
   );
 
@@ -138,40 +174,50 @@ export async function getProjectSummaries(options: GetProjectSummariesOptions = 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   const summaries = await getBlogPostSummaries();
   const match = summaries.find((post) => post.slug === slug || post.fileSlug === slug);
-  const fileSlug = match?.fileSlug ?? slug;
   const fallbackSlug = match?.slug ?? slug;
 
-  const fullPath = path.join(BLOG_DIR, `${fileSlug}.mdx`);
-
-  try {
-    const source = await fs.readFile(fullPath, "utf8");
-    const { content, frontmatter } = await compileMDX<BlogPostFrontMatter>({
-      source,
-      components: mdxComponents,
-      options: {
-        parseFrontmatter: true,
-        mdxOptions: {
-          remarkPlugins: [remarkGfm],
-          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+  for (const fullPath of buildBlogCandidatePaths(match, slug)) {
+    try {
+      const source = await fs.readFile(fullPath, "utf8");
+      const { content, frontmatter } = await compileMDX<BlogPostFrontMatter>({
+        source,
+        components: mdxComponents,
+        options: {
+          parseFrontmatter: true,
+          mdxOptions: {
+            remarkPlugins: [remarkGfm],
+            rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+          },
         },
-      },
-    });
+      });
 
-    if (frontmatter.draft) {
-      return null;
+      if (frontmatter.draft) {
+        return null;
+      }
+
+      const { slug: providedSlug, tags, ...rest } = frontmatter;
+      const canonicalSlug = ensureSlug(providedSlug, fallbackSlug);
+      const { tags: resolvedTags } = resolveTagSlugs(Array.isArray(tags) ? tags : []);
+      const fileSlugCandidate = path.basename(fullPath, ".mdx");
+      const filePath = path.relative(CONTENT_DIR, fullPath);
+
+      return {
+        slug: canonicalSlug,
+        fileSlug: fileSlugCandidate,
+        filePath,
+        content,
+        tags: resolvedTags,
+        ...rest,
+      } satisfies BlogPost;
+    } catch (error: unknown) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        continue;
+      }
+      throw error;
     }
-
-    const { slug: providedSlug, tags, ...rest } = frontmatter;
-    const canonicalSlug = ensureSlug(providedSlug, fallbackSlug);
-    const { tags: resolvedTags } = resolveTagSlugs(Array.isArray(tags) ? tags : []);
-
-    return { slug: canonicalSlug, fileSlug, content, tags: resolvedTags, ...rest } satisfies BlogPost;
-  } catch (error: unknown) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      return null;
-    }
-    throw error;
   }
+
+  return null;
 }
 
 export async function getProjectDocument(slug: string): Promise<ProjectDocument | null> {
@@ -280,37 +326,37 @@ async function createRSSComponents() {
 export async function getBlogPostForRSS(slug: string): Promise<{ content: ReactNode; frontmatter: BlogPostFrontMatter } | null> {
   const summaries = await getBlogPostSummaries();
   const match = summaries.find((post) => post.slug === slug || post.fileSlug === slug);
-  const fileSlug = match?.fileSlug ?? slug;
+  for (const fullPath of buildBlogCandidatePaths(match, slug)) {
+    try {
+      const source = await fs.readFile(fullPath, "utf8");
+      const rssComponents = await createRSSComponents();
 
-  const fullPath = path.join(BLOG_DIR, `${fileSlug}.mdx`);
-
-  try {
-    const source = await fs.readFile(fullPath, "utf8");
-    const rssComponents = await createRSSComponents();
-
-    const { content, frontmatter } = await compileMDX<BlogPostFrontMatter>({
-      source,
-      components: rssComponents,
-      options: {
-        parseFrontmatter: true,
-        mdxOptions: {
-          remarkPlugins: [remarkGfm],
-          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+      const { content, frontmatter } = await compileMDX<BlogPostFrontMatter>({
+        source,
+        components: rssComponents,
+        options: {
+          parseFrontmatter: true,
+          mdxOptions: {
+            remarkPlugins: [remarkGfm],
+            rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+          },
         },
-      },
-    });
+      });
 
-    if (frontmatter.draft) {
-      return null;
-    }
+      if (frontmatter.draft) {
+        return null;
+      }
 
-    return { content, frontmatter };
-  } catch (error: unknown) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      return null;
+      return { content, frontmatter };
+    } catch (error: unknown) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        continue;
+      }
+      throw error;
     }
-    throw error;
   }
+
+  return null;
 }
 
 /**
