@@ -25,6 +25,8 @@ export default function AppShell({ children }: PropsWithChildren) {
   const [isSubnavHidden, setIsSubnavHidden] = useState(false);
   const lastScrollY = useRef(0);
   const lastDirection = useRef<"up" | "down" | null>(null);
+  const affixRef = useRef<HTMLDivElement | null>(null);
+  const mainRef = useRef<HTMLElement | null>(null);
 
   const walletDemoEnabled = false;
 
@@ -132,6 +134,17 @@ export default function AppShell({ children }: PropsWithChildren) {
         return;
       }
 
+      const affixBottom = affixRef.current?.getBoundingClientRect().bottom ?? 0;
+      const mainTop = mainRef.current?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
+      const hasClearedAffix = mainTop <= affixBottom;
+
+      if (!hasClearedAffix) {
+        lastDirection.current = "up";
+        lastScrollY.current = currentY;
+        setIsSubnavHidden(false);
+        return;
+      }
+
       const direction = delta > 0 ? "down" : "up";
 
       if (direction !== lastDirection.current) {
@@ -159,7 +172,7 @@ export default function AppShell({ children }: PropsWithChildren) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <BodyThemeSync />
 
-          <div className="app-shell__affix">
+          <div className="app-shell__affix" ref={affixRef}>
             <header className="app-shell__header">
               <div className="l-container u-pad-block-sm">
                 <nav
@@ -387,7 +400,7 @@ export default function AppShell({ children }: PropsWithChildren) {
             ) : null}
           </div>
 
-          <main className="app-shell__main" id="main-content" tabIndex={-1}>
+          <main className="app-shell__main" id="main-content" tabIndex={-1} ref={mainRef}>
             {children}
           </main>
 
