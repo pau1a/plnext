@@ -22,6 +22,8 @@ export default function AppShell({ children }: PropsWithChildren) {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const walletDemoEnabled = false;
+
   const handleMouseEnter = (menu: string) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -103,11 +105,13 @@ export default function AppShell({ children }: PropsWithChildren) {
                       Projects
                     </Link>
                   </li>
-                  <li className="app-nav__item">
-                    <Link className="app-nav__link" href="/wallet-demo">
-                      Wallet demo
-                    </Link>
-                  </li>
+                  {walletDemoEnabled ? (
+                    <li className="app-nav__item">
+                      <Link className="app-nav__link" href="/wallet-demo">
+                        Wallet demo
+                      </Link>
+                    </li>
+                  ) : null}
                   <li
                     className={`app-nav__item app-nav__item--has-submenu ${openSubmenu === 'about' ? 'app-nav__item--open' : ''}`}
                     onMouseEnter={() => handleMouseEnter('about')}
