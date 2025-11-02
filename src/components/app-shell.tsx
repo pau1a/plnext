@@ -29,8 +29,10 @@ export default function AppShell({ children }: PropsWithChildren) {
   const mainNavRef = useRef<HTMLElement | null>(null);
   const mainRef = useRef<HTMLElement | null>(null);
   const subnavRef = useRef<HTMLDivElement | null>(null);
+  const walletButtonRef = useRef<HTMLButtonElement | null>(null);
   const navStackHeight = useRef(0);
   const isMobileNavOpenRef = useRef(false);
+  const [useCompactWalletLabel, setUseCompactWalletLabel] = useState(false);
 
   const walletDemoEnabled = false;
 
@@ -157,6 +159,53 @@ export default function AppShell({ children }: PropsWithChildren) {
       return;
     }
 
+    const button = walletButtonRef.current;
+
+    if (!button) {
+      return;
+    }
+
+    const updateLabel = () => {
+      if (!walletButtonRef.current) {
+        return;
+      }
+
+      const shouldUseCompact =
+        walletButtonRef.current.scrollWidth - walletButtonRef.current.clientWidth > 1;
+
+      setUseCompactWalletLabel((current) =>
+        current === shouldUseCompact ? current : shouldUseCompact,
+      );
+    };
+
+    updateLabel();
+
+    let resizeObserver: ResizeObserver | null = null;
+
+    if (typeof ResizeObserver === "function") {
+      resizeObserver = new ResizeObserver(() => {
+        updateLabel();
+      });
+
+      resizeObserver.observe(button);
+    }
+
+    window.addEventListener("resize", updateLabel);
+
+    return () => {
+      window.removeEventListener("resize", updateLabel);
+
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
     lastScrollY.current = window.scrollY;
 
     const SCROLL_THRESHOLD = 15;
@@ -227,6 +276,16 @@ export default function AppShell({ children }: PropsWithChildren) {
                   aria-label="Primary"
                 >
                   <div className="app-nav__top">
+                    <Link className="app-nav__logo" href="/" onClick={closeMobileNav} aria-label="Home">
+                      <Image
+                        src="/media/logo-mark-white.svg"
+                        alt=""
+                        width={40}
+                        height={40}
+                        priority
+                        style={{ height: "2rem", width: "auto" }}
+                      />
+                    </Link>
                     <Link className="app-nav__brand" href="/" onClick={closeMobileNav}>
                       <span className="app-nav__brand-text">Paula Livingstone</span>
                     </Link>
@@ -405,18 +464,6 @@ export default function AppShell({ children }: PropsWithChildren) {
             >
               <div className="app-subnav__container">
                 <nav className="app-subnav" aria-label="Secondary">
-                  <div className="app-subnav__brand">
-                    <Link href="/" className="app-subnav__brand-link" aria-label="Paula Livingstone">
-                      <Image
-                        src="/media/logo-mark-white.svg"
-                        alt=""
-                        width={48}
-                        height={48}
-                        priority
-                        style={{ height: "2.1rem", width: "auto" }}
-                      />
-                    </Link>
-                  </div>
                   <form className="app-subnav__search" role="search" action="/search">
                     <label className="sr-only" htmlFor="app-subnav-search">
                       Search
@@ -437,8 +484,9 @@ export default function AppShell({ children }: PropsWithChildren) {
                     type="button"
                     className="app-subnav__cta"
                     onClick={handleConnectWallet}
+                    ref={walletButtonRef}
                   >
-                    CONNECT WALLET
+                    {useCompactWalletLabel ? "WALLET" : "CONNECT WALLET"}
                   </button>
                 </nav>
               </div>
