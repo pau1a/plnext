@@ -358,6 +358,8 @@ body {
   background-color: var(--surface-base);
   transition: background-color var(--transition-base), color var(--transition-base);
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 :where(a, button, input, select, textarea) {
