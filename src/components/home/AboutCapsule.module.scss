@@ -285,7 +285,7 @@
 
 .portraitGlow {
   position: absolute;
-  inset: -32% -28% -20% -40%;
+  inset: -32% max(-4vw, -2rem) -20% max(-6vw, -3rem);
   background: radial-gradient(
     circle at 55% 25%,
     color-mix(in srgb, var(--color-teal-300) 30%, transparent) 0%,
@@ -294,6 +294,20 @@
   filter: blur(32px);
   opacity: 0.6;
   pointer-events: none;
+}
+
+@media (max-width: 48rem) {
+  .portraitGlow {
+    inset: -28% max(-3vw, -1.75rem) -18% max(-5vw, -2.5rem);
+    filter: blur(28px);
+  }
+}
+
+@media (max-width: 34rem) {
+  .portraitGlow {
+    inset: -24% max(-2vw, -1.25rem) -16% max(-4vw, -2rem);
+    filter: blur(24px);
+  }
 }
 
 .portraitFrame {
