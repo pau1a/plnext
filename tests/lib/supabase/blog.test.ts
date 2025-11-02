@@ -18,6 +18,8 @@ import type { BlogPostSummary } from "@/lib/mdx";
 function buildSummary(overrides: Partial<BlogPostSummary> = {}): BlogPostSummary {
   return {
     slug: "example-post",
+    fileSlug: "example-post",
+    filePath: "blog/example-post.mdx",
     title: "Example",
     description: "Example description",
     date: "2025-01-01T00:00:00.000Z",

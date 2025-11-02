@@ -4,12 +4,16 @@ import { getNotes } from "./notes";
 import { loadStream } from "./stream";
 import { stripMarkdown } from "./notes";
 import { ensureSlug } from "./slugify";
+import { resolveTagSlugs } from "./tags";
 import path from "path";
 import fs from "fs/promises";
 import matter from "gray-matter";
 
-const BLOG_DIR = path.join(process.cwd(), "content", "blog");
-const PROJECTS_DIR = path.join(process.cwd(), "content", "projects");
+const CONTENT_DIR = path.join(process.cwd(), "content");
+const BLOG_DIR = path.join(CONTENT_DIR, "blog");
+const WRITING_DIR = path.join(CONTENT_DIR, "writing");
+const BLOG_SOURCE_DIRS = [BLOG_DIR, WRITING_DIR];
+const PROJECTS_DIR = path.join(CONTENT_DIR, "projects");
 
 // Helper function to read MDX files from a directory
 async function readDirectory(dir: string) {
@@ -76,29 +80,39 @@ function searchInText(text: string, query: string): boolean {
 
 // Helper to load blog posts with body content for searching
 async function loadBlogPostsWithBody(): Promise<Array<BlogPostSummary & { body: string }>> {
-  const files = await readDirectory(BLOG_DIR);
+  const filesByDirectory = await Promise.all(
+    BLOG_SOURCE_DIRS.map(async (dir) => {
+      const files = await readDirectory(dir);
+      return files.map((file) => ({ dir, file }));
+    }),
+  );
 
   const posts = await Promise.all(
-    files.map(async (file) => {
-      const fullPath = path.join(BLOG_DIR, file);
+    filesByDirectory.flat().map(async ({ dir, file }) => {
+      const fullPath = path.join(dir, file);
       const raw = await fs.readFile(fullPath, "utf8");
       const { data, content: body } = matter(raw);
 
       const frontMatter = data as BlogPostFrontMatter;
       const fileSlug = file.replace(/\.mdx$/, "");
       const slug = ensureSlug(frontMatter.slug, fileSlug);
+      const { tags: resolvedTags } = resolveTagSlugs(
+        Array.isArray(frontMatter.tags) ? frontMatter.tags : [],
+      );
+      const filePath = path.relative(CONTENT_DIR, fullPath);
 
       return {
         fileSlug,
         slug,
+        filePath,
         title: frontMatter.title,
         date: frontMatter.date,
         description: frontMatter.description,
-        tags: Array.isArray(frontMatter.tags) ? frontMatter.tags : [],
+        tags: resolvedTags,
         draft: frontMatter.draft,
         body,
       } as BlogPostSummary & { body: string };
-    })
+    }),
   );
 
   return posts.filter(post => !post.draft);

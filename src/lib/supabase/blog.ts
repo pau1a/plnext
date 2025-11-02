@@ -91,6 +91,8 @@ function decodeCursor(token: string): CursorPayload {
 function mapRowToSummary(row: PostsTableRow): BlogPostSummary {
   return {
     slug: row.slug,
+    fileSlug: row.slug,
+    filePath: `blog/${row.slug}.mdx`,
     title: row.title,
     description: row.description,
     date: row.date,
