@@ -25,9 +25,12 @@ export default function AppShell({ children }: PropsWithChildren) {
   const [isSubnavHidden, setIsSubnavHidden] = useState(false);
   const lastScrollY = useRef(0);
   const lastDirection = useRef<"up" | "down" | null>(null);
+  const affixRef = useRef<HTMLDivElement | null>(null);
   const mainNavRef = useRef<HTMLElement | null>(null);
   const mainRef = useRef<HTMLElement | null>(null);
   const subnavRef = useRef<HTMLDivElement | null>(null);
+  const navStackHeight = useRef(0);
+  const isMobileNavOpenRef = useRef(false);
 
   const walletDemoEnabled = false;
 
@@ -98,6 +101,14 @@ export default function AppShell({ children }: PropsWithChildren) {
   }, [pathname, closeMobileNav]);
 
   useEffect(() => {
+    isMobileNavOpenRef.current = isMobileNavOpen;
+
+    if (isMobileNavOpen) {
+      setIsSubnavHidden(false);
+    }
+  }, [isMobileNavOpen]);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeMobileNav();
@@ -116,6 +127,36 @@ export default function AppShell({ children }: PropsWithChildren) {
       return;
     }
 
+    const updateNavStackHeight = () => {
+      navStackHeight.current = affixRef.current?.getBoundingClientRect().height ?? 0;
+    };
+
+    updateNavStackHeight();
+
+    if (typeof ResizeObserver === "function" && affixRef.current) {
+      const observer = new ResizeObserver(() => {
+        updateNavStackHeight();
+      });
+
+      observer.observe(affixRef.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+
+    window.addEventListener("resize", updateNavStackHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateNavStackHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
     lastScrollY.current = window.scrollY;
 
     const SCROLL_THRESHOLD = 15;
@@ -128,6 +169,13 @@ export default function AppShell({ children }: PropsWithChildren) {
         return;
       }
 
+      if (isMobileNavOpenRef.current) {
+        lastDirection.current = "up";
+        lastScrollY.current = currentY;
+        setIsSubnavHidden(false);
+        return;
+      }
+
       if (currentY <= 0) {
         lastDirection.current = "up";
         lastScrollY.current = 0;
@@ -135,11 +183,7 @@ export default function AppShell({ children }: PropsWithChildren) {
         return;
       }
 
-      const mainNavBottom = mainNavRef.current?.getBoundingClientRect().bottom ?? 0;
-      const subnavBottom = subnavRef.current?.getBoundingClientRect().bottom ?? mainNavBottom;
-      const navStackBottom = Math.max(mainNavBottom, subnavBottom);
-      const mainTop = mainRef.current?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY;
-      const hasClearedNavStack = mainTop <= navStackBottom;
+      const hasClearedNavStack = currentY >= navStackHeight.current && navStackHeight.current > 0;
 
       if (!hasClearedNavStack) {
         lastDirection.current = "up";
@@ -175,7 +219,7 @@ export default function AppShell({ children }: PropsWithChildren) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <BodyThemeSync />
 
-          <div className="app-shell__affix">
+          <div className="app-shell__affix" ref={affixRef}>
             <header className="app-shell__header" ref={mainNavRef}>
               <div className="l-container u-pad-block-sm">
                 <nav
