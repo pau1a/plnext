@@ -156,30 +156,21 @@ export default function AboutPageContent({
   useEffect(() => {
     if (!shouldAnimate) {
       setHeroReady(true);
+      setShowIntroOverlay(false);
       return;
     }
 
     setHeroReady(false);
-
-    const timer = window.setTimeout(() => {
-      setHeroReady(true);
-    }, 1700);
-
-    return () => window.clearTimeout(timer);
-  }, [shouldAnimate]);
-
-  useEffect(() => {
-    if (!shouldAnimate) {
-      setShowIntroOverlay(false);
-      return;
-    }
-
     setShowIntroOverlay(true);
-    const timer = window.setTimeout(() => {
-      setShowIntroOverlay(false);
-    }, 2400);
 
-    return () => window.clearTimeout(timer);
+    const readyFrame = window.requestAnimationFrame(() => {
+      setHeroReady(true);
+      setShowIntroOverlay(false);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(readyFrame);
+    };
   }, [shouldAnimate]);
 
   useEffect(() => {
