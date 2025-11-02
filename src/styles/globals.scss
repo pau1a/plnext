@@ -1298,6 +1298,13 @@ body.dark .essay-discussion {
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
   position: relative;
   z-index: 1;
+  transform: translateY(0);
+  transition: transform var(--transition-base);
+  will-change: transform;
+}
+
+.app-subnav-band.subnav--hidden {
+  transform: translateY(-100%);
 }
 
 .app-subnav__container {

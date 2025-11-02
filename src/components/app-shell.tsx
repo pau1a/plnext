@@ -22,6 +22,15 @@ export default function AppShell({ children }: PropsWithChildren) {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isSubnavHidden, setIsSubnavHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const lastDirection = useRef<"up" | "down" | null>(null);
+  const affixRef = useRef<HTMLDivElement | null>(null);
+  const mainNavRef = useRef<HTMLElement | null>(null);
+  const mainRef = useRef<HTMLElement | null>(null);
+  const subnavRef = useRef<HTMLDivElement | null>(null);
+  const navStackHeight = useRef(0);
+  const isMobileNavOpenRef = useRef(false);
 
   const walletDemoEnabled = false;
 
@@ -92,6 +101,14 @@ export default function AppShell({ children }: PropsWithChildren) {
   }, [pathname, closeMobileNav]);
 
   useEffect(() => {
+    isMobileNavOpenRef.current = isMobileNavOpen;
+
+    if (isMobileNavOpen) {
+      setIsSubnavHidden(false);
+    }
+  }, [isMobileNavOpen]);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeMobileNav();
@@ -105,6 +122,93 @@ export default function AppShell({ children }: PropsWithChildren) {
     };
   }, [closeMobileNav]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const updateNavStackHeight = () => {
+      navStackHeight.current = affixRef.current?.getBoundingClientRect().height ?? 0;
+    };
+
+    updateNavStackHeight();
+
+    if (typeof ResizeObserver === "function" && affixRef.current) {
+      const observer = new ResizeObserver(() => {
+        updateNavStackHeight();
+      });
+
+      observer.observe(affixRef.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+
+    window.addEventListener("resize", updateNavStackHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateNavStackHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    lastScrollY.current = window.scrollY;
+
+    const SCROLL_THRESHOLD = 15;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      if (Math.abs(delta) < SCROLL_THRESHOLD) {
+        return;
+      }
+
+      if (isMobileNavOpenRef.current) {
+        lastDirection.current = "up";
+        lastScrollY.current = currentY;
+        setIsSubnavHidden(false);
+        return;
+      }
+
+      if (currentY <= 0) {
+        lastDirection.current = "up";
+        lastScrollY.current = 0;
+        setIsSubnavHidden(false);
+        return;
+      }
+
+      const hasClearedNavStack = currentY >= navStackHeight.current && navStackHeight.current > 0;
+
+      if (!hasClearedNavStack) {
+        lastDirection.current = "up";
+        lastScrollY.current = currentY;
+        setIsSubnavHidden(false);
+        return;
+      }
+
+      const direction = delta > 0 ? "down" : "up";
+
+      if (direction !== lastDirection.current) {
+        lastDirection.current = direction;
+      }
+
+      lastScrollY.current = currentY;
+      setIsSubnavHidden(direction === "down");
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <body className="app-shell">
       <a className="skip-link" href="#main-content">
@@ -115,8 +219,8 @@ export default function AppShell({ children }: PropsWithChildren) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <BodyThemeSync />
 
-          <div className="app-shell__affix">
-            <header className="app-shell__header">
+          <div className="app-shell__affix" ref={affixRef}>
+            <header className="app-shell__header" ref={mainNavRef}>
               <div className="l-container u-pad-block-sm">
                 <nav
                   className={`app-nav ${isMobileNavOpen ? "app-nav--open" : ""}`}
@@ -295,7 +399,10 @@ export default function AppShell({ children }: PropsWithChildren) {
                 </nav>
               </div>
             </header>
-            <div className="app-subnav-band">
+            <div
+              className={`app-subnav-band ${isSubnavHidden ? "subnav--hidden" : ""}`}
+              ref={subnavRef}
+            >
               <div className="app-subnav__container">
                 <nav className="app-subnav" aria-label="Secondary">
                   <div className="app-subnav__brand">
@@ -343,7 +450,7 @@ export default function AppShell({ children }: PropsWithChildren) {
             ) : null}
           </div>
 
-          <main className="app-shell__main" id="main-content" tabIndex={-1}>
+          <main className="app-shell__main" id="main-content" tabIndex={-1} ref={mainRef}>
             {children}
           </main>
 
