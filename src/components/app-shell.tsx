@@ -22,6 +22,9 @@ export default function AppShell({ children }: PropsWithChildren) {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isSubnavHidden, setIsSubnavHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const lastDirection = useRef<"up" | "down" | null>(null);
 
   const walletDemoEnabled = false;
 
@@ -104,6 +107,47 @@ export default function AppShell({ children }: PropsWithChildren) {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [closeMobileNav]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    lastScrollY.current = window.scrollY;
+
+    const SCROLL_THRESHOLD = 15;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      if (Math.abs(delta) < SCROLL_THRESHOLD) {
+        return;
+      }
+
+      if (currentY <= 0) {
+        lastDirection.current = "up";
+        lastScrollY.current = 0;
+        setIsSubnavHidden(false);
+        return;
+      }
+
+      const direction = delta > 0 ? "down" : "up";
+
+      if (direction !== lastDirection.current) {
+        lastDirection.current = direction;
+      }
+
+      lastScrollY.current = currentY;
+      setIsSubnavHidden(direction === "down");
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <body className="app-shell">
@@ -295,7 +339,7 @@ export default function AppShell({ children }: PropsWithChildren) {
                 </nav>
               </div>
             </header>
-            <div className="app-subnav-band">
+            <div className={`app-subnav-band ${isSubnavHidden ? "subnav--hidden" : ""}`}>
               <div className="app-subnav__container">
                 <nav className="app-subnav" aria-label="Secondary">
                   <div className="app-subnav__brand">
