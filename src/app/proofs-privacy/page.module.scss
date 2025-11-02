@@ -1,0 +1,111 @@
+/*
+ * Demo/live proofs policy styling
+ * -------------------------------
+ * Shared for the proofs & privacy statement.
+ */
+
+.page {
+  padding-block: 4rem;
+}
+
+.layout {
+  display: grid;
+  gap: 3rem;
+}
+
+.hero {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 720px;
+}
+
+.heroEyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-teal-700);
+  font-weight: 600;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 2.8vw, 2.8rem);
+  font-weight: 700;
+  color: var(--color-graphite-900);
+}
+
+.heroSummary {
+  font-size: 1rem;
+  color: var(--color-graphite-700);
+  max-width: 60ch;
+}
+
+.body {
+  display: grid;
+  gap: 2rem;
+}
+
+.section {
+  border: 1px solid var(--color-graphite-200);
+  border-radius: 1rem;
+  background: white;
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-graphite-900);
+}
+
+.sectionText {
+  color: var(--color-graphite-700);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.listItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: var(--color-graphite-700);
+  font-size: 0.95rem;
+}
+
+.listItem::before {
+  content: "•";
+  color: var(--color-teal-600);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.footnote {
+  font-size: 0.85rem;
+  color: var(--color-graphite-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  .heroTitle {
+    color: var(--color-graphite-50);
+  }
+
+  .heroSummary,
+  .listItem,
+  .sectionText {
+    color: var(--color-graphite-200);
+  }
+
+  .section {
+    background: rgba(15, 23, 42, 0.95);
+    border-color: rgba(148, 163, 184, 0.25);
+  }
+}

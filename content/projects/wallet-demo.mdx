@@ -1,0 +1,27 @@
+---
+slug: "wallet-demo"
+title: "Wallet Demo Layer"
+date: "2025-02-01"
+summary: "Feature-flagged wallet experience with demo-safe flows for tips, integrity proofs, and humanity attestations."
+role: "Product Security"
+status: "In sandbox"
+stack:
+  - "Next.js"
+  - "TypeScript"
+  - "viem-ready"
+  - "PostRegistry"
+---
+
+The wallet module ships _demo-first_, meaning the UI calls only sandbox endpoints and never touches a real provider while `NEXT_PUBLIC_WALLET_MODE=demo`. A single flag swap flips the experience to production once real providers and contracts are wired.
+
+<WalletStub />
+
+## Implementation notes
+
+- Demo API routes live under `/api/demo/*` and will hard fail when the flag is set to `live`.
+- Live stubs return 501 until viem, relayers, and WebAuthn flows are connected.
+- The `Proofs & Privacy` page documents what we store in demo versus live.
+
+## Live readiness
+
+Follow the flip checklist in the README to connect SIWE, tip recording, on-chain anchoring, and humanity attestations. The contract stub in `contracts/PostRegistry.sol` anchors content once deployed.

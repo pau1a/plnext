@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import ThemeToggle from "@/components/theme-toggle";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
@@ -17,6 +18,7 @@ import { useState, useRef } from "react";
 export default function AppShell({ children }: PropsWithChildren) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin") ?? false;
+  const router = useRouter();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -31,6 +33,15 @@ export default function AppShell({ children }: PropsWithChildren) {
     timeoutRef.current = setTimeout(() => {
       setOpenSubmenu(null);
     }, 300);
+  };
+
+  const handleConnectWallet = () => {
+    if ((process.env.NEXT_PUBLIC_WALLET_MODE ?? "demo") === "demo") {
+      router.push("/wallet-demo");
+      return;
+    }
+
+    router.push("/contact?subject=wallet-onboarding");
   };
 
   return (
@@ -90,6 +101,11 @@ export default function AppShell({ children }: PropsWithChildren) {
                   <li className="app-nav__item">
                     <Link className="app-nav__link" href="/projects">
                       Projects
+                    </Link>
+                  </li>
+                  <li className="app-nav__item">
+                    <Link className="app-nav__link" href="/wallet-demo">
+                      Wallet demo
                     </Link>
                   </li>
                   <li
@@ -181,7 +197,13 @@ export default function AppShell({ children }: PropsWithChildren) {
                       autoComplete="off"
                     />
                   </form>
-                  <button type="button" className="app-subnav__cta">CONNECT WALLET</button>
+                  <button
+                    type="button"
+                    className="app-subnav__cta"
+                    onClick={handleConnectWallet}
+                  >
+                    CONNECT WALLET
+                  </button>
                 </nav>
               </div>
             </div>
