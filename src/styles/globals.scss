@@ -252,16 +252,87 @@ $transition-base: 180ms ease;
   --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
   --shadow-lg: 0 16px 48px rgba(15, 23, 42, 0.12);
   --shadow-inverse-lg: inset 0 -6rem 12rem rgba(4, 12, 18, 0.52);
-  --hero-media-ambient: rgba(35, 73, 96, 0.45);
-  --hero-overlay-top-start: rgba(6, 16, 24, 0.78);
-  --hero-overlay-top-mid: rgba(6, 16, 24, 0.72);
-  --hero-overlay-top-end: rgba(6, 16, 24, 0.9);
-  --hero-overlay-bottom-start: rgba(6, 16, 24, 0.55);
-  --hero-overlay-bottom-soft: rgba(6, 16, 24, 0.35);
+  --hero-glow-teal: color-mix(in srgb, var(--color-teal-400) 36%, transparent);
+  --hero-glow-crimson: color-mix(in srgb, var(--color-crimson-400) 28%, transparent);
+  --hero-radial-teal-position: 28% 18%;
+  --hero-radial-crimson-position: 72% 26%;
+  --hero-radial-teal-fade: 58%;
+  --hero-radial-crimson-fade: 66%;
+  --hero-backdrop-surface-top: color-mix(
+    in srgb,
+    var(--color-graphite-900) 88%,
+    var(--color-teal-900) 12%
+  );
+  --hero-backdrop-surface-mid: color-mix(
+    in srgb,
+    var(--color-graphite-900) 82%,
+    var(--color-teal-800) 18%
+  );
+  --hero-backdrop-surface-bottom: color-mix(
+    in srgb,
+    var(--color-graphite-900) 84%,
+    var(--color-crimson-900) 16%
+  );
+  --hero-backdrop-gradient: linear-gradient(
+    180deg,
+    var(--hero-backdrop-surface-top) 0%,
+    var(--hero-backdrop-surface-mid) 60%,
+    var(--hero-backdrop-surface-bottom) 100%
+  );
+  --hero-backdrop-radial-teal: radial-gradient(
+    circle at var(--hero-radial-teal-position),
+    var(--hero-glow-teal),
+    transparent var(--hero-radial-teal-fade)
+  );
+  --hero-backdrop-radial-crimson: radial-gradient(
+    circle at var(--hero-radial-crimson-position),
+    var(--hero-glow-crimson),
+    transparent var(--hero-radial-crimson-fade)
+  );
+  --hero-layered-backdrop: var(--hero-backdrop-radial-teal),
+    var(--hero-backdrop-radial-crimson),
+    var(--hero-backdrop-gradient);
+  --hero-overlay-top-start: color-mix(
+    in srgb,
+    var(--color-graphite-900) 70%,
+    var(--color-teal-900) 30%
+  );
+  --hero-overlay-top-mid: color-mix(
+    in srgb,
+    var(--color-graphite-900) 66%,
+    var(--color-teal-800) 34%
+  );
+  --hero-overlay-top-end: color-mix(
+    in srgb,
+    var(--color-graphite-900) 82%,
+    var(--color-crimson-900) 18%
+  );
+  --hero-overlay-bottom-start: color-mix(
+    in srgb,
+    var(--color-graphite-900) 58%,
+    var(--color-teal-900) 42%
+  );
+  --hero-overlay-bottom-soft: color-mix(
+    in srgb,
+    var(--color-graphite-900) 42%,
+    var(--color-teal-900) 28%
+  );
   --shadow-inverse-lg-compact: inset 0 -5rem 10rem rgba(4, 12, 18, 0.45);
-  --hero-overlay-top-start-compact: rgba(6, 16, 24, 0.64);
-  --hero-overlay-top-mid-compact: rgba(6, 16, 24, 0.58);
-  --hero-overlay-top-end-compact: rgba(6, 16, 24, 0.82);
+  --hero-overlay-top-start-compact: color-mix(
+    in srgb,
+    var(--color-graphite-900) 64%,
+    var(--color-teal-900) 36%
+  );
+  --hero-overlay-top-mid-compact: color-mix(
+    in srgb,
+    var(--color-graphite-900) 60%,
+    var(--color-teal-800) 40%
+  );
+  --hero-overlay-top-end-compact: color-mix(
+    in srgb,
+    var(--color-graphite-900) 80%,
+    var(--color-crimson-900) 20%
+  );
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
@@ -314,16 +385,64 @@ body.dark {
   --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.5);
   --shadow-lg: 0 20px 52px rgba(3, 7, 18, 0.6);
   --shadow-inverse-lg: inset 0 -6rem 12rem rgba(2, 6, 12, 0.62);
-  --hero-media-ambient: rgba(39, 88, 118, 0.55);
-  --hero-overlay-top-start: rgba(4, 12, 18, 0.82);
-  --hero-overlay-top-mid: rgba(4, 12, 18, 0.76);
-  --hero-overlay-top-end: rgba(4, 12, 18, 0.9);
-  --hero-overlay-bottom-start: rgba(4, 12, 18, 0.6);
-  --hero-overlay-bottom-soft: rgba(4, 12, 18, 0.4);
+  --hero-glow-teal: color-mix(in srgb, var(--color-teal-300) 42%, transparent);
+  --hero-glow-crimson: color-mix(in srgb, var(--color-crimson-300) 34%, transparent);
+  --hero-backdrop-surface-top: color-mix(
+    in srgb,
+    var(--color-graphite-900) 84%,
+    var(--color-teal-900) 16%
+  );
+  --hero-backdrop-surface-mid: color-mix(
+    in srgb,
+    var(--color-graphite-900) 78%,
+    var(--color-teal-800) 22%
+  );
+  --hero-backdrop-surface-bottom: color-mix(
+    in srgb,
+    var(--color-graphite-900) 80%,
+    var(--color-crimson-900) 20%
+  );
+  --hero-overlay-top-start: color-mix(
+    in srgb,
+    var(--color-graphite-900) 68%,
+    var(--color-teal-900) 32%
+  );
+  --hero-overlay-top-mid: color-mix(
+    in srgb,
+    var(--color-graphite-900) 64%,
+    var(--color-teal-800) 36%
+  );
+  --hero-overlay-top-end: color-mix(
+    in srgb,
+    var(--color-graphite-900) 80%,
+    var(--color-crimson-900) 20%
+  );
+  --hero-overlay-bottom-start: color-mix(
+    in srgb,
+    var(--color-graphite-900) 60%,
+    var(--color-teal-900) 40%
+  );
+  --hero-overlay-bottom-soft: color-mix(
+    in srgb,
+    var(--color-graphite-900) 44%,
+    var(--color-teal-900) 28%
+  );
   --shadow-inverse-lg-compact: inset 0 -5rem 10rem rgba(2, 6, 12, 0.55);
-  --hero-overlay-top-start-compact: rgba(4, 12, 18, 0.7);
-  --hero-overlay-top-mid-compact: rgba(4, 12, 18, 0.64);
-  --hero-overlay-top-end-compact: rgba(4, 12, 18, 0.86);
+  --hero-overlay-top-start-compact: color-mix(
+    in srgb,
+    var(--color-graphite-900) 62%,
+    var(--color-teal-900) 38%
+  );
+  --hero-overlay-top-mid-compact: color-mix(
+    in srgb,
+    var(--color-graphite-900) 60%,
+    var(--color-teal-800) 40%
+  );
+  --hero-overlay-top-end-compact: color-mix(
+    in srgb,
+    var(--color-graphite-900) 78%,
+    var(--color-crimson-900) 22%
+  );
 
   --admin-accent-soft: color-mix(in srgb, var(--admin-accent) 22%, transparent);
   --admin-border-subtle: color-mix(in srgb, var(--surface-border) 70%, transparent);
